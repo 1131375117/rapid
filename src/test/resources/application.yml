@@ -1,0 +1,9 @@
+spring:
+  # datasource config
+  datasource:
+    driver-class-name: org.h2.Driver
+    schema: classpath:sql/schema-h2.sql
+    data: classpath:sql/data-h2.sql
+    url: jdbc:h2:mem:tax-preference
+    username: root
+    password: test
