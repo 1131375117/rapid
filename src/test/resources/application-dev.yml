@@ -1,5 +1,6 @@
+# spring
 spring:
-  # datasource config
+  # datasource
   datasource:
     driver-class-name: org.h2.Driver
     schema: classpath:sql/schema-h2.sql
@@ -7,3 +8,9 @@ spring:
     url: jdbc:h2:mem:tax-preference
     username: root
     password: test
+
+# mybatis plus
+mybatis-plus:
+  configuration:
+    # print SQL
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

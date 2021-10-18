@@ -2,6 +2,8 @@ server:
   port: 10080
 # spring
 spring:
+  profiles:
+    active: dev
   application:
     name: tax-preference-server
     # file upload
@@ -9,12 +11,6 @@ spring:
     multipart:
       max-request-size: 1024MB
       max-file-size: 1024MB
-  # datasource
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: "jdbc:mysql://mysql:3306/tax_preference?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false"
-    username: tax_preference
-    password: tax_preference
 
 # swagger
 swagger:
@@ -26,6 +22,4 @@ mybatis-plus:
     banner: false
   configuration:
     call-setters-on-nulls: true
-    # print SQL
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 

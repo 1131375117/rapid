@@ -1,0 +1,7 @@
+-- 创建系统用户并授权
+
+CREATE USER 'tax-preference'@'%' IDENTIFIED BY 'tax-preference';
+
+GRANT SELECT, INSERT, UPDATE, REFERENCES, DELETE, CREATE, DROP, ALTER, INDEX, TRIGGER, CREATE VIEW, SHOW VIEW, EXECUTE, ALTER ROUTINE, CREATE ROUTINE, CREATE TEMPORARY TABLES, LOCK TABLES, EVENT ON `tax-preference`.* TO 'tax-preference'@'%';
+
+GRANT GRANT OPTION ON `tax-preference`.* TO 'tax-preference'@'%';

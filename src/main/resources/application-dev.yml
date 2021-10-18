@@ -1,0 +1,15 @@
+# spring
+spring:
+  # datasource
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: "jdbc:mysql://172.16.122.17:33061/tax_preference?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false"
+    username: tax_preference
+    password: tax_preference
+
+# mybatis plus
+mybatis-plus:
+  configuration:
+    # print SQL
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
