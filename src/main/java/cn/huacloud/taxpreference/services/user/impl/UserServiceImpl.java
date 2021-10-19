@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -30,6 +31,8 @@ public class UserServiceImpl implements UserService {
         UserDO userDO = userMapper.selectById(userId);
         LoginUserVO loginUserVO = new LoginUserVO();
         BeanUtils.copyProperties(userDO, loginUserVO);
+        loginUserVO.setRoleCodes(Collections.singletonList("admin"));
+        loginUserVO.setPermissionCodes(Collections.singletonList("*"));
         return loginUserVO;
     }
 

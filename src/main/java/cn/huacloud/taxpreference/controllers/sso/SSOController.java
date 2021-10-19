@@ -2,9 +2,9 @@ package cn.huacloud.taxpreference.controllers.sso;
 
 import cn.dev33.satoken.secure.SaSecureUtil;
 import cn.dev33.satoken.stp.StpUtil;
-import cn.huacloud.taxpreference.common.constants.UserConstants;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
+import cn.huacloud.taxpreference.common.utils.UserUtil;
 import cn.huacloud.taxpreference.services.user.UserService;
 import cn.huacloud.taxpreference.services.user.entity.dos.UserDO;
 import cn.huacloud.taxpreference.services.user.entity.vos.LoginUserVO;
@@ -44,10 +44,12 @@ public class SSOController {
         if (!userDO.getPassword().equals(SaSecureUtil.md5(password))) {
             throw BizCode._4200.exception();
         }
+        // 执行登录
+        StpUtil.login(userDO.getId());
         // 查询用户登录视图
         LoginUserVO loginUserVO = userService.getLoginUserVOById(userDO.getId());
-        // 保存用户登录视图到session
-        StpUtil.getSession().set(UserConstants.LOGIN_USER, loginUserVO);
+        // 保存用户登录视图到 session
+        StpUtil.getSession().set(UserUtil.LOGIN_USER, loginUserVO);
         // 返回结果
         return ResultVO.ok(loginUserVO);
     }
@@ -59,7 +61,7 @@ public class SSOController {
     @GetMapping("/sso/currentUser")
     public ResultVO<LoginUserVO> getLoginUserVO() {
         StpUtil.checkLogin();
-        return ResultVO.ok((LoginUserVO) StpUtil.getSession().get(UserConstants.LOGIN_USER));
+        return ResultVO.ok(UserUtil.getCurrentUser());
     }
 
     /**

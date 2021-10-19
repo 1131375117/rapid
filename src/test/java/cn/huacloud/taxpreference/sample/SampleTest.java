@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.sample;
 
+import cn.dev33.satoken.secure.SaSecureUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
@@ -12,7 +13,12 @@ public class SampleTest {
 
     @Test
     public void md5Test() {
-        /*String md5 = SaSecureUtil.md5("123456");
-        log.info(md5);*/
+        String md5 = SaSecureUtil.md5("123456");
+        log.info(md5);
+    }
+
+    @Test
+    public void testLogMessageFormat() {
+        log.info("{}和{}是好友。", "小明", "小红");
     }
 }
