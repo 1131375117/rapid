@@ -22,10 +22,16 @@
         <commons.io.version>2.6</commons.io.version>
         <spring.swagger.version>1.5.1.RELEASE</spring.swagger.version>
         <mybatis.plus.version>3.4.3.4</mybatis.plus.version>
-
+        <sa.token.version>1.27.0</sa.token.version>
     </properties>
 
     <dependencies>
+        <!--sa token-->
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-spring-boot-starter</artifactId>
+            <version>${sa.token.version}</version>
+        </dependency>
         <!--swagger-->
         <dependency>
             <groupId>com.spring4all</groupId>

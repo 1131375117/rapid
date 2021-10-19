@@ -15,5 +15,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class TaxPreferenceApplication {
     public static void main(String[] args) {
         SpringApplication.run(TaxPreferenceApplication.class, args);
+        // 打印 swagger 地址
+        /*Environment environment = context.getBean(Environment.class);
+        log.info("SwaggerUrl: http://localhost:{}/swagger-ui.html", environment.getProperty("server.port"));*/
     }
 }

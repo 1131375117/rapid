@@ -1,6 +1,6 @@
 package cn.huacloud.taxpreference.services.user.entity.dos;
 
-import cn.huacloud.taxpreference.services.user.enums.UserType;
+import cn.huacloud.taxpreference.common.enums.UserType;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -25,12 +25,17 @@ public class UserDO {
     /**
      * 用户名称
      */
-    private String username;
+    private String userAccount;
 
     /**
      * 用户密码
      */
     private String password;
+
+    /**
+     * 用户姓名、昵称
+     */
+    private String username;
 
     /**
      * 用户类型

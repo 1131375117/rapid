@@ -22,4 +22,16 @@ mybatis-plus:
     banner: false
   configuration:
     call-setters-on-nulls: true
+  type-enums-package: cn.huacloud.taxpreference.common.enums
+
+# sa-token
+sa-token:
+  token-name: satoken
+  timeout: 1800
+  activity-timeout: 1800
+  is-share: true
+  token-style: uuid
+  is-log: true
+
+
 

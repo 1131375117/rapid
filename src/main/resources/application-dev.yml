@@ -6,6 +6,11 @@ spring:
     url: "jdbc:mysql://172.16.122.17:33061/tax_preference?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false"
     username: tax_preference
     password: tax_preference
+  # redis
+  redis:
+    host: 172.16.122.17
+    port: 6379
+    password: foobared
 
 # mybatis plus
 mybatis-plus:

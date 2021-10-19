@@ -2,6 +2,7 @@ package cn.huacloud.taxpreference.controllers.user;
 
 import cn.huacloud.taxpreference.services.user.UserService;
 import cn.huacloud.taxpreference.services.user.entity.dos.UserDO;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import java.util.List;
  * 用户接口
  * @author wangkh
  */
+@Api(tags = "用户管理")
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
 @RestController
@@ -37,10 +39,6 @@ public class UserController {
 
     /**
      * 根据ID查询用户详情
-     */
-
-    /**
-     * 查询当前用户信息
      */
 
     /**

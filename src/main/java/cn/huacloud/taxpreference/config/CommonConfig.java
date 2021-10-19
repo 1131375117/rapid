@@ -18,6 +18,7 @@ public class CommonConfig {
      */
     @Bean
     public ObjectMapper objectMapper() {
+        // 反序列化忽略未定义的属性，宽泛前端入参
         return new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 }
