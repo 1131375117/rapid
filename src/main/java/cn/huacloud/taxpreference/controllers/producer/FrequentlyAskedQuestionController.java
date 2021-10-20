@@ -6,10 +6,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 热点问答接口
- * @author wangkh
+ * @author wuxin
  */
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
 @RestController
 public class FrequentlyAskedQuestionController {
+
+    /**
+     * 添加热门问答
+     */
 }
