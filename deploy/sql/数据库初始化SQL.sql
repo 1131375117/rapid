@@ -1,5 +1,5 @@
 -- 创建系统用户并授权
 
-CREATE USER 'tax_preference'@'%' IDENTIFIED BY '12345678Aa';
+CREATE USER 'tax_preference'@'%' IDENTIFIED BY 'tax_preference';
 
-GRANT ALL PRIVILEGES ON `tax-preference`.* TO 'tax_preference'@'%';
+GRANT SELECT, INSERT, UPDATE, DELETE ON `tax\_preference`.* TO 'tax_preference'@'%';

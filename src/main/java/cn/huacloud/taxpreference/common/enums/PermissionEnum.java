@@ -7,6 +7,17 @@ package cn.huacloud.taxpreference.common.enums;
  */
 public enum PermissionEnum {
 
+    // 政策法规
+
+    // 政策解读
+
+    // 税收优惠事项
+
+    // 内容审核列表
+
+    // 用户管理
+
+    // 角色管理
     ;
 
     /**
