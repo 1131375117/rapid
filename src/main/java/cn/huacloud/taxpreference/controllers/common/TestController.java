@@ -1,6 +1,7 @@
 package cn.huacloud.taxpreference.controllers.common;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.huacloud.taxpreference.common.enums.PermissionEnum;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

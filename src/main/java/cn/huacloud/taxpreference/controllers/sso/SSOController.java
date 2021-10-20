@@ -38,11 +38,11 @@ public class SSOController {
         // 根据用户名查找用户
         UserDO userDO = userService.getUserDOByUserAccount(userAccount);
         if (userDO == null) {
-            throw BizCode._4200.exception();
+            throw BizCode._4204.exception();
         }
         // 校验用户密码
         if (!userDO.getPassword().equals(SaSecureUtil.md5(password))) {
-            throw BizCode._4200.exception();
+            throw BizCode._4204.exception();
         }
         // 执行登录
         StpUtil.login(userDO.getId());

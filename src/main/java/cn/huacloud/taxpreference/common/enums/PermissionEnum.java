@@ -9,6 +9,7 @@ public enum PermissionEnum {
 
     // 政策法规
 
+
     // 政策解读
 
     // 税收优惠事项
@@ -18,6 +19,9 @@ public enum PermissionEnum {
     // 用户管理
 
     // 角色管理
+
+    // 测试
+    PERMISSION_TEST("permission_test", "", PermissionGroup.USER_MANAGE)
     ;
 
     /**
@@ -29,8 +33,11 @@ public enum PermissionEnum {
      */
     public final String name;
 
-    PermissionEnum(String code, String name) {
+    public final PermissionGroup permissionGroup;
+
+    PermissionEnum(String code, String name, PermissionGroup permissionGroup) {
         this.code = code;
         this.name = name;
+        this.permissionGroup = permissionGroup;
     }
 }

@@ -23,7 +23,7 @@ public class UserDO {
     private Long id;
 
     /**
-     * 用户名称
+     * 用户账户
      */
     private String userAccount;
 

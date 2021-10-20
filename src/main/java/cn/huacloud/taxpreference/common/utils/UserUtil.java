@@ -11,6 +11,10 @@ public class UserUtil {
     // 登录用户 session 键名
     public static final String LOGIN_USER = "login_user";
 
+    /**
+     * 获取当前登录的用户信息
+     * @return loginUserVO
+     */
     public static LoginUserVO getCurrentUser() {
         return (LoginUserVO) StpUtil.getSession().get(LOGIN_USER);
     }
