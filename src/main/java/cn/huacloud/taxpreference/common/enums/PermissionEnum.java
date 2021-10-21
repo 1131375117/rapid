@@ -9,7 +9,6 @@ public enum PermissionEnum {
 
     // 政策法规
 
-
     // 政策解读
 
     // 税收优惠事项
@@ -23,6 +22,8 @@ public enum PermissionEnum {
     // 测试
     PERMISSION_TEST("permission_test", "", PermissionGroup.USER_MANAGE)
     ;
+
+    public static final String testCode = "test";
 
     /**
      * 权限码值
