@@ -10,6 +10,7 @@ import cn.huacloud.taxpreference.services.producer.entity.dtos.TaxPreferenceDTO;
 import cn.huacloud.taxpreference.services.producer.mapper.SubmitConditionMapper;
 import cn.huacloud.taxpreference.services.producer.mapper.TaxPreferenceMapper;
 import cn.huacloud.taxpreference.services.producer.mapper.TaxPreferencePoliciesMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +26,17 @@ import java.util.List;
  * @create: 2021-10-21 10:36
  **/
 @Slf4j
+@RequiredArgsConstructor
 @Service
 public class TaxPreferenceServiceImpl implements TaxPreferenceService {
-    @Autowired
-    private TaxPreferenceMapper taxPreferenceMapper;
-    @Autowired
-    private TaxPreferencePoliciesMapper taxPreferencePoliciesMapper;
-    @Autowired
-    private SubmitConditionMapper submitConditionMapper;
+
+    private final TaxPreferenceMapper taxPreferenceMapper;
+
+    private final TaxPreferencePoliciesMapper taxPreferencePoliciesMapper;
+
+    private final SubmitConditionMapper submitConditionMapper;
+
+
 
 
     @Override
