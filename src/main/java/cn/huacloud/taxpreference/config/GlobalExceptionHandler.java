@@ -8,8 +8,12 @@ import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.exception.TaxPreferenceException;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * 全局异常处理器
@@ -52,6 +56,21 @@ public class GlobalExceptionHandler {
     public ResultVO<Void> handleTaxPreferenceException(TaxPreferenceException e) {
         log.info("接口调用业务异常", e);
         return new ResultVO<>(e.getCode(), e.getMessage(), null);
+    }
+
+    /**
+     * 捕获参数校验异常
+     * @param e 被捕获异常
+     * @return resultVO
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResultVO<Void> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        // 封装参数校验信息
+        String message = e.getBindingResult().getFieldErrors().stream()
+                .map(fieldError -> fieldError.getField() + " => " + fieldError.getDefaultMessage())
+                .collect(Collectors.joining(";"));
+        log.info("参数校验失败：{}", message);
+        return new ResultVO<>(BizCode._4100.code, message, null);
     }
 
     /**

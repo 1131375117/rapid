@@ -6,10 +6,7 @@ import cn.huacloud.taxpreference.services.producer.entity.dtos.TaxPreferenceDTO;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 优惠政策接口
@@ -50,7 +47,7 @@ public class TaxPreferenceController {
         return resultVO;
     }
     @ApiOperation("税收优惠修改接口")
-    @PostMapping("insertTaxPreference")
+    @PutMapping("insertTaxPreference")
     public ResultVO<Void> updateTaxPreference(@RequestBody TaxPreferenceDTO taxPreferenceDTO) {
         ResultVO<Void> resultVO = taxPreferenceService.updateTaxPreference(taxPreferenceDTO);
         return resultVO;
