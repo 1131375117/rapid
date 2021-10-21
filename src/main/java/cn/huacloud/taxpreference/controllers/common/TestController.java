@@ -1,7 +1,8 @@
 package cn.huacloud.taxpreference.controllers.common;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
-import cn.huacloud.taxpreference.common.enums.PermissionEnum;
+import cn.huacloud.taxpreference.common.annotations.PermissionInfo;
+import cn.huacloud.taxpreference.common.enums.PermissionGroup;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.user.UserService;
 import cn.huacloud.taxpreference.services.user.entity.dos.UserDO;
@@ -29,6 +30,7 @@ public class TestController {
     private UserService userService;
 
     @ApiOperation("接口权限测试")
+    @PermissionInfo(name = "接口权限测试", group = PermissionGroup.USER_MANAGE)
     @SaCheckPermission("permission_test")
     @GetMapping("/test/permissionTest")
     public ResultVO<Void> permissionTest() {

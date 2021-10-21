@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * 单点登录接口
+ *
  * @author wangkh
  */
 @Api(tags = "用户登录")
@@ -27,14 +28,15 @@ public class SSOController {
 
     /**
      * 用户登录接口
+     *
      * @param userAccount 用户名称
-     * @param password 用户密码
+     * @param password    用户密码
      * @return
      */
     @ApiOperation("用户登录接口")
     @PostMapping("/sso/login")
     public ResultVO<LoginUserVO> login(@RequestParam("userAccount") String userAccount,
-                                         @RequestParam("password") String password) {
+                                       @RequestParam("password") String password) {
         // 根据用户名查找用户
         UserDO userDO = userService.getUserDOByUserAccount(userAccount);
         if (userDO == null) {
@@ -66,6 +68,7 @@ public class SSOController {
 
     /**
      * 登出
+     *
      * @return
      */
     @ApiOperation("登出")

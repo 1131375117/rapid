@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.springframework.stereotype.Repository;
 
 /**
- * 用户
+ * 用户数据操作
  * @author wangkh
  */
 @Repository
