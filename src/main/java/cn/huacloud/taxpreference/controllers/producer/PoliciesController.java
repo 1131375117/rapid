@@ -61,7 +61,7 @@ public class PoliciesController {
     public ResultVO insertPolicies(@RequestBody PoliciesDTO policiesDTO){
 
         LoginUserVO currentUser = UserUtil.getCurrentUser();
-        policiesService.insertPolicies(null);
+        policiesService.insertPolicies(policiesDTO);
         //返回结果
         return ResultVO.ok();
     }

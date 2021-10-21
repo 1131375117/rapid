@@ -23,9 +23,9 @@ public interface PoliciesService {
 
     /**
      * 新增政策法规
-     * @param policiesDO
+     * @param policiesDTO
      */
-    public void insertPolicies(PoliciesDO policiesDO);
+    public void insertPolicies(PoliciesDTO policiesDTO);
 
 
     /**

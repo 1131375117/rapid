@@ -2,7 +2,9 @@ package cn.huacloud.taxpreference.services.producer.impl;
 
 import cn.huacloud.taxpreference.services.producer.PoliciesService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesDTO;
 import cn.huacloud.taxpreference.services.producer.mapper.PoliciesMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,10 +35,13 @@ public class PoliciesServiceImpl implements PoliciesService {
     /**
      * 新增政策法规
      *
-     * @param policiesDO
+     * @param policiesDTO
      */
     @Override
-    public void insertPolicies(PoliciesDO policiesDO) {
+    public void insertPolicies(PoliciesDTO policiesDTO) {
+
+        PoliciesDO policiesDO = new PoliciesDO();
+        BeanUtils.copyProperties(policiesDTO,policiesDO);
         //新增政策法规
         policiesMapper.insert(policiesDO);
     }
