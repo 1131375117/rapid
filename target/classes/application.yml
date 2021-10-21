@@ -1,0 +1,37 @@
+server:
+  port: 8080
+# spring
+spring:
+  profiles:
+    active: dev
+  application:
+    name: tax-preference-server
+    # file upload
+  servlet:
+    multipart:
+      max-request-size: 1024MB
+      max-file-size: 1024MB
+
+# swagger
+swagger:
+  base-package: cn.huacloud.taxpreference.controllers
+
+# mybatis plus
+mybatis-plus:
+  global-config:
+    banner: false
+  configuration:
+    call-setters-on-nulls: true
+  type-enums-package: cn.huacloud.taxpreference.common.enums
+
+# sa-token
+sa-token:
+  token-name: satoken
+  timeout: 1800
+  activity-timeout: 1800
+  is-share: true
+  token-style: uuid
+  is-log: true
+
+
+

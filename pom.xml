@@ -26,6 +26,11 @@
     </properties>
 
     <dependencies>
+        <!--validation-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
         <!--sa token-->
         <dependency>
             <groupId>cn.dev33</groupId>
