@@ -13,7 +13,7 @@ import javax.validation.constraints.NotEmpty;
  * @create: 2021-10-22 14:29
  **/
 @Data
-public class QueryTaxPrefrencesDTO extends KeywordPageQueryDTO {
+public class QueryTaxPreferencesDTO extends KeywordPageQueryDTO {
     /**
      * 收入税种种类码值
      */

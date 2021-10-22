@@ -11,7 +11,7 @@ import java.time.LocalDate;
  * @create: 2021-10-22 14:29
  **/
 @Data
-public class QueryTaxPrefrencesVO {
+public class QueryTaxPreferencesVO {
 
     /**
      * 优惠事项名称

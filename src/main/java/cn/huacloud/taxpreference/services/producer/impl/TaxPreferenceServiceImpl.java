@@ -6,10 +6,10 @@ import cn.huacloud.taxpreference.services.producer.TaxPreferenceService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.SubmitConditionDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferenceDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferencePoliciesDO;
-import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryTaxPrefrencesDTO;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryTaxPreferencesDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.SubmitConditionDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.TaxPreferenceDTO;
-import cn.huacloud.taxpreference.services.producer.entity.vos.QueryTaxPrefrencesVO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.QueryTaxPreferencesVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.SubmitConditionVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferencePoliciesVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceVO;
@@ -103,10 +103,10 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     }
 
     @Override
-    public ResultVO<PageVO<QueryTaxPrefrencesVO>> queryTaxPreferenceList(QueryTaxPrefrencesDTO queryTaxPrefrencesDTO) {
-        Page<QueryTaxPrefrencesVO> page = new Page<>(queryTaxPrefrencesDTO.getPageNum(), queryTaxPrefrencesDTO.getPageSize());
-        IPage<QueryTaxPrefrencesVO> iPage = taxPreferenceMapper.queryTaxPreferenceVOList(page, queryTaxPrefrencesDTO);
-        PageVO<QueryTaxPrefrencesVO> pageVO = PageVO.createPageVO(iPage, iPage.getRecords());
+    public ResultVO<PageVO<QueryTaxPreferencesVO>> queryTaxPreferenceList(QueryTaxPreferencesDTO queryTaxPreferencesDTO) {
+        Page<QueryTaxPreferencesVO> page = new Page<>(queryTaxPreferencesDTO.getPageNum(), queryTaxPreferencesDTO.getPageSize());
+        IPage<QueryTaxPreferencesVO> iPage = taxPreferenceMapper.queryTaxPreferenceVOList(page, queryTaxPreferencesDTO);
+        PageVO<QueryTaxPreferencesVO> pageVO = PageVO.createPageVO(iPage, iPage.getRecords());
         return ResultVO.ok(pageVO);
     }
 

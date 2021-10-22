@@ -19,29 +19,29 @@
                 #{updateTime}, #{deleted})
     </insert>
     <select id="queryTaxPreferenceVOList"
-            resultType="cn.huacloud.taxpreference.services.producer.entity.vos.QueryTaxPrefrencesVO">
+            resultType="cn.huacloud.taxpreference.services.producer.entity.vos.QueryTaxPreferencesVO">
         select p.tax_preference_name as taxPreferenceName,p.taxpayer_type_name as taxpayerTypeName,
         p.tax_categories_name as taxCategoriesName,p.enterprise_type_name as enterpriseTypeName,
         p.validity
         from t_tax_preference p
         <where>
-            <if test="queryTaxPrefrencesDTO.taxCategoriesCode != null and queryTaxPrefrencesDTO.taxCategoriesCode != '' ">
-                and p.tax_categories_code= #{queryTaxPrefrencesDTO.taxCategoriesCode}
+            <if test="queryTaxPreferencesDTO.taxCategoriesCode != null and queryTaxPreferencesDTO.taxCategoriesCode != '' ">
+                and p.tax_categories_code= #{queryTaxPreferencesDTO.taxCategoriesCode}
             </if>
-            <if test="queryTaxPrefrencesDTO.taxpayerRegisterTypeCode != null and queryTaxPrefrencesDTO.taxpayerRegisterTypeCode != '' ">
-                and p.taxpayer_register_type_code=#{queryTaxPrefrencesDTO.taxpayerRegisterTypeCode}
+            <if test="queryTaxPreferencesDTO.taxpayerRegisterTypeCode != null and queryTaxPreferencesDTO.taxpayerRegisterTypeCode != '' ">
+                and p.taxpayer_register_type_code=#{queryTaxPreferencesDTO.taxpayerRegisterTypeCode}
             </if>
-            <if test="queryTaxPrefrencesDTO.taxpayerTypeCode != null and queryTaxPrefrencesDTO.taxpayerTypeCode != '' ">
-                and p.taxpayer_type_code=#{queryTaxPrefrencesDTO.taxpayerTypeCode}
+            <if test="queryTaxPreferencesDTO.taxpayerTypeCode != null and queryTaxPreferencesDTO.taxpayerTypeCode != '' ">
+                and p.taxpayer_type_code=#{queryTaxPreferencesDTO.taxpayerTypeCode}
             </if>
-            <if test="queryTaxPrefrencesDTO.industryCode != null and queryTaxPrefrencesDTO.industryCode != '' ">
-                and p.industry_code=#{queryTaxPrefrencesDTO.industryCode}
+            <if test="queryTaxPreferencesDTO.industryCode != null and queryTaxPreferencesDTO.industryCode != '' ">
+                and p.industry_code=#{queryTaxPreferencesDTO.industryCode}
             </if>
-            <if test="queryTaxPrefrencesDTO.enterpriseTypeCode != null and queryTaxPrefrencesDTO.enterpriseTypeCode != '' ">
-                and p.enterprise_type_code=#{queryTaxPrefrencesDTO.enterpriseTypeCode}
+            <if test="queryTaxPreferencesDTO.enterpriseTypeCode != null and queryTaxPreferencesDTO.enterpriseTypeCode != '' ">
+                and p.enterprise_type_code=#{queryTaxPreferencesDTO.enterpriseTypeCode}
             </if>
-            <if test="queryTaxPrefrencesDTO.validity != null and queryTaxPrefrencesDTO.validity != '' ">
-                and p.validity=#{queryTaxPrefrencesDTO.validity}
+            <if test="queryTaxPreferencesDTO.validity != null and queryTaxPreferencesDTO.validity != '' ">
+                and p.validity=#{queryTaxPreferencesDTO.validity}
             </if>
         </where>
     </select>

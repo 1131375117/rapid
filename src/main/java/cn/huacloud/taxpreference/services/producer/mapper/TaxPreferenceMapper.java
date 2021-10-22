@@ -1,8 +1,8 @@
 package cn.huacloud.taxpreference.services.producer.mapper;
 
 import cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferenceDO;
-import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryTaxPrefrencesDTO;
-import cn.huacloud.taxpreference.services.producer.entity.vos.QueryTaxPrefrencesVO;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryTaxPreferencesDTO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.QueryTaxPreferencesVO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -20,5 +20,5 @@ public interface TaxPreferenceMapper  extends BaseMapper<TaxPreferenceDO> {
     int insertTaxPreference(TaxPreferenceDO taxPreferenceDO);
 
 
-    IPage<QueryTaxPrefrencesVO> queryTaxPreferenceVOList(@Param("page") Page<QueryTaxPrefrencesVO> page,@Param("queryTaxPrefrencesDTO") QueryTaxPrefrencesDTO queryTaxPrefrencesDTO);
+    IPage<QueryTaxPreferencesVO> queryTaxPreferenceVOList(@Param("page") Page<QueryTaxPreferencesVO> page,@Param("queryTaxPreferencesDTO") QueryTaxPreferencesDTO queryTaxPreferencesDTO);
 }
