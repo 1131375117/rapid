@@ -3,16 +3,21 @@ package cn.huacloud.taxpreference.services.producer.entity.dos;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
-import java.util.Date;
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * 热点问答实体
+ *
  * @author wuxin
  */
 @Data
-@TableName("t_ frequently_asked_question")
+@TableName("t_frequently_asked_question")
 public class FrequentlyAskedQuestionDO {
     /**
      * 主键ID
@@ -43,15 +48,26 @@ public class FrequentlyAskedQuestionDO {
     /**
      * 发布日期
      */
-    private Date releaseDate;
+    private LocalDate releaseDate;
+
+    /**
+     * 录入人用户id
+     */
+    private Long inputUserId;
 
     /**
      * 创建时间
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
-    private Date updateTime;
+    @JsonIgnoreProperties(value = {"hibernateLazyInitializer"})
+    private LocalDateTime updateTime;
+
+    /**
+     * 逻辑删除
+     */
+    private Integer deleted;
 }

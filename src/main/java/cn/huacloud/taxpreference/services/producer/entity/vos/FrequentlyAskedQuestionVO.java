@@ -1,4 +1,4 @@
-package cn.huacloud.taxpreference.services.producer.entity.dos;
+package cn.huacloud.taxpreference.services.producer.entity.vos;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -7,16 +7,14 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
- * 政策解读实体
+ * 热点问答实体
  * @author wuxin
  */
 @Data
-@TableName("t_policies_explain")
-public class PoliciesExplainDO {
-
+@TableName("t_ frequently_asked_question")
+public class FrequentlyAskedQuestionVO {
     /**
      * 主键ID
      */
@@ -24,14 +22,19 @@ public class PoliciesExplainDO {
     private Long id;
 
     /**
-     * 政策ID
+     * 政策ID集合
      */
-    private Long policiesId;
+    private String policiesIds;
 
     /**
-     * 标题
+     * 问题
      */
-    private String title;
+    private String question;
+
+    /**
+     * 回答
+     */
+    private String answer;
 
     /**
      * 来源
@@ -42,16 +45,6 @@ public class PoliciesExplainDO {
      * 发布日期
      */
     private LocalDate releaseDate;
-
-    /**
-     * 正文
-     */
-    private String content;
-
-    /**
-     * 录入人用户ID
-     */
-    private Long inputUserId;
 
     /**
      * 创建时间

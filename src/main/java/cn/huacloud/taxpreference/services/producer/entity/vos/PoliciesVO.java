@@ -13,7 +13,7 @@ import java.util.Date;
 public class PoliciesVO {
 
     @ApiModelProperty("政策法规ID")
-    private Long Id;
+    private Long id;
     @ApiModelProperty("标题")
     private String title;
     @ApiModelProperty("文号")

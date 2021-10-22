@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -13,6 +15,7 @@ import java.util.Date;
  * @author wangkh
  */
 @Data
+@Accessors(chain = true)
 @TableName("t_user")
 public class UserDO {
 
@@ -55,7 +58,7 @@ public class UserDO {
     /**
      * 创建时间
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 是否已删除
