@@ -8,4 +8,6 @@ package cn.huacloud.taxpreference.services.producer.entity.enums;
 
 public enum KeywordTypeEnum{
 
+    TITLE,DOCCODE;
+
 }
