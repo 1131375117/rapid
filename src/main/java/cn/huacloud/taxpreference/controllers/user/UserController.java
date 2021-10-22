@@ -13,8 +13,11 @@ import cn.huacloud.taxpreference.services.user.entity.vos.UserListVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 用户接口
@@ -48,7 +51,7 @@ public class UserController {
      * 选填字段：身份证号码、邮箱
      */
     @PermissionInfo(name = "新增后台用户", group = PermissionGroup.USER_MANAGE)
-    @SaCheckPermission("producer_user_add")
+    @SaCheckPermission("producer_user_save")
     @ApiOperation("新增后台用户")
     @PostMapping("/producer/user")
     public ResultVO<ProducerUserVO> saveProducerUser(@Validated(ValidationGroup.Create.class) ProducerUserVO producerUserVO) {
@@ -58,18 +61,63 @@ public class UserController {
 
 
     /**
-     * 修改用户信息
+     * 修改后台用户
      */
+    @PermissionInfo(name = "修改后台用户", group = PermissionGroup.USER_MANAGE)
+    @SaCheckPermission("producer_user_update")
+    @ApiOperation("修改后台用户")
+    @PutMapping("/producer/user")
+    public ResultVO<ProducerUserVO> updateProducerUser(@Validated(ValidationGroup.Update.class) ProducerUserVO producerUserVO) {
+        userService.updateProducerUser(producerUserVO);
+        return ResultVO.ok(producerUserVO);
+    }
 
     /**
-     * 根据ID查询用户详情
+     * 根据ID查询后台用户详情
      */
+    @PermissionInfo(name = "根据ID查询后台用户详情", group = PermissionGroup.USER_MANAGE)
+    @SaCheckPermission("producer_user_get")
+    @ApiOperation("根据ID查询后台用户详情")
+    @GetMapping("/producer/user/{userId}")
+    public ResultVO<ProducerUserVO> getProducerUser(@PathVariable("userId") Long userId) {
+        ProducerUserVO producerUserVO = userService.getProducerUserByUserId(userId);
+        return ResultVO.ok(producerUserVO);
+    }
 
     /**
-     * 根据ID禁用\启用用户
+     * 根据ID禁用/启用用户
      */
+    @PermissionInfo(name = "禁用/启用用户", group = PermissionGroup.USER_MANAGE)
+    @SaCheckPermission("producer_user_disable")
+    @ApiOperation(value = "根据ID禁用/启用用户", notes = "返回data数据为是否禁用")
+    @PutMapping("/producer/user/{userId}/disable")
+    public ResultVO<Boolean> switchDisableProducerUser(@PathVariable("userId") Long userId) {
+        Boolean disable = userService.switchDisableProducerUser(userId);
+        return ResultVO.ok(disable);
+    }
 
     /**
      * 根据ID删除用户
      */
+    @PermissionInfo(name = "删除用户", group = PermissionGroup.USER_MANAGE)
+    @SaCheckPermission("producer_user_delete")
+    @ApiOperation("根据ID删除用户")
+    @DeleteMapping("/producer/user/{userId}")
+    public ResultVO<Void> removeProducerUser(@PathVariable("userId") Long userId) {
+        userService.removeProducerUser(userId);
+        return ResultVO.ok();
+    }
+
+    /**
+     * 给指定ID用户赋予角色
+     */
+    @PermissionInfo(name = "给用户赋予角色", group = PermissionGroup.USER_MANAGE)
+    @SaCheckPermission("producer_user_set_role")
+    @ApiOperation("给指定ID用户赋予角色")
+    @PutMapping("/producer/user/{userId}/role")
+    public ResultVO<Void> setRoleToUser(@PathVariable("userId") String userId,
+                                        @RequestParam("roleCodes") List<String> roleCodes) {
+        userService.setRoleToUser(userId, roleCodes);
+        return ResultVO.ok();
+    }
 }

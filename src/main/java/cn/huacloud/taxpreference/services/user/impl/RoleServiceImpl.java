@@ -1,6 +1,7 @@
 package cn.huacloud.taxpreference.services.user.impl;
 
 import cn.huacloud.taxpreference.services.user.RoleService;
+import cn.huacloud.taxpreference.services.user.entity.dos.RoleDO;
 import cn.huacloud.taxpreference.services.user.entity.vos.RoleVO;
 import cn.huacloud.taxpreference.services.user.mapper.RoleMapper;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -35,5 +37,12 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Map<String, RoleVO> getAllRoleVOMap() {
         return getAllRoleVO().stream().collect(Collectors.toMap(RoleVO::getRoleCode, value -> value));
+    }
+
+    @Override
+    public Set<String> getAllRoleCodes() {
+        return roleMapper.selectList(null).stream()
+                .map(RoleDO::getRoleCode)
+                .collect(Collectors.toSet());
     }
 }

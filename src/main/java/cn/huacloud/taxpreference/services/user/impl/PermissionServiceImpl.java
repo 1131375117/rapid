@@ -72,7 +72,7 @@ public class PermissionServiceImpl implements PermissionService, CommandLineRunn
             // 检查是否有重名的权限码值
             String permissionCode = permissionDO.getPermissionCode();
             if (checkSet.contains(permissionCode)) {
-                log.warn("权限码值重复，权限信息：{}", permissionDO.toString());
+                log.error("权限码值重复，权限信息：{}", permissionDO.toString());
                 continue;
             }
             // 添加当前权限码值到 checkSet 中
