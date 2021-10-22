@@ -1,12 +1,13 @@
 package cn.huacloud.taxpreference.controllers.producer;
 
 import cn.huacloud.taxpreference.common.constants.ValidationGroup;
+import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.common.utils.UserUtil;
 import cn.huacloud.taxpreference.services.producer.TaxPreferenceService;
-import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryTaxPrefrencesDTO;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryTaxPreferencesDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.TaxPreferenceDTO;
-import cn.huacloud.taxpreference.services.producer.entity.vos.QueryTaxPrefrencesVO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.QueryTaxPreferencesVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,8 +32,8 @@ public class TaxPreferenceController {
 
     @ApiOperation("税收优惠查询接口")
     @PostMapping("queryTaxPreference")
-    public ResultVO<QueryTaxPrefrencesVO> queryTaxPreference(@RequestBody QueryTaxPrefrencesDTO queryTaxPrefrencesDTO) {
-        return taxPreferenceService.queryTaxPreferenceList(queryTaxPrefrencesDTO);
+    public ResultVO<PageVO<QueryTaxPreferencesVO>> queryTaxPreference(@RequestBody QueryTaxPreferencesDTO queryTaxPreferencesDTO) {
+        return taxPreferenceService.queryTaxPreferenceList(queryTaxPreferencesDTO);
     }
 
     @ApiOperation("税收优惠新增接口")

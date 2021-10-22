@@ -1,8 +1,8 @@
 package cn.huacloud.taxpreference.services.producer.entity.vos;
-import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
 import java.time.LocalDate;
 
 /**
@@ -11,7 +11,7 @@ import java.time.LocalDate;
  * @create: 2021-10-22 14:29
  **/
 @Data
-public class QueryTaxPrefrencesVO extends KeywordPageQueryDTO {
+public class QueryTaxPreferencesVO {
 
     /**
      * 优惠事项名称
@@ -48,6 +48,6 @@ public class QueryTaxPrefrencesVO extends KeywordPageQueryDTO {
 
     @ApiModelProperty("发布时间")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate releaseTime;
+    private LocalDate approvalTime;
 
 }
