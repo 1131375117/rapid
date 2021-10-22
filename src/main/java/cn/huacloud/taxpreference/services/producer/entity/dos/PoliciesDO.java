@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -98,7 +99,7 @@ public class PoliciesDO {
     /**
      * 发布日期
      */
-    private Date releaseDate;
+    private LocalDate releaseDate;
 
     /**
      * 摘要
@@ -118,7 +119,7 @@ public class PoliciesDO {
     /**
      * 政策法规状态
      */
-    private String policiesStatus="a";
+    private String policiesStatus;
 
     /**
      * 废止说明
@@ -133,12 +134,12 @@ public class PoliciesDO {
     /**
      * 创建时间
      */
-    private LocalDate createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
-    private LocalDate updateTime;
+    private LocalDateTime updateTime;
 
     /**
      * 逻辑删除

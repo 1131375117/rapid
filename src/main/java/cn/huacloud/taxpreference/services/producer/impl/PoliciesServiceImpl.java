@@ -1,9 +1,11 @@
 package cn.huacloud.taxpreference.services.producer.impl;
 
-import cn.huacloud.taxpreference.services.PoliciesExplainService;
+import cn.huacloud.taxpreference.services.producer.FrequentlyAskedQuestionService;
+import cn.huacloud.taxpreference.services.producer.PoliciesExplainService;
 import cn.huacloud.taxpreference.services.producer.PoliciesService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
-import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesDTO;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.FrequentlyAskedQuestionDTO;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesListDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesExplainDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesVO;
@@ -16,8 +18,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
+ * 政策法规服务实现类
+ *
  * @author wuxin
  */
 @Transactional(rollbackFor = Exception.class)
@@ -28,19 +33,22 @@ public class PoliciesServiceImpl implements PoliciesService {
 
     private final PoliciesMapper policiesMapper;
 
-
     private final PoliciesExplainService policiesExplainService;
+
+    private final FrequentlyAskedQuestionService frequentlyAskedQuestionService;
+
     /**
      * 政策列表查询
+     *
      * @param queryDTO
      * @return
      */
     @Override
     public IPage<PoliciesDO> getPolices(QueryDTO queryDTO) {
-        IPage<PoliciesDO> policiesDOPage = policiesMapper.selectPage(new Page<>(queryDTO.getPageNum(), queryDTO.getPageSize()), null);
+        IPage<PoliciesDO> policiesDoPage = policiesMapper.selectPage(new Page<>(queryDTO.getPageNum(), queryDTO.getPageSize()), null);
         PoliciesVO policiesVO = new PoliciesVO();
-        BeanUtils.copyProperties(policiesDOPage,policiesVO);
-        return policiesDOPage;
+        BeanUtils.copyProperties(policiesDoPage, policiesVO);
+        return policiesDoPage;
     }
 
     /**
@@ -50,23 +58,26 @@ public class PoliciesServiceImpl implements PoliciesService {
      * @param id
      */
     @Override
-    public void insertPolicies(PoliciesDTO policiesDTO, Long id) {
+    public void insertPolicies(PoliciesListDTO policiesDTO, Long id) {
         //新增政策法规
         PoliciesDO policiesDO = new PoliciesDO();
-        Long inputUserId = policiesDO.getInputUserId();
-        BeanUtils.copyProperties(policiesDTO,policiesDO);
+        BeanUtils.copyProperties(policiesDTO, policiesDO);
         policiesDO.setInputUserId(id);
-        policiesDO.setCreateTime(LocalDate.now());
-        policiesDO.setUpdateTime(LocalDate.now());
+        policiesDO.setPoliciesStatus("");
+        policiesDO.setReleaseDate(LocalDate.now());
+        policiesDO.setCreateTime(LocalDateTime.now());
+        policiesDO.setUpdateTime(LocalDateTime.now());
         policiesDO.setDeleted(0);
         policiesMapper.insert(policiesDO);
         //新增政策解读
         PoliciesExplainDTO policiesExplainDTO = new PoliciesExplainDTO();
-        BeanUtils.copyProperties(policiesDTO,policiesExplainDTO);
+        BeanUtils.copyProperties(policiesDTO, policiesExplainDTO);
         policiesExplainDTO.setPoliciesId(policiesDO.getId());
-        policiesExplainService.insertPoliciesExplain(policiesExplainDTO,inputUserId);
+        policiesExplainService.insertPoliciesExplain(policiesExplainDTO, id);
         //新增热点问答
-
+        FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO = new FrequentlyAskedQuestionDTO();
+        BeanUtils.copyProperties(policiesDTO, frequentlyAskedQuestionDTO);
+        frequentlyAskedQuestionService.insertFrequentlyAskedQuestion(frequentlyAskedQuestionDTO, id);
     }
 
     /**
@@ -79,7 +90,7 @@ public class PoliciesServiceImpl implements PoliciesService {
     public PoliciesVO getPoliciesById(Long id) {
         PoliciesDO policiesDO = policiesMapper.selectById(id);
         PoliciesVO policiesVO = new PoliciesVO();
-        BeanUtils.copyProperties(policiesDO,policiesVO);
+        BeanUtils.copyProperties(policiesDO, policiesVO);
         return policiesVO;
     }
 
@@ -89,9 +100,9 @@ public class PoliciesServiceImpl implements PoliciesService {
      * @param policiesDTO
      */
     @Override
-    public void updatePolicies(PoliciesDTO policiesDTO) {
+    public void updatePolicies(PoliciesListDTO policiesDTO) {
         PoliciesDO policiesDO = new PoliciesDO();
-        BeanUtils.copyProperties(policiesDTO,policiesDO);
+        BeanUtils.copyProperties(policiesDTO, policiesDO);
         //修改政策法规
         policiesMapper.updateById(policiesDO);
     }

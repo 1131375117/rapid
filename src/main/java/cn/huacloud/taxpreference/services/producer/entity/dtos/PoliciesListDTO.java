@@ -1,24 +1,20 @@
 package cn.huacloud.taxpreference.services.producer.entity.dtos;
 
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.annotations.ApiOperation;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
- *
+ * 政策法规数据传输对象
  * @author wuxin
  */
 @Data
 @ApiModel
-public class PoliciesDTO {
+public class PoliciesListDTO {
 
     @ApiModelProperty("id")
     private Long id;
@@ -73,5 +69,16 @@ public class PoliciesDTO {
 
     @ApiModelProperty("正文")
     private String content;
+
+    @ApiModelProperty("政策法规id")
+    private Long policiesId;
+
+    @ApiModelProperty("问题")
+    private String question;
+
+    @ApiModelProperty("回答")
+    private String answer;
+
+
 
 }

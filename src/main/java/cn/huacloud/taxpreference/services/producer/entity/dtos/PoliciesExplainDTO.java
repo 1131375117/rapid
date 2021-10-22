@@ -1,18 +1,19 @@
 package cn.huacloud.taxpreference.services.producer.entity.dtos;
 
-import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.annotations.ApiOperation;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
- * 政策解读实体
+ * 政策解读数据传输对象
+ *
  * @author wuxin
  */
 @Data
-@TableName("t_policies_explain")
+@ApiModel
 public class PoliciesExplainDTO {
 
     @ApiModelProperty("id")
