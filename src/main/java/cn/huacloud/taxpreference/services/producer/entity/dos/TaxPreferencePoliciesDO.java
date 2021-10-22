@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
+import java.time.LocalDate;
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -36,14 +38,14 @@ public class TaxPreferencePoliciesDO {
     /**
      * 有效期起
      */
-    @JsonFormat(pattern = "yyyy-MM-dd",timezone="Asia/Shanghai")
-    private Date validityBeginDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate validityBeginDate;
 
     /**
      * 有效期至
      */
-    @JsonFormat(pattern = "yyyy-MM-dd",timezone="Asia/Shanghai")
-    private Date validityEndDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate validityEndDate;
 
     /**
      * 排序字段
