@@ -14,9 +14,4 @@ public class UserServiceTest extends BaseApplicationTest {
     @Autowired
     UserService userService;
 
-    @Test
-    public void userList() {
-        List<UserDO> userDOS = userService.userList();
-        Assert.assertFalse(userDOS.isEmpty());
-    }
 }

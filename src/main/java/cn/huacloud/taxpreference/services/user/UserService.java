@@ -1,7 +1,11 @@
 package cn.huacloud.taxpreference.services.user;
 
+import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.services.user.entity.dos.UserDO;
+import cn.huacloud.taxpreference.services.user.entity.dtos.UserQueryDTO;
 import cn.huacloud.taxpreference.services.user.entity.vos.LoginUserVO;
+import cn.huacloud.taxpreference.services.user.entity.vos.ProducerUserVO;
+import cn.huacloud.taxpreference.services.user.entity.vos.UserListVO;
 
 import java.util.List;
 
@@ -26,9 +30,15 @@ public interface UserService {
     LoginUserVO getLoginUserVOById(Long userId);
 
     /**
-     * 测试用方法
-     * @return
+     * 查询用户列表
+     * @param userQueryDTO 用户信息查询类
+     * @return 用户分页数据
      */
-    List<UserDO> userList();
+    PageVO<UserListVO> producerUserPageQuery(UserQueryDTO userQueryDTO);
 
+    /**
+     * 新增后台用户
+     * @param producerUserVO
+     */
+    void saveProducerUser(ProducerUserVO producerUserVO);
 }

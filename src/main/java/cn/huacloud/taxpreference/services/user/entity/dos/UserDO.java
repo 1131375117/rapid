@@ -48,7 +48,17 @@ public class UserDO {
     private String roleCodes;
 
     /**
+     * 是否已禁用
+     */
+    private Boolean disable;
+
+    /**
      * 创建时间
      */
     private Date createTime;
+
+    /**
+     * 是否已删除
+     */
+    private Boolean deleted;
 }

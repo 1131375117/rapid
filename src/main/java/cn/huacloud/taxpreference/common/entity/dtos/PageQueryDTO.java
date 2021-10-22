@@ -1,5 +1,7 @@
 package cn.huacloud.taxpreference.common.entity.dtos;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -27,5 +29,13 @@ public class PageQueryDTO {
         if (pageSize == null || pageSize < 1) {
             pageSize = 10;
         }
+    }
+
+    /**
+     * 创建 mybatis plus 分页查询对象
+     * @return 分页查询对象
+     */
+    public <T> IPage<T> createQueryPage() {
+        return new Page<>(pageNum, pageSize);
     }
 }
