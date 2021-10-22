@@ -66,7 +66,7 @@ public class UserController {
     @PermissionInfo(name = "修改后台用户", group = PermissionGroup.USER_MANAGE)
     @SaCheckPermission("producer_user_update")
     @ApiOperation("修改后台用户")
-    @PostMapping("/producer/user")
+    @PutMapping("/producer/user")
     public ResultVO<ProducerUserVO> updateProducerUser(@Validated(ValidationGroup.Update.class) ProducerUserVO producerUserVO) {
         userService.updateProducerUser(producerUserVO);
         return ResultVO.ok(producerUserVO);
@@ -111,8 +111,8 @@ public class UserController {
     /**
      * 给指定ID用户赋予角色
      */
-    @PermissionInfo(name = "给用户赋予权限", group = PermissionGroup.USER_MANAGE)
-    @SaCheckPermission("producer_user_delete")
+    @PermissionInfo(name = "给用户赋予角色", group = PermissionGroup.USER_MANAGE)
+    @SaCheckPermission("producer_user_set_role")
     @ApiOperation("给指定ID用户赋予角色")
     @PutMapping("/producer/user/{userId}/role")
     public ResultVO<Void> setRoleToUser(@PathVariable("userId") String userId,
