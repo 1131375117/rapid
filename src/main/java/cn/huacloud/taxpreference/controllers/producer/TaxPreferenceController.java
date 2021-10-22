@@ -1,6 +1,7 @@
 package cn.huacloud.taxpreference.controllers.producer;
 
 import cn.huacloud.taxpreference.common.constants.ValidationGroup;
+import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.common.utils.UserUtil;
 import cn.huacloud.taxpreference.services.producer.TaxPreferenceService;
@@ -31,7 +32,7 @@ public class TaxPreferenceController {
 
     @ApiOperation("税收优惠查询接口")
     @PostMapping("queryTaxPreference")
-    public ResultVO<QueryTaxPrefrencesVO> queryTaxPreference(@RequestBody QueryTaxPrefrencesDTO queryTaxPrefrencesDTO) {
+    public ResultVO<PageVO<QueryTaxPrefrencesVO>> queryTaxPreference(@RequestBody QueryTaxPrefrencesDTO queryTaxPrefrencesDTO) {
         return taxPreferenceService.queryTaxPreferenceList(queryTaxPrefrencesDTO);
     }
 

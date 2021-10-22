@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.producer;
 
+import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryTaxPrefrencesDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.TaxPreferenceDTO;
@@ -38,5 +39,5 @@ public interface TaxPreferenceService {
      * @param queryTaxPrefrencesDTO
      * @return queryTaxPrefrencesVO
      */
-    ResultVO<QueryTaxPrefrencesVO> queryTaxPreferenceList(QueryTaxPrefrencesDTO queryTaxPrefrencesDTO);
+    ResultVO<PageVO<QueryTaxPrefrencesVO>> queryTaxPreferenceList(QueryTaxPrefrencesDTO queryTaxPrefrencesDTO);
 }

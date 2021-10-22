@@ -2,12 +2,10 @@ package cn.huacloud.taxpreference.services.producer.entity.dtos;
 
 import cn.huacloud.taxpreference.common.constants.ValidationGroup;
 import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
-import java.time.LocalDate;
 
 /**
  * @description: 税收优惠列表DTO
@@ -62,22 +60,9 @@ public class QueryTaxPrefrencesDTO extends KeywordPageQueryDTO {
     /**
      * 创建人用户id
      */
-    @ApiModelProperty("有效性")
-    private String inputUserId;
+    @ApiModelProperty("创建人用户id")
+    private Long inputUserId;
 
-    /**
-     * 开始时间
-     */
-    @ApiModelProperty("开始时间")
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate startTime;
-
-    /**
-     * 结束时间
-     */
-    @ApiModelProperty("结束时间")
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate endTime;
 
     /**
      * 排序
@@ -86,9 +71,15 @@ public class QueryTaxPrefrencesDTO extends KeywordPageQueryDTO {
     private Integer sort;
 
     /**
-     * 查询类型
+     * 开始时间
      */
-    @ApiModelProperty("查询类型")
-    private Integer queryType;
+    @ApiModelProperty("开始时间")
+    private Integer startTime;
+    /**
+     * 截止时间
+     */
+    @ApiModelProperty("截止时间")
+    private Integer endTime;
+
 
 }
