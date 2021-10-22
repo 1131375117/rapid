@@ -1,6 +1,7 @@
 package cn.huacloud.taxpreference.sample;
 
 import cn.dev33.satoken.secure.SaSecureUtil;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
@@ -12,6 +13,13 @@ import java.lang.reflect.Method;
  */
 @Slf4j
 public class SampleTest {
+
+    @Test
+    public void testIdWorker() {
+        for (int i = 0; i < 100; i++) {
+            log.info(IdWorker.get32UUID());
+        }
+    }
 
     @Test
     public void testReflectMethod() {
