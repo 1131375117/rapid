@@ -1,9 +1,10 @@
 package cn.huacloud.taxpreference.services.producer;
 
 import cn.huacloud.taxpreference.common.utils.ResultVO;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryTaxPrefrencesDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.TaxPreferenceDTO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.QueryTaxPrefrencesVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceVO;
-import org.springframework.stereotype.Service;
 
 
 /**
@@ -31,4 +32,11 @@ public interface TaxPreferenceService {
      * @return taxPreferenceVO
      */
     ResultVO<TaxPreferenceVO> queryTaxPreferenceInfo(Long id);
+
+    /**
+     *修改税收优惠查询基本信息接口
+     * @param queryTaxPrefrencesDTO
+     * @return queryTaxPrefrencesVO
+     */
+    ResultVO<QueryTaxPrefrencesVO> queryTaxPreferenceList(QueryTaxPrefrencesDTO queryTaxPrefrencesDTO);
 }

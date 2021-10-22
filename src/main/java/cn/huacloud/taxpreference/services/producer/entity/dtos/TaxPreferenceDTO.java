@@ -24,6 +24,8 @@ public class TaxPreferenceDTO {
     @Min(value = 1,message = "id必须为数字",groups = ValidationGroup.Update.class)
     private Long id;
 
+    private Long inputUserId;
+
     /**
      * 收入税种种类名称
      */

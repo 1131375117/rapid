@@ -2,12 +2,13 @@ package cn.huacloud.taxpreference.services.producer.impl;
 
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.producer.TaxPreferenceService;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryTaxPrefrencesDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.SubmitConditionDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferenceDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferencePoliciesDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.SubmitConditionDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.TaxPreferenceDTO;
-import cn.huacloud.taxpreference.services.producer.entity.dtos.TaxPreferencePoliciesDTO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.QueryTaxPrefrencesVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.SubmitConditionVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferencePoliciesVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceVO;
@@ -17,13 +18,14 @@ import cn.huacloud.taxpreference.services.producer.mapper.TaxPreferencePoliciesM
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @description: 优惠政策服务实现类
@@ -97,9 +99,14 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         return ResultVO.ok(taxPreferenceVO);
     }
 
+    @Override
+    public ResultVO<QueryTaxPrefrencesVO> queryTaxPreferenceList(QueryTaxPrefrencesDTO queryTaxPrefrencesDTO) {
+
+        return null;
+    }
+
     /**
      * 获取申报信息
-     * @param submitConditionDOS
      * @return submitConditionVO
      */
     private List<SubmitConditionVO> getSubmitConditionVOS(List<SubmitConditionDO> submitConditionDOS) {
@@ -116,7 +123,6 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
 
     /**
      * 获取政策法规信息
-     * @param columnMap
      * @return taxPreferencePoliciesVO
      */
     private List<TaxPreferencePoliciesVO> getTaxPreferencePoliciesVOS(Map<String, Object> columnMap) {
@@ -134,7 +140,6 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
 
     /**
      * 修改税收优惠申报条件
-     * @param taxPreferenceDTO
      */
     private void updateSubmitConditionByTaxPreferenceId(TaxPreferenceDTO taxPreferenceDTO) {
         //采取先删除后添加的方式
@@ -156,9 +161,9 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
      */
     public void insertSubmitConditionDOs(TaxPreferenceDTO taxPreferenceDTO, TaxPreferenceDO taxPreferenceDO) {
         List<SubmitConditionDTO> submitConditionDTOList = taxPreferenceDTO.getSubmitConditionDTOList();
-        for (int i = 0; i < submitConditionDTOList.size(); i++) {
+        for (SubmitConditionDTO submitConditionDTO : submitConditionDTOList) {
             SubmitConditionDO submitConditionDO = new SubmitConditionDO();
-            BeanUtils.copyProperties(submitConditionDTOList.get(i), submitConditionDO);
+            BeanUtils.copyProperties(submitConditionDTO, submitConditionDO);
             submitConditionDO.setTaxPreferenceId(taxPreferenceDO.getId());
             submitConditionMapper.insert(submitConditionDO);
         }
