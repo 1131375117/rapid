@@ -2,8 +2,9 @@ package cn.huacloud.taxpreference.services.producer;
 
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesDTO;
-
-import java.util.List;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryDTO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesVO;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 
 /**
  * 政策服务
@@ -14,18 +15,17 @@ public interface PoliciesService {
 
     /**
      * 政策列表查询
-     * @param policiesDO
-     * @param page
-     * @param size
+     * @param queryDTO
      * @return
      */
-    public List<PoliciesDO> getPolices(PoliciesDO policiesDO, Integer page, Integer size);
+    public IPage<PoliciesDO> getPolices(QueryDTO queryDTO);
 
     /**
      * 新增政策法规
      * @param policiesDTO
+     * @param id
      */
-    public void insertPolicies(PoliciesDTO policiesDTO);
+    public void insertPolicies(PoliciesDTO policiesDTO, Long id);
 
 
     /**
@@ -33,12 +33,12 @@ public interface PoliciesService {
      * @param id
      * @return
      */
-    public PoliciesDO getPoliciesById(Long id);
+    public PoliciesVO getPoliciesById(Long id);
 
 
     /**
      * 修改政策法规
-     * @param policiesDO
+     * @param policiesDTO
      */
-    public void updatePolicies(PoliciesDO policiesDO);
+    public void updatePolicies(PoliciesDTO policiesDTO);
 }

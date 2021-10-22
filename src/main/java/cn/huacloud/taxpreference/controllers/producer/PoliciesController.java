@@ -5,15 +5,14 @@ import cn.huacloud.taxpreference.common.utils.UserUtil;
 import cn.huacloud.taxpreference.services.producer.PoliciesService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesDTO;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesVO;
 import cn.huacloud.taxpreference.services.user.entity.vos.LoginUserVO;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * 政策法规接口
@@ -35,15 +34,11 @@ public class PoliciesController {
      * 根据发布时间和更新时间排序
      */
     @ApiOperation(value = "政策法规列表查询")
-    @PostMapping(value = "/getPolicies/")
-    public ResultVO<PoliciesVO> getPolices(@RequestBody PoliciesDO policiesDO,
-                                           @PathVariable("page") Integer page,
-                                           @PathVariable("size") Integer size){
-        List<PoliciesDO> policesDO = policiesService.getPolices(policiesDO, page, size);
-        PoliciesVO policiesVO = new PoliciesVO();
-        BeanUtils.copyProperties(policesDO,policiesVO);
+    @PostMapping(value = "/Policies")
+    public ResultVO<IPage<PoliciesDO>> getPolices(@RequestBody QueryDTO queryDTO){
+        IPage<PoliciesDO> polices = policiesService.getPolices(queryDTO);
         //返回结果
-        return ResultVO.ok(policiesVO);
+        return ResultVO.ok(polices);
 
     }
 
@@ -58,38 +53,37 @@ public class PoliciesController {
      */
     @ApiOperation(value = "新增政策法规")
     @PostMapping(value = "/insertPolicies")
-    public ResultVO insertPolicies(@RequestBody PoliciesDTO policiesDTO){
+    public ResultVO<Void> insertPolicies(@RequestBody PoliciesDTO policiesDTO){
 
-        LoginUserVO currentUser = UserUtil.getCurrentUser();
-        policiesService.insertPolicies(policiesDTO);
+
+        policiesService.insertPolicies(policiesDTO,UserUtil.getCurrentUser().getId());
         //返回结果
         return ResultVO.ok();
     }
 
-
     /**
      * 根据id获取政策法规详情
      * 政策法规id
+     * @return
      */
     @ApiOperation(value = "根据id获取政策法规详情")
     @GetMapping(value = "/getPoliciesById/{id}")
-    public ResultVO<PoliciesDO> getPoliciesById(@PathVariable("id") Long id){
-
-        PoliciesDO policiesDO = policiesService.getPoliciesById(id);
+    public ResultVO<PoliciesVO> getPoliciesById(@PathVariable("id") Long id){
+        PoliciesVO policiesVO = policiesService.getPoliciesById(id);
         //返回结果
-        return ResultVO.ok(policiesDO);
+        return ResultVO.ok(policiesVO);
     }
-
 
     /**
      * 修改政策法规
      * 政策法规id
      */
     @ApiOperation(value = "修改政策法规")
-    @PostMapping(value = "/updatePolicies")
-    public ResultVO<Void> updatePolicies(@RequestBody PoliciesDO policiesDO){
+    @PostMapping(value = "/Policies-")
+    public ResultVO<Void> updatePolicies(@RequestBody PoliciesDTO policiesDTO){
 
-        policiesService.updatePolicies(policiesDO);
+        policiesService.updatePolicies(policiesDTO);
+        //返回结果
         return ResultVO.ok();
     }
 

@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -117,7 +118,7 @@ public class PoliciesDO {
     /**
      * 政策法规状态
      */
-    private String policiesStatus;
+    private String policiesStatus="a";
 
     /**
      * 废止说明
@@ -125,14 +126,19 @@ public class PoliciesDO {
     private String abolishNote;
 
     /**
+     * 录入人用户ID
+     */
+    private Long inputUserId;
+
+    /**
      * 创建时间
      */
-    private Date createTime;
+    private LocalDate createTime;
 
     /**
      * 更新时间
      */
-    private Date updateTime;
+    private LocalDate updateTime;
 
     /**
      * 逻辑删除
