@@ -38,7 +38,40 @@ public interface UserService {
 
     /**
      * 新增后台用户
-     * @param producerUserVO
+     * @param producerUserVO 后台用户信息视图
      */
     void saveProducerUser(ProducerUserVO producerUserVO);
+
+    /**
+     * 修改后台用户
+     * @param producerUserVO 后台用户信息视图
+     */
+    void updateProducerUser(ProducerUserVO producerUserVO);
+
+    /**
+     * 根据ID查询后台用户详情
+     * @param userId 用户ID
+     * @return 后台用户信息视图
+     */
+    ProducerUserVO getProducerUserByUserId(Long userId);
+
+    /**
+     * 根据ID禁用/启用用户
+     * @param userId 用户ID
+     * @return 是否被禁用
+     */
+    Boolean switchDisableProducerUser(Long userId);
+
+    /**
+     * 删除后台用户
+     * @param userId 用户ID
+     */
+    void removeProducerUser(Long userId);
+
+    /**
+     * 给指定ID用户赋予角色
+     * @param userId 用户ID
+     * @param roleCodes 角色码值
+     */
+    void setRoleToUser(String userId, List<String> roleCodes);
 }
