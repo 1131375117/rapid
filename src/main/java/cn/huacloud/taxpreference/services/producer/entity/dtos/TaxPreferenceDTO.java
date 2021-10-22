@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * @description: 税收优惠dto对象
@@ -142,15 +144,10 @@ public class TaxPreferenceDTO {
     private Date validityEndDate;
 
     /**
-     * 条件名称-申报
+     * 申报信息
      */
-    @ApiModelProperty("条件名称")
-    private String conditionName;
+    @ApiModelProperty("申报信息")
+    private List<SubmitConditionDTO> submitConditionDTOList;
 
-    /**
-     * 具体要求-申报
-     */
-    @ApiModelProperty("具体要求")
-    private String requirement;
 
 }

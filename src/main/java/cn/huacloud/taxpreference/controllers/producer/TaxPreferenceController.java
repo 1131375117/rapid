@@ -41,13 +41,14 @@ public class TaxPreferenceController {
      * 修改条件:税收优惠事项id
      */
     @ApiOperation("税收优惠新增接口")
-    @PostMapping("insertTaxPreference")
+    @PostMapping("taxPreference")
     public ResultVO<Void> insertTaxPreference(@RequestBody TaxPreferenceDTO taxPreferenceDTO) {
         ResultVO<Void> resultVO = taxPreferenceService.insertTaxPreference(taxPreferenceDTO);
         return resultVO;
     }
+
     @ApiOperation("税收优惠修改接口")
-    @PutMapping("insertTaxPreference")
+    @PutMapping("taxPreference")
     public ResultVO<Void> updateTaxPreference(@RequestBody TaxPreferenceDTO taxPreferenceDTO) {
         ResultVO<Void> resultVO = taxPreferenceService.updateTaxPreference(taxPreferenceDTO);
         return resultVO;
