@@ -18,3 +18,7 @@ mybatis-plus:
     # print SQL
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
+
+tax-preference:
+  encrypt:
+    key: "6b32c10d8ed53774"

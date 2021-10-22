@@ -20,7 +20,8 @@ public interface UserMapper extends BaseMapper<UserDO> {
      */
     default UserDO getUserDOByAccount(String userAccount) {
         LambdaQueryWrapper<UserDO> queryWrapper = Wrappers.lambdaQuery(UserDO.class)
-                .eq(UserDO::getUserAccount, userAccount);
+                .eq(UserDO::getUserAccount, userAccount)
+                .eq(UserDO::getDisable, false);
         return selectOne(queryWrapper);
     }
 }
