@@ -12,11 +12,14 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * 测试用接口
@@ -31,6 +34,7 @@ public class TestController {
 
     private final UserService userService;
 
+    @Autowired
     private final ObjectMapper objectMapper;
 
     @ApiOperation("接口权限测试")
@@ -79,5 +83,9 @@ public class TestController {
         private String name;
         @Min(value = 1, message = "年龄不能小于1", groups = ValidationGroup.Update.class)
         private Integer age;
+
+        private LocalDate birthday;
+
+        private LocalDateTime createTime;
     }
 }
