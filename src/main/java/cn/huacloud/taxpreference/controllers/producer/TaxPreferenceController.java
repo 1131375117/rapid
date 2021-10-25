@@ -22,7 +22,7 @@ import javax.validation.constraints.NotEmpty;
  *
  * @author fuhua
  */
-@Api("税收优惠")
+@Api(tags = "税收优惠")
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
 @RestController
@@ -45,7 +45,7 @@ public class TaxPreferenceController {
 
     @ApiOperation("税收优惠修改接口")
     @PutMapping("taxPreference")
-    public ResultVO<Void> updateTaxPreference(@RequestBody TaxPreferenceDTO taxPreferenceDTO) {
+    public ResultVO<Void> updateTaxPreference(@Validated(ValidationGroup.Update.class)@RequestBody TaxPreferenceDTO taxPreferenceDTO) {
         return taxPreferenceService.updateTaxPreference(taxPreferenceDTO);
     }
 
