@@ -1,9 +1,14 @@
 package cn.huacloud.taxpreference.controllers.producer;
 
+import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.common.utils.UserUtil;
 import cn.huacloud.taxpreference.services.producer.PoliciesExplainService;
+import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesExplainDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesExplainDTO;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesExplainDTO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainDetailVO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +33,13 @@ public class PoliciesExplainController {
      * 根据发布时间和更新时间排序
      * 分页
      */
+    @ApiOperation("政策解读列表页面")
+    @GetMapping(value = "/policiesExplainList")
+    public ResultVO<PageVO<PoliciesExplainDO>> getPoliciesExplainList(@RequestBody QueryPoliciesExplainDTO queryPoliciesExplainDTO){
+
+        PageVO<PoliciesExplainDO> pageVO=policiesExplainService.getPoliciesExplainList(queryPoliciesExplainDTO);
+        return ResultVO.ok(pageVO);
+    }
 
     /**
      * 新增政策解读接口
@@ -50,6 +62,12 @@ public class PoliciesExplainController {
      * 根据ID获取政策解读详情
      * 政策解读id
      */
+    @GetMapping(value = "/PoliciesById/{id}")
+    public ResultVO<PoliciesExplainDetailVO> getPoliciesById(@PathVariable("id") Long id){
+        PoliciesExplainDetailVO policiesExplainDetailVO =policiesExplainService.getPoliciesById(id);
+        return ResultVO.ok(policiesExplainDetailVO);
+
+    }
 
     /**
      * 修改政策解读

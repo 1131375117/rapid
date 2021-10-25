@@ -49,7 +49,7 @@ public class FrequentlyAskedQuestionDO {
     /**
      * 发布日期
      */
-    private Date releaseDate;
+    private LocalDate releaseDate;
 
     /**
      * 录入人用户id

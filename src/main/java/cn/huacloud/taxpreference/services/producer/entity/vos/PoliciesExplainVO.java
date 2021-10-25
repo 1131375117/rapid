@@ -1,20 +1,19 @@
-package cn.huacloud.taxpreference.services.producer.entity.dtos;
+package cn.huacloud.taxpreference.services.producer.entity.vos;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 /**
- * 政策解读数据传输对象
+ * 政策解读VO
  *
  * @author wuxin
  */
 @Data
 @ApiModel
-public class PoliciesExplainDTO {
+public class PoliciesExplainVO {
 
     @ApiModelProperty("id")
     private Long id;
@@ -28,9 +27,4 @@ public class PoliciesExplainDTO {
     @ApiModelProperty("发布日期")
     private LocalDate releaseDate;
 
-    @ApiModelProperty("正文")
-    private String content;
-
-    @ApiModelProperty("政策法规id")
-    private Long policiesId;
 }

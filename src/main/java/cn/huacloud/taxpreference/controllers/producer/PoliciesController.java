@@ -1,13 +1,14 @@
 package cn.huacloud.taxpreference.controllers.producer;
 
+import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.common.utils.UserUtil;
 import cn.huacloud.taxpreference.services.producer.PoliciesService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesListDTO;
-import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryDTO;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesDTO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesDetailVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesVO;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -35,10 +36,10 @@ public class PoliciesController {
      */
     @ApiOperation(value = "政策法规列表查询")
     @PostMapping(value = "/Policies")
-    public ResultVO<IPage<PoliciesDO>> getPolices(@RequestBody QueryDTO queryDTO) {
-        IPage<PoliciesDO> polices = policiesService.getPolices(queryDTO);
+    public ResultVO<PageVO<PoliciesVO>> getPolices(@RequestBody QueryPoliciesDTO queryDTO) {
+        PageVO<PoliciesVO> policesList = policiesService.getPolicesList(queryDTO);
         //返回结果
-        return ResultVO.ok(polices);
+        return ResultVO.ok(policesList);
 
     }
 
@@ -59,8 +60,6 @@ public class PoliciesController {
     @ApiOperation(value = "政策法规新增")
     @PostMapping(value = "/insertPolicies")
     public ResultVO<Void> insertPolicies(@RequestBody PoliciesListDTO policiesListDTO) {
-
-
         policiesService.insertPolicies(policiesListDTO, UserUtil.getCurrentUser().getId());
         //返回结果
         return ResultVO.ok();
@@ -74,10 +73,10 @@ public class PoliciesController {
      */
     @ApiOperation(value = "根据id获取政策法规详情")
     @GetMapping(value = "/getPoliciesById/{id}")
-    public ResultVO<PoliciesVO> getPoliciesById(@PathVariable("id") Long id) {
-        PoliciesVO policiesVO = policiesService.getPoliciesById(id);
+    public ResultVO<PoliciesDetailVO> getPoliciesById(@PathVariable("id") Long id) {
+        PoliciesDetailVO policiesDetailVO = policiesService.getPoliciesById(id);
         //返回结果
-        return ResultVO.ok(policiesVO);
+        return ResultVO.ok(policiesDetailVO);
     }
 
     /**
@@ -85,7 +84,7 @@ public class PoliciesController {
      * 政策法规id
      */
     @ApiOperation(value = "政策法规修改")
-    @PostMapping(value = "/Policies-")
+    @PutMapping(value = "/Policies-")
     public ResultVO<Void> updatePolicies(@RequestBody PoliciesListDTO policiesListDTO) {
 
         policiesService.updatePolicies(policiesListDTO);
@@ -103,4 +102,9 @@ public class PoliciesController {
      * 删除政策法规
      * 政策法规id
      */
+    @DeleteMapping(value = "policies--")
+    public ResultVO<Void> deletePoliciesById(@PathVariable("id") Long id){
+        policiesService.deletePoliciesById(id);
+        return ResultVO.ok();
+    }
 }

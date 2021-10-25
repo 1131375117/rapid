@@ -6,7 +6,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 /**
  * 政策法规数据传输对象
@@ -62,7 +61,7 @@ public class PoliciesListDTO {
     private String validity;
 
     @ApiModelProperty("发布日期")
-    private Date releaseDate;
+    private LocalDate releaseDate;
 
     @ApiModelProperty("摘要")
     private String digest;
@@ -78,6 +77,9 @@ public class PoliciesListDTO {
 
     @ApiModelProperty("回答")
     private String answer;
+
+    @ApiModelProperty("政策法规状态")
+    private String policiesStatus;
 
 
 

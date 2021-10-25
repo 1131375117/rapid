@@ -37,5 +37,6 @@ public class FrequentlyAskedQuestionDTO {
     private String docSource;
 
     @ApiModelProperty("发布日期")
-    private Date releaseDate;
+    private LocalDate releaseDate;
+
 }

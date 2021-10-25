@@ -11,12 +11,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
- * 热点问答VO
+ * 政策解读详情VO
  * @author wuxin
  */
 @Data
 @ApiModel
-public class FrequentlyAskedQuestionVO {
+public class PoliciesExplainDetailVO {
+
     /**
      * 主键ID
      */
@@ -24,50 +25,36 @@ public class FrequentlyAskedQuestionVO {
     private Long id;
 
     /**
-     * 政策ID集合
+     * 政策ID
      */
-    @ApiModelProperty("政策ID集合")
-    private String policiesIds;
+    @ApiModelProperty("id")
+    private Long policiesId;
 
     /**
-     * 问题
+     * 标题
      */
-    @ApiModelProperty("问题")
-    private String question;
-
-    /**
-     * 回答
-     */
-    @ApiModelProperty("回答")
-    private String answer;
+    @ApiModelProperty("id")
+    private String title;
 
     /**
      * 来源
      */
-    @ApiModelProperty("来源")
     private String docSource;
 
     /**
      * 发布日期
      */
-    @ApiModelProperty("发布日期")
     private LocalDate releaseDate;
 
     /**
-     * 创建时间
+     * 正文
      */
-    @ApiModelProperty("创建时间")
-    private LocalDateTime createTime;
+    @ApiModelProperty("id")
+    private String content;
 
     /**
-     * 更新时间
+     * 录入人用户ID
      */
-    @ApiModelProperty("更新时间")
-    private LocalDateTime updateTime;
+    private Long inputUserId;
 
-    /**
-     * 逻辑删除
-     */
-    @ApiModelProperty("逻辑删除")
-    private Integer deleted;
 }

@@ -5,17 +5,23 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * @author wuxin
  */
 @Data
 @ApiModel
-public class QueryDTO extends KeywordPageQueryDTO {
+public class QueryPoliciesDTO extends KeywordPageQueryDTO {
+
+    @ApiModelProperty("查询条件类型")
+    private KeyWordField keyWordField;
 
     @ApiModelProperty("查询标题")
     private String title;
+
+    @ApiModelProperty("查询文号")
+    private String docCode;
 
     @ApiModelProperty("查询所属税种码值")
     private String taxCategoriesCode;
@@ -36,9 +42,16 @@ public class QueryDTO extends KeywordPageQueryDTO {
     private String validity;
 
     @ApiModelProperty("查询发布日期")
-    private Date releaseDate;
+    private LocalDate releaseDate;
 
-    private String sort;
+    private SortField sortField;
 
-
+    public enum SortField {
+        RELEASE_DATE,
+        UPDATE_TIME;
+    }
+    public enum KeyWordField{
+        TITLE,
+        DOC_CODE;
+    }
 }
