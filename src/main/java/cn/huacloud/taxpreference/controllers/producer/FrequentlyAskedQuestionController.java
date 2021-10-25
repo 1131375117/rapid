@@ -7,10 +7,7 @@ import cn.huacloud.taxpreference.services.producer.entity.dtos.FrequentlyAskedQu
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 热点问答接口
@@ -31,10 +28,24 @@ public class FrequentlyAskedQuestionController {
      * @return
      */
     @ApiOperation("新增热点解读")
-    @PostMapping("FrequentlyAskedQuestion")
+    @PostMapping(value = "frequentlyAskedQuestion")
     public ResultVO<Void> insertFrequentlyAskedQuestion(@RequestBody FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO){
 
         frequentlyAskedQuestionService.insertFrequentlyAskedQuestion(frequentlyAskedQuestionDTO,UserUtil.getCurrentUser().getId());
         return ResultVO.ok();
+    }
+
+
+    /**
+     * 修改热点问答
+     * @param frequentlyAskedQuestionDTO
+     * @return
+     */
+    @ApiOperation("修改热点问答")
+    @PutMapping(value = "frequentlyAskedQuestion-")
+    public ResultVO<Void> updateFrequentlyAskedQuestion(@RequestBody FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO){
+        frequentlyAskedQuestionService.updateFrequentlyAskedQuestion(frequentlyAskedQuestionDTO);
+        return ResultVO.ok();
+
     }
 }

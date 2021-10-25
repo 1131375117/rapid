@@ -37,4 +37,17 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
         frequentlyAskedQuestionDO.setDeleted(0);
         frequentlyAskedQuestionMapper.insert(frequentlyAskedQuestionDO);
     }
+
+    /**
+     * 修改热点问答
+     *
+     * @param frequentlyAskedQuestionDTO
+     */
+    @Override
+    public void updateFrequentlyAskedQuestion(FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO) {
+        //修改热点问答
+        FrequentlyAskedQuestionDO frequentlyAskedQuestionDO = new FrequentlyAskedQuestionDO();
+        BeanUtils.copyProperties(frequentlyAskedQuestionDTO,frequentlyAskedQuestionDO);
+        frequentlyAskedQuestionMapper.updateById(frequentlyAskedQuestionDO);
+    }
 }

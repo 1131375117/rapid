@@ -17,4 +17,10 @@ public interface PoliciesExplainService {
      * @param id
      */
     public void insertPoliciesExplain(PoliciesExplainDTO policiesExplainDTO, Long id);
+
+    /**
+     * 修改政策解读
+     * @param policiesExplainDTO
+     */
+    public void updatePolicesExplain(PoliciesExplainDTO policiesExplainDTO);
 }

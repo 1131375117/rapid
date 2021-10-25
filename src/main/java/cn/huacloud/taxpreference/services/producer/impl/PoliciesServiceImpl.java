@@ -4,16 +4,21 @@ import cn.huacloud.taxpreference.services.producer.FrequentlyAskedQuestionServic
 import cn.huacloud.taxpreference.services.producer.PoliciesExplainService;
 import cn.huacloud.taxpreference.services.producer.PoliciesService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
+import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesExplainDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.FrequentlyAskedQuestionDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesListDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesExplainDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesVO;
 import cn.huacloud.taxpreference.services.producer.mapper.PoliciesMapper;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +30,6 @@ import java.time.LocalDateTime;
  *
  * @author wuxin
  */
-@Transactional(rollbackFor = Exception.class)
 @RequiredArgsConstructor
 @Service
 public class PoliciesServiceImpl implements PoliciesService {
@@ -45,6 +49,9 @@ public class PoliciesServiceImpl implements PoliciesService {
      */
     @Override
     public IPage<PoliciesDO> getPolices(QueryDTO queryDTO) {
+
+        QueryWrapper<Object> queryWrapper = new QueryWrapper<>()
+                .orderBy(true, true, queryDTO.getSort());
         IPage<PoliciesDO> policiesDoPage = policiesMapper.selectPage(new Page<>(queryDTO.getPageNum(), queryDTO.getPageSize()), null);
         PoliciesVO policiesVO = new PoliciesVO();
         BeanUtils.copyProperties(policiesDoPage, policiesVO);
@@ -54,14 +61,15 @@ public class PoliciesServiceImpl implements PoliciesService {
     /**
      * 新增政策法规
      *
-     * @param policiesDTO
+     * @param policiesListDTO
      * @param id
      */
+    @Transactional(rollbackFor = Exception.class)
     @Override
-    public void insertPolicies(PoliciesListDTO policiesDTO, Long id) {
+    public void insertPolicies(PoliciesListDTO policiesListDTO, Long id) {
         //新增政策法规
         PoliciesDO policiesDO = new PoliciesDO();
-        BeanUtils.copyProperties(policiesDTO, policiesDO);
+        BeanUtils.copyProperties(policiesListDTO, policiesDO);
         policiesDO.setInputUserId(id);
         policiesDO.setPoliciesStatus("");
         policiesDO.setReleaseDate(LocalDate.now());
@@ -71,12 +79,12 @@ public class PoliciesServiceImpl implements PoliciesService {
         policiesMapper.insert(policiesDO);
         //新增政策解读
         PoliciesExplainDTO policiesExplainDTO = new PoliciesExplainDTO();
-        BeanUtils.copyProperties(policiesDTO, policiesExplainDTO);
+        BeanUtils.copyProperties(policiesListDTO, policiesExplainDTO);
         policiesExplainDTO.setPoliciesId(policiesDO.getId());
         policiesExplainService.insertPoliciesExplain(policiesExplainDTO, id);
         //新增热点问答
         FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO = new FrequentlyAskedQuestionDTO();
-        BeanUtils.copyProperties(policiesDTO, frequentlyAskedQuestionDTO);
+        BeanUtils.copyProperties(policiesListDTO, frequentlyAskedQuestionDTO);
         frequentlyAskedQuestionService.insertFrequentlyAskedQuestion(frequentlyAskedQuestionDTO, id);
     }
 
@@ -97,13 +105,23 @@ public class PoliciesServiceImpl implements PoliciesService {
     /**
      * 修改政策法规
      *
-     * @param policiesDTO
+     * @param policiesListDTO
      */
+    @Transactional(rollbackFor = Exception.class)
     @Override
-    public void updatePolicies(PoliciesListDTO policiesDTO) {
-        PoliciesDO policiesDO = new PoliciesDO();
-        BeanUtils.copyProperties(policiesDTO, policiesDO);
+    public void updatePolicies(PoliciesListDTO policiesListDTO) {
         //修改政策法规
+        PoliciesDO policiesDO = new PoliciesDO();
+        BeanUtils.copyProperties(policiesListDTO, policiesDO);
         policiesMapper.updateById(policiesDO);
+        //修改政策解读
+        PoliciesExplainDTO policiesExplainDTO = new PoliciesExplainDTO();
+        BeanUtils.copyProperties(policiesListDTO,policiesExplainDTO);
+        policiesExplainService.updatePolicesExplain(policiesExplainDTO);
+        //修改热点问答
+        FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO = new FrequentlyAskedQuestionDTO();
+        BeanUtils.copyProperties(policiesListDTO,frequentlyAskedQuestionDTO);
+        frequentlyAskedQuestionService.updateFrequentlyAskedQuestion(frequentlyAskedQuestionDTO);
+
     }
 }

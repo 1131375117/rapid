@@ -10,6 +10,7 @@ import lombok.Data;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * 热点问答实体
@@ -48,7 +49,7 @@ public class FrequentlyAskedQuestionDO {
     /**
      * 发布日期
      */
-    private LocalDate releaseDate;
+    private Date releaseDate;
 
     /**
      * 录入人用户id

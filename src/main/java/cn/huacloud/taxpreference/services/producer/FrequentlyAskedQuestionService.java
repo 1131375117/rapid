@@ -17,4 +17,10 @@ public interface FrequentlyAskedQuestionService {
      */
     public void insertFrequentlyAskedQuestion(FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO, Long id);
 
+    /**
+     * 修改热点问答
+     * @param frequentlyAskedQuestionDTO
+     */
+    public void updateFrequentlyAskedQuestion(FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO);
+
 }

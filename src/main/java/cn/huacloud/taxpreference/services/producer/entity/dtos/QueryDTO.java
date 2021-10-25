@@ -38,6 +38,7 @@ public class QueryDTO extends KeywordPageQueryDTO {
     @ApiModelProperty("查询发布日期")
     private Date releaseDate;
 
+    private String sort;
 
 
 }

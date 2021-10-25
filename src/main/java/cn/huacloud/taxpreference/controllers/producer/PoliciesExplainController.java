@@ -7,10 +7,7 @@ import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesExplainDT
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 政策解读接口
@@ -58,6 +55,13 @@ public class PoliciesExplainController {
      * 修改政策解读
      * 政策解读id
      */
+    @ApiOperation("修改政策解读")
+    @PutMapping(value = "/PolicesExplain-")
+    public ResultVO<Void> updatePolicesExplain(@RequestBody PoliciesExplainDTO policiesExplainDTO){
+        policiesExplainService.updatePolicesExplain(policiesExplainDTO);
+        return ResultVO.ok();
+
+    }
 
     /**
      * 删除政策解读

@@ -43,4 +43,17 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
         BeanUtils.copyProperties(policiesExplainDTO, policiesExplainDO);
         policiesExplainMapper.insert(policiesExplainDO);
     }
+
+    /**
+     * 修改政策解读
+     *
+     * @param policiesExplainDTO
+     */
+    @Override
+    public void updatePolicesExplain(PoliciesExplainDTO policiesExplainDTO) {
+        //修改政策解读
+        PoliciesExplainDO policiesExplainDO = new PoliciesExplainDO();
+        BeanUtils.copyProperties(policiesExplainDTO,policiesExplainDO);
+        policiesExplainMapper.updateById(policiesExplainDO);
+    }
 }

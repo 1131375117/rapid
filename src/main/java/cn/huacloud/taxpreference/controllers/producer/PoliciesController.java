@@ -51,12 +51,17 @@ public class PoliciesController {
      * 需要在service层调用解读和问答的方法
      * 提交进行标题和文号的查重，失败提示“该标题或文号已存在”
      */
-    @ApiOperation(value = "新增政策法规")
+    /**
+     * 新增政策法规接口
+     * @param policiesListDTO
+     * @return
+     */
+    @ApiOperation(value = "政策法规新增")
     @PostMapping(value = "/insertPolicies")
-    public ResultVO<Void> insertPolicies(@RequestBody PoliciesListDTO policiesDTO) {
+    public ResultVO<Void> insertPolicies(@RequestBody PoliciesListDTO policiesListDTO) {
 
 
-        policiesService.insertPolicies(policiesDTO, UserUtil.getCurrentUser().getId());
+        policiesService.insertPolicies(policiesListDTO, UserUtil.getCurrentUser().getId());
         //返回结果
         return ResultVO.ok();
     }
@@ -79,11 +84,11 @@ public class PoliciesController {
      * 修改政策法规
      * 政策法规id
      */
-    @ApiOperation(value = "修改政策法规")
+    @ApiOperation(value = "政策法规修改")
     @PostMapping(value = "/Policies-")
-    public ResultVO<Void> updatePolicies(@RequestBody PoliciesListDTO policiesDTO) {
+    public ResultVO<Void> updatePolicies(@RequestBody PoliciesListDTO policiesListDTO) {
 
-        policiesService.updatePolicies(policiesDTO);
+        policiesService.updatePolicies(policiesListDTO);
         //返回结果
         return ResultVO.ok();
     }

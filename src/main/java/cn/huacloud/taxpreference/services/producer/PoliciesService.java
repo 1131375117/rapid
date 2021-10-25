@@ -25,10 +25,10 @@ public interface PoliciesService {
     /**
      * 新增政策法规
      *
-     * @param policiesDTO
+     * @param policiesListDTO
      * @param id
      */
-    public void insertPolicies(PoliciesListDTO policiesDTO, Long id);
+    public void insertPolicies(PoliciesListDTO policiesListDTO, Long id);
 
 
     /**
@@ -43,7 +43,7 @@ public interface PoliciesService {
     /**
      * 修改政策法规
      *
-     * @param policiesDTO
+     * @param policiesListDTO
      */
-    public void updatePolicies(PoliciesListDTO policiesDTO);
+    public void updatePolicies(PoliciesListDTO policiesListDTO);
 }
