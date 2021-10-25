@@ -73,5 +73,5 @@ public interface UserService {
      * @param userId 用户ID
      * @param roleCodes 角色码值
      */
-    void setRoleToUser(String userId, List<String> roleCodes);
+    void setRoleToUser(Long userId, List<String> roleCodes);
 }
