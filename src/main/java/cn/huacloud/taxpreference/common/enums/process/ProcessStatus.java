@@ -1,4 +1,4 @@
-package cn.huacloud.taxpreference.common.enums;
+package cn.huacloud.taxpreference.common.enums.process;
 
 import com.baomidou.mybatisplus.annotation.IEnum;
 
@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.annotation.IEnum;
  **/
 public enum ProcessStatus implements IEnum<String> {
     NOT_APPROVED("待通过"),
-    UNDER_APPROVAL("审批中"),
+    RETURNED("已退回"),
     APPROVED("已通过");
 
     public final String name;

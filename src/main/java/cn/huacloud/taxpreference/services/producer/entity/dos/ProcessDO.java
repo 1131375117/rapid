@@ -44,7 +44,7 @@ public class ProcessDO {
      *
      * 审批人ID
      */
-    private String approverId;
+    private Long approverId;
     /**
      * 审批人名
      */
@@ -61,4 +61,9 @@ public class ProcessDO {
      * 是否为最新流程
      */
     private Boolean latestProcess;
+
+    /**
+     * 流程备注信息
+     */
+    private String approvalNote;
 }

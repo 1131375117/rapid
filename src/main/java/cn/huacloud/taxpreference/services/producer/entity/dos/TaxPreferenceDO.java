@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * @description: 税收优惠实体
@@ -90,7 +90,7 @@ public class TaxPreferenceDO {
     /**
      * 录入人用户ID
      */
-    private String inputUserId;
+    private Long inputUserId;
 
     /**
      * 有效性
@@ -121,18 +121,24 @@ public class TaxPreferenceDO {
      * 创建时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDate createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDate updateTime;
+    private LocalDateTime updateTime;
 
     /**
      * 是否已删除
      */
-    private Integer deleted;
+    private boolean deleted;
+
+    /**
+     * 审批状态
+     */
+    private String taxPreferenceStatus;
+
 
 
 }
