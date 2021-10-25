@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.huacloud.taxpreference.services.producer.mapper.ProcessServiceMapper">
+    <update id="updateByTaxPreferenceId">
+        update t_process
+        set latest_process =0
+        where tax_preference_id = #{taxPreferenceId}
+    </update>
+    <select id="queryProcessList"
+            resultType="cn.huacloud.taxpreference.services.producer.entity.vos.ProcessListVO">
+        select t.tax_preference_name as taxPreferenceName,
+        t.tax_categories_name as taxCategoriesName,
+        p.process_status as processStatus,
+        p.create_time as createTime,
+        u.username as userName
+        from t_tax_preference t,
+        t_user u,
+        t_process p
+        <where>
+            and t.input_user_id = u.id
+            and t.id = p.tax_preference_id
+            <if test="query.taxPreferenceName!=null and query.taxPreferenceName!= ''">
+               and t.tax_preference_name like "%"#{query.taxPreferenceName}"%"
+            </if>
+            <if test="query.taxCategoriesCode!=null and query.taxCategoriesCode!= ''">
+              and  t.taxCategoriesCode = #{query.taxCategoriesCode}
+            </if>
+            <if test="query.startTime!=null and query.startTime!= ''">
+              and  t.create_time >= #{query.startTime}
+            </if>
+            <if test="query.endTime!=null and query.endTime!= ''">
+               and t.create_time &lt;= #{query.endTime}
+            </if>
+            <if test="query.userName!=null and query.userName!= ''">
+               and u.username = #{query.userName}
+            </if>
+            and t.deleted = 0
+
+        </where>
+    </select>
+
+</mapper>

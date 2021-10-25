@@ -1,6 +1,7 @@
 package cn.huacloud.taxpreference.services.producer.impl;
 
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
+import cn.huacloud.taxpreference.common.enums.taxpreference.PreferenceValidation;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.producer.TaxPreferenceService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.SubmitConditionDO;
@@ -9,6 +10,7 @@ import cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferencePolic
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryTaxPreferencesDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.SubmitConditionDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.TaxPreferenceDTO;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.TaxPreferencePoliciesDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.QueryTaxPreferencesVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.SubmitConditionVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferencePoliciesVO;
@@ -24,7 +26,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,12 +54,14 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     public ResultVO<Void> insertTaxPreference(TaxPreferenceDTO taxPreferenceDTO) {
         //新增-税收优惠表t_tax_preference
         TaxPreferenceDO taxPreferenceDO = getTaxPreferenceDO(taxPreferenceDTO);
-        taxPreferenceDO.setCreateTime(LocalDate.now());
+        taxPreferenceDO.setCreateTime(LocalDateTime.now());
         taxPreferenceMapper.insert(taxPreferenceDO);
 
         //新增-税收优惠政策法规关联表t_tax_preference_ policies
-        TaxPreferencePoliciesDO preferencePoliciesDO = getTaxPreferencePoliciesDO(taxPreferenceDTO, taxPreferenceDO);
-        taxPreferencePoliciesMapper.insert(preferencePoliciesDO);
+        List<TaxPreferencePoliciesDO> taxPreferencePoliciesDOList = getTaxPreferencePoliciesDO(taxPreferenceDTO, taxPreferenceDO);
+        for (TaxPreferencePoliciesDO taxPreferencePoliciesDO : taxPreferencePoliciesDOList) {
+            taxPreferencePoliciesMapper.insert(taxPreferencePoliciesDO);
+        }
 
         //新增-申报条件表 t_submit_condition
         insertSubmitConditionDOs(taxPreferenceDTO, taxPreferenceDO);
@@ -72,8 +76,10 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         taxPreferenceMapper.updateById(taxPreferenceDO);
 
         //修改-税收优惠政策法规关联表t_tax_preference_ policies
-        TaxPreferencePoliciesDO preferencePoliciesDO = getTaxPreferencePoliciesDO(taxPreferenceDTO, taxPreferenceDO);
-        taxPreferencePoliciesMapper.updateByTaxPreferenceId(preferencePoliciesDO);
+        List<TaxPreferencePoliciesDO> preferencePoliciesDOList = getTaxPreferencePoliciesDO(taxPreferenceDTO, taxPreferenceDO);
+        for (TaxPreferencePoliciesDO preferencePoliciesDO : preferencePoliciesDOList) {
+            taxPreferencePoliciesMapper.updateByTaxPreferenceId(preferencePoliciesDO);
+        }
 
         //修改-申报条件表 t_submit_condition
         updateSubmitConditionByTaxPreferenceId(taxPreferenceDTO);
@@ -95,8 +101,8 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         taxPreferenceVO.setTaxPreferencePoliciesVOList(taxPreferencePoliciesVOList);
 
         //查询申报信息
-        List<SubmitConditionDO> submitConditionDOS = submitConditionMapper.selectByMap(columnMap);
-        List<SubmitConditionVO> submitConditionVOList = getSubmitConditionVOS(submitConditionDOS);
+        List<SubmitConditionDO> submitConditionDOList = submitConditionMapper.selectByMap(columnMap);
+        List<SubmitConditionVO> submitConditionVOList = getSubmitConditionVOS(submitConditionDOList);
         taxPreferenceVO.setSubmitConditionVOList(submitConditionVOList);
 
         return ResultVO.ok(taxPreferenceVO);
@@ -168,24 +174,35 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
      */
     public void insertSubmitConditionDOs(TaxPreferenceDTO taxPreferenceDTO, TaxPreferenceDO taxPreferenceDO) {
         List<SubmitConditionDTO> submitConditionDTOList = taxPreferenceDTO.getSubmitConditionDTOList();
-        for (SubmitConditionDTO submitConditionDTO : submitConditionDTOList) {
-            SubmitConditionDO submitConditionDO = new SubmitConditionDO();
-            BeanUtils.copyProperties(submitConditionDTO, submitConditionDO);
-            submitConditionDO.setTaxPreferenceId(taxPreferenceDO.getId());
-            submitConditionMapper.insert(submitConditionDO);
+        if (submitConditionDTOList != null && submitConditionDTOList.size() > 0) {
+            for (int i = 0; i < submitConditionDTOList.size(); i++) {
+                SubmitConditionDO submitConditionDO = new SubmitConditionDO();
+                BeanUtils.copyProperties(submitConditionDTOList.get(i), submitConditionDO);
+                submitConditionDO.setTaxPreferenceId(taxPreferenceDO.getId());
+                submitConditionDO.setSort((long) i+1);
+                submitConditionMapper.insert(submitConditionDO);
+            }
         }
-
     }
 
     /**
      * 填充TaxPreferencePoliciesDO对象
      */
-    private TaxPreferencePoliciesDO getTaxPreferencePoliciesDO(TaxPreferenceDTO taxPreferenceDTO, TaxPreferenceDO taxPreferenceDO) {
+    private List<TaxPreferencePoliciesDO> getTaxPreferencePoliciesDO(TaxPreferenceDTO taxPreferenceDTO, TaxPreferenceDO taxPreferenceDO) {
+
         TaxPreferencePoliciesDO preferencePoliciesDO = new TaxPreferencePoliciesDO();
-        BeanUtils.copyProperties(taxPreferenceDTO, preferencePoliciesDO);
-        preferencePoliciesDO.setTaxPreferenceId(taxPreferenceDO.getId());
-        preferencePoliciesDO.setSort(1L);
-        return preferencePoliciesDO;
+        //政策法规对象集合
+        List<TaxPreferencePoliciesDO> taxPreferencePoliciesDOList = new ArrayList<>();
+        List<TaxPreferencePoliciesDTO> taxPreferencePoliciesDTOList = taxPreferenceDTO.getTaxPreferencePoliciesDTOList();
+        if (taxPreferencePoliciesDTOList != null && taxPreferencePoliciesDTOList.size() > 0) {
+            for (int i = 0; i < taxPreferencePoliciesDTOList.size(); i++) {
+                BeanUtils.copyProperties(taxPreferencePoliciesDTOList.get(i), preferencePoliciesDO);
+                preferencePoliciesDO.setTaxPreferenceId(taxPreferenceDO.getId());
+                preferencePoliciesDO.setSort((long) i+1);
+                taxPreferencePoliciesDOList.add(preferencePoliciesDO);
+            }
+        }
+        return taxPreferencePoliciesDOList;
     }
 
     /**
@@ -194,8 +211,9 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     private TaxPreferenceDO getTaxPreferenceDO(TaxPreferenceDTO taxPreferenceDTO) {
         TaxPreferenceDO taxPreferenceDO = new TaxPreferenceDO();
         BeanUtils.copyProperties(taxPreferenceDTO, taxPreferenceDO);
-        taxPreferenceDO.setDeleted(0);
-        taxPreferenceDO.setUpdateTime(LocalDate.now());
+        taxPreferenceDO.setDeleted(false);
+        taxPreferenceDO.setUpdateTime(LocalDateTime.now());
+        taxPreferenceDO.setValidity(PreferenceValidation.EFFECTIVE.getValue());
         return taxPreferenceDO;
     }
 
