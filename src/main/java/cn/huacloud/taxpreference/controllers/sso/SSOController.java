@@ -46,6 +46,12 @@ public class SSOController {
         if (!userDO.getPassword().equals(SaSecureUtil.md5(password))) {
             throw BizCode._4204.exception();
         }
+
+        // 检查账号禁用状态
+        if (userDO.getDisable()) {
+            throw BizCode._4205.exception();
+        }
+
         // 执行登录
         StpUtil.login(userDO.getId());
         // 查询用户登录视图

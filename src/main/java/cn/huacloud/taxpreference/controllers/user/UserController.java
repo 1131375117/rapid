@@ -115,7 +115,7 @@ public class UserController {
     @SaCheckPermission("producer_user_set_role")
     @ApiOperation("给指定ID用户赋予角色")
     @PutMapping("/producer/user/{userId}/role")
-    public ResultVO<Void> setRoleToUser(@PathVariable("userId") String userId,
+    public ResultVO<Void> setRoleToUser(@PathVariable("userId") Long userId,
                                         @RequestParam("roleCodes") List<String> roleCodes) {
         userService.setRoleToUser(userId, roleCodes);
         return ResultVO.ok();

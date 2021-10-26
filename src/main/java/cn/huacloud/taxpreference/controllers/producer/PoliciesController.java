@@ -1,16 +1,22 @@
 package cn.huacloud.taxpreference.controllers.producer;
 
+import cn.huacloud.taxpreference.common.annotations.PermissionInfo;
+import cn.huacloud.taxpreference.common.constants.ValidationGroup;
+import cn.huacloud.taxpreference.common.entity.vos.PageVO;
+import cn.huacloud.taxpreference.common.enums.PermissionGroup;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.common.utils.UserUtil;
 import cn.huacloud.taxpreference.services.producer.PoliciesService;
-import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesListDTO;
-import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryDTO;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryAbolishDTO;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesDTO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesAbolishVO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesDetailVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesVO;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -33,12 +39,13 @@ public class PoliciesController {
      * 适用行业（需查）、所属区域（需查）、有效性（需查）、发布时间（区间）
      * 根据发布时间和更新时间排序
      */
+    @PermissionInfo(name = "政策法规列表查询", group = PermissionGroup.POLICIES)
     @ApiOperation(value = "政策法规列表查询")
     @PostMapping(value = "/Policies")
-    public ResultVO<IPage<PoliciesDO>> getPolices(@RequestBody QueryDTO queryDTO) {
-        IPage<PoliciesDO> polices = policiesService.getPolices(queryDTO);
+    public ResultVO<PageVO<PoliciesVO>> getPolices(@RequestBody QueryPoliciesDTO queryPoliciesDTO) {
+        PageVO<PoliciesVO> policesList = policiesService.getPolicesList(queryPoliciesDTO);
         //返回结果
-        return ResultVO.ok(polices);
+        return ResultVO.ok(policesList);
 
     }
 
@@ -51,12 +58,16 @@ public class PoliciesController {
      * 需要在service层调用解读和问答的方法
      * 提交进行标题和文号的查重，失败提示“该标题或文号已存在”
      */
-    @ApiOperation(value = "新增政策法规")
-    @PostMapping(value = "/insertPolicies")
-    public ResultVO<Void> insertPolicies(@RequestBody PoliciesListDTO policiesDTO) {
-
-
-        policiesService.insertPolicies(policiesDTO, UserUtil.getCurrentUser().getId());
+    /**
+     * 新增政策法规接口
+     * @param policiesListDTO
+     * @return
+     */
+    @PermissionInfo(name = "政策法规新增", group = PermissionGroup.POLICIES)
+    @ApiOperation(value = "政策法规新增")
+    @PostMapping(value = "/policies/insert")
+    public ResultVO<Void> insertPolicies(@Validated(ValidationGroup.Create.class)@RequestBody PoliciesListDTO policiesListDTO) {
+        policiesService.insertPolicies(policiesListDTO, UserUtil.getCurrentUser().getId());
         //返回结果
         return ResultVO.ok();
     }
@@ -67,23 +78,25 @@ public class PoliciesController {
      *
      * @return
      */
+    @PermissionInfo(name = "根据id获取政策法规详情", group = PermissionGroup.POLICIES)
     @ApiOperation(value = "根据id获取政策法规详情")
-    @GetMapping(value = "/getPoliciesById/{id}")
-    public ResultVO<PoliciesVO> getPoliciesById(@PathVariable("id") Long id) {
-        PoliciesVO policiesVO = policiesService.getPoliciesById(id);
+    @GetMapping(value = "/PoliciesById/{id}")
+    public ResultVO<PoliciesDetailVO> getPoliciesById(@PathVariable("id") Long id) {
+        PoliciesDetailVO policiesDetailVO = policiesService.getPoliciesById(id);
         //返回结果
-        return ResultVO.ok(policiesVO);
+        return ResultVO.ok(policiesDetailVO);
     }
 
     /**
      * 修改政策法规
      * 政策法规id
      */
+    @PermissionInfo(name = "修改政策法规", group = PermissionGroup.POLICIES)
     @ApiOperation(value = "修改政策法规")
-    @PostMapping(value = "/Policies-")
-    public ResultVO<Void> updatePolicies(@RequestBody PoliciesListDTO policiesDTO) {
+    @PutMapping(value = "/policies/update")
+    public ResultVO<Void> updatePolicies(@Validated(ValidationGroup.Update.class)@RequestBody PoliciesListDTO policiesListDTO) {
 
-        policiesService.updatePolicies(policiesDTO);
+        policiesService.updatePolicies(policiesListDTO);
         //返回结果
         return ResultVO.ok();
     }
@@ -93,9 +106,37 @@ public class PoliciesController {
      * 政策法规id
      *  全文废止和部分废止
      */
+    @PermissionInfo(name = "政策法规废止", group = PermissionGroup.POLICIES)
+    @ApiOperation("政策法规废止")
+    @PutMapping(value = "/policies/abolish/update")
+    public ResultVO<Void> isAbolish(@RequestBody QueryAbolishDTO queryAbolishDTO){
+        policiesService.isAbolish(queryAbolishDTO);
+        return ResultVO.ok();
+
+    }
+
+    /**
+     * 查询废止信息
+     */
+    @PermissionInfo(name = "政策法规废止", group = PermissionGroup.POLICIES)
+    @ApiOperation("查询政策法规废止信息")
+    @PostMapping(value = "/policies/abolish/{id}")
+    public ResultVO<PoliciesAbolishVO> getAbolish(@PathVariable("id") Long id){
+        PoliciesAbolishVO policiesAbolishVO=policiesService.getAbolish(id);
+        return ResultVO.ok(policiesAbolishVO);
+
+    }
+
 
     /**
      * 删除政策法规
      * 政策法规id
      */
+    @PermissionInfo(name = "删除政策法规", group = PermissionGroup.POLICIES)
+    @ApiOperation("删除政策法规")
+    @DeleteMapping(value = "/policies/{id}")
+    public ResultVO<Void> deletePoliciesById(@PathVariable("id") Long id){
+        policiesService.deletePoliciesById(id);
+        return ResultVO.ok();
+    }
 }

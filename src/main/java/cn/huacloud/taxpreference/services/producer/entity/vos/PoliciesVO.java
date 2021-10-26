@@ -1,15 +1,18 @@
 package cn.huacloud.taxpreference.services.producer.entity.vos;
 
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.Date;
 
-/**
+/**政策法规VO
  * @author wuxin
  */
 @Data
+@ApiModel
 public class PoliciesVO {
 
     @ApiModelProperty("政策法规ID")
@@ -29,6 +32,6 @@ public class PoliciesVO {
     @ApiModelProperty("有效性")
     private String validity;
     @ApiModelProperty("发布日期")
-    private Date releaseDate;
+    private LocalDate releaseDate;
 
 }

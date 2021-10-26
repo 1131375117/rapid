@@ -1,36 +1,39 @@
-package cn.huacloud.taxpreference.services.producer.entity.dos;
+package cn.huacloud.taxpreference.services.producer.entity.vos;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
- * 政策解读实体
+ * 政策解读详情VO
  * @author wuxin
  */
 @Data
-@TableName("t_policies_explain")
-public class PoliciesExplainDO {
+@ApiModel
+public class PoliciesExplainDetailVO {
 
     /**
      * 主键ID
      */
-    @TableId(type = IdType.AUTO)
+    @ApiModelProperty("id")
     private Long id;
 
     /**
      * 政策ID
      */
+    @ApiModelProperty("id")
     private Long policiesId;
 
     /**
      * 标题
      */
+    @ApiModelProperty("id")
     private String title;
 
     /**
@@ -46,6 +49,7 @@ public class PoliciesExplainDO {
     /**
      * 正文
      */
+    @ApiModelProperty("id")
     private String content;
 
     /**
@@ -53,18 +57,4 @@ public class PoliciesExplainDO {
      */
     private Long inputUserId;
 
-    /**
-     * 创建时间
-     */
-    private LocalDateTime createTime;
-
-    /**
-     * 更新时间
-     */
-    private LocalDateTime updateTime;
-
-    /**
-     * 逻辑删除
-     */
-    private Boolean deleted;
 }

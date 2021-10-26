@@ -20,5 +20,11 @@ mybatis-plus:
 
 
 tax-preference:
+  # 数据库加密
   encrypt:
     key: "6b32c10d8ed53774"
+  # 对象存储
+  minio:
+    endpoint: "http://172.16.122.17:9000"
+    access-key: "tax_preference"
+    secret-key: "tax_preference"

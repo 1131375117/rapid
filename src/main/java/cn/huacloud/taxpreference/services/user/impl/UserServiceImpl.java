@@ -1,9 +1,11 @@
 package cn.huacloud.taxpreference.services.user.impl;
 
 import cn.dev33.satoken.secure.SaSecureUtil;
+import cn.dev33.satoken.stp.StpUtil;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.enums.UserType;
+import cn.huacloud.taxpreference.common.utils.UserUtil;
 import cn.huacloud.taxpreference.services.user.RoleService;
 import cn.huacloud.taxpreference.services.user.UserService;
 import cn.huacloud.taxpreference.services.user.entity.dos.ProducerUserDO;
@@ -68,6 +70,7 @@ public class UserServiceImpl implements UserService {
         // 构建查询条件
         LambdaQueryWrapper<UserDO> queryWrapper = Wrappers.lambdaQuery(UserDO.class)
                 .eq(UserDO::getUserType, UserType.PRODUCER_USER)
+                .eq(UserDO::getDeleted, false)
                 .like(userAccountKeyword != null, UserDO::getUserAccount, userAccountKeyword)
                 .like(usernameKeyword != null, UserDO::getUsername, usernameKeyword)
                 .apply(roleCode != null, "FIND_IN_SET ('" + roleCode + "', roleCodes)");
@@ -184,6 +187,9 @@ public class UserServiceImpl implements UserService {
         }
         userDO.setDisable(!userDO.getDisable());
         userMapper.updateById(userDO);
+        // 禁用用户
+        StpUtil.logout();
+
         return userDO.getDisable();
     }
 
@@ -195,7 +201,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void setRoleToUser(String userId, List<String> roleCodes) {
+    public void setRoleToUser(Long userId, List<String> roleCodes) {
         UserDO userDO = userMapper.selectById(userId);
         // validate
         if (userDO == null) {
@@ -213,5 +219,8 @@ public class UserServiceImpl implements UserService {
 
         // 保存更新
         userMapper.updateById(userDO);
+
+        // 设置权限后注销指定用户
+        StpUtil.logout(userId);
     }
 }

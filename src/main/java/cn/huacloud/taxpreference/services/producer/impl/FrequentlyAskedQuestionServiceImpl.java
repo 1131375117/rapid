@@ -7,7 +7,9 @@ import cn.huacloud.taxpreference.services.producer.mapper.FrequentlyAskedQuestio
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -32,9 +34,24 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
         FrequentlyAskedQuestionDO frequentlyAskedQuestionDO = new FrequentlyAskedQuestionDO();
         BeanUtils.copyProperties(frequentlyAskedQuestionDTO, frequentlyAskedQuestionDO);
         frequentlyAskedQuestionDO.setInputUserId(id);
+        frequentlyAskedQuestionDO.setReleaseDate(LocalDate.now());
         frequentlyAskedQuestionDO.setCreateTime(LocalDateTime.now());
         frequentlyAskedQuestionDO.setUpdateTime(LocalDateTime.now());
         frequentlyAskedQuestionDO.setDeleted(0);
         frequentlyAskedQuestionMapper.insert(frequentlyAskedQuestionDO);
+    }
+
+    /**
+     * 修改热点问答
+     *
+     * @param frequentlyAskedQuestionDTO
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void updateFrequentlyAskedQuestion(FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO) {
+        //修改热点问答
+        FrequentlyAskedQuestionDO frequentlyAskedQuestionDO = new FrequentlyAskedQuestionDO();
+        BeanUtils.copyProperties(frequentlyAskedQuestionDTO,frequentlyAskedQuestionDO);
+        frequentlyAskedQuestionMapper.updateById(frequentlyAskedQuestionDO);
     }
 }
