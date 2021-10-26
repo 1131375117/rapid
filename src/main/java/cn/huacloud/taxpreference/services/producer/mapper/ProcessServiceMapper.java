@@ -26,4 +26,11 @@ public interface ProcessServiceMapper extends BaseMapper<ProcessDO> {
      * @return IPage
      */
     IPage<ProcessListVO> queryProcessList(@Param("page") Page<ProcessListVO> page,@Param("query") ProcessListDTO processListDTO);
+
+    /**
+     * 查询状态
+     * @param id
+     * @return status
+     */
+    String selectByTaxPreferenceId(Long id);
 }

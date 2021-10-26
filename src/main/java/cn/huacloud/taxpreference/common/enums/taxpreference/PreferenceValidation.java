@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.annotation.IEnum;
  * @create: 2021-10-25 10:11
  **/
 public enum PreferenceValidation implements IEnum<String> {
+    //税收优惠是否有效
     EFFECTIVE("有效"),
     INVALID("废止");
 
@@ -19,6 +20,6 @@ public enum PreferenceValidation implements IEnum<String> {
 
     @Override
     public String getValue() {
-        return this.name();
+        return this.name;
     }
 }

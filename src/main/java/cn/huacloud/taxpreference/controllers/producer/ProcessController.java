@@ -8,18 +8,17 @@ import cn.huacloud.taxpreference.common.utils.UserUtil;
 import cn.huacloud.taxpreference.services.producer.ProcessService;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.ProcessListDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.ProcessSubmitDTO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.ProcessInfoVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.ProcessListVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotEmpty;
+import java.util.List;
 
 /**
  * 流程管理接口
@@ -58,11 +57,20 @@ public class ProcessController {
      */
     @ApiOperation("税收优惠事项审核提交")
     @PostMapping("/submitProcess")
-    public ResultVO<Void> insertTaxPreference(@Validated() ProcessSubmitDTO processSubmitDTO)  {
+    public ResultVO<Void> insertTaxPreference(@RequestBody @Validated() ProcessSubmitDTO processSubmitDTO)  {
         if(ProcessStatus.RETURNED.name().equals(processSubmitDTO.getTaxPreferenceStatus())&& StringUtils.isBlank(processSubmitDTO.getApprovalNote())){
             throw BizCode._4301.exception();
         }
         return processService.submitProcess(processSubmitDTO,UserUtil.getCurrentUser());
+    }
+    /**
+     *
+     * 流程审批信息
+     * */
+    @ApiOperation("税收优惠事项审批信息")
+    @PostMapping("/queryProcessInfo/{id}")
+    public ResultVO<List<ProcessInfoVO>> queryProcessInfo(@Validated()@NotEmpty(message = "id不能为空")@PathVariable Long id)  {
+        return processService.queryProcessInfo(id);
     }
 
 

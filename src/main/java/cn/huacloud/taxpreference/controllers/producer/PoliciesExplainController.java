@@ -1,10 +1,13 @@
 package cn.huacloud.taxpreference.controllers.producer;
 
+import cn.huacloud.taxpreference.common.annotations.PermissionInfo;
+import cn.huacloud.taxpreference.common.constants.ValidationGroup;
+import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
+import cn.huacloud.taxpreference.common.enums.PermissionGroup;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.common.utils.UserUtil;
 import cn.huacloud.taxpreference.services.producer.PoliciesExplainService;
-import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesExplainDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesExplainDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesExplainDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainDetailVO;
@@ -12,7 +15,10 @@ import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 政策解读接口
@@ -33,21 +39,23 @@ public class PoliciesExplainController {
      * 根据发布时间和更新时间排序
      * 分页
      */
-    @ApiOperation("政策解读列表页面")
-    @GetMapping(value = "/policiesExplainList")
-    public ResultVO<PageVO<PoliciesExplainDO>> getPoliciesExplainList(@RequestBody QueryPoliciesExplainDTO queryPoliciesExplainDTO){
+    @PermissionInfo(name = "政策解读列表查询", group = PermissionGroup.POLICIES_EXPLAIN)
+    @ApiOperation("政策解读列表查询")
+    @PostMapping(value = "/policiesExplainList")
+    public ResultVO<PageVO<PoliciesExplainVO>> getPoliciesExplainList(@RequestBody QueryPoliciesExplainDTO queryPoliciesExplainDTO){
 
-        PageVO<PoliciesExplainDO> pageVO=policiesExplainService.getPoliciesExplainList(queryPoliciesExplainDTO);
-        return ResultVO.ok(pageVO);
+        PageVO<PoliciesExplainVO> policiesExplainVOPageVO = policiesExplainService.getPoliciesExplainList(queryPoliciesExplainDTO);
+        return ResultVO.ok(policiesExplainVOPageVO);
     }
 
     /**
      * 新增政策解读接口
      * 标题、来源、发布日期、正文
      */
+    @PermissionInfo(name = "新增政策解读", group = PermissionGroup.POLICIES_EXPLAIN)
     @ApiOperation("新增政策解读")
-    @PostMapping(value = "PoliciesExplain")
-    public ResultVO<Void> insertPoliciesExplain(@RequestBody PoliciesExplainDTO policiesExplainDTO){
+    @PostMapping(value = "/policiesExplain/insert")
+    public ResultVO<Void> insertPoliciesExplain(@Validated(ValidationGroup.Create.class)@RequestBody PoliciesExplainDTO policiesExplainDTO){
 
 
         policiesExplainService.insertPoliciesExplain(policiesExplainDTO, UserUtil.getCurrentUser().getId());
@@ -57,12 +65,21 @@ public class PoliciesExplainController {
     /**
      * 关联政策（模糊查询，政策法规）
      */
+    @PostMapping("/policies/query")
+    public ResultVO<List<PoliciesExplainVO>> fuzzyQuery(@RequestBody KeywordPageQueryDTO keywordPageQueryDTO){
+        List<PoliciesExplainVO> policiesExplainVOS = policiesExplainService.fuzzyQuery(keywordPageQueryDTO);
+        return ResultVO.ok(policiesExplainVOS);
+
+    }
+
 
     /**
      * 根据ID获取政策解读详情
      * 政策解读id
      */
-    @GetMapping(value = "/PoliciesById/{id}")
+    @PermissionInfo(name = "根据id获取政策解读详情", group = PermissionGroup.POLICIES_EXPLAIN)
+    @ApiOperation("根据id获取政策解读详情")
+    @GetMapping(value = "/policiesById/{id}")
     public ResultVO<PoliciesExplainDetailVO> getPoliciesById(@PathVariable("id") Long id){
         PoliciesExplainDetailVO policiesExplainDetailVO =policiesExplainService.getPoliciesById(id);
         return ResultVO.ok(policiesExplainDetailVO);
@@ -73,9 +90,10 @@ public class PoliciesExplainController {
      * 修改政策解读
      * 政策解读id
      */
+    @PermissionInfo(name = "修改政策解读", group = PermissionGroup.POLICIES_EXPLAIN)
     @ApiOperation("修改政策解读")
-    @PutMapping(value = "/PolicesExplain-")
-    public ResultVO<Void> updatePolicesExplain(@RequestBody PoliciesExplainDTO policiesExplainDTO){
+    @PutMapping(value = "/policesExplain/update")
+    public ResultVO<Void> updatePolicesExplain(@Validated(ValidationGroup.Update.class)@RequestBody PoliciesExplainDTO policiesExplainDTO){
         policiesExplainService.updatePolicesExplain(policiesExplainDTO);
         return ResultVO.ok();
 
@@ -85,6 +103,16 @@ public class PoliciesExplainController {
      * 删除政策解读
      * 政策解读id
      */
+    @PermissionInfo(name = "删除政策解读", group = PermissionGroup.POLICIES_EXPLAIN)
+    @ApiOperation("删除政策解读")
+    @DeleteMapping("/policies/delete/{id}")
+    public ResultVO<Void> deletePoliciesById(@PathVariable("id") Long id){
+        policiesExplainService.deletePoliciesById(id);
+        return ResultVO.ok();
+    }
 
+    /**
+     * 文件上传
+     */
 
 }

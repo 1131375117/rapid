@@ -144,7 +144,6 @@ public class PoliciesDO {
     /**
      * 逻辑删除
      */
-    @TableLogic
     private Boolean deleted;
 
 

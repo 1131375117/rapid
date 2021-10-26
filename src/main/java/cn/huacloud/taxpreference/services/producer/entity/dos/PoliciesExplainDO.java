@@ -66,5 +66,5 @@ public class PoliciesExplainDO {
     /**
      * 逻辑删除
      */
-    private Integer deleted;
+    private Boolean deleted;
 }

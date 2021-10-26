@@ -26,6 +26,10 @@ public class TaxPreferenceDTO {
 
     private Long inputUserId;
 
+    @ApiModelProperty("有效性")
+    @NotBlank(message = "有效性不能为空",groups = {ValidationGroup.Update.class,ValidationGroup.Create.class})
+    private String validity;
+
     /**
      * 收入税种种类名称
      */
@@ -138,6 +142,9 @@ public class TaxPreferenceDTO {
     @NotEmpty(message = "提资料报送时限不能为空",groups = {ValidationGroup.Update.class,ValidationGroup.Create.class})
     private String submitTimeLimit;
 
+    @ApiModelProperty("申报表填写简要说明")
+    @NotEmpty(message = "申报表填写简要说明不能为空",groups = {ValidationGroup.Update.class,ValidationGroup.Create.class})
+    private String submitDescription;
 
     @ApiModelProperty("政策法规关联信息")
     @NotEmpty(message = "政策法规关联信息不能为空",groups = {ValidationGroup.Update.class,ValidationGroup.Create.class})
@@ -148,6 +155,9 @@ public class TaxPreferenceDTO {
     @ApiModelProperty("申报信息")
     @NotEmpty(message = "申报信息不能为空",groups = {ValidationGroup.Update.class,ValidationGroup.Create.class})
     private List<SubmitConditionDTO> submitConditionDTOList;
+    @ApiModelProperty("保存或者提交:false-保存,true提交")
+    private Boolean release;
+
 
 
 }

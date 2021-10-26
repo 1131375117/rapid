@@ -1,12 +1,12 @@
 package cn.huacloud.taxpreference.services.producer;
 
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
-import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesListDTO;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryAbolishDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesDTO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesAbolishVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesDetailVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesVO;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 
 /**
  * 政策法规服务
@@ -19,16 +19,16 @@ public interface PoliciesService {
     /**
      * 政策列表查询
      *
-     * @param queryDTO
+     * @param queryPoliciesDTO 政策法规查询条件
      * @return
      */
-    public PageVO<PoliciesVO> getPolicesList(QueryPoliciesDTO queryDTO);
+    public PageVO<PoliciesVO> getPolicesList(QueryPoliciesDTO queryPoliciesDTO);
 
     /**
      * 新增政策法规
      *
-     * @param policiesListDTO
-     * @param id
+     * @param policiesListDTO 政策法规参数集合
+     * @param id 录入人用户ID
      */
     public void insertPolicies(PoliciesListDTO policiesListDTO, Long id);
 
@@ -36,7 +36,7 @@ public interface PoliciesService {
     /**
      * 根据政策法规id获取详细信息
      *
-     * @param id
+     * @param id 政策法规id
      * @return
      */
     public PoliciesDetailVO getPoliciesById(Long id);
@@ -45,14 +45,27 @@ public interface PoliciesService {
     /**
      * 修改政策法规
      *
-     * @param policiesListDTO
+     * @param policiesListDTO 政策法规参数集合
      */
     public void updatePolicies(PoliciesListDTO policiesListDTO);
 
     /**
      * 删除政策法规
-     * @param id
+     * @param id 政策法规id
      */
     public void deletePoliciesById(Long id);
 
+    /**
+     * 政策法规废止
+     * @param queryAbolishDTO 政策法规id
+     */
+    public void isAbolish(QueryAbolishDTO queryAbolishDTO);
+
+
+    /**
+     * 查询废止信息
+     * @param id 政策法规id
+     * @return
+     */
+    public PoliciesAbolishVO getAbolish(Long id);
 }

@@ -4,8 +4,11 @@ import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.ProcessListDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.ProcessSubmitDTO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.ProcessInfoVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.ProcessListVO;
 import cn.huacloud.taxpreference.services.user.entity.vos.LoginUserVO;
+
+import java.util.List;
 
 /**
  * @author fuhua
@@ -33,4 +36,11 @@ public interface ProcessService {
      * @return Void
      */
     ResultVO<Void> submitProcess(ProcessSubmitDTO taxPreferenceId, LoginUserVO currentUser);
+
+    /**
+     * 税收流程审批信息
+     * @param id
+     * @return
+     */
+    ResultVO<List<ProcessInfoVO>> queryProcessInfo(Long id);
 }

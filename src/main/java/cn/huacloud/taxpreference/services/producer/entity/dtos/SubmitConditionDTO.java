@@ -1,13 +1,7 @@
 package cn.huacloud.taxpreference.services.producer.entity.dtos;
 
-import cn.huacloud.taxpreference.common.constants.ValidationGroup;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
-import javax.validation.constraints.NotEmpty;
 
 /**
  * @description: 申报条件表实体
@@ -32,7 +26,7 @@ public class SubmitConditionDTO {
     /**
      * 排序字段
      */
-    @ApiModelProperty("排序字段")
-    private String sort;
+/*    @ApiModelProperty("排序字段")
+    private String sort;*/
 
 }

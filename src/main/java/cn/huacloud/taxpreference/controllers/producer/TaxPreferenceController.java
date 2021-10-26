@@ -33,7 +33,7 @@ public class TaxPreferenceController {
     @ApiOperation("税收优惠查询接口")
     @PostMapping("queryTaxPreference")
     public ResultVO<PageVO<QueryTaxPreferencesVO>> queryTaxPreference(@RequestBody QueryTaxPreferencesDTO queryTaxPreferencesDTO) {
-        return taxPreferenceService.queryTaxPreferenceList(queryTaxPreferencesDTO);
+        return taxPreferenceService.queryTaxPreferenceList(queryTaxPreferencesDTO,UserUtil.getCurrentUser().getId());
     }
 
     @ApiOperation("税收优惠新增接口")
@@ -64,4 +64,19 @@ public class TaxPreferenceController {
      * 税收优惠事项批量删除
      * 删除条件:优惠事项idlist
      */
+    @ApiOperation("税收优惠事项删除")
+    @DeleteMapping("taxPreference/{id}")
+    public ResultVO<Void> taxPreference(@Validated @NotEmpty(message = "id不能为空") @PathVariable Long[] id) {
+        return taxPreferenceService.deleteTaxPreference(id);
+    }
+    /**
+     * 税收优惠事项内容撤回
+     * 删除条件:优惠事项idlist
+     */
+    @ApiOperation("税收优惠事项内容撤回")
+    @PutMapping("reTaxPreference/{id}")
+    public ResultVO<Void> taxPreference(@Validated @NotEmpty(message = "id不能为空") @PathVariable Long id) {
+        return taxPreferenceService.reTaxPreference(id);
+    }
+
 }

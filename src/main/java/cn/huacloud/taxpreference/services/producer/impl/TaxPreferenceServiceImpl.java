@@ -1,7 +1,10 @@
 package cn.huacloud.taxpreference.services.producer.impl;
 
+import cn.huacloud.taxpreference.common.constants.ValidationGroup;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
-import cn.huacloud.taxpreference.common.enums.taxpreference.PreferenceValidation;
+import cn.huacloud.taxpreference.common.enums.BizCode;
+import cn.huacloud.taxpreference.common.enums.taxpreference.SortType;
+import cn.huacloud.taxpreference.common.enums.taxpreference.TaxPreferenceStatus;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.producer.TaxPreferenceService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.SubmitConditionDO;
@@ -15,10 +18,13 @@ import cn.huacloud.taxpreference.services.producer.entity.vos.QueryTaxPreference
 import cn.huacloud.taxpreference.services.producer.entity.vos.SubmitConditionVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferencePoliciesVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceVO;
+import cn.huacloud.taxpreference.services.producer.mapper.ProcessServiceMapper;
 import cn.huacloud.taxpreference.services.producer.mapper.SubmitConditionMapper;
 import cn.huacloud.taxpreference.services.producer.mapper.TaxPreferenceMapper;
 import cn.huacloud.taxpreference.services.producer.mapper.TaxPreferencePoliciesMapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +32,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,13 +55,22 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
 
     private final SubmitConditionMapper submitConditionMapper;
 
+    private final ProcessServiceMapper ProcessServiceMapper;
+
+     static final String TAX_PREFERENCE_ID ="tax_preference_id";
+
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResultVO<Void> insertTaxPreference(TaxPreferenceDTO taxPreferenceDTO) {
+        //检查优惠事项名称是否存在
+        judgeExists( taxPreferenceDTO.getTaxPreferenceName());
+
         //新增-税收优惠表t_tax_preference
         TaxPreferenceDO taxPreferenceDO = getTaxPreferenceDO(taxPreferenceDTO);
         taxPreferenceDO.setCreateTime(LocalDateTime.now());
+
+        log.info("税收优惠新增对象:{}",taxPreferenceDO);
         taxPreferenceMapper.insert(taxPreferenceDO);
 
         //新增-税收优惠政策法规关联表t_tax_preference_ policies
@@ -68,9 +84,29 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         return ResultVO.ok();
     }
 
+    @NotEmpty(message = "优惠事项名称不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+    private String getTaxPreferenceName(TaxPreferenceDTO taxPreferenceDTO) {
+        return taxPreferenceDTO.getTaxPreferenceName();
+    }
+    /**
+     * 判断此税收优惠事项是否存在
+     * */
+    private Boolean judgeExists(String name) {
+        LambdaQueryWrapper<TaxPreferenceDO> queryWrapper = Wrappers.lambdaQuery(TaxPreferenceDO.class)
+                .eq(TaxPreferenceDO::getTaxPreferenceName, name)
+                .eq(TaxPreferenceDO::isDeleted,0)
+                ;
+        Long count = taxPreferenceMapper.selectCount(queryWrapper);
+        if(count>0){
+            throw BizCode._4302.exception();
+        }
+        return false;
+    }
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResultVO<Void> updateTaxPreference(TaxPreferenceDTO taxPreferenceDTO) {
+        judgeExists(taxPreferenceDTO.getTaxPreferenceName());
         //修改-税收优惠表t_tax_preference
         TaxPreferenceDO taxPreferenceDO = getTaxPreferenceDO(taxPreferenceDTO);
         taxPreferenceMapper.updateById(taxPreferenceDO);
@@ -90,7 +126,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     public ResultVO<TaxPreferenceVO> queryTaxPreferenceInfo(Long id) {
         TaxPreferenceVO taxPreferenceVO = new TaxPreferenceVO();
         Map<String, Object> columnMap = new HashMap<>(16);
-        columnMap.put("tax_preference_id", id);
+        columnMap.put(TAX_PREFERENCE_ID, id);
 
         //根据id查询税收优惠表t_tax_preference信息
         TaxPreferenceDO taxPreferenceDO = taxPreferenceMapper.selectById(id);
@@ -109,11 +145,63 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     }
 
     @Override
-    public ResultVO<PageVO<QueryTaxPreferencesVO>> queryTaxPreferenceList(QueryTaxPreferencesDTO queryTaxPreferencesDTO) {
+    public ResultVO<PageVO<QueryTaxPreferencesVO>> queryTaxPreferenceList(QueryTaxPreferencesDTO queryTaxPreferencesDTO, Long userId) {
+        log.info("查询条件:queryTaxPreferencesDTO:{}",queryTaxPreferencesDTO);
+        queryTaxPreferencesDTO.paramReasonable();
         Page<QueryTaxPreferencesVO> page = new Page<>(queryTaxPreferencesDTO.getPageNum(), queryTaxPreferencesDTO.getPageSize());
-        IPage<QueryTaxPreferencesVO> iPage = taxPreferenceMapper.queryTaxPreferenceVOList(page, queryTaxPreferencesDTO);
+        //获取排序字段
+        String sort = getSort(queryTaxPreferencesDTO);
+        IPage<QueryTaxPreferencesVO> iPage = taxPreferenceMapper.queryTaxPreferenceVOList(page, queryTaxPreferencesDTO,sort,userId);
+        List<QueryTaxPreferencesVO> records = iPage.getRecords();
+        records.forEach(queryTaxPreferencesVO -> {
+           String  processStatus = ProcessServiceMapper.selectByTaxPreferenceId(queryTaxPreferencesVO.getId());
+           queryTaxPreferencesVO.setProcessStatus(processStatus);
+        });
         PageVO<QueryTaxPreferencesVO> pageVO = PageVO.createPageVO(iPage, iPage.getRecords());
         return ResultVO.ok(pageVO);
+    }
+
+    /**
+     * 获取排序字段
+     * @param queryTaxPreferencesDTO
+     */
+    private String getSort(QueryTaxPreferencesDTO queryTaxPreferencesDTO) {
+        String sort=SortType.CREATE_TIME.getValue();
+        if(queryTaxPreferencesDTO.getSortType().equals(SortType.UPDATE_TIME)){
+            sort=SortType.UPDATE_TIME.name();
+        }
+        log.info("排序字段sort:{}",sort);
+        return sort;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ResultVO<Void> deleteTaxPreference(Long[] ids) {
+        for (Long id : ids) {
+            log.info("删除条件:ids={}",id);
+            Map<String, Object> keyMap=new HashMap<>(16);
+            keyMap.put(TAX_PREFERENCE_ID,id);
+
+            //逻辑删除t_tax_preference
+            taxPreferenceMapper.updateDeletedById(id);
+            //删除-申报条件t_submit_condition
+            submitConditionMapper.deleteByMap(keyMap);
+            //删除政策法规t_tax_preference_policies
+            taxPreferencePoliciesMapper.deleteByMap(keyMap);
+            log.info("id为{}的税收优惠删除成功！",id);
+        }
+        return ResultVO.ok(null);
+    }
+
+    @Override
+    public ResultVO<Void> reTaxPreference(Long id) {
+        log.info("撤回条件:ids={}",id);
+        TaxPreferenceDO taxPreferenceDO=new TaxPreferenceDO();
+        taxPreferenceDO.setId(id);
+        taxPreferenceDO.setTaxPreferenceStatus(TaxPreferenceStatus.UNRELEASED.getValue());
+        taxPreferenceMapper.updateById(taxPreferenceDO);
+        log.info("id为{}的税收优惠撤回成功！",id);
+        return ResultVO.ok();
     }
 
     /**
@@ -213,7 +301,8 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         BeanUtils.copyProperties(taxPreferenceDTO, taxPreferenceDO);
         taxPreferenceDO.setDeleted(false);
         taxPreferenceDO.setUpdateTime(LocalDateTime.now());
-        taxPreferenceDO.setValidity(PreferenceValidation.EFFECTIVE.getValue());
+        taxPreferenceDO.setValidity(taxPreferenceDO.getValidity());
+        taxPreferenceDO.setTaxPreferenceStatus(TaxPreferenceStatus.UNRELEASED.getValue());
         return taxPreferenceDO;
     }
 

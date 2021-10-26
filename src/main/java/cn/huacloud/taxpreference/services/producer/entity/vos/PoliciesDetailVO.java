@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
  * @author wuxin
  */
 @Data
-@TableName("t_policies")
 public class PoliciesDetailVO {
 
     /**
@@ -131,7 +130,7 @@ public class PoliciesDetailVO {
     /**
      * 标签集合
      */
-    @ApiModelProperty("id")
-    private String labels;
+//    @ApiModelProperty("id")
+//    private String labels;
 
 }

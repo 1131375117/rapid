@@ -1,13 +1,16 @@
 package cn.huacloud.taxpreference.services.producer.entity.dtos;
 
 import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
+ * 政策犯规查询条件类
  * @author wuxin
  */
 @Data
@@ -43,6 +46,15 @@ public class QueryPoliciesDTO extends KeywordPageQueryDTO {
 
     @ApiModelProperty("查询发布日期")
     private LocalDate releaseDate;
+
+    @ApiModelProperty("开始时间")
+    private LocalDate startTime;
+
+    @ApiModelProperty("结束时间")
+    private LocalDate endTime;
+
+    @ApiModelProperty("查询更新日期")
+    private LocalDateTime updateTime;
 
     private SortField sortField;
 
