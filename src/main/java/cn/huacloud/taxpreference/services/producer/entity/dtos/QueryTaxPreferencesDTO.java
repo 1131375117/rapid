@@ -2,6 +2,8 @@ package cn.huacloud.taxpreference.services.producer.entity.dtos;
 
 import cn.huacloud.taxpreference.common.constants.ValidationGroup;
 import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
+import cn.huacloud.taxpreference.common.enums.taxpreference.ReleaseMatter;
+import cn.huacloud.taxpreference.common.enums.taxpreference.SortType;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -68,7 +70,7 @@ public class QueryTaxPreferencesDTO extends KeywordPageQueryDTO {
      * 排序
      */
     @ApiModelProperty("排序")
-    private Integer sort;
+    private SortType sortType;
 
     /**
      * 开始时间
@@ -80,6 +82,9 @@ public class QueryTaxPreferencesDTO extends KeywordPageQueryDTO {
      */
     @ApiModelProperty("截止时间")
     private Integer endTime;
+
+    @ApiModelProperty("是否自我发布")
+    private ReleaseMatter releaseMatter;
 
 
 }

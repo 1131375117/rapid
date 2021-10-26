@@ -1,9 +1,8 @@
 package cn.huacloud.taxpreference.services.producer.entity.vos;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * @description: 税收优惠列表VO
@@ -18,6 +17,9 @@ public class QueryTaxPreferencesVO {
      */
     @ApiModelProperty("优惠事项名称")
     private String taxPreferenceName;
+
+    @ApiModelProperty("优惠事项id")
+    private Long id;
 
     /**
      * 纳税人登记注册类型名称
@@ -46,8 +48,7 @@ public class QueryTaxPreferencesVO {
     @ApiModelProperty("审核状态")
     private String  processStatus;
 
-    @ApiModelProperty("发布时间")
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate approvalTime;
+    @ApiModelProperty("创建时间")
+    private LocalDateTime createTime;
 
 }

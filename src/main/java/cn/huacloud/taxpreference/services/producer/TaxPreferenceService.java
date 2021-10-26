@@ -35,9 +35,23 @@ public interface TaxPreferenceService {
     ResultVO<TaxPreferenceVO> queryTaxPreferenceInfo(Long id);
 
     /**
-     *修改税收优惠查询基本信息接口
+     *查询税收优惠查询基本信息接口
      * @param queryTaxPreferencesDTO
+     * @param userId
      * @return queryTaxPreferencesVO
      */
-    ResultVO<PageVO<QueryTaxPreferencesVO>> queryTaxPreferenceList(QueryTaxPreferencesDTO queryTaxPreferencesDTO);
+    ResultVO<PageVO<QueryTaxPreferencesVO>> queryTaxPreferenceList(QueryTaxPreferencesDTO queryTaxPreferencesDTO, Long userId);
+
+    /**
+     * 税收优惠实现删除接口
+     * @param ids
+     * @return Void
+     */
+    ResultVO<Void> deleteTaxPreference(Long[] ids);
+    /**
+     * 内容撤回
+     * @param id
+     * @return Void
+     */
+    ResultVO<Void> reTaxPreference(Long id);
 }

@@ -16,9 +16,26 @@ import org.springframework.stereotype.Repository;
  **/
 @Repository
 public interface TaxPreferenceMapper  extends BaseMapper<TaxPreferenceDO> {
-
+    /**
+     * 税收优惠新增
+     * @param taxPreferenceDO
+     * @return int
+     */
     int insertTaxPreference(TaxPreferenceDO taxPreferenceDO);
 
+    /**
+     * 税收优惠查询
+     * @param page
+     * @param queryTaxPreferencesDTO
+     * @param sort
+     * @param userId
+     * @return queryTaxPreferencesVO
+     */
+    IPage<QueryTaxPreferencesVO> queryTaxPreferenceVOList(@Param("page") Page<QueryTaxPreferencesVO> page, @Param("queryTaxPreferencesDTO") QueryTaxPreferencesDTO queryTaxPreferencesDTO, @Param("sort") String sort,@Param("userId") Long userId);
 
-    IPage<QueryTaxPreferencesVO> queryTaxPreferenceVOList(@Param("page") Page<QueryTaxPreferencesVO> page,@Param("queryTaxPreferencesDTO") QueryTaxPreferencesDTO queryTaxPreferencesDTO);
+    /**
+     * 税收优惠删除
+     * @param id
+     */
+    void updateDeletedById(Long id);
 }

@@ -39,5 +39,9 @@
 
         </where>
     </select>
+    <select id="selectByTaxPreferenceId" resultType="java.lang.String">
+        select process_status as processStatus
+            from t_process where tax_preference_id=#{id} and latest_process=1
+    </select>
 
 </mapper>
