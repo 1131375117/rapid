@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.huacloud.taxpreference.services.user.mapper.RoleMapper">
+    <select id="rolePageQuery" resultType="cn.huacloud.taxpreference.services.user.entity.vos.RoleListVO">
+        SELECT t_role.id,
+               t_role.role_code,
+               t_role.role_name,
+               t_role.note,
+               t_role.permission_codes,
+               COUNT(*) user_count
+        FROM t_role
+                 LEFT JOIN (
+            SELECT id user_id,
+                   role_codes
+            FROM t_user
+            WHERE deleted = 0
+        ) tmp_user
+                           ON FIND_IN_SET(t_role.role_code, tmp_user.role_codes)
+        GROUP BY role_code
+    </select>
+</mapper>

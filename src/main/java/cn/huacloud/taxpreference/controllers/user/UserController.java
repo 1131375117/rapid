@@ -7,7 +7,10 @@ import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.PermissionGroup;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.user.UserService;
+import cn.huacloud.taxpreference.services.user.entity.dos.PermissionDO;
 import cn.huacloud.taxpreference.services.user.entity.dtos.UserQueryDTO;
+import cn.huacloud.taxpreference.services.user.entity.vos.PermissionGroupVO;
+import cn.huacloud.taxpreference.services.user.entity.vos.PermissionVO;
 import cn.huacloud.taxpreference.services.user.entity.vos.ProducerUserVO;
 import cn.huacloud.taxpreference.services.user.entity.vos.UserListVO;
 import io.swagger.annotations.Api;
@@ -58,7 +61,6 @@ public class UserController {
         userService.saveProducerUser(producerUserVO);
         return ResultVO.ok(producerUserVO);
     }
-
 
     /**
      * 修改后台用户

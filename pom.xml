@@ -51,6 +51,11 @@
             <artifactId>sa-token-spring-boot-starter</artifactId>
             <version>${sa.token.version}</version>
         </dependency>
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-dao-redis-jackson</artifactId>
+            <version>${sa.token.version}</version>
+        </dependency>
         <!--swagger-->
         <dependency>
             <groupId>com.spring4all</groupId>

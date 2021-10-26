@@ -2,6 +2,7 @@ package cn.huacloud.taxpreference.services.user.impl;
 
 import cn.dev33.satoken.secure.SaSecureUtil;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.huacloud.taxpreference.common.constants.UserConstants;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.enums.UserType;
@@ -9,6 +10,7 @@ import cn.huacloud.taxpreference.common.utils.UserUtil;
 import cn.huacloud.taxpreference.services.user.RoleService;
 import cn.huacloud.taxpreference.services.user.UserService;
 import cn.huacloud.taxpreference.services.user.entity.dos.ProducerUserDO;
+import cn.huacloud.taxpreference.services.user.entity.dos.RoleDO;
 import cn.huacloud.taxpreference.services.user.entity.dos.UserDO;
 import cn.huacloud.taxpreference.services.user.entity.dtos.UserQueryDTO;
 import cn.huacloud.taxpreference.services.user.entity.vos.LoginUserVO;
@@ -32,9 +34,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 用户服务实现
+ *
  * @author wangkh
  */
 @RequiredArgsConstructor
@@ -57,8 +61,28 @@ public class UserServiceImpl implements UserService {
         UserDO userDO = userMapper.selectById(userId);
         LoginUserVO loginUserVO = new LoginUserVO();
         BeanUtils.copyProperties(userDO, loginUserVO);
-        loginUserVO.setRoleCodes(Collections.singletonList("admin"));
-        loginUserVO.setPermissionCodes(Collections.singletonList("*"));
+
+        // 判断角色码值是否为空
+        if (StringUtils.isBlank(userDO.getRoleCodes())) {
+            loginUserVO.setRoleCodes(new ArrayList<>());
+            loginUserVO.setPermissionCodes(new ArrayList<>());
+            return loginUserVO;
+        }
+
+        // 设置角色码值
+        List<RoleDO> roleDOList = roleService.getRoleDOByRoleCodes(Arrays.asList(userDO.getRoleCodes().split(",")));
+        List<String> roleCodes = roleDOList.stream().map(RoleDO::getRoleCode).sorted().collect(Collectors.toList());
+        loginUserVO.setRoleCodes(roleCodes);
+        // 设置权限码值
+        List<String> permissionCodes = roleDOList.stream().flatMap(roleDO -> {
+            String permissionCodeStr = roleDO.getPermissionCodes();
+            if (StringUtils.isBlank(permissionCodeStr)) {
+                return Stream.empty();
+            }
+            return Arrays.stream(permissionCodeStr.split(","));
+        }).sorted().collect(Collectors.toList());
+        loginUserVO.setPermissionCodes(permissionCodes);
+
         return loginUserVO;
     }
 
@@ -76,6 +100,8 @@ public class UserServiceImpl implements UserService {
                 .apply(roleCode != null, "FIND_IN_SET ('" + roleCode + "', roleCodes)");
         // 执行查询
         IPage<UserDO> iPage = userMapper.selectPage(userQueryDTO.createQueryPage(), queryWrapper);
+
+        Map<Long, ProducerUserDO> producerUserDOMap = producerUserMapper.getMapByUserIds(iPage.getRecords().stream().map(UserDO::getId).collect(Collectors.toList()));
         // 获取所有角色
         Map<String, RoleVO> allRoleVOMap = roleService.getAllRoleVOMap();
         // 数据映射
@@ -84,6 +110,11 @@ public class UserServiceImpl implements UserService {
                     UserListVO userListVO = new UserListVO();
                     // 基础属性拷贝
                     BeanUtils.copyProperties(userDO, userListVO);
+                    // 生产者属性拷贝
+                    ProducerUserDO producerUserDO = producerUserDOMap.get(userDO.getId());
+                    if (producerUserDO != null) {
+                        userListVO.setPhoneNumber(producerUserDO.getPhoneNumber());
+                    }
                     // 设置角色
                     String roleCodes = userDO.getRoleCodes();
                     if (StringUtils.isNotBlank(roleCodes)) {
@@ -185,10 +216,15 @@ public class UserServiceImpl implements UserService {
         if (userDO == null) {
             throw BizCode._4100.exception();
         }
+        // 检查是否为管理员角色
+        adminUserCheck(userDO.getUserAccount());
+
         userDO.setDisable(!userDO.getDisable());
         userMapper.updateById(userDO);
         // 禁用用户
-        StpUtil.logout();
+        if (userDO.getDisable()) {
+            StpUtil.logout(userId);
+        }
 
         return userDO.getDisable();
     }
@@ -196,6 +232,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void removeProducerUser(Long userId) {
         UserDO userDO = userMapper.selectById(userId);
+        // validate
+        if (userDO == null) {
+            throw BizCode._4100.exception();
+        }
+        // 检查是否为管理员角色
+        adminUserCheck(userDO.getUserAccount());
         userDO.setDeleted(true);
         userMapper.updateById(userDO);
     }
@@ -207,6 +249,9 @@ public class UserServiceImpl implements UserService {
         if (userDO == null) {
             throw BizCode._4100.exception();
         }
+
+        // 检查是否为管理员角色
+        adminUserCheck(userDO.getUserAccount());
 
         Set<String> allRoleCodes = roleService.getAllRoleCodes();
         Set<String> setRoleCodes = new HashSet<>(roleCodes);
@@ -221,6 +266,17 @@ public class UserServiceImpl implements UserService {
         userMapper.updateById(userDO);
 
         // 设置权限后注销指定用户
-        StpUtil.logout(userId);
+        // StpUtil.logout(userId);
+    }
+
+    /**
+     * 检查是否为管理员角色
+     *
+     * @param userAccount
+     */
+    private void adminUserCheck(String userAccount) {
+        if (UserConstants.ADMIN_USER_NAME.equalsIgnoreCase(userAccount)) {
+            throw BizCode._4209.exception();
+        }
     }
 }

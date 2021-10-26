@@ -2,12 +2,16 @@ package cn.huacloud.taxpreference.services.user.impl;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.huacloud.taxpreference.common.annotations.PermissionInfo;
+import cn.huacloud.taxpreference.common.enums.PermissionGroup;
 import cn.huacloud.taxpreference.common.exception.MissingPermissionInfoException;
 import cn.huacloud.taxpreference.services.user.PermissionService;
 import cn.huacloud.taxpreference.services.user.entity.dos.PermissionDO;
+import cn.huacloud.taxpreference.services.user.entity.vos.PermissionGroupVO;
+import cn.huacloud.taxpreference.services.user.entity.vos.PermissionVO;
 import cn.huacloud.taxpreference.services.user.mapper.PermissionMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 import org.springframework.web.method.HandlerMethod;
@@ -30,6 +34,43 @@ public class PermissionServiceImpl implements PermissionService, CommandLineRunn
     private final PermissionMapper permissionMapper;
 
     private final RequestMappingHandlerMapping requestMappingHandlerMapping;
+
+    @Override
+    public List<PermissionGroupVO> getPermissionGroupVOList() {
+        // 集合分组
+        Map<PermissionGroup, List<PermissionDO>> map = permissionMapper.selectList(null).stream()
+                .collect(Collectors.groupingBy(PermissionDO::getPermissionGroup));
+        // 数据映射
+        List<PermissionGroupVO> permissionGroupVOList = map.entrySet().stream()
+                .map(entry -> {
+                    PermissionGroup key = entry.getKey();
+                    PermissionGroupVO permissionGroupVO = new PermissionGroupVO();
+                    permissionGroupVO.setGroupCode(key.getValue());
+                    permissionGroupVO.setGroupName(key.name);
+
+                    List<PermissionDO> value = entry.getValue();
+                    List<PermissionVO> permissionVOList = value.stream()
+                            .map(permissionDO -> {
+                                        PermissionVO permissionVO = new PermissionVO();
+                                        BeanUtils.copyProperties(permissionDO, permissionVO);
+                                        return permissionVO;
+                                    }
+                            ).collect(Collectors.toList());
+
+                    permissionGroupVO.setPermissions(permissionVOList);
+                    return permissionGroupVO;
+                }).collect(Collectors.toList());
+
+        return permissionGroupVOList;
+    }
+
+    @Override
+    public Set<String> getAllPermissionCodeSet() {
+        return permissionMapper.selectList(null).stream()
+                .map(PermissionDO::getPermissionCode)
+                .collect(Collectors.toSet());
+    }
+
 
     /**
      * 扫描 HandlerMethod 中的注解权限信息，并保存到数据库
