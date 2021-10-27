@@ -3,7 +3,7 @@ spring:
   # datasource
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: "jdbc:mysql://172.16.122.17:3306/tax_preference?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false"
+    url: "jdbc:mysql://172.16.122.17:3306/tax_preference_dev?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false"
     username: tax_preference
     password: tax_preference
   # redis

@@ -20,6 +20,7 @@ import cn.huacloud.taxpreference.services.user.entity.vos.UserListVO;
 import cn.huacloud.taxpreference.services.user.mapper.ProducerUserMapper;
 import cn.huacloud.taxpreference.services.user.mapper.UserMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -97,7 +98,7 @@ public class UserServiceImpl implements UserService {
                 .eq(UserDO::getDeleted, false)
                 .like(userAccountKeyword != null, UserDO::getUserAccount, userAccountKeyword)
                 .like(usernameKeyword != null, UserDO::getUsername, usernameKeyword)
-                .apply(roleCode != null, "FIND_IN_SET ('" + roleCode + "', roleCodes)");
+                .apply(roleCode != null, "FIND_IN_SET ('" + roleCode + "', role_codes)");
         // 执行查询
         IPage<UserDO> iPage = userMapper.selectPage(userQueryDTO.createQueryPage(), queryWrapper);
 
@@ -124,6 +125,8 @@ public class UserServiceImpl implements UserService {
                                 .filter(Objects::nonNull)
                                 .collect(Collectors.toList());
                         userListVO.setRoles(roleVOList);
+                    } else {
+                        userListVO.setRoles(new ArrayList<>());
                     }
                     return userListVO;
                 }).collect(Collectors.toList());
@@ -199,7 +202,9 @@ public class UserServiceImpl implements UserService {
         ProducerUserDO producerUserDO = producerUserMapper.selectByUserId(userId);
         // 属性拷贝
         ProducerUserVO producerUserVO = new ProducerUserVO();
-        BeanUtils.copyProperties(producerUserDO, producerUserVO);
+        if (producerUserDO != null) {
+            BeanUtils.copyProperties(producerUserDO, producerUserVO);
+        }
         BeanUtils.copyProperties(userDO, producerUserVO);
         producerUserVO.setId(userId);
         // 擦除密码
@@ -216,7 +221,7 @@ public class UserServiceImpl implements UserService {
         if (userDO == null) {
             throw BizCode._4100.exception();
         }
-        // 检查是否为管理员角色
+        // 检查是否为管理员用户
         adminUserCheck(userDO.getUserAccount());
 
         userDO.setDisable(!userDO.getDisable());
@@ -236,7 +241,7 @@ public class UserServiceImpl implements UserService {
         if (userDO == null) {
             throw BizCode._4100.exception();
         }
-        // 检查是否为管理员角色
+        // 检查是否为管理员用户
         adminUserCheck(userDO.getUserAccount());
         userDO.setDeleted(true);
         userMapper.updateById(userDO);
@@ -250,7 +255,7 @@ public class UserServiceImpl implements UserService {
             throw BizCode._4100.exception();
         }
 
-        // 检查是否为管理员角色
+        // 检查是否为管理员用户
         adminUserCheck(userDO.getUserAccount());
 
         Set<String> allRoleCodes = roleService.getAllRoleCodes();
@@ -269,8 +274,36 @@ public class UserServiceImpl implements UserService {
         // StpUtil.logout(userId);
     }
 
+    @Override
+    public void removeUserRole(Long userId, String roleCode) {
+        UserDO userDO = userMapper.selectById(userId);
+        // 参数校验
+        if (userDO == null) {
+            throw BizCode._4100.exception();
+        }
+        // 检查是否为管理员用户
+        adminUserCheck(userDO.getUserAccount());
+
+        List<String> roleCodeList = Arrays.asList(userDO.getRoleCodes().split(","));
+        // 移除角色
+        roleCodeList.remove(roleCode);
+        String roleCodesStr = String.join(",", roleCodeList);
+        userDO.setRoleCodes(roleCodesStr);
+
+        // 执行保存
+        userMapper.updateById(userDO);
+    }
+
+    @Override
+    public boolean isUserAccountExist(String userAccount) {
+        LambdaQueryWrapper<UserDO> queryWrapper = Wrappers.lambdaQuery(UserDO.class)
+                .eq(UserDO::getUserAccount, userAccount);
+        Long count = userMapper.selectCount(queryWrapper);
+        return count > 0;
+    }
+
     /**
-     * 检查是否为管理员角色
+     * 检查是否为管理员用户
      *
      * @param userAccount
      */

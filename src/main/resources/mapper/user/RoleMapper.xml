@@ -8,7 +8,7 @@
                t_role.role_name,
                t_role.note,
                t_role.permission_codes,
-               COUNT(*) user_count
+               COUNT(user_id) user_count
         FROM t_role
                  LEFT JOIN (
             SELECT id user_id,

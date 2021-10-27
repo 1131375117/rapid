@@ -7,11 +7,21 @@ import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.common.utils.UserUtil;
 import cn.huacloud.taxpreference.services.user.UserService;
 import cn.huacloud.taxpreference.services.user.entity.dos.UserDO;
+import cn.huacloud.taxpreference.services.user.entity.vos.CaptchaVO;
 import cn.huacloud.taxpreference.services.user.entity.vos.LoginUserVO;
+import cn.hutool.captcha.CaptchaUtil;
+import cn.hutool.captcha.LineCaptcha;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 单点登录接口
@@ -26,6 +36,8 @@ public class SSOController {
 
     private final UserService userService;
 
+    private final StringRedisTemplate stringRedisTemplate;
+
     /**
      * 用户登录接口
      *
@@ -36,7 +48,17 @@ public class SSOController {
     @ApiOperation("用户登录接口")
     @PostMapping("/sso/login")
     public ResultVO<LoginUserVO> login(@RequestParam("userAccount") String userAccount,
-                                       @RequestParam("password") String password) {
+                                       @RequestParam("password") String password,
+                                       @RequestParam(name = "captchaKey", defaultValue = "2c54df8c-5f8c-489b-bf3c-84bd14d1d669") String captchaKey,
+                                       @RequestParam(name = "captchaCode", defaultValue = "1234") String captchaCode) {
+        // 校验验证码
+        /*String captchaRedisKey = getCaptchaRedisKey(captchaKey);
+        String serverCaptchaCode = stringRedisTemplate.opsForValue().get(captchaRedisKey);
+        if (serverCaptchaCode == null || !serverCaptchaCode.equalsIgnoreCase(captchaCode)) {
+            throw BizCode._4210.exception();
+        }
+        stringRedisTemplate.delete(captchaRedisKey);*/
+
         // 根据用户名查找用户
         UserDO userDO = userService.getUserDOByUserAccount(userAccount);
         if (userDO == null) {
@@ -82,5 +104,35 @@ public class SSOController {
     public ResultVO<Void> logout() {
         StpUtil.logout();
         return ResultVO.ok();
+    }
+
+    @ApiOperation("获取图片验证码")
+    @GetMapping("/sso/captcha")
+    public ResultVO<CaptchaVO> getCaptcha(@RequestParam(name = "width", defaultValue = "600") Integer width,
+                                          @RequestParam(name = "height", defaultValue = "300") Integer height) {
+        // 生成图片验证码
+        LineCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(width, height, 4, 200);
+        // 属性设置
+        CaptchaVO captchaVO = new CaptchaVO();
+        String uuid = UUID.randomUUID().toString();
+        captchaVO.setCaptchaId(uuid);
+        captchaVO.setImageBase64(lineCaptcha.getImageBase64());
+
+        // 把验证码存入redis
+        String captchaRedisKey = getCaptchaRedisKey(uuid);
+        stringRedisTemplate.opsForValue().set(captchaRedisKey, lineCaptcha.getCode());
+        // 设置30分钟后过期
+        stringRedisTemplate.expire(captchaRedisKey, 30, TimeUnit.MINUTES);
+
+        return ResultVO.ok(captchaVO);
+    }
+
+    /**
+     * 根据captchaId获取验证码redisKey
+     * @param captchaId 验证码ID
+     * @return redisKey
+     */
+    private String getCaptchaRedisKey(String captchaId) {
+        return "captcha:" + captchaId;
     }
 }
