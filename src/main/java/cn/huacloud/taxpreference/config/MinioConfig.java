@@ -29,7 +29,7 @@ public class MinioConfig {
      */
     private String secretKey;
     /**
-     * 存储通
+     * 存储桶
      */
     private String bucket = "tax-preference";
 

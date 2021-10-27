@@ -27,7 +27,10 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -50,6 +53,8 @@ public class PoliciesServiceImpl implements PoliciesService {
     private final TaxPreferencePoliciesMapper taxPreferencePoliciesMapper;
 
     private final TaxPreferenceMapper taxPreferenceMapper;
+
+    static final String POLICIES_ID="policies_id";
 
     /**
      * 政策列表查询
@@ -255,16 +260,27 @@ public class PoliciesServiceImpl implements PoliciesService {
         //查询政策法规
         PoliciesDO policiesDO = policiesMapper.selectById(id);
         //查询税收优惠政策关联表
-        TaxPreferencePoliciesDO taxPreferencePoliciesDO = taxPreferencePoliciesMapper.selectById(id);
+        Map<String, Object> columnMap = new HashMap<>(16);
+        columnMap.put(POLICIES_ID, policiesDO.getId());
+        List<TaxPreferencePoliciesDO> taxPreferencePoliciesDOS = taxPreferencePoliciesMapper.selectByMap(columnMap);
         //查询税收优惠
-        Long taxPreferenceId = taxPreferencePoliciesDO.getTaxPreferenceId();
-        TaxPreferenceDO taxPreferenceDO = taxPreferenceMapper.selectById(taxPreferenceId);
+        Long taxPreferenceId=null;
+        for (TaxPreferencePoliciesDO taxPreferencePoliciesDO : taxPreferencePoliciesDOS) {
+            taxPreferenceId = taxPreferencePoliciesDO.getTaxPreferenceId();
+        }
+        LambdaQueryWrapper<TaxPreferenceDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(TaxPreferenceDO::getId,taxPreferenceId);
+        List<TaxPreferenceDO> taxPreferenceDOS = taxPreferenceMapper.selectList(lambdaQueryWrapper);
+        List<String> taxPreferenceNameList = new ArrayList<>();
+        for (TaxPreferenceDO taxPreferenceDO : taxPreferenceDOS) {
+            String taxCategoriesName = taxPreferenceDO.getTaxCategoriesName();
+            taxPreferenceNameList.add(taxCategoriesName);
+        }
         //设置返回结果值
         PoliciesAbolishVO policiesAbolishVO = new PoliciesAbolishVO();
         policiesAbolishVO.setPoliciesStatus(policiesDO.getPoliciesStatus());
         policiesAbolishVO.setAbolishNote(policiesDO.getAbolishNote());
-        policiesAbolishVO.setTaxPreferenceName(taxPreferenceDO.getTaxPreferenceName());
-        policiesAbolishVO.setValidity(taxPreferenceDO.getValidity());
+        policiesAbolishVO.setNameList(taxPreferenceNameList);
         //返回结果
         return policiesAbolishVO;
     }
