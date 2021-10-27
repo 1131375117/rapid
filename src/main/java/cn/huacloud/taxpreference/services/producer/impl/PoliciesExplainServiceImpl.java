@@ -6,9 +6,11 @@ import cn.huacloud.taxpreference.services.producer.PoliciesExplainService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesExplainDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesExplainDTO;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesExplainDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainDetailVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainVO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesTitleVO;
 import cn.huacloud.taxpreference.services.producer.mapper.PoliciesExplainMapper;
 import cn.huacloud.taxpreference.services.producer.mapper.PoliciesMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -19,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.BeanFactoryTransactionAttributeSourceAdvisor;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
@@ -48,17 +51,13 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
      */
     @Override
     public PageVO<PoliciesExplainVO> getPoliciesExplainList(QueryPoliciesExplainDTO queryPoliciesExplainDTO) {
-        Long policiesId = queryPoliciesExplainDTO.getPoliciesId();
-        PoliciesDO policiesDO = policiesMapper.selectById(policiesId);
-        //模糊查询--政策解读标题
+
         LambdaQueryWrapper<PoliciesExplainDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        //模糊查询--政策解读标题
         lambdaQueryWrapper.like(!StringUtils.isEmpty(queryPoliciesExplainDTO.getTitle()),
                 PoliciesExplainDO::getTitle,
-                queryPoliciesExplainDTO.getKeyword());
+                queryPoliciesExplainDTO.getTitle());
         //模糊查询--政策法规标题
-//        lambdaQueryWrapper.like(!StringUtils.isEmpty(queryPoliciesExplainDTO.getTitle()),
-//                PoliciesExplainDO::getTitle,
-//                queryPoliciesExplainDTO.getTitle());
         //模糊查询--政策解读来源
         lambdaQueryWrapper.like(!StringUtils.isEmpty(queryPoliciesExplainDTO.getDocSource())
                 , PoliciesExplainDO::getDocSource,
@@ -93,6 +92,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 
         return PageVO.createPageVO(policiesExplainDOPage, records);
     }
+
 
     /**
      * 新增政策解读
@@ -163,18 +163,18 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
      * @return
      */
     @Override
-    public List<PoliciesExplainVO> fuzzyQuery(KeywordPageQueryDTO keywordPageQueryDTO) {
-        LambdaQueryWrapper<PoliciesExplainDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.like(PoliciesExplainDO::getTitle, keywordPageQueryDTO.getKeyword());
-        List<PoliciesExplainDO> policiesExplainDOS = policiesExplainMapper.selectList(lambdaQueryWrapper);
-        PoliciesExplainVO policiesExplainVO = null;
-        ArrayList<PoliciesExplainVO> policiesExplainVOS = new ArrayList<>();
-        for (PoliciesExplainDO policiesExplainDO : policiesExplainDOS) {
-            policiesExplainVO = new PoliciesExplainVO();
-            BeanUtils.copyProperties(policiesExplainDO, policiesExplainVO);
-            policiesExplainVOS.add(policiesExplainVO);
+    public List<PoliciesTitleVO> fuzzyQuery(KeywordPageQueryDTO keywordPageQueryDTO) {
+        LambdaQueryWrapper<PoliciesDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.like(PoliciesDO::getTitle, keywordPageQueryDTO.getKeyword());
+        List<PoliciesDO> policiesDOS = policiesMapper.selectList(lambdaQueryWrapper);
+        PoliciesTitleVO policiesTitleVO = null;
+        List<PoliciesTitleVO> policiesTitleVOList = new ArrayList<>();
+        for (PoliciesDO policiesDO : policiesDOS) {
+            policiesTitleVO=new PoliciesTitleVO();
+            BeanUtils.copyProperties(policiesDO,policiesTitleVO);
+            policiesTitleVOList.add(policiesTitleVO);
         }
-        return policiesExplainVOS;
+        return policiesTitleVOList;
 
     }
 }

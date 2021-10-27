@@ -12,6 +12,7 @@ import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesExplainDT
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesExplainDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainDetailVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainVO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesTitleVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -66,12 +67,10 @@ public class PoliciesExplainController {
      * 关联政策（模糊查询，政策法规）
      */
     @PostMapping("/policies/query")
-    public ResultVO<List<PoliciesExplainVO>> fuzzyQuery(@RequestBody KeywordPageQueryDTO keywordPageQueryDTO){
-        List<PoliciesExplainVO> policiesExplainVOS = policiesExplainService.fuzzyQuery(keywordPageQueryDTO);
-        return ResultVO.ok(policiesExplainVOS);
-
+    public ResultVO<List<PoliciesTitleVO>> fuzzyQuery(@RequestBody KeywordPageQueryDTO keywordPageQueryDTO){
+        List<PoliciesTitleVO> policiesTitleVOList = policiesExplainService.fuzzyQuery(keywordPageQueryDTO);
+        return ResultVO.ok(policiesTitleVOList);
     }
-
 
     /**
      * 根据ID获取政策解读详情

@@ -2,11 +2,11 @@ package cn.huacloud.taxpreference.services.producer;
 
 import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
-import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesExplainDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesExplainDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesExplainDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainDetailVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainVO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesTitleVO;
 
 import java.util.List;
 
@@ -58,6 +58,6 @@ public interface PoliciesExplainService {
      * @param keywordPageQueryDTO 关联政策查询条件
      * @return
      */
-    List<PoliciesExplainVO> fuzzyQuery(KeywordPageQueryDTO keywordPageQueryDTO);
+    List<PoliciesTitleVO> fuzzyQuery(KeywordPageQueryDTO keywordPageQueryDTO);
 
 }

@@ -31,7 +31,7 @@ public class PoliciesVO {
     private String areaCode;
     @ApiModelProperty("有效性")
     private String validity;
-    @ApiModelProperty("发布日期")
+    @ApiModelProperty("发布时间")
     private LocalDate releaseDate;
 
 }

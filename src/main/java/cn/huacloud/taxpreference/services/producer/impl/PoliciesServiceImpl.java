@@ -63,13 +63,15 @@ public class PoliciesServiceImpl implements PoliciesService {
         LambdaQueryWrapper<PoliciesDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         //模糊查询标题
         if(QueryPoliciesDTO.KeyWordField.TITLE.equals(queryPoliciesDTO.getKeyWordField())){
-            lambdaQueryWrapper.like(!StringUtils.isEmpty(queryPoliciesDTO.getTitle()),PoliciesDO::getTitle, queryPoliciesDTO.getKeyword());
+            lambdaQueryWrapper.like(!StringUtils.isEmpty(queryPoliciesDTO.getTitle()),
+                    PoliciesDO::getTitle,
+                    queryPoliciesDTO.getTitle());
         }
         //模糊查询文号
         if(QueryPoliciesDTO.KeyWordField.DOC_CODE.equals(queryPoliciesDTO.getKeyWordField())){
             lambdaQueryWrapper.like(!StringUtils.isEmpty(queryPoliciesDTO.getDocCode()),
                     PoliciesDO::getDocCode,
-                    queryPoliciesDTO.getKeyword());
+                    queryPoliciesDTO.getDocCode());
         }
         //条件查询--所属税种码值
         lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getTaxCategoriesCode()),

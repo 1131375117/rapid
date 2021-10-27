@@ -17,10 +17,15 @@ import java.time.LocalDateTime;
 @ApiModel
 public class QueryPoliciesExplainDTO extends KeywordPageQueryDTO {
 
+    @ApiModelProperty("政策解读id")
+    private Long id;
     @ApiModelProperty("政策法规id")
     private Long policiesId;
 
-    @ApiModelProperty("查询标题")
+    @ApiModelProperty("政策法规标题")
+    private String policiesTitle;
+
+    @ApiModelProperty("政策解读标题")
     private String title;
 
     @ApiModelProperty("来源")
