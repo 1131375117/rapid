@@ -26,15 +26,22 @@
             <if test="query.taxCategoriesCode!=null and query.taxCategoriesCode!= ''">
               and  t.taxCategoriesCode = #{query.taxCategoriesCode}
             </if>
-            <if test="query.startTime!=null and query.startTime!= ''">
+            <if test="query.startTime!=null ">
               and  t.create_time >= #{query.startTime}
             </if>
-            <if test="query.endTime!=null and query.endTime!= ''">
+            <if test="query.endTime!=null ">
                and t.create_time &lt;= #{query.endTime}
             </if>
             <if test="query.userName!=null and query.userName!= ''">
                and u.username = #{query.userName}
             </if>
+            <if test="query.ProcessStatus.getValue()==@cn.huacloud.taxpreference.common.enums.process.ProcessStatus@NOT_APPROVED.getValue()">
+                and p.process_status='待通过'
+            </if>
+            <if test="query.ProcessStatus.getValue()!=@cn.huacloud.taxpreference.common.enums.process.ProcessStatus@NOT_APPROVED.getValue()">
+                and p.process_status!='待通过'
+            </if>
+            and latest_process=1
             and t.deleted = 0
 
         </where>

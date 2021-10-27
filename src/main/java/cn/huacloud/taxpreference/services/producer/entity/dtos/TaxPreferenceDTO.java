@@ -26,7 +26,7 @@ public class TaxPreferenceDTO {
 
     private Long inputUserId;
 
-    @ApiModelProperty("有效性")
+    @ApiModelProperty("有效性-有效,无效")
     @NotBlank(message = "有效性不能为空",groups = {ValidationGroup.Update.class,ValidationGroup.Create.class})
     private String validity;
 
@@ -72,40 +72,29 @@ public class TaxPreferenceDTO {
     @NotEmpty(message = "纳税人类型码值不能为空",groups = {ValidationGroup.Update.class,ValidationGroup.Create.class})
     private String taxpayerTypeCode;
 
-    /**
-     * 适用行业名称
-     */
-    @ApiModelProperty("适用行业名称")
-    @NotEmpty(message = "适用行业名称不能为空",groups = {ValidationGroup.Update.class,ValidationGroup.Create.class})
-    private String industryName;
+
 
     /**
      * 适用行业码值
      */
     @ApiModelProperty("适用行业码值")
     @NotEmpty(message = "适用行业码值不能为空",groups = {ValidationGroup.Update.class,ValidationGroup.Create.class})
-    private String industryCode;
+    private List<String> industryCodes;
 
-    /**
-     * 适用企业类型名称
-     */
-    @ApiModelProperty("适用企业类型名称")
-    @NotEmpty(message = "适用企业类型名称不能为空",groups = {ValidationGroup.Update.class,ValidationGroup.Create.class})
-    private String enterpriseTypeName;
 
     /**
      * 适用企业类型码值
      */
     @ApiModelProperty("适用企业类型码值")
     @NotEmpty(message = "适用企业类型码值不能为空",groups = {ValidationGroup.Update.class,ValidationGroup.Create.class})
-    private String enterpriseTypeCode;
+    private List<String> enterpriseTypeCodes;
 
     /**
      * 纳税信用等级
      */
     @ApiModelProperty("纳税信用等级")
     @NotEmpty(message = "适纳税信用等级不能为空",groups = {ValidationGroup.Update.class,ValidationGroup.Create.class})
-    private String taxpayerCreditRating;
+    private List<String> taxpayerCreditRatings;
 
     /**
      * 优惠事项名称
@@ -155,8 +144,7 @@ public class TaxPreferenceDTO {
     @ApiModelProperty("申报信息")
     @NotEmpty(message = "申报信息不能为空",groups = {ValidationGroup.Update.class,ValidationGroup.Create.class})
     private List<SubmitConditionDTO> submitConditionDTOList;
-    @ApiModelProperty("保存或者提交:false-保存,true提交")
-    private Boolean release;
+
 
 
 

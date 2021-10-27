@@ -25,9 +25,10 @@ public interface ProcessService {
     /**
      * 查询流程列表
      * @param processListDTO
+     * @param userId
      * @return ResultVO
      */
-    ResultVO<PageVO<ProcessListVO>>queryProcessList(ProcessListDTO processListDTO);
+    ResultVO<PageVO<ProcessListVO>>queryProcessList(ProcessListDTO processListDTO, Long userId);
 
     /**
      * 审核提交

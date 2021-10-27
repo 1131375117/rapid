@@ -19,7 +19,7 @@ public class ProcessSubmitDTO  {
     @ApiModelProperty("审批说明")
     private String approvalNote;
     @ApiModelProperty("审核状态")
-    @NotEmpty(message = "审核状态不能为空")
+    @NotEmpty(message = "审核状态不能为空,NOT_APPROVED-待通过，APPROVED-已通过，RETURNED-已退回")
     private String taxPreferenceStatus;
 
 }

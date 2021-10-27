@@ -61,7 +61,7 @@ public class ProcessServiceImpl implements ProcessService {
     }
 
     @Override
-    public ResultVO<PageVO<ProcessListVO>> queryProcessList(ProcessListDTO processListDTO) {
+    public ResultVO<PageVO<ProcessListVO>> queryProcessList(ProcessListDTO processListDTO, Long userId) {
         processListDTO.paramReasonable();
         Page<ProcessListVO> page = new Page<>(processListDTO.getPageNum(), processListDTO.getPageSize());
         IPage<ProcessListVO> iPage = processServiceMapper.queryProcessList(page, processListDTO);
@@ -82,34 +82,35 @@ public class ProcessServiceImpl implements ProcessService {
 
     @Override
     public ResultVO<List<ProcessInfoVO>> queryProcessInfo(Long id) {
-        log.info("查询条件:id-{}",id);
-        List<ProcessInfoVO> processInfoVOList=new ArrayList<>();
-        Map<String, Object> keymap=new HashMap<>(16);
-        keymap.put(TAX_PREFERENCE_ID,id);
+        log.info("查询条件:id-{}", id);
+        List<ProcessInfoVO> processInfoVOList = new ArrayList<>();
+        Map<String, Object> keymap = new HashMap<>(16);
+        keymap.put(TAX_PREFERENCE_ID, id);
         List<ProcessDO> processDOList = processServiceMapper.selectByMap(keymap);
-        log.info("查询结果:processDOList:{}",processDOList);
+        log.info("查询结果:processDOList:{}", processDOList);
         processDOList.forEach(processDO -> {
             ProcessInfoVO processInfoVO = new ProcessInfoVO();
-            BeanUtils.copyProperties(processDO,processInfoVO);
+            BeanUtils.copyProperties(processDO, processInfoVO);
             processInfoVOList.add(processInfoVO);
         });
-        log.info("返回结果:processInfoVOList:{}",processDOList);
+        log.info("返回结果:processInfoVOList:{}", processDOList);
         return ResultVO.ok(processInfoVOList);
     }
 
     /**
      * 封装流程对象
-     * */
+     */
     private ProcessDO getProcessDO(ProcessSubmitDTO processSubmitDTO, LoginUserVO currentUser) {
         ProcessDO processDO = new ProcessDO();
-        BeanUtils.copyProperties(processSubmitDTO,processDO);
+        BeanUtils.copyProperties(processSubmitDTO, processDO);
         processDO.setApproverId(currentUser.getId());
         processDO.setApproverName(currentUser.getUsername());
         processDO.setCreateTime(LocalDateTime.now());
-        if(ProcessStatus.NOT_APPROVED.name.equals(processDO.getProcessStatus())){
+        if (ProcessStatus.NOT_APPROVED.name.equals(processDO.getProcessStatus())) {
             processDO.setProcessStatus(ProcessStatus.RETURNED.getValue());
-        }else{
+        } else if (ProcessStatus.APPROVED.name.equals(processDO.getProcessStatus())) {
             processDO.setProcessStatus(ProcessStatus.APPROVED.getValue());
+            processDO.setApprovalTime(LocalDateTime.now());
         }
 
         return processDO;
@@ -117,14 +118,14 @@ public class ProcessServiceImpl implements ProcessService {
 
     /**
      * 封装税收优惠
-     * */
+     */
     private TaxPreferenceDO getTaxPreferenceDO(ProcessDO processDO) {
         TaxPreferenceDO taxPreferenceDO = new TaxPreferenceDO();
         taxPreferenceDO.setId(processDO.getTaxPreferenceId());
         taxPreferenceDO.setTaxPreferenceStatus(processDO.getProcessStatus());
-        if(ProcessStatus.APPROVED.name.equals(processDO.getProcessStatus())){
-        taxPreferenceDO.setTaxPreferenceStatus(TaxPreferenceStatus.RELEASED.getValue());
-        }else{
+        if (ProcessStatus.APPROVED.getValue().equals(processDO.getProcessStatus())) {
+            taxPreferenceDO.setTaxPreferenceStatus(TaxPreferenceStatus.RELEASED.getValue());
+        } else {
             taxPreferenceDO.setTaxPreferenceStatus(TaxPreferenceStatus.UNRELEASED.getValue());
         }
         return taxPreferenceDO;

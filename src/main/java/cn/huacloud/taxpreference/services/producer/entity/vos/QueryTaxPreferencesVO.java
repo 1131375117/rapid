@@ -1,8 +1,10 @@
 package cn.huacloud.taxpreference.services.producer.entity.vos;
+
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @description: 税收优惠列表VO
@@ -37,13 +39,13 @@ public class QueryTaxPreferencesVO {
      * 适用企业类型名称
      */
     @ApiModelProperty("适用企业类型名称")
-    private String enterpriseTypeName;
+    private List<String> enterpriseTypeName;
 
     /**
      * 有效性
      */
     @ApiModelProperty("有效性")
-    private String effectiveness;
+    private String validity;
 
     @ApiModelProperty("审核状态")
     private String  processStatus;

@@ -55,27 +55,27 @@ public class TaxPreferenceDO {
     /**
      * 适用行业名称
      */
-    private String industryName;
+    private String industryNames;
 
     /**
      * 适用行业码值
      */
-    private String industryCode;
+    private String industryCodes;
 
     /**
      * 适用企业类型名称
      */
-    private String enterpriseTypeName;
+    private String enterpriseTypeNames;
 
     /**
      * 适用企业类型码值
      */
-    private String enterpriseTypeCode;
+    private String enterpriseTypeCodes;
 
     /**
      * 纳税信用等级
      */
-    private String taxpayerCreditRating;
+    private String taxpayerCreditRatings;
 
     /**
      * 优惠事项名称
