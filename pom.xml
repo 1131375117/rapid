@@ -26,9 +26,17 @@
         <minio.version>8.3.3</minio.version>
         <okhttp.version>4.10.0-RC1</okhttp.version>
         <hutool.version>5.7.15</hutool.version>
+        <pinyin4j.version>2.5.0</pinyin4j.version>
     </properties>
 
     <dependencies>
+        <!--pinyin4j-->
+        <dependency>
+            <groupId>com.belerweb</groupId>
+            <artifactId>pinyin4j</artifactId>
+            <version>${pinyin4j.version}</version>
+            <scope>test</scope>
+        </dependency>
         <!--hutool captcha-->
         <dependency>
             <groupId>cn.hutool</groupId>
