@@ -1,1 +1,1 @@
-docker-compose --compatibility up -d
+docker-compose -f docker-compose.yml --compatibility up -d

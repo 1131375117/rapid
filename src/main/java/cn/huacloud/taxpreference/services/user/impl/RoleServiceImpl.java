@@ -14,6 +14,7 @@ import cn.huacloud.taxpreference.services.user.mapper.RoleMapper;
 import cn.huacloud.taxpreference.services.user.mapper.UserMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -72,6 +73,15 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public PageVO<RoleListVO> rolePageQuery(PageQueryDTO pageQueryDTO) {
         IPage<RoleListVO> pageVO = roleMapper.rolePageQuery(pageQueryDTO.createQueryPage());
+        // 处理权限码值
+        for (RoleListVO record : pageVO.getRecords()) {
+            String permissionCodes = record.getPermissionCodes();
+            if (StringUtils.isBlank(permissionCodes)) {
+                record.setPermissionCodeList(new ArrayList<>());
+                continue;
+            }
+            record.setPermissionCodeList(Arrays.asList(permissionCodes.split(",")));
+        }
         return PageVO.createPageVO(pageVO);
     }
 
@@ -84,6 +94,7 @@ public class RoleServiceImpl implements RoleService {
         }
         RoleDO roleDO = new RoleDO();
         BeanUtils.copyProperties(roleVO, roleDO);
+        roleDO.setRoleCode(roleVO.getRoleCode().toUpperCase());
         roleMapper.insert(roleDO);
         roleVO.setId(roleDO.getId());
     }

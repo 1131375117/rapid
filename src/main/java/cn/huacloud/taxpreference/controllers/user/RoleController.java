@@ -81,15 +81,6 @@ public class RoleController {
         return ResultVO.ok();
     }
 
-    @PermissionInfo(name = "获取权限分组列表", group = PermissionGroup.ROLE_MANAGE)
-    @SaCheckPermission("permission_group")
-    @ApiOperation("获取权限分组列表")
-    @PutMapping("/permission/group")
-    public ResultVO<List<PermissionGroupVO>> getPermissionGroupVOList() {
-        List<PermissionGroupVO> groupList = permissionService.getPermissionGroupVOList();
-        return ResultVO.ok(groupList);
-    }
-
     @PermissionInfo(name = "给角色赋予权限", group = PermissionGroup.USER_MANAGE)
     @SaCheckPermission("role_set_permission")
     @ApiOperation("给角色赋予权限")
@@ -98,5 +89,14 @@ public class RoleController {
                                         @RequestParam("permissionCode") List<String> permissionCodes) {
         roleService.setPermissionToRole(roleId, permissionCodes);
         return ResultVO.ok();
+    }
+
+    @PermissionInfo(name = "获取权限分组列表", group = PermissionGroup.ROLE_MANAGE)
+    @SaCheckPermission("permission_group")
+    @ApiOperation("获取权限分组列表")
+    @PutMapping("/permission/group")
+    public ResultVO<List<PermissionGroupVO>> getPermissionGroupVOList() {
+        List<PermissionGroupVO> groupList = permissionService.getPermissionGroupVOList();
+        return ResultVO.ok(groupList);
     }
 }

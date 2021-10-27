@@ -25,9 +25,16 @@
         <sa.token.version>1.27.0</sa.token.version>
         <minio.version>8.3.3</minio.version>
         <okhttp.version>4.10.0-RC1</okhttp.version>
+        <hutool.version>5.7.15</hutool.version>
     </properties>
 
     <dependencies>
+        <!--hutool captcha-->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-captcha</artifactId>
+            <version>${hutool.version}</version>
+        </dependency>
         <!--okhttp-->
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
@@ -161,7 +168,7 @@
                 <artifactId>dockerfile-maven-plugin</artifactId>
                 <version>${dockerfile.maven.plugin.version}</version>
                 <configuration>
-                    <repository>${docker.registry}/${project.build.finalName}</repository>
+                    <repository>${docker.registry}/${project.artifactId}</repository>
                     <force>true</force>
                     <tag>${dockerfile.tag.version}</tag>
                     <pullNewerImage>false</pullNewerImage>

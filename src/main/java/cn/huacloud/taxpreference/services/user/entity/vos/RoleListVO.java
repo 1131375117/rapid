@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @author wangkh
  */
@@ -22,6 +24,9 @@ public class RoleListVO {
 
     @ApiModelProperty("权限码值集合（以\",\"分隔）")
     private String permissionCodes;
+
+    @ApiModelProperty("权限码值集合")
+    private List<String> permissionCodeList;
 
     @ApiModelProperty("角色描述")
     private String note;
