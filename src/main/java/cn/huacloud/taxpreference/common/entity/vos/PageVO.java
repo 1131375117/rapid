@@ -39,4 +39,14 @@ public class PageVO<T> {
         pageVO.setRecords(records);
         return pageVO;
     }
+
+    /**
+     * 根据IPage创建PageVO
+     * @param iPage iPage
+     * @param <T> 数据记录类型
+     * @return pageVO
+     */
+    public static <T> PageVO<T> createPageVO(IPage<T> iPage) {
+        return createPageVO(iPage, iPage.getRecords());
+    }
 }

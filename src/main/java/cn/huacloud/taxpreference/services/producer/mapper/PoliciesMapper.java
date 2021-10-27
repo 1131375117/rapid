@@ -11,9 +11,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface PoliciesMapper extends BaseMapper<PoliciesDO> {
-    /**
-     *
-     * @param id
-     */
-    void deletePoliciesById(Long id);
+
 }

@@ -1,7 +1,10 @@
 package cn.huacloud.taxpreference.services.producer.entity.vos;
 
+import cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferenceDO;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * @author wuxin
@@ -23,4 +26,6 @@ public class PoliciesAbolishVO {
 
     @ApiModelProperty("有效性")
     private String validity;
+
+    private List<String> nameList;
 }

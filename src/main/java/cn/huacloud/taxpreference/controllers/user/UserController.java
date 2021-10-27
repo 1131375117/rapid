@@ -13,7 +13,6 @@ import cn.huacloud.taxpreference.services.user.entity.vos.UserListVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,11 +53,10 @@ public class UserController {
     @SaCheckPermission("producer_user_save")
     @ApiOperation("新增后台用户")
     @PostMapping("/producer/user")
-    public ResultVO<ProducerUserVO> saveProducerUser(@Validated(ValidationGroup.Create.class) ProducerUserVO producerUserVO) {
+    public ResultVO<ProducerUserVO> saveProducerUser(@Validated(ValidationGroup.Create.class) @RequestBody ProducerUserVO producerUserVO) {
         userService.saveProducerUser(producerUserVO);
         return ResultVO.ok(producerUserVO);
     }
-
 
     /**
      * 修改后台用户
@@ -67,7 +65,7 @@ public class UserController {
     @SaCheckPermission("producer_user_update")
     @ApiOperation("修改后台用户")
     @PutMapping("/producer/user")
-    public ResultVO<ProducerUserVO> updateProducerUser(@Validated(ValidationGroup.Update.class) ProducerUserVO producerUserVO) {
+    public ResultVO<ProducerUserVO> updateProducerUser(@Validated(ValidationGroup.Update.class) @RequestBody ProducerUserVO producerUserVO) {
         userService.updateProducerUser(producerUserVO);
         return ResultVO.ok(producerUserVO);
     }
@@ -119,5 +117,22 @@ public class UserController {
                                         @RequestParam("roleCodes") List<String> roleCodes) {
         userService.setRoleToUser(userId, roleCodes);
         return ResultVO.ok();
+    }
+
+    @PermissionInfo(name = "移除角色", group = PermissionGroup.USER_MANAGE)
+    @SaCheckPermission("producer_user_remove_role")
+    @ApiOperation("移除指定用户的指定角色")
+    @DeleteMapping("/producer/user/{userId}/role/{roleCode}")
+    public ResultVO<Void> removeUserRole(@PathVariable("userId") Long userId,
+                                         @PathVariable("roleCode") String roleCode) {
+        userService.removeUserRole(userId, roleCode);
+        return ResultVO.ok();
+    }
+
+    @ApiOperation(value = "检查用户账号是否已存在", notes = "true：已存在，不可用；false：不存在，可用")
+    @GetMapping("/user/account/exist")
+    public ResultVO<Boolean> isUserAccountExist(String userAccount) {
+        boolean exist = userService.isUserAccountExist(userAccount);
+        return ResultVO.ok(exist);
     }
 }

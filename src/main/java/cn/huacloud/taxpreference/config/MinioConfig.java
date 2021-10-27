@@ -29,7 +29,7 @@ public class MinioConfig {
      */
     private String secretKey;
     /**
-     * 存储通
+     * 存储桶
      */
     private String bucket = "tax-preference";
 
@@ -41,9 +41,9 @@ public class MinioConfig {
                 .build();
 
         // 检查存储桶是否已经创建，没有创建则自动创建
-        boolean bucketExists = minioClient.bucketExists(BucketExistsArgs.builder().bucket("tax-preference").build());
+        boolean bucketExists = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucket).build());
         if (!bucketExists) {
-            minioClient.makeBucket(MakeBucketArgs.builder().bucket("tax-preference").build());
+            minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucket).build());
         }
 
         return minioClient;

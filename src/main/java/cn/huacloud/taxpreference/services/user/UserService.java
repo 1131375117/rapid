@@ -74,4 +74,18 @@ public interface UserService {
      * @param roleCodes 角色码值
      */
     void setRoleToUser(Long userId, List<String> roleCodes);
+
+    /**
+     * 移除指定用户的指定角色
+     * @param userId 用户ID
+     * @param roleCode 角色码值
+     */
+    void removeUserRole(Long userId, String roleCode);
+
+    /**
+     *
+     * @param userAccount
+     * @return
+     */
+    boolean isUserAccountExist(String userAccount);
 }

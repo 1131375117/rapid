@@ -3,6 +3,7 @@ package cn.huacloud.taxpreference.controllers.producer;
 import cn.huacloud.taxpreference.common.annotations.PermissionInfo;
 import cn.huacloud.taxpreference.common.constants.ValidationGroup;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
+import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.enums.PermissionGroup;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.common.utils.UserUtil;
@@ -13,17 +14,23 @@ import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesAbolishVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesDetailVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesVO;
+import io.minio.MinioClient;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 
 /**
  * 政策法规接口
  *
  * @author wuxin
  */
+@Slf4j
 @Api(tags = "政策法规")
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
@@ -60,13 +67,14 @@ public class PoliciesController {
      */
     /**
      * 新增政策法规接口
+     *
      * @param policiesListDTO
      * @return
      */
     @PermissionInfo(name = "政策法规新增", group = PermissionGroup.POLICIES)
     @ApiOperation(value = "政策法规新增")
     @PostMapping(value = "/policies/insert")
-    public ResultVO<Void> insertPolicies(@Validated(ValidationGroup.Create.class)@RequestBody PoliciesListDTO policiesListDTO) {
+    public ResultVO<Void> insertPolicies(@Validated(ValidationGroup.Create.class) @RequestBody PoliciesListDTO policiesListDTO) {
         policiesService.insertPolicies(policiesListDTO, UserUtil.getCurrentUser().getId());
         //返回结果
         return ResultVO.ok();
@@ -94,7 +102,7 @@ public class PoliciesController {
     @PermissionInfo(name = "修改政策法规", group = PermissionGroup.POLICIES)
     @ApiOperation(value = "修改政策法规")
     @PutMapping(value = "/policies/update")
-    public ResultVO<Void> updatePolicies(@Validated(ValidationGroup.Update.class)@RequestBody PoliciesListDTO policiesListDTO) {
+    public ResultVO<Void> updatePolicies(@Validated(ValidationGroup.Update.class) @RequestBody PoliciesListDTO policiesListDTO) {
 
         policiesService.updatePolicies(policiesListDTO);
         //返回结果
@@ -104,12 +112,12 @@ public class PoliciesController {
     /**
      * 政策法规废止
      * 政策法规id
-     *  全文废止和部分废止
+     * 全文废止和部分废止
      */
     @PermissionInfo(name = "政策法规废止", group = PermissionGroup.POLICIES)
     @ApiOperation("政策法规废止")
     @PutMapping(value = "/policies/abolish/update")
-    public ResultVO<Void> isAbolish(@RequestBody QueryAbolishDTO queryAbolishDTO){
+    public ResultVO<Void> isAbolish(@RequestBody QueryAbolishDTO queryAbolishDTO) {
         policiesService.isAbolish(queryAbolishDTO);
         return ResultVO.ok();
 
@@ -121,12 +129,11 @@ public class PoliciesController {
     @PermissionInfo(name = "政策法规废止", group = PermissionGroup.POLICIES)
     @ApiOperation("查询政策法规废止信息")
     @PostMapping(value = "/policies/abolish/{id}")
-    public ResultVO<PoliciesAbolishVO> getAbolish(@PathVariable("id") Long id){
-        PoliciesAbolishVO policiesAbolishVO=policiesService.getAbolish(id);
+    public ResultVO<PoliciesAbolishVO> getAbolish(@PathVariable("id") Long id) {
+        PoliciesAbolishVO policiesAbolishVO = policiesService.getAbolish(id);
         return ResultVO.ok(policiesAbolishVO);
 
     }
-
 
     /**
      * 删除政策法规
@@ -135,8 +142,19 @@ public class PoliciesController {
     @PermissionInfo(name = "删除政策法规", group = PermissionGroup.POLICIES)
     @ApiOperation("删除政策法规")
     @DeleteMapping(value = "/policies/{id}")
-    public ResultVO<Void> deletePoliciesById(@PathVariable("id") Long id){
+    public ResultVO<Void> deletePoliciesById(@PathVariable("id") Long id) {
         policiesService.deletePoliciesById(id);
+        return ResultVO.ok();
+    }
+
+    /**
+     * 文件上传
+     */
+    @PostMapping("/upload")
+    public ResultVO upload(@RequestParam(name = "file", required = false) MultipartFile file){
+        if (file == null) {
+            throw BizCode._4303.exception();
+        }
         return ResultVO.ok();
     }
 }

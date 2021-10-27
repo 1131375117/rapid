@@ -2,10 +2,12 @@ package cn.huacloud.taxpreference.sample;
 
 import cn.dev33.satoken.secure.SaSecureUtil;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.fasterxml.jackson.databind.util.ArrayIterator;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 /**
  * 简单测试类
@@ -13,6 +15,12 @@ import java.lang.reflect.Method;
  */
 @Slf4j
 public class SampleTest {
+
+    @Test
+    public void testStringJoin() {
+        String join = String.join(",", new ArrayList<>());
+        log.info("join: '{}'", join);
+    }
 
     @Test
     public void testIdWorker() {

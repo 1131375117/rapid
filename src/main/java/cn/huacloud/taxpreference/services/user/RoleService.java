@@ -1,7 +1,12 @@
 package cn.huacloud.taxpreference.services.user;
 
+import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
+import cn.huacloud.taxpreference.common.entity.vos.PageVO;
+import cn.huacloud.taxpreference.services.user.entity.dos.RoleDO;
+import cn.huacloud.taxpreference.services.user.entity.vos.RoleListVO;
 import cn.huacloud.taxpreference.services.user.entity.vos.RoleVO;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,4 +34,43 @@ public interface RoleService {
      * @return 角色码值集合
      */
     Set<String> getAllRoleCodes();
+
+    /**
+     * 根据角色码值结合
+     * @param roleCodes 角色码值集合
+     * @return
+     */
+    List<RoleDO> getRoleDOByRoleCodes(Collection<String> roleCodes);
+
+    /**
+     * 角色分页列表
+     * @param pageQueryDTO 分页查询条件
+     * @return 角色分页列表
+     */
+    PageVO<RoleListVO> rolePageQuery(PageQueryDTO pageQueryDTO);
+
+    /**
+     * 添加角色
+     * @param roleVO
+     */
+    void saveRole(RoleVO roleVO);
+
+    /**
+     * 修改用户
+     * @param roleVO
+     */
+    void updateRole(RoleVO roleVO);
+
+    /**
+     * 删除角色
+     * @param roleId
+     */
+    void deleteRole(String roleId);
+
+    /**
+     * 给角色赋予权限
+     * @param roleId
+     * @param permissionCodes
+     */
+    void setPermissionToRole(Long roleId, List<String> permissionCodes);
 }

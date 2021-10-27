@@ -19,6 +19,8 @@ public class UserListVO {
     private String userAccount;
     @ApiModelProperty("用户名称")
     private String username;
+    @ApiModelProperty("手机号码")
+    private String phoneNumber;
     @ApiModelProperty("用户角色")
     private List<RoleVO> roles;
     @ApiModelProperty("是否禁用")

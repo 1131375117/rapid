@@ -34,7 +34,12 @@ public class GlobalExceptionHandler {
     public ResultVO handleSaTokenException(SaTokenException e) {
         ResultVO resultVO;
         if (e instanceof NotLoginException) {
-            resultVO = BizCode._4200.getResultVO();
+            NotLoginException notLoginException = (NotLoginException) e;
+            if (NotLoginException.TOKEN_TIMEOUT.equals(notLoginException.getType())) {
+                resultVO = BizCode._4211.getResultVO();
+            } else {
+                resultVO = BizCode._4200.getResultVO();
+            }
         } else if (e instanceof NotRoleException) {
             resultVO = BizCode._4201.getResultVO(e.getMessage());
         } else if (e instanceof NotPermissionException) {
