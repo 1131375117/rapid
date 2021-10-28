@@ -30,6 +30,11 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>guava</artifactId>
+            <scope>test</scope>
+        </dependency>
         <!--pinyin4j-->
         <dependency>
             <groupId>com.belerweb</groupId>

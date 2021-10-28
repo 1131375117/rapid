@@ -6,10 +6,12 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * @author wangkh
  */
+@Accessors(chain = true)
 @Data
 @TableName("t_sys_code")
 public class SysCodeDO {
