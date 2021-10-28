@@ -45,6 +45,7 @@ public class ProcessServiceImpl implements ProcessService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResultVO<Void> insertProcessService(Long[] taxPreferenceIds, LoginUserVO currentUser) {
+        log.info("新增流程参数:taxPreferenceIds={},currentUser={}",taxPreferenceIds,currentUser);
         for (Long taxPreferenceId : taxPreferenceIds) {
             //新增先查询是否存在并更新流程状态
             processServiceMapper.updateByTaxPreferenceId(taxPreferenceId);
@@ -63,8 +64,10 @@ public class ProcessServiceImpl implements ProcessService {
     @Override
     public ResultVO<PageVO<ProcessListVO>> queryProcessList(ProcessListDTO processListDTO, Long userId) {
         processListDTO.paramReasonable();
+        log.info("查询条件:processListDTO={},userId={}",processListDTO,userId);
         Page<ProcessListVO> page = new Page<>(processListDTO.getPageNum(), processListDTO.getPageSize());
         IPage<ProcessListVO> iPage = processServiceMapper.queryProcessList(page, processListDTO);
+        log.info("iPage-查询结果{}",iPage);
         PageVO<ProcessListVO> pageVO = PageVO.createPageVO(iPage, iPage.getRecords());
         return ResultVO.ok(pageVO);
     }
@@ -72,6 +75,7 @@ public class ProcessServiceImpl implements ProcessService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResultVO<Void> submitProcess(ProcessSubmitDTO processSubmitDTO, LoginUserVO currentUser) {
+        log.info("发布申请dto={},currentUser={}",processSubmitDTO,currentUser);
         ProcessDO processDO = getProcessDO(processSubmitDTO, currentUser);
         processServiceMapper.updateById(processDO);
         processDO = processServiceMapper.selectById(processDO.getId());
@@ -112,7 +116,7 @@ public class ProcessServiceImpl implements ProcessService {
             processDO.setProcessStatus(ProcessStatus.APPROVED.getValue());
             processDO.setApprovalTime(LocalDateTime.now());
         }
-
+        log.info("封装结果:processDO:{}", processDO);
         return processDO;
     }
 
@@ -128,6 +132,7 @@ public class ProcessServiceImpl implements ProcessService {
         } else {
             taxPreferenceDO.setTaxPreferenceStatus(TaxPreferenceStatus.UNRELEASED.getValue());
         }
+        log.info("封装结果:taxPreferenceDO:{}", taxPreferenceDO);
         return taxPreferenceDO;
     }
 }
