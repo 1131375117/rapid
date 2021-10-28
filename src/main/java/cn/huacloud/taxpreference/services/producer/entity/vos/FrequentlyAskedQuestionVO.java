@@ -9,6 +9,7 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 热点问答VO
@@ -28,7 +29,7 @@ public class FrequentlyAskedQuestionVO {
      * 政策ID集合
      */
     @ApiModelProperty("政策ID集合")
-    private String policiesIds;
+    private List<String> policiesIds;
 
     /**
      * 问题
