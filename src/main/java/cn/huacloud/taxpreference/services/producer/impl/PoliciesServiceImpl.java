@@ -20,6 +20,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,10 +29,7 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -39,6 +38,7 @@ import java.util.stream.Collectors;
  *
  * @author wuxin
  */
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class PoliciesServiceImpl implements PoliciesService {
@@ -138,15 +138,27 @@ public class PoliciesServiceImpl implements PoliciesService {
      * 新增政策法规
      *
      * @param policiesCombinationDTO
-     * @param id
+     * @param userId
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void insertPolicies(PoliciesCombinationDTO policiesCombinationDTO, Long id) {
+    public void insertPolicies(PoliciesCombinationDTO policiesCombinationDTO, Long userId) {
         //新增政策法规
         PoliciesDO policiesDO = new PoliciesDO();
+
+        policiesDO.setTaxpayerIdentifyTypeCodes(org.apache.commons.lang3.StringUtils.join(policiesCombinationDTO.getTaxpayerIdentifyTypeCodes(),","));
+
+        policiesDO.setEnterpriseTypeCodes(org.apache.commons.lang3.StringUtils.join(policiesCombinationDTO.getEnterpriseTypeCodes(),","));
+
+        policiesDO.setIndustryCodes(org.apache.commons.lang3.StringUtils.join(policiesCombinationDTO.getIndustryCodes(),","));
+
+        StringBuffer industryNames = getIndustryNames(policiesDO.getIndustryNames(), policiesCombinationDTO.getIndustryCodes());
+
+
+        policiesDO.setIndustryCodes(industryNames.toString());
+
         BeanUtils.copyProperties(policiesCombinationDTO, policiesDO);
-        policiesDO.setInputUserId(id);
+        policiesDO.setInputUserId(userId);
         //添加废止状态
         policiesDO.setPoliciesStatus(policiesCombinationDTO.getPoliciesStatus());
         //添加发布时间
@@ -162,11 +174,53 @@ public class PoliciesServiceImpl implements PoliciesService {
         PoliciesExplainDTO policiesExplainDTO = new PoliciesExplainDTO();
         BeanUtils.copyProperties(policiesCombinationDTO, policiesExplainDTO);
         policiesExplainDTO.setPoliciesId(policiesDO.getId());
-        policiesExplainService.insertPoliciesExplain(policiesExplainDTO, id);
-        //新增热点问答
+        policiesExplainService.insertPoliciesExplain(policiesExplainDTO, userId);
+        //新增热点问答--todo
         FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO = new FrequentlyAskedQuestionDTO();
         BeanUtils.copyProperties(policiesCombinationDTO, frequentlyAskedQuestionDTO);
-        frequentlyAskedQuestionService.insertFrequentlyAskedQuestion(frequentlyAskedQuestionDTO, id);
+        frequentlyAskedQuestionService.insertFrequentlyAskedQuestion(frequentlyAskedQuestionDTO, userId);
+    }
+
+    /**
+     * 企业名称集合拼接
+     * */
+    @NotNull
+    private StringBuffer getTaxpayerIdentifyTypeNames(PoliciesCombinationDTO policiesCombinationDTO, PoliciesDO policiesDO) {
+        StringBuffer taxpayerIdentifyTypeNames=new StringBuffer(policiesDO.getTaxpayerIdentifyTypeNames());
+        policiesCombinationDTO.getTaxpayerIdentifyTypeCodes().forEach(taxpayerIdentifyTypeName->{
+            //todo 通过code查询名称
+            taxpayerIdentifyTypeNames.append(",");
+        });
+        log.info("适用企业名称:enterpriseTypeNames={}",taxpayerIdentifyTypeNames);
+        return taxpayerIdentifyTypeNames;
+    }
+
+    /**
+     * 行业名称集合拼接
+     * */
+    @NotNull
+    private StringBuffer getIndustryNames(String industryNames2, List<String> industryCodes) {
+        StringBuffer industryNames = new StringBuffer(industryNames2);
+        industryCodes.forEach(industryCode -> {
+            //todo 通过code查询名称
+            industryNames.append(",");
+        });
+        log.info("行业名称:industryNames={}",industryNames);
+        return industryNames;
+    }
+
+    /**
+     * 企业名称集合拼接
+     * */
+    @NotNull
+    private StringBuffer getEnterpriseTypeNames(PoliciesCombinationDTO policiesCombinationDTO, PoliciesDO policiesDO) {
+        StringBuffer enterpriseTypeNames=new StringBuffer(policiesDO.getEnterpriseTypeNames());
+        policiesCombinationDTO.getEnterpriseTypeCodes().forEach(enterpriseTypeName->{
+            //todo 通过code查询名称
+            enterpriseTypeNames.append(",");
+        });
+        log.info("适用企业名称:enterpriseTypeNames={}",enterpriseTypeNames);
+        return enterpriseTypeNames;
     }
 
     /**
@@ -196,6 +250,7 @@ public class PoliciesServiceImpl implements PoliciesService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void updatePolicies(PoliciesCombinationDTO policiesCombinationDTO) {
+
         //修改政策法规
         PoliciesDO policiesDO = new PoliciesDO();
         BeanUtils.copyProperties(policiesCombinationDTO, policiesDO);

@@ -8,6 +8,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * 政策法规数据传输对象
@@ -52,27 +53,27 @@ public class PoliciesCombinationDTO {
 
     @ApiModelProperty("纳税人资格认定类型名称")
     @NotBlank(message = "纳税人资格认定类型名称不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
-    private String taxpayerIdentifyTypeNames;
+    private List<String> taxpayerIdentifyTypeNames;
 
     @ApiModelProperty("纳税人资格认定类型码值")
     @NotBlank(message = "纳税人资格认定类型码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
-    private String taxpayerIdentifyTypeCodes;
+    private List<String> taxpayerIdentifyTypeCodes;
 
     @ApiModelProperty("适用企业类型名称")
     @NotBlank(message = "适用企业类型名称不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
-    private String enterpriseTypeNames;
+    private List<String> enterpriseTypeNames;
 
     @ApiModelProperty("适用企业类型码值")
     @NotBlank(message = "适用企业类型码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
-    private String enterpriseTypeCodes;
+    private List<String> enterpriseTypeCodes;
 
     @ApiModelProperty("适用行业名称")
     @NotBlank(message = "适用行业名称不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
-    private String industryNames;
+    private List<String> industryNames;
 
     @ApiModelProperty("适用行业码值")
     @NotBlank(message = "适用行业码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
-    private String industryCodes;
+    private List<String> industryCodes;
 
     @ApiModelProperty("有效性")
     @NotBlank(message = "有效性不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
