@@ -52,7 +52,7 @@
             <if test="queryTaxPreferencesDTO.taxpayerCreditRatings!=null and queryTaxPreferencesDTO.taxpayerCreditRatings.size>0 ">
 
                 <foreach collection="queryTaxPreferencesDTO.taxpayerCreditRatings" item="credit">
-                    and FIND_IN_SET(#{credit.toString()},p.taxpayer_credit_ratings)
+                    and FIND_IN_SET(#{credit},p.taxpayer_credit_ratings)
                 </foreach>
             </if>
             <if test=" queryTaxPreferencesDTO.industryCodes!=null and queryTaxPreferencesDTO.industryCodes.size>0 ">

@@ -28,9 +28,9 @@ public interface PoliciesService {
      * 新增政策法规
      *
      * @param policiesCombinationDTO 政策法规参数集合
-     * @param id              录入人用户ID
+     * @param userId              录入人用户ID
      */
-     void insertPolicies(PoliciesCombinationDTO policiesCombinationDTO, Long id);
+     void insertPolicies(PoliciesCombinationDTO policiesCombinationDTO, Long userId);
 
 
     /**

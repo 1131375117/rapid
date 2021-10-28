@@ -2,12 +2,10 @@ package cn.huacloud.taxpreference.services.producer.entity.dtos;
 
 import cn.huacloud.taxpreference.common.constants.ValidationGroup;
 import cn.huacloud.taxpreference.common.enums.taxpreference.PreferenceValidation;
-import cn.huacloud.taxpreference.common.enums.taxpreference.TaxpayerCreditRating;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -31,16 +29,7 @@ public class TaxPreferenceDTO {
     private Long inputUserId;
 
     @ApiModelProperty("有效性-EFFECTIVE有效,INVALID无效")
-    @NotBlank(message = "有效性不能为空",groups = {ValidationGroup.Update.class,ValidationGroup.Create.class})
     private PreferenceValidation validity;
-
-    /**
-     * 收入税种种类名称
-     */
-/*    @ApiModelProperty("收入税种种类名称")
-    @NotBlank(message = "收入税种种类名称不能为空",groups = {ValidationGroup.Update.class,ValidationGroup.Create.class})
-    private String taxCategoriesName;*/
-
 
     /**
      * 收入税种种类码值
@@ -49,12 +38,6 @@ public class TaxPreferenceDTO {
     @NotEmpty(message = "收入税种种类码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
     private String taxCategoriesCode;
 
-    /**
-     * 纳税人登记注册类型名称
-     */
-/*    @ApiModelProperty("纳税人登记注册类型名称")
-    @NotEmpty(message = "纳税人登记注册类型名称不能为空",groups = {ValidationGroup.Update.class,ValidationGroup.Create.class})
-    private String taxpayerRegisterTypeName;*/
 
     /**
      * 纳税人登记注册类型码值
@@ -63,12 +46,6 @@ public class TaxPreferenceDTO {
     @NotEmpty(message = "纳税人登记注册类型码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
     private String taxpayerRegisterTypeCode;
 
-    /**
-     * 纳税人类型名称
-     */
-/*    @ApiModelProperty("纳税人类型名称")
-    @NotEmpty(message = "纳税人类型名称不能为空",groups = {ValidationGroup.Update.class,ValidationGroup.Create.class})
-    private String taxpayerTypeName;*/
 
     /**
      * 纳税人类型码值
@@ -131,7 +108,7 @@ public class TaxPreferenceDTO {
     /**
      * 标签管理
      */
-    @ApiModelProperty("标签管理")
+    @ApiModelProperty("标签管理,多个按照逗号隔开")
     @NotEmpty(message = "标签管理",groups = {ValidationGroup.Update.class,ValidationGroup.Create.class})
     private String labels;
 

@@ -2,6 +2,7 @@ package cn.huacloud.taxpreference.services.producer.impl;
 
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.BizCode;
+import cn.huacloud.taxpreference.common.enums.taxpreference.SortType;
 import cn.huacloud.taxpreference.services.producer.FrequentlyAskedQuestionService;
 import cn.huacloud.taxpreference.services.producer.PoliciesExplainService;
 import cn.huacloud.taxpreference.services.producer.PoliciesService;
@@ -9,10 +10,12 @@ import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferenceDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferencePoliciesDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.*;
+import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesSortType;
 import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesStatusEnum;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesAbolishVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesDetailVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesVO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.QueryTaxPreferencesVO;
 import cn.huacloud.taxpreference.services.producer.mapper.PoliciesMapper;
 import cn.huacloud.taxpreference.services.producer.mapper.TaxPreferenceMapper;
 import cn.huacloud.taxpreference.services.producer.mapper.TaxPreferencePoliciesMapper;
@@ -20,6 +23,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,10 +32,7 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -39,6 +41,7 @@ import java.util.stream.Collectors;
  *
  * @author wuxin
  */
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class PoliciesServiceImpl implements PoliciesService {
@@ -64,66 +67,11 @@ public class PoliciesServiceImpl implements PoliciesService {
      */
     @Override
     public PageVO<PoliciesVO> getPolicesList(QueryPoliciesDTO queryPoliciesDTO) {
-
-        LambdaQueryWrapper<PoliciesDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        //模糊查询标题
-        if (QueryPoliciesDTO.KeyWordField.TITLE.equals(queryPoliciesDTO.getKeyWordField())) {
-            lambdaQueryWrapper.like(!StringUtils.isEmpty(queryPoliciesDTO.getTitle()),
-                    PoliciesDO::getTitle,
-                    queryPoliciesDTO.getTitle());
-            //模糊查询文号
-        }else if (QueryPoliciesDTO.KeyWordField.DOC_CODE.equals(queryPoliciesDTO.getKeyWordField())) {
-            lambdaQueryWrapper.like(!StringUtils.isEmpty(queryPoliciesDTO.getDocCode()),
-                    PoliciesDO::getDocCode,
-                    queryPoliciesDTO.getDocCode());
-        }
-        //条件查询--所属税种码值
-        lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getTaxCategoriesCode()),
-                PoliciesDO::getTaxCategoriesCode,
-                queryPoliciesDTO.getTaxCategoriesCode());
-        //条件查询--纳税人资格认定类型码值
-        lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getTaxpayerIdentifyTypeCodes()),
-                PoliciesDO::getTaxpayerIdentifyTypeCodes,
-                queryPoliciesDTO.getTaxpayerIdentifyTypeCodes());
-        //条件查询--适用企业类型码值
-        lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getEnterpriseTypeCodes()),
-                PoliciesDO::getEnterpriseTypeCodes,
-                queryPoliciesDTO.getEnterpriseTypeCodes());
-        //条件查询--适用行业码值
-        lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getAreaCode()),
-                PoliciesDO::getIndustryCodes,
-                queryPoliciesDTO.getIndustryCodes());
-        //条件查询--所属区域码值
-        lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getAreaCode()),
-                PoliciesDO::getAreaCode,
-                queryPoliciesDTO.getAreaCode());
-        //条件查询--有效性
-        lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getValidity()),
-                PoliciesDO::getValidity, queryPoliciesDTO.getValidity());
-        //条件查询--发布日期
-        lambdaQueryWrapper.ge(!StringUtils.isEmpty(queryPoliciesDTO.getReleaseDate()),
-                PoliciesDO::getReleaseDate, queryPoliciesDTO.getStartTime())
-                .le(!StringUtils.isEmpty(queryPoliciesDTO.getReleaseDate()),
-                        PoliciesDO::getReleaseDate, queryPoliciesDTO.getEndTime());
-        //排序--发布时间
-        if (QueryPoliciesDTO.SortField.RELEASE_DATE.equals(queryPoliciesDTO.getSortField())) {
-            lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getReleaseDate()),
-                    PoliciesDO::getReleaseDate,
-                    queryPoliciesDTO.getReleaseDate()).orderByDesc(PoliciesDO::getReleaseDate);
-        }
-        //排序--更新时间
-        if (QueryPoliciesDTO.SortField.UPDATE_TIME.equals(queryPoliciesDTO.getSortField())) {
-            lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getUpdateTime()),
-                    PoliciesDO::getReleaseDate,
-                    queryPoliciesDTO.getUpdateTime()).orderByDesc(PoliciesDO::getUpdateTime);
-        }
-        //分页
-        IPage<PoliciesDO> policiesDoPage =
-                //--todo
-                policiesMapper.selectPage(new Page<>(queryPoliciesDTO.getPageNum(),
-                        queryPoliciesDTO.getPageSize()), lambdaQueryWrapper);
-
-        //数据映射
+        Page<PoliciesVO> page = new Page<>(queryPoliciesDTO.getPageNum(), queryPoliciesDTO.getPageSize());
+        //获取排序字段
+        String sort = getSort(queryPoliciesDTO);
+        IPage<PoliciesVO> policiesDoPage = policiesMapper.queryPoliciesVOList(page, queryPoliciesDTO, sort);
+                //数据映射
         List<PoliciesVO> records = policiesDoPage.getRecords().stream().map(policiesDO -> {
             PoliciesVO policiesVO = new PoliciesVO();
             //属性拷贝
@@ -132,21 +80,115 @@ public class PoliciesServiceImpl implements PoliciesService {
         }).collect(Collectors.toList());
         //返回结果
         return PageVO.createPageVO(policiesDoPage, records);
+
     }
+    /**
+     * 获取排序字段
+     */
+    private String getSort(QueryPoliciesDTO queryPoliciesDTO) {
+        String sort = PoliciesSortType.RELEASE.getValue();
+        if (queryPoliciesDTO.getPoliciesSortType().equals(PoliciesSortType.UPDATE_TIME)) {
+            sort = SortType.UPDATE_TIME.name();
+        }
+        log.info("排序字段sort:{}", sort);
+        return sort;
+    }
+
+//        LambdaQueryWrapper<PoliciesDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+//        //模糊查询标题
+//        if (QueryPoliciesDTO.KeyWordField.TITLE.equals(queryPoliciesDTO.getKeyWordField())) {
+//            lambdaQueryWrapper.like(!StringUtils.isEmpty(queryPoliciesDTO.getTitle()),
+//                    PoliciesDO::getTitle,
+//                    queryPoliciesDTO.getTitle());
+//            //模糊查询文号
+//        } else if (QueryPoliciesDTO.KeyWordField.DOC_CODE.equals(queryPoliciesDTO.getKeyWordField())) {
+//            lambdaQueryWrapper.like(!StringUtils.isEmpty(queryPoliciesDTO.getDocCode()),
+//                    PoliciesDO::getDocCode,
+//                    queryPoliciesDTO.getDocCode());
+//        }
+//        //条件查询--所属税种码值
+//        lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getTaxCategoriesCode()),
+//                PoliciesDO::getTaxCategoriesCode,
+//                queryPoliciesDTO.getTaxCategoriesCode());
+//        //条件查询--纳税人资格认定类型码值
+//        lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getTaxpayerIdentifyTypeCodes()),
+//                PoliciesDO::getTaxpayerIdentifyTypeCodes,
+//                queryPoliciesDTO.getTaxpayerIdentifyTypeCodes());
+//        //条件查询--适用企业类型码值
+//        lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getEnterpriseTypeCodes()),
+//                PoliciesDO::getEnterpriseTypeCodes,
+//                queryPoliciesDTO.getEnterpriseTypeCodes());
+//        //条件查询--适用行业码值
+//        lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getAreaCode()),
+//                PoliciesDO::getIndustryCodes,
+//                queryPoliciesDTO.getIndustryCodes());
+//        //条件查询--所属区域码值
+//        lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getAreaCode()),
+//                PoliciesDO::getAreaCode,
+//                queryPoliciesDTO.getAreaCode());
+//        //条件查询--有效性
+//        lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getValidity()),
+//                PoliciesDO::getValidity, queryPoliciesDTO.getValidity());
+//        //条件查询--发布日期
+//        lambdaQueryWrapper.ge(!StringUtils.isEmpty(queryPoliciesDTO.getReleaseDate()),
+//                PoliciesDO::getReleaseDate, queryPoliciesDTO.getStartTime())
+//                .le(!StringUtils.isEmpty(queryPoliciesDTO.getReleaseDate()),
+//                        PoliciesDO::getReleaseDate, queryPoliciesDTO.getEndTime());
+//        //排序--发布时间
+//        if (QueryPoliciesDTO.SortField.RELEASE_DATE.equals(queryPoliciesDTO.getSortField())) {
+//            lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getReleaseDate()),
+//                    PoliciesDO::getReleaseDate,
+//                    queryPoliciesDTO.getReleaseDate()).orderByDesc(PoliciesDO::getReleaseDate);
+//        }
+//        //排序--更新时间
+//        if (QueryPoliciesDTO.SortField.UPDATE_TIME.equals(queryPoliciesDTO.getSortField())) {
+//            lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getUpdateTime()),
+//                    PoliciesDO::getReleaseDate,
+//                    queryPoliciesDTO.getUpdateTime()).orderByDesc(PoliciesDO::getUpdateTime);
+//        }
+//        //分页
+//        IPage<PoliciesDO> policiesDoPage =
+//                //--todo
+//                policiesMapper.selectPage(new Page<>(queryPoliciesDTO.getPageNum(),
+//                        queryPoliciesDTO.getPageSize()), lambdaQueryWrapper);
+//
+//        //数据映射
+//        List<PoliciesVO> records = policiesDoPage.getRecords().stream().map(policiesDO -> {
+//            PoliciesVO policiesVO = new PoliciesVO();
+//            //属性拷贝
+//            BeanUtils.copyProperties(policiesDO, policiesVO);
+//            return policiesVO;
+//        }).collect(Collectors.toList());
+//        //返回结果
+//        return PageVO.createPageVO(policiesDoPage, records);
+//    }
 
     /**
      * 新增政策法规
      *
      * @param policiesCombinationDTO
-     * @param id
+     * @param userId
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void insertPolicies(PoliciesCombinationDTO policiesCombinationDTO, Long id) {
+    public void insertPolicies(PoliciesCombinationDTO policiesCombinationDTO, Long userId) {
         //新增政策法规
         PoliciesDO policiesDO = new PoliciesDO();
+        //设置纳税人、使用企业、适用行业码值
+        policiesDO.setTaxpayerIdentifyTypeCodes(org.apache.commons.lang3.StringUtils.join(policiesCombinationDTO.getTaxpayerIdentifyTypeCodes(), ","));
+        policiesDO.setEnterpriseTypeCodes(org.apache.commons.lang3.StringUtils.join(policiesCombinationDTO.getEnterpriseTypeCodes(), ","));
+        policiesDO.setIndustryCodes(org.apache.commons.lang3.StringUtils.join(policiesCombinationDTO.getIndustryCodes(), ","));
+        //进行切分
+        String taxpayerIdentifyTypeNames = convert2String(policiesCombinationDTO.getTaxpayerIdentifyTypeCodes());
+        String enterpriseTypeCodes = convert2String(policiesCombinationDTO.getEnterpriseTypeCodes());
+        String industryNames = convert2String(policiesCombinationDTO.getIndustryCodes());
+        //设置纳税人、使用企业、适用行业名称值
+        policiesDO.setTaxpayerIdentifyTypeNames(taxpayerIdentifyTypeNames);
+        policiesDO.setEnterpriseTypeNames(enterpriseTypeCodes);
+        policiesDO.setIndustryNames(industryNames);
+
         BeanUtils.copyProperties(policiesCombinationDTO, policiesDO);
-        policiesDO.setInputUserId(id);
+        policiesDO.setInputUserId(userId);
         //添加废止状态
         policiesDO.setPoliciesStatus(policiesCombinationDTO.getPoliciesStatus());
         //添加发布时间
@@ -162,11 +204,25 @@ public class PoliciesServiceImpl implements PoliciesService {
         PoliciesExplainDTO policiesExplainDTO = new PoliciesExplainDTO();
         BeanUtils.copyProperties(policiesCombinationDTO, policiesExplainDTO);
         policiesExplainDTO.setPoliciesId(policiesDO.getId());
-        policiesExplainService.insertPoliciesExplain(policiesExplainDTO, id);
-        //新增热点问答
+        policiesExplainService.insertPoliciesExplain(policiesExplainDTO, userId);
+        //新增热点问答--todo
         FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO = new FrequentlyAskedQuestionDTO();
         BeanUtils.copyProperties(policiesCombinationDTO, frequentlyAskedQuestionDTO);
-        frequentlyAskedQuestionService.insertFrequentlyAskedQuestion(frequentlyAskedQuestionDTO, id);
+        frequentlyAskedQuestionService.insertFrequentlyAskedQuestion(frequentlyAskedQuestionDTO, userId);
+    }
+
+    /**
+     * 拼接转换
+     */
+    @NotNull
+    private String convert2String(List<String> industryCodes) {
+        Set<String> keySet = new HashSet<>();
+        industryCodes.forEach(industryCode -> {
+            //todo 通过code查询名称
+            keySet.add("a");
+        });
+        log.info("keySet={}", keySet);
+        return org.apache.commons.lang3.StringUtils.join(keySet, ",");
     }
 
     /**
@@ -196,6 +252,7 @@ public class PoliciesServiceImpl implements PoliciesService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void updatePolicies(PoliciesCombinationDTO policiesCombinationDTO) {
+
         //修改政策法规
         PoliciesDO policiesDO = new PoliciesDO();
         BeanUtils.copyProperties(policiesCombinationDTO, policiesDO);

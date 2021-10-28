@@ -1,12 +1,14 @@
 package cn.huacloud.taxpreference.services.producer.entity.dtos;
 
 import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
+import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesSortType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 政策犯规条件类
@@ -30,13 +32,13 @@ public class QueryPoliciesDTO extends KeywordPageQueryDTO {
     private String taxCategoriesCode;
 
     @ApiModelProperty("纳税人资格认定类型码值")
-    private String taxpayerIdentifyTypeCodes;
+    private List<String> taxpayerIdentifyTypeCodes;
 
     @ApiModelProperty("适用企业类型码值")
-    private String enterpriseTypeCodes;
+    private List<String> enterpriseTypeCodes;
 
     @ApiModelProperty("适用行业码值")
-    private String industryCodes;
+    private List<String> industryCodes;
 
     @ApiModelProperty("所属区域码值")
     private String areaCode;
@@ -57,12 +59,8 @@ public class QueryPoliciesDTO extends KeywordPageQueryDTO {
     private LocalDateTime updateTime;
 
     @ApiModelProperty("排序字段")
-    private SortField sortField;
+    private PoliciesSortType policiesSortType;
 
-    public enum SortField {
-        RELEASE_DATE,
-        UPDATE_TIME;
-    }
 
     public enum KeyWordField {
         TITLE,

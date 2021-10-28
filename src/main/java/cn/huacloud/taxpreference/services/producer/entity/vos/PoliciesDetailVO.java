@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * 政策法规VO
@@ -126,6 +127,6 @@ public class PoliciesDetailVO {
      * 标签集合
      */
     @ApiModelProperty("标签集合")
-    private String labels;
+    private List<String> labels;
 
 }
