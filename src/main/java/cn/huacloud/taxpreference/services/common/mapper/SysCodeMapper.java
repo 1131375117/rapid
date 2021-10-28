@@ -24,7 +24,8 @@ public interface SysCodeMapper extends BaseMapper<SysCodeDO> {
      */
     default List<SysCodeDO> getAllValid() {
         LambdaQueryWrapper<SysCodeDO> queryWrapper = Wrappers.lambdaQuery(SysCodeDO.class)
-                .eq(SysCodeDO::getCodeStatus, SysCodeStatus.VALID);
+                .eq(SysCodeDO::getCodeStatus, SysCodeStatus.VALID)
+                .orderByAsc(SysCodeDO::getSort);
         return selectList(queryWrapper);
     }
 }
