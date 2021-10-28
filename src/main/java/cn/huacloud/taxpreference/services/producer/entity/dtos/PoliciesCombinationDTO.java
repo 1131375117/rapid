@@ -52,27 +52,27 @@ public class PoliciesCombinationDTO {
 
     @ApiModelProperty("纳税人资格认定类型名称")
     @NotBlank(message = "纳税人资格认定类型名称不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
-    private String taxpayerIdentifyTypeName;
+    private String taxpayerIdentifyTypeNames;
 
     @ApiModelProperty("纳税人资格认定类型码值")
     @NotBlank(message = "纳税人资格认定类型码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
-    private String taxpayerIdentifyTypeCode;
+    private String taxpayerIdentifyTypeCodes;
 
     @ApiModelProperty("适用企业类型名称")
     @NotBlank(message = "适用企业类型名称不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
-    private String enterpriseTypeName;
+    private String enterpriseTypeNames;
 
     @ApiModelProperty("适用企业类型码值")
     @NotBlank(message = "适用企业类型码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
-    private String enterpriseTypeCode;
+    private String enterpriseTypeCodes;
 
     @ApiModelProperty("适用行业名称")
     @NotBlank(message = "适用行业名称不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
-    private String industryName;
+    private String industryNames;
 
     @ApiModelProperty("适用行业码值")
     @NotBlank(message = "适用行业码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
-    private String industryCode;
+    private String industryCodes;
 
     @ApiModelProperty("有效性")
     @NotBlank(message = "有效性不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})

@@ -22,12 +22,12 @@ public class ProcessDO {
     private Long id;
 
     /**
-     * 税收优惠ID
+     * 税收优惠Id
      */
     private Long taxPreferenceId;
 
     /**
-     * 创建人ID
+     * 创建人Id
      */
     private Long creatorId;
 

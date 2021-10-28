@@ -20,42 +20,45 @@ import java.time.LocalDateTime;
 public class PoliciesExplainDetailVO {
 
     /**
-     * 主键ID
+     * 主键Id
      */
-    @ApiModelProperty("id")
+    @ApiModelProperty("主键Id")
     private Long id;
 
     /**
-     * 政策ID
+     * 政策Id
      */
-    @ApiModelProperty("id")
+    @ApiModelProperty("主键Id")
     private Long policiesId;
 
     /**
      * 标题
      */
-    @ApiModelProperty("id")
+    @ApiModelProperty("标题")
     private String title;
 
     /**
      * 来源
      */
+    @ApiModelProperty("来源")
     private String docSource;
 
     /**
      * 发布日期
      */
+    @ApiModelProperty("发布日期")
     private LocalDate releaseDate;
 
     /**
      * 正文
      */
-    @ApiModelProperty("id")
+    @ApiModelProperty("正文")
     private String content;
 
     /**
-     * 录入人用户ID
+     * 录入人用户Id
      */
+    @ApiModelProperty("录入人用户Id")
     private Long inputUserId;
 
 }

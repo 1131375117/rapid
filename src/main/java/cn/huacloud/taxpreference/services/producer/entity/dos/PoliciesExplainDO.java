@@ -25,7 +25,7 @@ public class PoliciesExplainDO {
     private Long id;
 
     /**
-     * 政策ID
+     * 政策Id
      */
     private Long policiesId;
 

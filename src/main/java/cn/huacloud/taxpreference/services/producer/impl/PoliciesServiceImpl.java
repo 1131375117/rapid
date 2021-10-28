@@ -82,9 +82,9 @@ public class PoliciesServiceImpl implements PoliciesService {
                 PoliciesDO::getTaxCategoriesCode,
                 queryPoliciesDTO.getTaxCategoriesCode());
         //条件查询--纳税人资格认定类型码值
-        lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getTaxpayerIdentifyTypeCode()),
-                PoliciesDO::getTaxpayerIdentifyTypeCode,
-                queryPoliciesDTO.getTaxpayerIdentifyTypeCode());
+        lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getTaxpayerIdentifyTypeCodes()),
+                PoliciesDO::getTaxpayerIdentifyTypeCodes,
+                queryPoliciesDTO.getTaxpayerIdentifyTypeCodes());
         //条件查询--适用企业类型码值
         lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getEnterpriseTypeCodes()),
                 PoliciesDO::getEnterpriseTypeCodes,

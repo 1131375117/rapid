@@ -34,12 +34,12 @@ public class FrequentlyAskedQuestionDO {
     /**
      * 问题
      */
-    private String question;
+    private String title;
 
     /**
      * 回答
      */
-    private String answer;
+    private String content;
 
     /**
      * 来源

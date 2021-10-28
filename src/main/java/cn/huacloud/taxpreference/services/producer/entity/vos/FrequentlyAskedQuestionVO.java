@@ -34,13 +34,13 @@ public class FrequentlyAskedQuestionVO {
      * 问题
      */
     @ApiModelProperty("问题")
-    private String question;
+    private String title;
 
     /**
      * 回答
      */
     @ApiModelProperty("回答")
-    private String answer;
+    private String content;
 
     /**
      * 来源

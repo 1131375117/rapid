@@ -32,17 +32,17 @@ public class QueryPoliciesExplainDTO extends KeywordPageQueryDTO {
     @ApiModelProperty("来源")
     private String docSource;
 
-    @ApiModelProperty("查询发布日期")
+    @ApiModelProperty("发布日期")
     private LocalDate releaseDate;
 
-    @ApiModelProperty("查询开始日期")
+    @ApiModelProperty("开始日期")
     private LocalDate startTime;
 
-    @ApiModelProperty("查询结束日期")
+    @ApiModelProperty("结束日期")
     private LocalDate endTime;
 
 
-    @ApiModelProperty("查询更新日期")
+    @ApiModelProperty("更新日期")
     private LocalDateTime updateTime;
 
     @ApiModelProperty("排序")

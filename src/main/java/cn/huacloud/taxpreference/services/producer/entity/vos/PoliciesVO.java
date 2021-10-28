@@ -17,7 +17,7 @@ import java.util.Date;
 @ApiModel
 public class PoliciesVO {
 
-    @ApiModelProperty("政策法规ID")
+    @ApiModelProperty("政策法规Id")
     private Long id;
     @ApiModelProperty("标题")
     private String title;
