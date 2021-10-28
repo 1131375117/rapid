@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 /**
+ * 系统码值数据实体
  * @author wangkh
  */
 @Accessors(chain = true)
