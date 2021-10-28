@@ -38,6 +38,7 @@ public class TaxPreferenceController {
     @ApiOperation("税收优惠查询接口")
     @PostMapping("queryTaxPreference")
     public ResultVO<PageVO<QueryTaxPreferencesVO>> queryTaxPreference(@RequestBody QueryTaxPreferencesDTO queryTaxPreferencesDTO) {
+        queryTaxPreferencesDTO.paramReasonable();
         return taxPreferenceService.queryTaxPreferenceList(queryTaxPreferencesDTO, UserUtil.getCurrentUser().getId());
     }
 

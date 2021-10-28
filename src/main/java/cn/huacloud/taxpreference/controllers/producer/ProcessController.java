@@ -69,7 +69,7 @@ public class ProcessController {
     @ApiOperation("税收优惠事项审核提交")
     @PostMapping("/submitProcess")
     public ResultVO<Void> insertTaxPreference(@RequestBody @Validated() ProcessSubmitDTO processSubmitDTO) {
-        if (ProcessStatus.RETURNED.name().equals(processSubmitDTO.getTaxPreferenceStatus())
+        if (ProcessStatus.RETURNED.name().equals(processSubmitDTO.getTaxPreferenceStatus().getValue())
                 && StringUtils.isBlank(processSubmitDTO.getApprovalNote())) {
             throw BizCode._4301.exception();
         }

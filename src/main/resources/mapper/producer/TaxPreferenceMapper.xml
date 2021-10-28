@@ -25,7 +25,8 @@
             resultType="cn.huacloud.taxpreference.services.producer.entity.vos.QueryTaxPreferencesVO">
         select p.id,p.tax_preference_name as taxPreferenceName,p.industry_names as industryNames ,p.taxpayer_type_name as taxpayerTypeName,
         p.tax_categories_name as taxCategoriesName,p.enterprise_type_names as enterpriseTypeNames,
-        p.validity,p.create_time as createTime,p.taxpayer_credit_ratings as taxpayerCreditRatings
+        p.validity,p.create_time as createTime,p.taxpayer_credit_ratings as taxpayerCreditRatings,
+        p.taxpayer_register_type_name as taxpayerRegisterTypeName
         from t_tax_preference p
         <where>
 
@@ -38,10 +39,10 @@
             <if test="queryTaxPreferencesDTO.taxpayerTypeCode != null and queryTaxPreferencesDTO.taxpayerTypeCode != '' ">
                 and p.taxpayer_type_code=#{queryTaxPreferencesDTO.taxpayerTypeCode}
             </if>
-
-            <if test="queryTaxPreferencesDTO.validity != null and queryTaxPreferencesDTO.validity != '' ">
+            <if test="queryTaxPreferencesDTO.validity!=null and queryTaxPreferencesDTO.validity!='' ">
                 and p.validity=#{queryTaxPreferencesDTO.validity}
             </if>
+
             <if test="queryTaxPreferencesDTO.releaseMatter.getValue()==@cn.huacloud.taxpreference.common.enums.taxpreference.ReleaseMatter@MY_RELEASED.getValue()">
                 and p.input_user_id=#{userId} and tax_preference_status='已发布'
             </if>
@@ -51,12 +52,12 @@
             <if test="queryTaxPreferencesDTO.taxpayerCreditRatings!=null and queryTaxPreferencesDTO.taxpayerCreditRatings.size>0 ">
 
                 <foreach collection="queryTaxPreferencesDTO.taxpayerCreditRatings" item="credit">
-                    and FIND_IN_SET(#{credit},p.taxpayer_credit_ratings)
+                    and FIND_IN_SET(#{credit.toString()},p.taxpayer_credit_ratings)
                 </foreach>
             </if>
-            <if test=" queryTaxPreferencesDTO.industryCodess!=null and queryTaxPreferencesDTO.industryCodess.size>0 ">
-                <foreach collection="queryTaxPreferencesDTO.industryCodess" item="industryCodes" >
-                    and  FIND_IN_SET(#{industryCodes},p.industryCodes)
+            <if test=" queryTaxPreferencesDTO.industryCodes!=null and queryTaxPreferencesDTO.industryCodes.size>0 ">
+                <foreach collection="queryTaxPreferencesDTO.industryCodes" item="industryCodes" >
+                    and  FIND_IN_SET(#{industryCodes},p.industry_codes)
                 </foreach>
             </if>
             <if test="queryTaxPreferencesDTO.enterpriseTypeCodes!=null and queryTaxPreferencesDTO.enterpriseTypeCodes.size>0 ">

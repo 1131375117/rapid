@@ -10,7 +10,7 @@ import com.baomidou.mybatisplus.annotation.IEnum;
 public enum PreferenceValidation implements IEnum<String> {
     //税收优惠是否有效
     EFFECTIVE("有效"),
-    INVALID("废止");
+    INVALID("失效");
 
     public final String name;
 
