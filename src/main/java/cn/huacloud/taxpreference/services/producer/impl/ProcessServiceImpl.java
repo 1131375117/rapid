@@ -45,6 +45,7 @@ public class ProcessServiceImpl implements ProcessService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResultVO<Void> insertProcessService(Long[] taxPreferenceIds, LoginUserVO currentUser) {
+        log.info("新增流程参数:taxPreferenceIds={},currentUser={}",taxPreferenceIds,currentUser);
         for (Long taxPreferenceId : taxPreferenceIds) {
             //新增先查询是否存在并更新流程状态
             processServiceMapper.updateByTaxPreferenceId(taxPreferenceId);
@@ -61,10 +62,12 @@ public class ProcessServiceImpl implements ProcessService {
     }
 
     @Override
-    public ResultVO<PageVO<ProcessListVO>> queryProcessList(ProcessListDTO processListDTO) {
+    public ResultVO<PageVO<ProcessListVO>> queryProcessList(ProcessListDTO processListDTO, Long userId) {
         processListDTO.paramReasonable();
+        log.info("查询条件:processListDTO={},userId={}",processListDTO,userId);
         Page<ProcessListVO> page = new Page<>(processListDTO.getPageNum(), processListDTO.getPageSize());
         IPage<ProcessListVO> iPage = processServiceMapper.queryProcessList(page, processListDTO);
+        log.info("iPage-查询结果{}",iPage);
         PageVO<ProcessListVO> pageVO = PageVO.createPageVO(iPage, iPage.getRecords());
         return ResultVO.ok(pageVO);
     }
@@ -72,6 +75,7 @@ public class ProcessServiceImpl implements ProcessService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResultVO<Void> submitProcess(ProcessSubmitDTO processSubmitDTO, LoginUserVO currentUser) {
+        log.info("发布申请dto={},currentUser={}",processSubmitDTO,currentUser);
         ProcessDO processDO = getProcessDO(processSubmitDTO, currentUser);
         processServiceMapper.updateById(processDO);
         processDO = processServiceMapper.selectById(processDO.getId());
@@ -82,51 +86,53 @@ public class ProcessServiceImpl implements ProcessService {
 
     @Override
     public ResultVO<List<ProcessInfoVO>> queryProcessInfo(Long id) {
-        log.info("查询条件:id-{}",id);
-        List<ProcessInfoVO> processInfoVOList=new ArrayList<>();
-        Map<String, Object> keymap=new HashMap<>(16);
-        keymap.put(TAX_PREFERENCE_ID,id);
+        log.info("查询条件:id-{}", id);
+        List<ProcessInfoVO> processInfoVOList = new ArrayList<>();
+        Map<String, Object> keymap = new HashMap<>(16);
+        keymap.put(TAX_PREFERENCE_ID, id);
         List<ProcessDO> processDOList = processServiceMapper.selectByMap(keymap);
-        log.info("查询结果:processDOList:{}",processDOList);
+        log.info("查询结果:processDOList:{}", processDOList);
         processDOList.forEach(processDO -> {
             ProcessInfoVO processInfoVO = new ProcessInfoVO();
-            BeanUtils.copyProperties(processDO,processInfoVO);
+            BeanUtils.copyProperties(processDO, processInfoVO);
             processInfoVOList.add(processInfoVO);
         });
-        log.info("返回结果:processInfoVOList:{}",processDOList);
+        log.info("返回结果:processInfoVOList:{}", processDOList);
         return ResultVO.ok(processInfoVOList);
     }
 
     /**
      * 封装流程对象
-     * */
+     */
     private ProcessDO getProcessDO(ProcessSubmitDTO processSubmitDTO, LoginUserVO currentUser) {
         ProcessDO processDO = new ProcessDO();
-        BeanUtils.copyProperties(processSubmitDTO,processDO);
+        BeanUtils.copyProperties(processSubmitDTO, processDO);
         processDO.setApproverId(currentUser.getId());
         processDO.setApproverName(currentUser.getUsername());
         processDO.setCreateTime(LocalDateTime.now());
-        if(ProcessStatus.NOT_APPROVED.name.equals(processDO.getProcessStatus())){
+        if (ProcessStatus.NOT_APPROVED.name.equals(processDO.getProcessStatus())) {
             processDO.setProcessStatus(ProcessStatus.RETURNED.getValue());
-        }else{
+        } else if (ProcessStatus.APPROVED.name.equals(processDO.getProcessStatus())) {
             processDO.setProcessStatus(ProcessStatus.APPROVED.getValue());
+            processDO.setApprovalTime(LocalDateTime.now());
         }
-
+        log.info("封装结果:processDO:{}", processDO);
         return processDO;
     }
 
     /**
      * 封装税收优惠
-     * */
+     */
     private TaxPreferenceDO getTaxPreferenceDO(ProcessDO processDO) {
         TaxPreferenceDO taxPreferenceDO = new TaxPreferenceDO();
         taxPreferenceDO.setId(processDO.getTaxPreferenceId());
         taxPreferenceDO.setTaxPreferenceStatus(processDO.getProcessStatus());
-        if(ProcessStatus.APPROVED.name.equals(processDO.getProcessStatus())){
-        taxPreferenceDO.setTaxPreferenceStatus(TaxPreferenceStatus.RELEASED.getValue());
-        }else{
+        if (ProcessStatus.APPROVED.getValue().equals(processDO.getProcessStatus())) {
+            taxPreferenceDO.setTaxPreferenceStatus(TaxPreferenceStatus.RELEASED.getValue());
+        } else {
             taxPreferenceDO.setTaxPreferenceStatus(TaxPreferenceStatus.UNRELEASED.getValue());
         }
+        log.info("封装结果:taxPreferenceDO:{}", taxPreferenceDO);
         return taxPreferenceDO;
     }
 }

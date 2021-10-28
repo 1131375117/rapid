@@ -1,7 +1,6 @@
 package cn.huacloud.taxpreference.services.producer.entity.dtos;
 
 import cn.huacloud.taxpreference.common.constants.ValidationGroup;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -29,7 +28,6 @@ public class TaxPreferencePoliciesDTO {
      * 有效期起-政策法规
      */
     @ApiModelProperty("有效期起")
-    @JsonFormat(pattern = "yyyy-MM-dd")
     @NotEmpty(message = "有效期不能为空",groups = {ValidationGroup.Update.class,ValidationGroup.Create.class})
     private LocalDate validityBeginDate;
 
@@ -37,7 +35,6 @@ public class TaxPreferencePoliciesDTO {
      * 有效期至-政策法规
      */
     @ApiModelProperty("有效期至")
-    @JsonFormat(pattern = "yyyy-MM-dd")
     @NotEmpty(message = "有效期不能为空",groups = {ValidationGroup.Update.class,ValidationGroup.Create.class})
     private LocalDate validityEndDate;
 

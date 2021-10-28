@@ -15,12 +15,13 @@ public interface FrequentlyAskedQuestionService {
      * @param frequentlyAskedQuestionDTO
      * @param id
      */
-    public void insertFrequentlyAskedQuestion(FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO, Long id);
+     void insertFrequentlyAskedQuestion(FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO, Long id);
 
     /**
      * 修改热点问答
+     *
      * @param frequentlyAskedQuestionDTO
      */
-    public void updateFrequentlyAskedQuestion(FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO);
+     void updateFrequentlyAskedQuestion(FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO);
 
 }

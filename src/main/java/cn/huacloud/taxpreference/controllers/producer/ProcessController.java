@@ -1,7 +1,10 @@
 package cn.huacloud.taxpreference.controllers.producer;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.huacloud.taxpreference.common.annotations.PermissionInfo;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.BizCode;
+import cn.huacloud.taxpreference.common.enums.PermissionGroup;
 import cn.huacloud.taxpreference.common.enums.process.ProcessStatus;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.common.utils.UserUtil;
@@ -22,6 +25,7 @@ import java.util.List;
 
 /**
  * 流程管理接口
+ *
  * @author fuhua
  */
 @RequiredArgsConstructor
@@ -30,46 +34,56 @@ import java.util.List;
 @Api(tags = "流程管理接口")
 public class ProcessController {
     private final ProcessService processService;
+
     /**
      * 税收优惠事项审核列表
      * 参数(可选):优惠事项名称
      */
-    @ApiOperation("税收优惠事项批量发布申请")
+    @PermissionInfo(name = "税收优惠事项审核列表", group = PermissionGroup.APPROVAL)
+    @SaCheckPermission("producer_process_query")
+    @ApiOperation("税收优惠事项审核列表")
     @PostMapping("/queryProcessList")
-    public ResultVO<PageVO<ProcessListVO>>queryProcessList(ProcessListDTO processListDTO) {
-        return processService.queryProcessList(processListDTO);
+    public ResultVO<PageVO<ProcessListVO>> queryProcessList(@RequestBody ProcessListDTO processListDTO) {
+        return processService.queryProcessList(processListDTO, UserUtil.getCurrentUser().getId());
     }
 
     /**
      * 税收优惠事项批量发布申请
      * 发布申请条件:优惠事项idlist
      */
+    @PermissionInfo(name = "税收优惠事项发布", group = PermissionGroup.APPROVAL)
+    @SaCheckPermission("producer_process_release")
     @ApiOperation("税收优惠事项批量发布申请")
     @PostMapping("/process/{taxPreferenceId}")
-    public ResultVO<Void> insertTaxPreference(@Validated()@NotEmpty(message = "税收优惠id不能为空") @PathVariable("taxPreferenceId") Long[] taxPreferenceIds) {
-        return processService.insertProcessService(taxPreferenceIds,UserUtil.getCurrentUser());
+    public ResultVO<Void> insertTaxPreference(@Validated() @NotEmpty(message = "税收优惠id不能为空") @PathVariable("taxPreferenceId") Long[] taxPreferenceIds) {
+        return processService.insertProcessService(taxPreferenceIds, UserUtil.getCurrentUser());
     }
 
     /**
      * 税收优惠事项审核提交
-     *  审核必传参数:税收优惠事项id,审核结果
-     *        可选:备注审核信息(审核结果不通过时为必填)
+     * 审核必传参数:税收优惠事项id,审核结果
+     * 可选:备注审核信息(审核结果不通过时为必填)
      */
+    @PermissionInfo(name = "税收优惠事项审核流程提交", group = PermissionGroup.APPROVAL)
+    @SaCheckPermission("producer_process_submit")
     @ApiOperation("税收优惠事项审核提交")
     @PostMapping("/submitProcess")
-    public ResultVO<Void> insertTaxPreference(@RequestBody @Validated() ProcessSubmitDTO processSubmitDTO)  {
-        if(ProcessStatus.RETURNED.name().equals(processSubmitDTO.getTaxPreferenceStatus())&& StringUtils.isBlank(processSubmitDTO.getApprovalNote())){
+    public ResultVO<Void> insertTaxPreference(@RequestBody @Validated() ProcessSubmitDTO processSubmitDTO) {
+        if (ProcessStatus.RETURNED.name().equals(processSubmitDTO.getTaxPreferenceStatus().getValue())
+                && StringUtils.isBlank(processSubmitDTO.getApprovalNote())) {
             throw BizCode._4301.exception();
         }
-        return processService.submitProcess(processSubmitDTO,UserUtil.getCurrentUser());
+        return processService.submitProcess(processSubmitDTO, UserUtil.getCurrentUser());
     }
+
     /**
-     *
      * 流程审批信息
-     * */
+     */
+    @PermissionInfo(name = "税收优惠事项流程审批详情", group = PermissionGroup.APPROVAL)
+    @SaCheckPermission("producer_process_approval_detail")
     @ApiOperation("税收优惠事项审批信息")
     @PostMapping("/queryProcessInfo/{id}")
-    public ResultVO<List<ProcessInfoVO>> queryProcessInfo(@Validated()@NotEmpty(message = "id不能为空")@PathVariable Long id)  {
+    public ResultVO<List<ProcessInfoVO>> queryProcessInfo(@Validated() @NotEmpty(message = "id不能为空") @PathVariable Long id) {
         return processService.queryProcessInfo(id);
     }
 

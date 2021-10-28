@@ -1,15 +1,10 @@
 package cn.huacloud.taxpreference.services.producer.entity.vos;
 
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
  * 政策法规VO
@@ -20,117 +15,117 @@ import java.time.LocalDateTime;
 public class PoliciesDetailVO {
 
     /**
-     * 主键ID
+     * 主键Id
      */
-    @ApiModelProperty("id")
+    @ApiModelProperty("政策法规主键id")
     private Long id;
 
     /**
      * 标题
      */
-    @ApiModelProperty("id")
+    @ApiModelProperty("标题")
     private String title;
 
     /**
      * 文号
      */
-    @ApiModelProperty("id")
+    @ApiModelProperty("文号")
     private String docCode;
 
     /**
      * 所属区域名称
      */
-    @ApiModelProperty("id")
+    @ApiModelProperty("所属区域名称")
     private String areaName;
 
     /**
      * 所属区域码值
      */
-    @ApiModelProperty("id")
+    @ApiModelProperty("所属区域码值")
     private String areaCode;
 
     /**
      * 来源
      */
-    @ApiModelProperty("id")
+    @ApiModelProperty("来源")
     private String docSource;
 
     /**
      * 所属税种名称
      */
-    @ApiModelProperty("id")
+    @ApiModelProperty("所属税种名称")
     private String taxCategoriesName;
 
     /**
      * 所属税种码值
      */
-    @ApiModelProperty("id")
+    @ApiModelProperty("所属税种码值")
     private String taxCategoriesCode;
 
     /**
      * 纳税人资格认定类型名称
      */
-    @ApiModelProperty("id")
-    private String taxpayerIdentifyTypeName;
+    @ApiModelProperty("纳税人资格认定类型名称")
+    private String taxpayerIdentifyTypeNames;
 
     /**
      * 纳税人资格认定类型码值
      */
-    @ApiModelProperty("id")
-    private String taxpayerIdentifyTypeCode;
+    @ApiModelProperty("纳税人资格认定类型码值")
+    private String taxpayerIdentifyTypeCodes;
 
     /**
      * 适用企业类型名称
      */
-    @ApiModelProperty("id")
-    private String enterpriseTypeName;
+    @ApiModelProperty("适用企业类型名称")
+    private String taxpayerCreditRatings;
 
     /**
      * 适用企业类型码值
      */
-    @ApiModelProperty("id")
-    private String enterpriseTypeCode;
+    @ApiModelProperty("适用企业类型码值")
+    private String enterpriseTypeCodes;
 
     /**
      * 适用行业名称
      */
-    @ApiModelProperty("id")
-    private String industryName;
+    @ApiModelProperty("适用行业名称")
+    private String industryNames;
 
     /**
      * 适用行业码值
      */
-    @ApiModelProperty("id")
-    private String industryCode;
+    @ApiModelProperty("适用行业码值")
+    private String industryCodes;
 
     /**
      * 有效性
      */
-    @ApiModelProperty("id")
+    @ApiModelProperty("有效性")
     private String validity;
 
     /**
      * 发布日期
      */
-    @ApiModelProperty("id")
+    @ApiModelProperty("发布日期")
     private LocalDate releaseDate;
 
     /**
      * 摘要
      */
-    @ApiModelProperty("id")
+    @ApiModelProperty("摘要")
     private String digest;
 
     /**
      * 正文
      */
-    @ApiModelProperty("id")
+    @ApiModelProperty("正文")
     private String content;
 
     /**
      * 标签集合
      */
-//    @ApiModelProperty("id")
-//    private String labels;
+    @ApiModelProperty("标签集合")
+    private String labels;
 
 }

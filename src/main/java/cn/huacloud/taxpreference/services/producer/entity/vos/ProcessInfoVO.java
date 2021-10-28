@@ -17,7 +17,7 @@ public class ProcessInfoVO {
     @ApiModelProperty("申请人")
     private String creatorName;
     @ApiModelProperty("审批人")
-    private String approveName;
+    private String approverName;
     @ApiModelProperty("审批结果")
     private String processStatus;
     @ApiModelProperty("审批说明")

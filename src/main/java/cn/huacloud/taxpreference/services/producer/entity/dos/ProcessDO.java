@@ -18,16 +18,16 @@ public class ProcessDO {
     /**
      * 主键自增
      */
-    @TableId(type= IdType.AUTO)
+    @TableId(type = IdType.AUTO)
     private Long id;
 
     /**
-     * 税收优惠ID
+     * 税收优惠Id
      */
     private Long taxPreferenceId;
 
     /**
-     * 创建人ID
+     * 创建人Id
      */
     private Long creatorId;
 
@@ -41,7 +41,6 @@ public class ProcessDO {
      */
     private LocalDateTime createTime;
     /**
-     *
      * 审批人ID
      */
     private Long approverId;

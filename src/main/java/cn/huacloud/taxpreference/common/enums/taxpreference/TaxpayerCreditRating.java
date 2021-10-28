@@ -12,6 +12,6 @@ public enum TaxpayerCreditRating implements IEnum<String> {
 
     @Override
     public String getValue() {
-        return null;
+        return this.name();
     }
 }

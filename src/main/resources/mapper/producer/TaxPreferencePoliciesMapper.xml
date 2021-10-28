@@ -4,7 +4,7 @@
 <mapper namespace="cn.huacloud.taxpreference.services.producer.mapper.TaxPreferencePoliciesMapper">
     <insert id="insertTaxPreferencePolicies"
             parameterType="cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferencePoliciesDO">
-        INSERT INTO t_tax_preference_ policies ( tax_preference_id, policies_id, validity_begin_date, validity_end_date,sort )
+        INSERT INTO t_tax_preference_policies ( tax_preference_id, policies_id, validity_begin_date, validity_end_date,sort )
         VALUES ( #{taxPreferenceId}, #{policiesId}, #{validityBeginDate}, #{validityEndDate}, #{sort})
     </insert>
 

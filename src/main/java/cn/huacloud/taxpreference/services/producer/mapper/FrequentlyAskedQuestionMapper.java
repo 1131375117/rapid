@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * 热点问答
+ *
  * @author wuxin
  */
 @Repository

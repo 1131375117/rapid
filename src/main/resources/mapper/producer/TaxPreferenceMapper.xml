@@ -6,14 +6,14 @@
             parameterType="cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferenceDO">
         insert into t_tax_preference (tax_categories_name, tax_categories_code, taxpayer_register_type_name,
                                       taxpayer_register_type_code, taxpayer_type_name, taxpayer_type_code,
-                                      industry_name, industry_code, enterprise_type_name, enterprise_type_code,
-                                      taxpayer_credit_rating, tax_preference_name, digest, keep_query_data,
+                                      industry_names, industry_codes, enterprise_type_names, enterprise_type_codes,
+                                      taxpayer_credit_ratings, tax_preference_name, digest, keep_query_data,
                                       submit_tax_data, submit_time_limit, submit_description, create_time, update_time,
                                       deleted)
         values (#{taxCategoriesName}, #{taxCategoriesCode}, #{taxpayerRegisterTypeName},
                 #{taxpayerRegisterTypeCode}, #{taxpayerTypeName}, #{taxpayerTypeCode},
-                #{industryName}, #{industryCode}, #{enterpriseTypeName},
-                #{enterpriseTypeCode}, #{taxpayerCreditRating}, #{taxPreferenceName},
+                #{industryNames}, #{industryCodes}, #{enterpriseTypeNames},
+                #{enterpriseTypeCodes}, #{taxpayerCreditRatings}, #{taxPreferenceName},
                 #{digest}, #{keepQueryData}, #{submitTaxData},
                 #{submitTimeLimit}, #{submitDescription}, #{createTime},
                 #{updateTime}, #{deleted})
@@ -23,11 +23,13 @@
     </update>
     <select id="queryTaxPreferenceVOList"
             resultType="cn.huacloud.taxpreference.services.producer.entity.vos.QueryTaxPreferencesVO">
-        select p.id,p.tax_preference_name as taxPreferenceName,p.taxpayer_type_name as taxpayerTypeName,
-        p.tax_categories_name as taxCategoriesName,p.enterprise_type_name as enterpriseTypeName,
-        p.validity,p.create_time as createTime
+        select p.id,p.tax_preference_name as taxPreferenceName,p.industry_names as industryNames ,p.taxpayer_type_name as taxpayerTypeName,
+        p.tax_categories_name as taxCategoriesName,p.enterprise_type_names as enterpriseTypeNames,
+        p.validity,p.create_time as createTime,p.taxpayer_credit_ratings as taxpayerCreditRatings,
+        p.taxpayer_register_type_name as taxpayerRegisterTypeName
         from t_tax_preference p
         <where>
+
             <if test="queryTaxPreferencesDTO.taxCategoriesCode != null and queryTaxPreferencesDTO.taxCategoriesCode != '' ">
                 and p.tax_categories_code= #{queryTaxPreferencesDTO.taxCategoriesCode}
             </if>
@@ -37,24 +39,36 @@
             <if test="queryTaxPreferencesDTO.taxpayerTypeCode != null and queryTaxPreferencesDTO.taxpayerTypeCode != '' ">
                 and p.taxpayer_type_code=#{queryTaxPreferencesDTO.taxpayerTypeCode}
             </if>
-            <if test="queryTaxPreferencesDTO.industryCode != null and queryTaxPreferencesDTO.industryCode != '' ">
-                and p.industry_code=#{queryTaxPreferencesDTO.industryCode}
-            </if>
-            <if test="queryTaxPreferencesDTO.enterpriseTypeCode != null and queryTaxPreferencesDTO.enterpriseTypeCode != '' ">
-                and p.enterprise_type_code=#{queryTaxPreferencesDTO.enterpriseTypeCode}
-            </if>
-            <if test="queryTaxPreferencesDTO.validity != null and queryTaxPreferencesDTO.validity != '' ">
+            <if test="queryTaxPreferencesDTO.validity!=null and queryTaxPreferencesDTO.validity!='' ">
                 and p.validity=#{queryTaxPreferencesDTO.validity}
             </if>
+
             <if test="queryTaxPreferencesDTO.releaseMatter.getValue()==@cn.huacloud.taxpreference.common.enums.taxpreference.ReleaseMatter@MY_RELEASED.getValue()">
                 and p.input_user_id=#{userId} and tax_preference_status='已发布'
             </if>
             <if test="queryTaxPreferencesDTO.releaseMatter.getValue()==@cn.huacloud.taxpreference.common.enums.taxpreference.ReleaseMatter@MY_UNRELEASED.getValue()">
             and p.input_user_id=#{userId} and tax_preference_status='待发布'
             </if>
-            and p.deleted=0
+            <if test="queryTaxPreferencesDTO.taxpayerCreditRatings!=null and queryTaxPreferencesDTO.taxpayerCreditRatings.size>0 ">
+
+                <foreach collection="queryTaxPreferencesDTO.taxpayerCreditRatings" item="credit">
+                    and FIND_IN_SET(#{credit.toString()},p.taxpayer_credit_ratings)
+                </foreach>
+            </if>
+            <if test=" queryTaxPreferencesDTO.industryCodes!=null and queryTaxPreferencesDTO.industryCodes.size>0 ">
+                <foreach collection="queryTaxPreferencesDTO.industryCodes" item="industryCodes" >
+                    and  FIND_IN_SET(#{industryCodes},p.industry_codes)
+                </foreach>
+            </if>
+            <if test="queryTaxPreferencesDTO.enterpriseTypeCodes!=null and queryTaxPreferencesDTO.enterpriseTypeCodes.size>0 ">
+                <foreach collection="queryTaxPreferencesDTO.enterpriseTypeCodes" item="enterpriseTypeCode" >
+                    and  FIND_IN_SET(#{enterpriseTypeCodes},p.enterprise_type_codes)
+                </foreach>
+            </if>
+        and p.deleted=0
+
         </where>
-            order by ${sort}
+            order by #{sort}
 
     </select>
 

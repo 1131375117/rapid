@@ -54,7 +54,7 @@ public class PoliciesServiceImpl implements PoliciesService {
 
     private final TaxPreferenceMapper taxPreferenceMapper;
 
-    static final String POLICIES_ID="policies_id";
+    static final String POLICIES_ID = "policies_id";
 
     /**
      * 政策列表查询
@@ -67,13 +67,12 @@ public class PoliciesServiceImpl implements PoliciesService {
 
         LambdaQueryWrapper<PoliciesDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         //模糊查询标题
-        if(QueryPoliciesDTO.KeyWordField.TITLE.equals(queryPoliciesDTO.getKeyWordField())){
+        if (QueryPoliciesDTO.KeyWordField.TITLE.equals(queryPoliciesDTO.getKeyWordField())) {
             lambdaQueryWrapper.like(!StringUtils.isEmpty(queryPoliciesDTO.getTitle()),
                     PoliciesDO::getTitle,
                     queryPoliciesDTO.getTitle());
-        }
-        //模糊查询文号
-        if(QueryPoliciesDTO.KeyWordField.DOC_CODE.equals(queryPoliciesDTO.getKeyWordField())){
+            //模糊查询文号
+        }else if (QueryPoliciesDTO.KeyWordField.DOC_CODE.equals(queryPoliciesDTO.getKeyWordField())) {
             lambdaQueryWrapper.like(!StringUtils.isEmpty(queryPoliciesDTO.getDocCode()),
                     PoliciesDO::getDocCode,
                     queryPoliciesDTO.getDocCode());
@@ -83,17 +82,17 @@ public class PoliciesServiceImpl implements PoliciesService {
                 PoliciesDO::getTaxCategoriesCode,
                 queryPoliciesDTO.getTaxCategoriesCode());
         //条件查询--纳税人资格认定类型码值
-        lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getTaxpayerIdentifyTypeCode()),
-                PoliciesDO::getTaxpayerIdentifyTypeCode,
-                queryPoliciesDTO.getTaxpayerIdentifyTypeCode());
+        lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getTaxpayerIdentifyTypeCodes()),
+                PoliciesDO::getTaxpayerIdentifyTypeCodes,
+                queryPoliciesDTO.getTaxpayerIdentifyTypeCodes());
         //条件查询--适用企业类型码值
-        lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getEnterpriseTypeCode()),
-                PoliciesDO::getEnterpriseTypeCode,
-                queryPoliciesDTO.getEnterpriseTypeCode());
+        lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getEnterpriseTypeCodes()),
+                PoliciesDO::getEnterpriseTypeCodes,
+                queryPoliciesDTO.getEnterpriseTypeCodes());
         //条件查询--适用行业码值
         lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getAreaCode()),
-                PoliciesDO::getIndustryCode,
-                queryPoliciesDTO.getIndustryCode());
+                PoliciesDO::getIndustryCodes,
+                queryPoliciesDTO.getIndustryCodes());
         //条件查询--所属区域码值
         lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getAreaCode()),
                 PoliciesDO::getAreaCode,
@@ -105,7 +104,7 @@ public class PoliciesServiceImpl implements PoliciesService {
         lambdaQueryWrapper.ge(!StringUtils.isEmpty(queryPoliciesDTO.getReleaseDate()),
                 PoliciesDO::getReleaseDate, queryPoliciesDTO.getStartTime())
                 .le(!StringUtils.isEmpty(queryPoliciesDTO.getReleaseDate()),
-                        PoliciesDO::getReleaseDate,queryPoliciesDTO.getEndTime());
+                        PoliciesDO::getReleaseDate, queryPoliciesDTO.getEndTime());
         //排序--发布时间
         if (QueryPoliciesDTO.SortField.RELEASE_DATE.equals(queryPoliciesDTO.getSortField())) {
             lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getReleaseDate()),
@@ -120,6 +119,7 @@ public class PoliciesServiceImpl implements PoliciesService {
         }
         //分页
         IPage<PoliciesDO> policiesDoPage =
+                //--todo
                 policiesMapper.selectPage(new Page<>(queryPoliciesDTO.getPageNum(),
                         queryPoliciesDTO.getPageSize()), lambdaQueryWrapper);
 
@@ -131,24 +131,24 @@ public class PoliciesServiceImpl implements PoliciesService {
             return policiesVO;
         }).collect(Collectors.toList());
         //返回结果
-        return  PageVO.createPageVO(policiesDoPage,records);
+        return PageVO.createPageVO(policiesDoPage, records);
     }
 
     /**
      * 新增政策法规
      *
-     * @param policiesListDTO
+     * @param policiesCombinationDTO
      * @param id
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void insertPolicies(PoliciesListDTO policiesListDTO, Long id) {
+    public void insertPolicies(PoliciesCombinationDTO policiesCombinationDTO, Long id) {
         //新增政策法规
         PoliciesDO policiesDO = new PoliciesDO();
-        BeanUtils.copyProperties(policiesListDTO, policiesDO);
+        BeanUtils.copyProperties(policiesCombinationDTO, policiesDO);
         policiesDO.setInputUserId(id);
         //添加废止状态
-        policiesDO.setPoliciesStatus(policiesListDTO.getPoliciesStatus());
+        policiesDO.setPoliciesStatus(policiesCombinationDTO.getPoliciesStatus());
         //添加发布时间
         policiesDO.setReleaseDate(LocalDate.now());
         //添加创建时间
@@ -160,12 +160,12 @@ public class PoliciesServiceImpl implements PoliciesService {
         policiesMapper.insert(policiesDO);
         //新增政策解读
         PoliciesExplainDTO policiesExplainDTO = new PoliciesExplainDTO();
-        BeanUtils.copyProperties(policiesListDTO, policiesExplainDTO);
+        BeanUtils.copyProperties(policiesCombinationDTO, policiesExplainDTO);
         policiesExplainDTO.setPoliciesId(policiesDO.getId());
         policiesExplainService.insertPoliciesExplain(policiesExplainDTO, id);
         //新增热点问答
         FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO = new FrequentlyAskedQuestionDTO();
-        BeanUtils.copyProperties(policiesListDTO, frequentlyAskedQuestionDTO);
+        BeanUtils.copyProperties(policiesCombinationDTO, frequentlyAskedQuestionDTO);
         frequentlyAskedQuestionService.insertFrequentlyAskedQuestion(frequentlyAskedQuestionDTO, id);
     }
 
@@ -179,7 +179,7 @@ public class PoliciesServiceImpl implements PoliciesService {
     public PoliciesDetailVO getPoliciesById(Long id) {
         PoliciesDO policiesDO = policiesMapper.selectById(id);
         //参数校验
-        if(policiesDO==null){
+        if (policiesDO == null) {
             throw BizCode._4100.exception();
         }
         PoliciesDetailVO policiesDetailVO = new PoliciesDetailVO();
@@ -191,22 +191,22 @@ public class PoliciesServiceImpl implements PoliciesService {
     /**
      * 修改政策法规
      *
-     * @param policiesListDTO
+     * @param policiesCombinationDTO
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void updatePolicies(PoliciesListDTO policiesListDTO) {
+    public void updatePolicies(PoliciesCombinationDTO policiesCombinationDTO) {
         //修改政策法规
         PoliciesDO policiesDO = new PoliciesDO();
-        BeanUtils.copyProperties(policiesListDTO, policiesDO);
+        BeanUtils.copyProperties(policiesCombinationDTO, policiesDO);
         policiesMapper.updateById(policiesDO);
         //修改政策解读
         PoliciesExplainDTO policiesExplainDTO = new PoliciesExplainDTO();
-        BeanUtils.copyProperties(policiesListDTO, policiesExplainDTO);
+        BeanUtils.copyProperties(policiesCombinationDTO, policiesExplainDTO);
         policiesExplainService.updatePolicesExplain(policiesExplainDTO);
         //修改热点问答
         FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO = new FrequentlyAskedQuestionDTO();
-        BeanUtils.copyProperties(policiesListDTO, frequentlyAskedQuestionDTO);
+        BeanUtils.copyProperties(policiesCombinationDTO, frequentlyAskedQuestionDTO);
         frequentlyAskedQuestionService.updateFrequentlyAskedQuestion(frequentlyAskedQuestionDTO);
 
     }
@@ -216,6 +216,7 @@ public class PoliciesServiceImpl implements PoliciesService {
      *
      * @param id
      */
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void deletePoliciesById(Long id) {
         PoliciesDO policiesDO = policiesMapper.selectById(id);
@@ -229,30 +230,49 @@ public class PoliciesServiceImpl implements PoliciesService {
      * @param queryAbolishDTO 政策法规废止参数
      */
     @Override
-    public void isAbolish(QueryAbolishDTO queryAbolishDTO) {
+    public void abolish(QueryAbolishDTO queryAbolishDTO) {
+        //查询政策法规
         Long id = queryAbolishDTO.getId();
-        TaxPreferencePoliciesDO taxPreferencePoliciesDO = taxPreferencePoliciesMapper.selectById(id);
-        Long taxPreferenceId = taxPreferencePoliciesDO.getTaxPreferenceId();
-        TaxPreferenceDO taxPreferenceDO = taxPreferenceMapper.selectById(taxPreferenceId);
         PoliciesDO policiesDO = policiesMapper.selectById(id);
-
         //参数校验
-        if(policiesDO==null){
+        if (policiesDO == null) {
             throw BizCode._4100.exception();
         }
-        if(PoliciesStatusEnum.FULL_TEXT_REPEAL.equals(policiesDO.getPoliciesStatus())){
-            policiesDO.setPoliciesStatus(PoliciesStatusEnum.FULL_TEXT_REPEAL.getValue());
+        Map<String, Object> columnMap = new HashMap<>(16);
+        columnMap.put(POLICIES_ID, policiesDO.getId());
+        List<TaxPreferencePoliciesDO> taxPreferencePoliciesDOS = taxPreferencePoliciesMapper.selectByMap(columnMap);
+        Long taxPreferenceId = null;
+        for (TaxPreferencePoliciesDO taxPreferencePoliciesDO : taxPreferencePoliciesDOS) {
+            taxPreferenceId = taxPreferencePoliciesDO.getTaxPreferenceId();
         }
-        if(PoliciesStatusEnum.PARTIAL_REPEAL.equals(policiesDO.getPoliciesStatus())){
+        LambdaQueryWrapper<TaxPreferenceDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(TaxPreferenceDO::getId, taxPreferenceId);
+        List<TaxPreferenceDO> taxPreferenceDOS = taxPreferenceMapper.selectList(lambdaQueryWrapper);
+
+        //判断条件--全文废止
+        if (PoliciesStatusEnum.FULL_TEXT_REPEAL.equals(policiesDO.getPoliciesStatus())) {
+            policiesDO.setPoliciesStatus(PoliciesStatusEnum.FULL_TEXT_REPEAL.getValue());
+            //设置政策法规的有效性--todo
+            policiesDO.setValidity("全文废止");
+            //设置税收优惠的有效性--todo
+            for (TaxPreferenceDO taxPreferenceDO : taxPreferenceDOS) {
+                taxPreferenceDO.setValidity("失效");
+            }
+        }
+        //判断条件--部分废止
+        if (PoliciesStatusEnum.PARTIAL_REPEAL.equals(policiesDO.getPoliciesStatus())) {
             policiesDO.setPoliciesStatus(PoliciesStatusEnum.PARTIAL_REPEAL.getValue());
-            //设置税收优惠的有效性
-//            taxPreferenceDO.setTaxPreferenceStatus();
+            //设置政策法规的有效性--todo
+            policiesDO.setValidity("部分有效");
+            //设置税收优惠的有效性--根据用户自己手动变更--todo
+
         }
         policiesMapper.updateById(policiesDO);
     }
 
     /**
      * 查询废止信息
+     *
      * @param id
      */
     @Override
@@ -264,12 +284,12 @@ public class PoliciesServiceImpl implements PoliciesService {
         columnMap.put(POLICIES_ID, policiesDO.getId());
         List<TaxPreferencePoliciesDO> taxPreferencePoliciesDOS = taxPreferencePoliciesMapper.selectByMap(columnMap);
         //查询税收优惠
-        Long taxPreferenceId=null;
+        Long taxPreferenceId = null;
         for (TaxPreferencePoliciesDO taxPreferencePoliciesDO : taxPreferencePoliciesDOS) {
             taxPreferenceId = taxPreferencePoliciesDO.getTaxPreferenceId();
         }
         LambdaQueryWrapper<TaxPreferenceDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(TaxPreferenceDO::getId,taxPreferenceId);
+        lambdaQueryWrapper.eq(TaxPreferenceDO::getId, taxPreferenceId);
         List<TaxPreferenceDO> taxPreferenceDOS = taxPreferenceMapper.selectList(lambdaQueryWrapper);
         List<String> taxPreferenceNameList = new ArrayList<>();
         for (TaxPreferenceDO taxPreferenceDO : taxPreferenceDOS) {

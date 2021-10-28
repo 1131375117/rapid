@@ -3,7 +3,7 @@ package cn.huacloud.taxpreference.services.producer.entity.vos;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * @description: 流程查询接口VO对象
@@ -21,7 +21,7 @@ public class ProcessListVO {
     @ApiModelProperty("审批状态")
     private String processStatus;
     @ApiModelProperty("时间")
-    private LocalDate createTime;
+    private LocalDateTime createTime;
     @ApiModelProperty("录入人用户")
     private String userName;
 }

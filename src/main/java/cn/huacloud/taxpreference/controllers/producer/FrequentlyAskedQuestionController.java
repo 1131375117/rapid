@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * 热点问答接口
+ *
  * @author wuxin
  */
 @Api(tags = "热点问答")
@@ -24,26 +25,28 @@ public class FrequentlyAskedQuestionController {
 
     /**
      * 新增热门问答
+     *
      * @param frequentlyAskedQuestionDTO
      * @return
      */
     @ApiOperation("新增热点解读")
     @PostMapping(value = "frequentlyAskedQuestion")
-    public ResultVO<Void> insertFrequentlyAskedQuestion(@RequestBody FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO){
+    public ResultVO<Void> insertFrequentlyAskedQuestion(@RequestBody FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO) {
 
-        frequentlyAskedQuestionService.insertFrequentlyAskedQuestion(frequentlyAskedQuestionDTO,UserUtil.getCurrentUser().getId());
+        frequentlyAskedQuestionService.insertFrequentlyAskedQuestion(frequentlyAskedQuestionDTO, UserUtil.getCurrentUser().getId());
         return ResultVO.ok();
     }
 
 
     /**
      * 修改热点问答
+     *
      * @param frequentlyAskedQuestionDTO
      * @return
      */
     @ApiOperation("修改热点问答")
     @PutMapping(value = "frequentlyAskedQuestion-")
-    public ResultVO<Void> updateFrequentlyAskedQuestion(@RequestBody FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO){
+    public ResultVO<Void> updateFrequentlyAskedQuestion(@RequestBody FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO) {
         frequentlyAskedQuestionService.updateFrequentlyAskedQuestion(frequentlyAskedQuestionDTO);
         return ResultVO.ok();
 
