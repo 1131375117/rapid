@@ -3,14 +3,11 @@ package cn.huacloud.taxpreference.services.producer.entity.dos;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
 
 /**
  * 政策法规实体
@@ -75,22 +72,22 @@ public class PoliciesDO {
     /**
      * 适用企业类型名称
      */
-    private String enterpriseTypeName;
+    private String enterpriseTypeNames;
 
     /**
      * 适用企业类型码值
      */
-    private String enterpriseTypeCode;
+    private String enterpriseTypeCodes;
 
     /**
      * 适用行业名称
      */
-    private String industryName;
+    private String industryNames;
 
     /**
      * 适用行业码值
      */
-    private String industryCode;
+    private String industryCodes;
 
     /**
      * 有效性

@@ -132,12 +132,17 @@ public class TaxPreferenceDO {
     /**
      * 是否已删除
      */
-    private boolean deleted;
+    private Boolean deleted;
 
     /**
      * 审批状态
      */
     private String taxPreferenceStatus;
+
+    /**
+     * 标签管理
+     */
+    private String labels;
 
 
 

@@ -87,13 +87,13 @@ public class PoliciesServiceImpl implements PoliciesService {
                 PoliciesDO::getTaxpayerIdentifyTypeCode,
                 queryPoliciesDTO.getTaxpayerIdentifyTypeCode());
         //条件查询--适用企业类型码值
-        lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getEnterpriseTypeCode()),
-                PoliciesDO::getEnterpriseTypeCode,
-                queryPoliciesDTO.getEnterpriseTypeCode());
+        lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getEnterpriseTypeCodes()),
+                PoliciesDO::getEnterpriseTypeCodes,
+                queryPoliciesDTO.getEnterpriseTypeCodes());
         //条件查询--适用行业码值
         lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getAreaCode()),
-                PoliciesDO::getIndustryCode,
-                queryPoliciesDTO.getIndustryCode());
+                PoliciesDO::getIndustryCodes,
+                queryPoliciesDTO.getIndustryCodes());
         //条件查询--所属区域码值
         lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getAreaCode()),
                 PoliciesDO::getAreaCode,

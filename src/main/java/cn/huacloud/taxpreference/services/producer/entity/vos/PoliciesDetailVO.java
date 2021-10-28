@@ -1,15 +1,10 @@
 package cn.huacloud.taxpreference.services.producer.entity.vos;
 
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
  * 政策法规VO
@@ -83,25 +78,25 @@ public class PoliciesDetailVO {
      * 适用企业类型名称
      */
     @ApiModelProperty("id")
-    private String enterpriseTypeName;
+    private String taxpayerCreditRatings;
 
     /**
      * 适用企业类型码值
      */
     @ApiModelProperty("id")
-    private String enterpriseTypeCode;
+    private String enterpriseTypeCodes;
 
     /**
      * 适用行业名称
      */
     @ApiModelProperty("id")
-    private String industryName;
+    private String industryNames;
 
     /**
      * 适用行业码值
      */
     @ApiModelProperty("id")
-    private String industryCode;
+    private String industryCodes;
 
     /**
      * 有效性

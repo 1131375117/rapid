@@ -46,16 +46,16 @@ public class PoliciesListDTO {
     private String taxpayerIdentifyTypeCode;
 
     @ApiModelProperty("适用企业类型名称")
-    private String enterpriseTypeName;
+    private String taxpayerCreditRatings;
 
     @ApiModelProperty("适用企业类型码值")
-    private String enterpriseTypeCode;
+    private String enterpriseTypeCodes;
 
     @ApiModelProperty("适用行业名称")
-    private String industryName;
+    private String industryNames;
 
     @ApiModelProperty("适用行业码值")
-    private String industryCode;
+    private String industryCodes;
 
     @ApiModelProperty("有效性")
     private String validity;

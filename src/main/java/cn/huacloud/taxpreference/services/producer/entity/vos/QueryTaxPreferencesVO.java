@@ -4,7 +4,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * @description: 税收优惠列表VO
@@ -39,7 +38,19 @@ public class QueryTaxPreferencesVO {
      * 适用企业类型名称
      */
     @ApiModelProperty("适用企业类型名称")
-    private List<String> enterpriseTypeName;
+    private String enterpriseTypeNames;
+
+    /**
+     * 适用企业类型名称
+     */
+    @ApiModelProperty("适用行业名称")
+    private String industryNames;
+
+    /**
+     * 纳税信用等级
+     */
+    @ApiModelProperty("纳税信用等级")
+    private String taxpayerCreditRatings;
 
     /**
      * 有效性

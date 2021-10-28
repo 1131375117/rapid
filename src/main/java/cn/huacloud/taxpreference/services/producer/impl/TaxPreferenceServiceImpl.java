@@ -95,7 +95,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         log.info("judgeExists:{}",name);
         LambdaQueryWrapper<TaxPreferenceDO> queryWrapper = Wrappers.lambdaQuery(TaxPreferenceDO.class)
                 .eq(TaxPreferenceDO::getTaxPreferenceName, name)
-                .eq(TaxPreferenceDO::isDeleted, 0);
+                .eq(TaxPreferenceDO::getDeleted, 0);
         Long count = taxPreferenceMapper.selectCount(queryWrapper);
         log.info("judgeExists:count={}",count);
         if (count > 0) {
@@ -149,7 +149,9 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     @Override
     public ResultVO<PageVO<QueryTaxPreferencesVO>> queryTaxPreferenceList(QueryTaxPreferencesDTO queryTaxPreferencesDTO, Long userId) {
         log.info("税收优惠查询条件:queryTaxPreferencesDTO:{}", queryTaxPreferencesDTO);
+        //todo controller
         queryTaxPreferencesDTO.paramReasonable();
+       //todo
         Page<QueryTaxPreferencesVO> page = new Page<>(queryTaxPreferencesDTO.getPageNum(), queryTaxPreferencesDTO.getPageSize());
         //获取排序字段
         String sort = getSort(queryTaxPreferencesDTO);
@@ -345,9 +347,9 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
      * 行业名称集合拼接
      * */
     @NotNull
-    private StringBuffer getIndustryNames(String industryNames2, List<String> industryCodes) {
+    private StringBuffer getIndustryNames(String industryNames2, List<String> industryCodess) {
         StringBuffer industryNames = new StringBuffer(industryNames2);
-        industryCodes.forEach(industryCode -> {
+        industryCodess.forEach(industryCodes -> {
             //todo 通过code查询名称
             industryNames.append(",");
         });
