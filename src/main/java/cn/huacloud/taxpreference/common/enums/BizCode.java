@@ -7,6 +7,7 @@ import org.slf4j.helpers.MessageFormatter;
 
 /**
  * 业务状态码值
+ *
  * @author wangkh
  */
 public enum BizCode {
@@ -35,9 +36,8 @@ public enum BizCode {
     _4300(4300, ""),
     _4301(4301, "审批不通过必须填写备注信息"),
     _4302(4302, "税收优惠名称已存在"),
-    _4303(4303,"上传文件不能为空"),
-    _4304(4303, "政策法规不存在"),
-
+    _4303(4303, "上传文件不能为空"),
+    _4304(4304, "政策法规不存在"),
 
 
     // 5xx 系统错误
@@ -53,6 +53,7 @@ public enum BizCode {
 
     /**
      * 获取消息格式化的ResultVO
+     *
      * @param args
      * @return
      */
@@ -70,7 +71,7 @@ public enum BizCode {
         return bizException;
     }
 
-    public TaxPreferenceException exception(Object ...args) {
+    public TaxPreferenceException exception(Object... args) {
         TaxPreferenceException bizException = new TaxPreferenceException(format2String(args));
         bizException.setCode(this.code);
         return bizException;

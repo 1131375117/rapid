@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  * 关键字分页查询对象
+ *
  * @author wangkh
  */
 @Data

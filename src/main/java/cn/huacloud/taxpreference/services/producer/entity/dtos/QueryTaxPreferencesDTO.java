@@ -58,7 +58,7 @@ public class QueryTaxPreferencesDTO extends KeywordPageQueryDTO {
     @ApiModelProperty("有效性-(有效,无效)")
     private String validity;
 
-/*    *//**
+    /*    *//**
      * 创建人用户id
      *//*
     @ApiModelProperty("创建人用户id")

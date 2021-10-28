@@ -6,7 +6,7 @@ package cn.huacloud.taxpreference.services.producer.entity.enums;
  *
  * @author wuxin
  */
-public enum KeywordTypeEnum  {
+public enum KeywordTypeEnum {
     TITLE,
     DOC_CODE;
 }

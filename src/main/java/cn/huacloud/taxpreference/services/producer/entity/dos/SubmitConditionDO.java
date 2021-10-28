@@ -17,7 +17,7 @@ public class SubmitConditionDO {
     /**
      * 主键自增
      */
-    @TableId(type= IdType.AUTO)
+    @TableId(type = IdType.AUTO)
     private Long id;
 
     /**

@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 
 /**
  * 政策解读详情VO
+ *
  * @author wuxin
  */
 @Data

@@ -44,7 +44,7 @@ public class ProcessController {
     @ApiOperation("税收优惠事项审核列表")
     @PostMapping("/queryProcessList")
     public ResultVO<PageVO<ProcessListVO>> queryProcessList(@RequestBody ProcessListDTO processListDTO) {
-        return processService.queryProcessList(processListDTO,UserUtil.getCurrentUser().getId());
+        return processService.queryProcessList(processListDTO, UserUtil.getCurrentUser().getId());
     }
 
     /**

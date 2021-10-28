@@ -247,7 +247,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     @NotNull
     private PoliciesDO getPoliciesDO(TaxPreferencePoliciesVO taxPreferencePoliciesVO) throws TaxPreferenceException {
         PoliciesDO policiesDO = policiesMapper.selectById(taxPreferencePoliciesVO.getPoliciesId());
-        if(policiesDO==null){
+        if (policiesDO == null) {
             throw BizCode._4303.exception();
         }
         return policiesDO;
@@ -335,7 +335,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
 
     /**
      * 行业名称集合拼接
-     * */
+     */
     @NotNull
     private StringBuffer getIndustryNames(String industryNames2, List<String> industryCodes) {
         StringBuffer industryNames = new StringBuffer(industryNames2);
@@ -348,11 +348,11 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
 
     /**
      * 企业名称集合拼接
-     * */
+     */
     @NotNull
     private StringBuffer getEnterpriseTypeNames(TaxPreferenceDTO taxPreferenceDTO, TaxPreferenceDO taxPreferenceDO) {
-        StringBuffer enterpriseTypeNames=new StringBuffer(taxPreferenceDO.getEnterpriseTypeNames());
-        taxPreferenceDTO.getEnterpriseTypeCodes().forEach(enterpriseTypeName->{
+        StringBuffer enterpriseTypeNames = new StringBuffer(taxPreferenceDO.getEnterpriseTypeNames());
+        taxPreferenceDTO.getEnterpriseTypeCodes().forEach(enterpriseTypeName -> {
             //todo 通过code查询名称
             enterpriseTypeNames.append(",");
         });

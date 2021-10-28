@@ -13,7 +13,7 @@ import javax.validation.constraints.NotEmpty;
 @Data
 @ApiModel
 public class QueryAbolishDTO {
-    @ApiModelProperty("id")
+    @ApiModelProperty("政策法规id")
     private Long id;
 
     @ApiModelProperty("废止说明")

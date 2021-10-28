@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 /**
  * 申报条件
+ *
  * @author fuhua
  */
 @Repository

@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 
 /**
  * 政策犯规查询条件类
+ *
  * @author wuxin
  */
 @Data
@@ -62,7 +63,8 @@ public class QueryPoliciesDTO extends KeywordPageQueryDTO {
         RELEASE_DATE,
         UPDATE_TIME;
     }
-    public enum KeyWordField{
+
+    public enum KeyWordField {
         TITLE,
         DOC_CODE;
     }

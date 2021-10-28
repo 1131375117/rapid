@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 
 /**
  * 热点问答VO
+ *
  * @author wuxin
  */
 @Data

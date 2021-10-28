@@ -11,6 +11,7 @@ import java.util.Date;
 
 /**
  * 政策解读实体
+ *
  * @author wuxin
  */
 @Data

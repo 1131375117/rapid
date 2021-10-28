@@ -19,7 +19,7 @@ public class TaxPreferenceDO {
     /**
      * 主键自增
      */
-    @TableId(type=IdType.AUTO)
+    @TableId(type = IdType.AUTO)
     private Long id;
 
     /**
@@ -138,7 +138,6 @@ public class TaxPreferenceDO {
      * 审批状态
      */
     private String taxPreferenceStatus;
-
 
 
 }
