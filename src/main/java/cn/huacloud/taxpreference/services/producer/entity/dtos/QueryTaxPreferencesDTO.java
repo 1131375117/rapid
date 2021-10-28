@@ -38,7 +38,7 @@ public class QueryTaxPreferencesDTO extends KeywordPageQueryDTO {
      * 适用行业码值
      */
     @ApiModelProperty("适用行业码值")
-    private List<String> industryCodess;
+    private List<String> industryCodes;
 
     /**
      * 适用企业类型码值
@@ -49,21 +49,14 @@ public class QueryTaxPreferencesDTO extends KeywordPageQueryDTO {
     /**
      * 纳税信用等级
      */
-    @ApiModelProperty("纳税信用等级")
+    @ApiModelProperty("纳税信用等级A, B, C, D, M")
     private List<String> taxpayerCreditRatings;
 
     /**
      * 有效性
      */
-    @ApiModelProperty("有效性-(有效,无效)")
+    @ApiModelProperty("有效性-(EFFECTIVE-有效,INVALID-无效)")
     private String validity;
-
-    /*    *//**
-     * 创建人用户id
-     *//*
-    @ApiModelProperty("创建人用户id")
-    private Long inputUserId;*/
-
 
     /**
      * 排序

@@ -35,10 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @description: 优惠政策服务实现类
@@ -73,10 +70,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         taxPreferenceMapper.insert(taxPreferenceDO);
 
         //新增-税收优惠政策法规关联表t_tax_preference_ policies
-        List<TaxPreferencePoliciesDO> taxPreferencePoliciesDOList = getTaxPreferencePoliciesDO(taxPreferenceDTO, taxPreferenceDO);
-        for (TaxPreferencePoliciesDO taxPreferencePoliciesDO : taxPreferencePoliciesDOList) {
-            taxPreferencePoliciesMapper.insert(taxPreferencePoliciesDO);
-        }
+        insertTaxPreferencePoliciesDO(taxPreferenceDTO, taxPreferenceDO);
 
         //新增-申报条件表 t_submit_condition
         insertSubmitConditionDOs(taxPreferenceDTO, taxPreferenceDO);
@@ -112,15 +106,20 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         TaxPreferenceDO taxPreferenceDO = getTaxPreferenceDO(taxPreferenceDTO);
         taxPreferenceMapper.updateById(taxPreferenceDO);
 
-        //修改-税收优惠政策法规关联表t_tax_preference_ policies
-        List<TaxPreferencePoliciesDO> preferencePoliciesDOList = getTaxPreferencePoliciesDO(taxPreferenceDTO, taxPreferenceDO);
-        for (TaxPreferencePoliciesDO preferencePoliciesDO : preferencePoliciesDOList) {
-            taxPreferencePoliciesMapper.updateByTaxPreferenceId(preferencePoliciesDO);
-        }
+        //修改政策法规
+        updateTaxPreferencePolicy(taxPreferenceDTO, taxPreferenceDO);
 
         //修改-申报条件表 t_submit_condition
         updateSubmitConditionByTaxPreferenceId(taxPreferenceDTO);
         return ResultVO.ok();
+    }
+
+    private void updateTaxPreferencePolicy(TaxPreferenceDTO taxPreferenceDTO, TaxPreferenceDO taxPreferenceDO) {
+        //采取先删除后添加的方式
+        HashMap<String, Object> columnMap = new HashMap<>(16);
+        columnMap.put(TAX_PREFERENCE_ID, taxPreferenceDTO.getId());
+        taxPreferencePoliciesMapper.deleteByMap(columnMap);
+        insertTaxPreferencePoliciesDO(taxPreferenceDTO, taxPreferenceDO);
     }
 
     @Override
@@ -149,13 +148,9 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     @Override
     public ResultVO<PageVO<QueryTaxPreferencesVO>> queryTaxPreferenceList(QueryTaxPreferencesDTO queryTaxPreferencesDTO, Long userId) {
         log.info("税收优惠查询条件:queryTaxPreferencesDTO:{}", queryTaxPreferencesDTO);
-        //todo controller
-        queryTaxPreferencesDTO.paramReasonable();
-       //todo
         Page<QueryTaxPreferencesVO> page = new Page<>(queryTaxPreferencesDTO.getPageNum(), queryTaxPreferencesDTO.getPageSize());
         //获取排序字段
         String sort = getSort(queryTaxPreferencesDTO);
-
         IPage<QueryTaxPreferencesVO> iPage = taxPreferenceMapper.queryTaxPreferenceVOList(page, queryTaxPreferencesDTO, sort, userId);
         List<QueryTaxPreferencesVO> records = iPage.getRecords();
         records.forEach(queryTaxPreferencesVO -> {
@@ -296,24 +291,23 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     }
 
     /**
-     * 填充TaxPreferencePoliciesDO对象
+     * 新增TaxPreferencePoliciesDO
      */
-    private List<TaxPreferencePoliciesDO> getTaxPreferencePoliciesDO(TaxPreferenceDTO taxPreferenceDTO, TaxPreferenceDO taxPreferenceDO) {
+    private void insertTaxPreferencePoliciesDO(TaxPreferenceDTO taxPreferenceDTO, TaxPreferenceDO taxPreferenceDO) {
         log.info("填充TaxPreferencePoliciesDO条件-taxPreferenceDTO={}",taxPreferenceDTO);
         TaxPreferencePoliciesDO preferencePoliciesDO = new TaxPreferencePoliciesDO();
         //政策法规对象集合
-        List<TaxPreferencePoliciesDO> taxPreferencePoliciesDOList = new ArrayList<>();
         List<TaxPreferencePoliciesDTO> taxPreferencePoliciesDTOList = taxPreferenceDTO.getTaxPreferencePoliciesDTOList();
         if (taxPreferencePoliciesDTOList != null && taxPreferencePoliciesDTOList.size() > 0) {
             for (int i = 0; i < taxPreferencePoliciesDTOList.size(); i++) {
                 BeanUtils.copyProperties(taxPreferencePoliciesDTOList.get(i), preferencePoliciesDO);
                 preferencePoliciesDO.setTaxPreferenceId(taxPreferenceDO.getId());
                 preferencePoliciesDO.setSort((long) i + 1);
-                taxPreferencePoliciesDOList.add(preferencePoliciesDO);
+                log.info("新增TaxPreferencePoliciesDO-preferencePoliciesDO={}",preferencePoliciesDO);
+                taxPreferencePoliciesMapper.insert(preferencePoliciesDO);
             }
         }
-        log.info("填充TaxPreferencePoliciesDO对象返回-taxPreferencePoliciesDOList={}",taxPreferencePoliciesDOList);
-        return taxPreferencePoliciesDOList;
+
     }
 
     /**
@@ -330,45 +324,31 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         //行业code
         taxPreferenceDO.setIndustryCodes(StringUtils.join(taxPreferenceDTO.getIndustryCodes(), ","));
         //适用企业类型
-        taxPreferenceDO.setIndustryCodes(StringUtils.join(taxPreferenceDTO.getEnterpriseTypeCodes(), ","));
+        taxPreferenceDO.setEnterpriseTypeCodes(StringUtils.join(taxPreferenceDTO.getEnterpriseTypeCodes(), ","));
         //信用等级
         taxPreferenceDO.setTaxpayerCreditRatings(StringUtils.join(taxPreferenceDTO.getTaxpayerCreditRatings(), ","));
         //行业名称
-        StringBuffer industryNames = getIndustryNames(taxPreferenceDO.getIndustryNames(), taxPreferenceDTO.getIndustryCodes());
-        taxPreferenceDO.setIndustryNames(industryNames.toString());
+        String industryNames = convert2String(taxPreferenceDTO.getIndustryCodes());
+        taxPreferenceDO.setIndustryNames(industryNames);
         //适用企业类型
-        StringBuffer enterpriseTypeNames = getEnterpriseTypeNames(taxPreferenceDTO, taxPreferenceDO);
-        taxPreferenceDO.setEnterpriseTypeNames(enterpriseTypeNames.toString());
+        String enterpriseTypeNames = convert2String(taxPreferenceDTO.getEnterpriseTypeCodes());
+        taxPreferenceDO.setEnterpriseTypeNames(enterpriseTypeNames);
         log.info("taxPreferenceDO={}",taxPreferenceDO);
         return taxPreferenceDO;
     }
 
     /**
-     * 行业名称集合拼接
+     * 拼接转换
      * */
     @NotNull
-    private StringBuffer getIndustryNames(String industryNames2, List<String> industryCodess) {
-        StringBuffer industryNames = new StringBuffer(industryNames2);
-        industryCodess.forEach(industryCodes -> {
+    private String convert2String( List<String> industryCodes) {
+        Set<String> keySet=new HashSet<>();
+        industryCodes.forEach(industryCode -> {
             //todo 通过code查询名称
-            industryNames.append(",");
+            keySet.add("a");
         });
-        log.info("行业名称:industryNames={}",industryNames);
-        return industryNames;
-    }
-
-    /**
-     * 企业名称集合拼接
-     * */
-    @NotNull
-    private StringBuffer getEnterpriseTypeNames(TaxPreferenceDTO taxPreferenceDTO, TaxPreferenceDO taxPreferenceDO) {
-        StringBuffer enterpriseTypeNames=new StringBuffer(taxPreferenceDO.getEnterpriseTypeNames());
-        taxPreferenceDTO.getEnterpriseTypeCodes().forEach(enterpriseTypeName->{
-            //todo 通过code查询名称
-            enterpriseTypeNames.append(",");
-        });
-        log.info("适用企业名称:enterpriseTypeNames={}",enterpriseTypeNames);
-        return enterpriseTypeNames;
+        log.info("keySet={}",keySet);
+        return StringUtils.join(keySet,",");
     }
 
 
