@@ -58,9 +58,9 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResultVO<Void> insertTaxPreference(TaxPreferenceDTO taxPreferenceDTO) {
-        log.info("新增政策法规dto={}",taxPreferenceDTO);
+        log.info("新增政策法规dto={}", taxPreferenceDTO);
         //检查优惠事项名称是否存在
-        judgeExists(taxPreferenceDTO.getTaxPreferenceName());
+        judgeExists(taxPreferenceDTO);
 
         //新增-税收优惠表t_tax_preference
         TaxPreferenceDO taxPreferenceDO = getTaxPreferenceDO(taxPreferenceDTO);
@@ -85,14 +85,19 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     /**
      * 判断此税收优惠事项是否存在
      */
-    private Boolean judgeExists(String name) {
-        log.info("judgeExists:{}",name);
+    private Boolean judgeExists(TaxPreferenceDTO taxPreferenceDTO) {
+        log.info("judgeExists:taxPreferenceDTO={}", taxPreferenceDTO);
         LambdaQueryWrapper<TaxPreferenceDO> queryWrapper = Wrappers.lambdaQuery(TaxPreferenceDO.class)
-                .eq(TaxPreferenceDO::getTaxPreferenceName, name)
+                .eq(TaxPreferenceDO::getTaxPreferenceName, taxPreferenceDTO.getTaxPreferenceName())
                 .eq(TaxPreferenceDO::getDeleted, 0);
-        Long count = taxPreferenceMapper.selectCount(queryWrapper);
-        log.info("judgeExists:count={}",count);
-        if (count > 0) {
+        List<TaxPreferenceDO> taxPreferenceDOs = taxPreferenceMapper.selectList(queryWrapper);
+        log.info("judgeExists:taxPreferenceDOs={}", taxPreferenceDOs);
+        if (taxPreferenceDOs.size() > 1) {
+            throw BizCode._4302.exception();
+        }
+        if (taxPreferenceDOs.size() == 1
+                && taxPreferenceDTO.getId() != null
+                && !taxPreferenceDOs.get(0).getId().equals(taxPreferenceDTO.getId())) {
             throw BizCode._4302.exception();
         }
         return false;
@@ -101,7 +106,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResultVO<Void> updateTaxPreference(TaxPreferenceDTO taxPreferenceDTO) {
-        judgeExists(taxPreferenceDTO.getTaxPreferenceName());
+        judgeExists(taxPreferenceDTO);
         //修改-税收优惠表t_tax_preference
         TaxPreferenceDO taxPreferenceDO = getTaxPreferenceDO(taxPreferenceDTO);
         taxPreferenceMapper.updateById(taxPreferenceDO);
@@ -218,7 +223,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
                     submitConditionVOList.add(submitConditionVO);
                 }
         );
-        log.info("申报信息结果:submitConditionVOList={}",submitConditionVOList);
+        log.info("申报信息结果:submitConditionVOList={}", submitConditionVOList);
         return submitConditionVOList;
     }
 
@@ -228,7 +233,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
      * @return taxPreferencePoliciesVO
      */
     private List<TaxPreferencePoliciesVO> getTaxPreferencePoliciesVOS(Map<String, Object> columnMap) {
-        log.info("获取政策法规信息参数:columnMap={}",columnMap);
+        log.info("获取政策法规信息参数:columnMap={}", columnMap);
         List<TaxPreferencePoliciesDO> taxPreferencePoliciesDOS = taxPreferencePoliciesMapper.selectByMap(columnMap);
         List<TaxPreferencePoliciesVO> taxPreferencePoliciesVOList = new ArrayList<>();
         taxPreferencePoliciesDOS.forEach(taxPreferencePoliciesDO ->
@@ -241,14 +246,14 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
                     taxPreferencePoliciesVOList.add(taxPreferencePoliciesVO);
                 }
         );
-        log.info("政策法规信结果:taxPreferencePoliciesVOList={}",taxPreferencePoliciesVOList);
+        log.info("政策法规信结果:taxPreferencePoliciesVOList={}", taxPreferencePoliciesVOList);
         return taxPreferencePoliciesVOList;
     }
 
     @NotNull
     private PoliciesDO getPoliciesDO(TaxPreferencePoliciesVO taxPreferencePoliciesVO) throws TaxPreferenceException {
         PoliciesDO policiesDO = policiesMapper.selectById(taxPreferencePoliciesVO.getPoliciesId());
-        if(policiesDO==null){
+        if (policiesDO == null) {
             throw BizCode._4304.exception();
         }
         return policiesDO;
@@ -258,7 +263,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
      * 修改税收优惠申报条件
      */
     private void updateSubmitConditionByTaxPreferenceId(TaxPreferenceDTO taxPreferenceDTO) {
-        log.info("修改税收优惠申报参数:taxPreferenceDTO={}",taxPreferenceDTO);
+        log.info("修改税收优惠申报参数:taxPreferenceDTO={}", taxPreferenceDTO);
         //采取先删除后添加的方式
         HashMap<String, Object> columnMap = new HashMap<>(16);
         columnMap.put(TAX_PREFERENCE_ID, taxPreferenceDTO.getId());
@@ -277,7 +282,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
      * 新增到申报条件表t_submit_condition
      */
     public void insertSubmitConditionDOs(TaxPreferenceDTO taxPreferenceDTO, TaxPreferenceDO taxPreferenceDO) {
-        log.info("新增到申报条件表t_submit_condition-参数:taxPreferenceDTO={},taxPreferenceDO={}",taxPreferenceDTO,taxPreferenceDO);
+        log.info("新增到申报条件表t_submit_condition-参数:taxPreferenceDTO={},taxPreferenceDO={}", taxPreferenceDTO, taxPreferenceDO);
         List<SubmitConditionDTO> submitConditionDTOList = taxPreferenceDTO.getSubmitConditionDTOList();
         if (submitConditionDTOList != null && submitConditionDTOList.size() > 0) {
             for (int i = 0; i < submitConditionDTOList.size(); i++) {
@@ -294,16 +299,16 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
      * 新增TaxPreferencePoliciesDO
      */
     private void insertTaxPreferencePoliciesDO(TaxPreferenceDTO taxPreferenceDTO, TaxPreferenceDO taxPreferenceDO) {
-        log.info("填充TaxPreferencePoliciesDO条件-taxPreferenceDTO={}",taxPreferenceDTO);
-        TaxPreferencePoliciesDO preferencePoliciesDO = new TaxPreferencePoliciesDO();
+        log.info("填充TaxPreferencePoliciesDO条件-taxPreferenceDTO={}", taxPreferenceDTO);
         //政策法规对象集合
         List<TaxPreferencePoliciesDTO> taxPreferencePoliciesDTOList = taxPreferenceDTO.getTaxPreferencePoliciesDTOList();
         if (taxPreferencePoliciesDTOList != null && taxPreferencePoliciesDTOList.size() > 0) {
             for (int i = 0; i < taxPreferencePoliciesDTOList.size(); i++) {
+                TaxPreferencePoliciesDO preferencePoliciesDO = new TaxPreferencePoliciesDO();
                 BeanUtils.copyProperties(taxPreferencePoliciesDTOList.get(i), preferencePoliciesDO);
                 preferencePoliciesDO.setTaxPreferenceId(taxPreferenceDO.getId());
                 preferencePoliciesDO.setSort((long) i + 1);
-                log.info("新增TaxPreferencePoliciesDO-preferencePoliciesDO={}",preferencePoliciesDO);
+                log.info("新增TaxPreferencePoliciesDO-preferencePoliciesDO={}", preferencePoliciesDO);
                 taxPreferencePoliciesMapper.insert(preferencePoliciesDO);
             }
         }
@@ -314,12 +319,12 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
      * 填充taxPreferenceDO对象
      */
     private TaxPreferenceDO getTaxPreferenceDO(TaxPreferenceDTO taxPreferenceDTO) {
-        log.info("taxPreferenceDTO={}",taxPreferenceDTO);
+        log.info("taxPreferenceDTO={}", taxPreferenceDTO);
         TaxPreferenceDO taxPreferenceDO = new TaxPreferenceDO();
         BeanUtils.copyProperties(taxPreferenceDTO, taxPreferenceDO);
         taxPreferenceDO.setDeleted(false);
         taxPreferenceDO.setUpdateTime(LocalDateTime.now());
-        taxPreferenceDO.setValidity(taxPreferenceDO.getValidity());
+        taxPreferenceDO.setValidity(taxPreferenceDTO.getValidity().getValue());
         taxPreferenceDO.setTaxPreferenceStatus(TaxPreferenceStatus.UNRELEASED.getValue());
         //行业code
         taxPreferenceDO.setIndustryCodes(StringUtils.join(taxPreferenceDTO.getIndustryCodes(), ","));
@@ -333,22 +338,22 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         //适用企业类型
         String enterpriseTypeNames = convert2String(taxPreferenceDTO.getEnterpriseTypeCodes());
         taxPreferenceDO.setEnterpriseTypeNames(enterpriseTypeNames);
-        log.info("taxPreferenceDO={}",taxPreferenceDO);
+        log.info("taxPreferenceDO={}", taxPreferenceDO);
         return taxPreferenceDO;
     }
 
     /**
      * 拼接转换
-     * */
+     */
     @NotNull
-    private String convert2String( List<String> industryCodes) {
-        Set<String> keySet=new HashSet<>();
-        industryCodes.forEach(industryCode -> {
+    private String convert2String(List<String> stringList) {
+        Set<String> keySet = new HashSet<>();
+        stringList.forEach(industryCode -> {
             //todo 通过code查询名称
             keySet.add("a");
         });
-        log.info("keySet={}",keySet);
-        return StringUtils.join(keySet,",");
+        log.info("keySet={}", keySet);
+        return StringUtils.join(keySet, ",");
     }
 
 
