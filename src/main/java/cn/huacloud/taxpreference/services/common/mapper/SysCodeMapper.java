@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.common.mapper;
 
+import cn.huacloud.taxpreference.common.enums.SysCodeStatus;
 import cn.huacloud.taxpreference.common.enums.SysCodeType;
 import cn.huacloud.taxpreference.services.common.entity.dos.SysCodeDO;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -17,9 +18,13 @@ import java.util.List;
 @Repository
 public interface SysCodeMapper extends BaseMapper<SysCodeDO> {
 
-    default List<SysCodeDO> getSysCodeDOByType(SysCodeType sysCodeType) {
+    /**
+     * 获取所有有效的系统码值
+     * @return 有效的系统码值
+     */
+    default List<SysCodeDO> getAllValid() {
         LambdaQueryWrapper<SysCodeDO> queryWrapper = Wrappers.lambdaQuery(SysCodeDO.class)
-                .eq(SysCodeDO::getCodeType, sysCodeType);
+                .eq(SysCodeDO::getCodeStatus, SysCodeStatus.VALID);
         return selectList(queryWrapper);
     }
 }

@@ -31,10 +31,10 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.github.ben-manes.caffeine</groupId>
+            <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <scope>test</scope>
         </dependency>
+
         <!--pinyin4j-->
         <dependency>
             <groupId>com.belerweb</groupId>

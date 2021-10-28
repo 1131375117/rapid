@@ -4,6 +4,7 @@ import cn.huacloud.taxpreference.common.enums.SysCodeType;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeTreeVO;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import java.util.List;
  * 系统码值接口
  * @author wangkh
  */
+@Api(tags = "系统码值")
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
 @RestController

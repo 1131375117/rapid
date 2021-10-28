@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
  *
  * @author wangkh
  */
-@Ignore
+//@Ignore
 @Slf4j
 public class SysCodeTool extends BaseApplicationTest {
 
@@ -164,20 +164,23 @@ public class SysCodeTool extends BaseApplicationTest {
             String name = split[1];
 
             Long pid;
+            boolean isLeaf;
             if (code.length() == 1) {
                 pid = 0L;
                 currentPid = nextId;
+                isLeaf = false;
             } else {
                 pid = currentPid;
+                isLeaf = true;
             }
 
             SysCodeDO sysCodeDO = new SysCodeDO().setCodeName(name)
                     .setCodeValue(SysCodeType.INDUSTRY.getValue() + "_" + code)
                     .setId(nextId)
                     .setPid(pid)
-                    .setCodeType(SysCodeType.AREA)
+                    .setCodeType(SysCodeType.INDUSTRY)
                     .setCodeStatus(SysCodeStatus.VALID)
-                    .setLeaf(true)
+                    .setLeaf(isLeaf)
                     .setSort(nextId);
 
             nextId++;
