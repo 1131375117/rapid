@@ -8,14 +8,16 @@ import lombok.Data;
 import java.time.LocalDate;
 import java.util.Date;
 
-/**政策法规VO
+/**
+ * 政策法规VO
+ *
  * @author wuxin
  */
 @Data
 @ApiModel
 public class PoliciesVO {
 
-    @ApiModelProperty("政策法规ID")
+    @ApiModelProperty("政策法规Id")
     private Long id;
     @ApiModelProperty("标题")
     private String title;

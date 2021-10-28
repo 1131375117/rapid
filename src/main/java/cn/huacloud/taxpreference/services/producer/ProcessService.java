@@ -16,6 +16,7 @@ import java.util.List;
 public interface ProcessService {
     /**
      * 流程新增
+     *
      * @param taxPreferenceIds
      * @param currentUser
      * @return resultVO
@@ -24,14 +25,16 @@ public interface ProcessService {
 
     /**
      * 查询流程列表
+     *
      * @param processListDTO
      * @param userId
      * @return ResultVO
      */
-    ResultVO<PageVO<ProcessListVO>>queryProcessList(ProcessListDTO processListDTO, Long userId);
+    ResultVO<PageVO<ProcessListVO>> queryProcessList(ProcessListDTO processListDTO, Long userId);
 
     /**
      * 审核提交
+     *
      * @param taxPreferenceId
      * @param currentUser
      * @return Void
@@ -40,6 +43,7 @@ public interface ProcessService {
 
     /**
      * 税收流程审批信息
+     *
      * @param id
      * @return
      */

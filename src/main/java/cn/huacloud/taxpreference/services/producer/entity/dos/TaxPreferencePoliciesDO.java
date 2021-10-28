@@ -22,7 +22,7 @@ public class TaxPreferencePoliciesDO {
     /**
      * 主键自增
      */
-    @TableId(type= IdType.AUTO)
+    @TableId(type = IdType.AUTO)
     private Long id;
 
     /**
@@ -51,7 +51,6 @@ public class TaxPreferencePoliciesDO {
      * 排序字段
      */
     private Long sort;
-
 
 
 }

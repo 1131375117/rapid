@@ -62,12 +62,12 @@ public class PoliciesDO {
     /**
      * 纳税人资格认定类型名称
      */
-    private String taxpayerIdentifyTypeName;
+    private String taxpayerIdentifyTypeNames;
 
     /**
      * 纳税人资格认定类型码值
      */
-    private String taxpayerIdentifyTypeCode;
+    private String taxpayerIdentifyTypeCodes;
 
     /**
      * 适用企业类型名称

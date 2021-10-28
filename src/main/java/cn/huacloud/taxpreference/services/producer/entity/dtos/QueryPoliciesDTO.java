@@ -9,7 +9,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
- * 政策犯规查询条件类
+ * 政策犯规条件类
+ *
  * @author wuxin
  */
 @Data
@@ -19,31 +20,31 @@ public class QueryPoliciesDTO extends KeywordPageQueryDTO {
     @ApiModelProperty("查询条件类型")
     private KeyWordField keyWordField;
 
-    @ApiModelProperty("查询标题")
+    @ApiModelProperty("标题")
     private String title;
 
-    @ApiModelProperty("查询文号")
+    @ApiModelProperty("文号")
     private String docCode;
 
-    @ApiModelProperty("查询所属税种码值")
+    @ApiModelProperty("所属税种码值")
     private String taxCategoriesCode;
 
-    @ApiModelProperty("查询纳税人资格认定类型码")
-    private String taxpayerIdentifyTypeCode;
+    @ApiModelProperty("纳税人资格认定类型码值")
+    private String taxpayerIdentifyTypeCodes;
 
-    @ApiModelProperty("查询适用企业类型码值")
+    @ApiModelProperty("适用企业类型码值")
     private String enterpriseTypeCodes;
 
-    @ApiModelProperty("查询适用行业码值")
+    @ApiModelProperty("适用行业码值")
     private String industryCodes;
 
-    @ApiModelProperty("查询所属区域码值")
+    @ApiModelProperty("所属区域码值")
     private String areaCode;
 
-    @ApiModelProperty("查询有效性")
+    @ApiModelProperty("有效性")
     private String validity;
 
-    @ApiModelProperty("查询发布日期")
+    @ApiModelProperty("发布日期")
     private LocalDate releaseDate;
 
     @ApiModelProperty("开始时间")
@@ -52,16 +53,18 @@ public class QueryPoliciesDTO extends KeywordPageQueryDTO {
     @ApiModelProperty("结束时间")
     private LocalDate endTime;
 
-    @ApiModelProperty("查询更新日期")
+    @ApiModelProperty("更新日期")
     private LocalDateTime updateTime;
 
+    @ApiModelProperty("排序字段")
     private SortField sortField;
 
     public enum SortField {
         RELEASE_DATE,
         UPDATE_TIME;
     }
-    public enum KeyWordField{
+
+    public enum KeyWordField {
         TITLE,
         DOC_CODE;
     }

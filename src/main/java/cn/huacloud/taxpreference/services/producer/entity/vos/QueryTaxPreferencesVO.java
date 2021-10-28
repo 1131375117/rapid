@@ -59,7 +59,7 @@ public class QueryTaxPreferencesVO {
     private String validity;
 
     @ApiModelProperty("审核状态")
-    private String  processStatus;
+    private String processStatus;
 
     @ApiModelProperty("创建时间")
     private LocalDateTime createTime;

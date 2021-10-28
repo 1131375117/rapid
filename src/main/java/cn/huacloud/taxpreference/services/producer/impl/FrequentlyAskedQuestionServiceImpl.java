@@ -51,7 +51,7 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
     public void updateFrequentlyAskedQuestion(FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO) {
         //修改热点问答
         FrequentlyAskedQuestionDO frequentlyAskedQuestionDO = new FrequentlyAskedQuestionDO();
-        BeanUtils.copyProperties(frequentlyAskedQuestionDTO,frequentlyAskedQuestionDO);
+        BeanUtils.copyProperties(frequentlyAskedQuestionDTO, frequentlyAskedQuestionDO);
         frequentlyAskedQuestionMapper.updateById(frequentlyAskedQuestionDO);
     }
 }

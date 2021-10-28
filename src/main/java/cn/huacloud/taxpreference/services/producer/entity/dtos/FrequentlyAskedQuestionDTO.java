@@ -24,14 +24,14 @@ public class FrequentlyAskedQuestionDTO {
     @ApiModelProperty("id")
     private Long id;
 
-    @ApiModelProperty("政策ID集合")
+    @ApiModelProperty("政策Id集合")
     private String policiesIds;
 
     @ApiModelProperty("问题")
-    private String question;
+    private String title;
 
     @ApiModelProperty("回答")
-    private String answer;
+    private String content;
 
     @ApiModelProperty("来源")
     private String docSource;

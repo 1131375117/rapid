@@ -11,6 +11,7 @@ import java.util.Date;
 
 /**
  * 政策解读实体
+ *
  * @author wuxin
  */
 @Data
@@ -24,7 +25,7 @@ public class PoliciesExplainDO {
     private Long id;
 
     /**
-     * 政策ID
+     * 政策Id
      */
     private Long policiesId;
 

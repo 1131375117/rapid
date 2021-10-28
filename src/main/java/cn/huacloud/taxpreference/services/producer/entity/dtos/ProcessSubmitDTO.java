@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
  * @create: 2021-10-25 14:35
  **/
 @Data
-public class ProcessSubmitDTO  {
+public class ProcessSubmitDTO {
     @NotNull(message = "流程审批id不能为空")
     @ApiModelProperty("流程审批id")
     private Long id;
