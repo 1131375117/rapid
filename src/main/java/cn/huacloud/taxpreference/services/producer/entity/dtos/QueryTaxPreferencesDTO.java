@@ -38,7 +38,7 @@ public class QueryTaxPreferencesDTO extends KeywordPageQueryDTO {
      * 适用行业码值
      */
     @ApiModelProperty("适用行业码值")
-    private List<String> industryCodes;
+    private List<String> industryCodess;
 
     /**
      * 适用企业类型码值

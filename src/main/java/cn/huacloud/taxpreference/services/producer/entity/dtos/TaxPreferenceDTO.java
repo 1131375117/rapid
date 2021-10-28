@@ -125,6 +125,14 @@ public class TaxPreferenceDTO {
     private String submitTaxData;
 
     /**
+     * 标签管理
+     */
+    @ApiModelProperty("标签管理")
+    @NotEmpty(message = "标签管理",groups = {ValidationGroup.Update.class,ValidationGroup.Create.class})
+    private String labels;
+
+
+    /**
      * 资料报送时限
      */
     @ApiModelProperty("资料报送时限")

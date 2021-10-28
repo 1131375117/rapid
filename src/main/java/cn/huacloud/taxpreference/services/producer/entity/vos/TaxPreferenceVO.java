@@ -1,18 +1,8 @@
 package cn.huacloud.taxpreference.services.producer.entity.vos;
 
-import cn.huacloud.taxpreference.common.constants.ValidationGroup;
-import cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferenceDO;
-import cn.huacloud.taxpreference.services.producer.entity.dtos.SubmitConditionDTO;
-import cn.huacloud.taxpreference.services.producer.entity.dtos.TaxPreferencePoliciesDTO;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -63,31 +53,31 @@ public class TaxPreferenceVO {
      * 适用行业名称
      */
     @ApiModelProperty("适用行业名称")
-    private String industryName;
+    private String industryNames;
 
     /**
      * 适用行业码值
      */
     @ApiModelProperty("适用行业码值")
-    private String industryCode;
+    private String industryCodes;
 
     /**
      * 适用企业类型名称
      */
     @ApiModelProperty("适用企业类型名称")
-    private String enterpriseTypeName;
+    private String enterpriseTypeNames;
 
     /**
      * 适用企业类型码值
      */
     @ApiModelProperty("适用企业类型码值")
-    private String enterpriseTypeCode;
+    private String enterpriseTypeCodes;
 
     /**
      * 纳税信用等级
      */
     @ApiModelProperty("纳税信用等级")
-    private String taxpayerCreditRating;
+    private String taxpayerCreditRatings;
 
     /**
      * 优惠事项名称
@@ -120,9 +110,15 @@ public class TaxPreferenceVO {
     private String submitTimeLimit;
 
     /**
+     * 标签管理
+     */
+    @ApiModelProperty("标签管理")
+    private String labels;
+
+    /**
      * 政策法规信息
      */
-    @ApiModelProperty("申报信息")
+    @ApiModelProperty("政策法规信息")
     private List<TaxPreferencePoliciesVO> taxPreferencePoliciesVOList;
 
     /**

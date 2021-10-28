@@ -1,7 +1,6 @@
 package cn.huacloud.taxpreference.services.producer.entity.dtos;
 
 import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -34,10 +33,10 @@ public class QueryPoliciesDTO extends KeywordPageQueryDTO {
     private String taxpayerIdentifyTypeCode;
 
     @ApiModelProperty("查询适用企业类型码值")
-    private String enterpriseTypeCode;
+    private String enterpriseTypeCodes;
 
     @ApiModelProperty("查询适用行业码值")
-    private String industryCode;
+    private String industryCodes;
 
     @ApiModelProperty("查询所属区域码值")
     private String areaCode;
