@@ -18,4 +18,28 @@ public class UserUtil {
     public static LoginUserVO getCurrentUser() {
         return (LoginUserVO) StpUtil.getSession().get(LOGIN_USER);
     }
+
+    /**
+     * 获取当前的用户ID
+     * @return 用户ID
+     */
+    public static Long getCurrentUserId() {
+        LoginUserVO currentUser = getCurrentUser();
+        if (currentUser == null) {
+            return null;
+        }
+        return currentUser.getId();
+    }
+
+    /**
+     * 获取当前的用户账户
+     * @return 用户账户
+     */
+    public static String getCurrentUserAccount() {
+        LoginUserVO currentUser = getCurrentUser();
+        if (currentUser == null) {
+            return null;
+        }
+        return currentUser.getUserAccount();
+    }
 }

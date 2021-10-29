@@ -6,7 +6,6 @@ import cn.huacloud.taxpreference.common.constants.UserConstants;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.enums.UserType;
-import cn.huacloud.taxpreference.common.utils.TaxPreferenceUtil;
 import cn.huacloud.taxpreference.services.user.RoleService;
 import cn.huacloud.taxpreference.services.user.UserService;
 import cn.huacloud.taxpreference.services.user.entity.dos.ProducerUserDO;
@@ -165,6 +164,7 @@ public class UserServiceImpl implements UserService {
                 .setDeleted(false);
         // 执行保存
         producerUserMapper.insert(producerUserDO);
+        log.info("添加后台用户成功，userAccount：{}", userDO.getUserAccount());
     }
 
     @Transactional
@@ -191,6 +191,7 @@ public class UserServiceImpl implements UserService {
         producerUserMapper.updateById(producerUserDO);
         // 擦除密码
         producerUserVO.setPassword(null);
+        log.info("更新后台用户信息成功，userAccount：{}", userDO.getUserAccount());
     }
 
     @Override
@@ -231,7 +232,7 @@ public class UserServiceImpl implements UserService {
         if (userDO.getDisable()) {
             StpUtil.logout(userId);
         }
-
+        log.info("切换用户禁用状态成功，userAccount：{}，disable：{}", userDO.getUserAccount(), userDO.getDisable());
         return userDO.getDisable();
     }
 
@@ -271,6 +272,8 @@ public class UserServiceImpl implements UserService {
         // 保存更新
         userMapper.updateById(userDO);
 
+        log.info("修改用户拥有的角色成功， userAccount：{}，roleCodes：{}", userDO.getUserAccount(), userDO.getRoleCodes());
+
         // 设置权限后注销指定用户
         // StpUtil.logout(userId);
     }
@@ -293,6 +296,7 @@ public class UserServiceImpl implements UserService {
 
         // 执行保存
         userMapper.updateById(userDO);
+        log.info("移除后台用户角色成功， userAccount：{}， roleCode：{}", userDO.getUserAccount(), roleCode);
     }
 
     @Override
@@ -318,7 +322,7 @@ public class UserServiceImpl implements UserService {
                 continue;
             }
             // 属性设置
-            String roleCodes = TaxPreferenceUtil.separatorStrAddElement(userDO.getRoleCodes(), addDTO.getAddRoleCode());
+            String roleCodes = separatorStrAddElement(userDO.getRoleCodes(), addDTO.getAddRoleCode());
             userDO.setRoleCodes(roleCodes);
             // 执行更新
             userMapper.updateById(userDO);
@@ -335,5 +339,21 @@ public class UserServiceImpl implements UserService {
         if (UserConstants.ADMIN_USER_NAME.equalsIgnoreCase(userAccount)) {
             throw BizCode._4209.exception();
         }
+    }
+
+    /**
+     * 给","分隔的字符串添加新元素
+     * @param target 目标字符串
+     * @param element 新元素
+     * @return 合并后的字符串
+     */
+    private static String separatorStrAddElement(String target, String element) {
+        if (org.apache.commons.lang3.StringUtils.isBlank(target)) {
+            return element;
+        }
+        List<String> targetList = Arrays.asList(target.split(target));
+        Set<String> treeSet = new TreeSet<>(targetList);
+        treeSet.add(element);
+        return String.join(",", treeSet);
     }
 }

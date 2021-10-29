@@ -10,7 +10,9 @@ import cn.huacloud.taxpreference.services.common.mapper.AttachmentMapper;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import io.minio.*;
+import io.minio.GetObjectArgs;
+import io.minio.MinioClient;
+import io.minio.PutObjectArgs;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
@@ -19,7 +21,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -108,6 +109,7 @@ public class AttachmentServiceImpl implements AttachmentService {
         try {
             return minioClient.getObject(GetObjectArgs.builder().bucket(minioConfig.getBucket()).object(path).build());
         } catch (Exception e) {
+            log.error("附件下载失败", e);
             throw BizCode._4401.exception();
         }
     }

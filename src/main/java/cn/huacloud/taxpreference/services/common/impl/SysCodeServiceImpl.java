@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -68,7 +67,6 @@ public class SysCodeServiceImpl implements SysCodeService {
         if (StringUtils.isBlank(codeValues)) {
             return new ArrayList<>();
         }
-        Map<String, SysCodeDO> sysCodeMapCache = getSysCodeMapCache();
         return getValidSortStreamByCodeValues(codeValues)
                 .map(sysCodeDO -> {
                     SysCodeVO sysCodeVO = new SysCodeVO();
