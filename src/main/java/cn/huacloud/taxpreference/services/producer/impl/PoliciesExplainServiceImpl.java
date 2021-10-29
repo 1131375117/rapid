@@ -2,6 +2,7 @@ package cn.huacloud.taxpreference.services.producer.impl;
 
 import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
+import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.services.producer.PoliciesExplainService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesExplainDO;
@@ -119,9 +120,15 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void updatePolicesExplain(PoliciesExplainDTO policiesExplainDTO) {
-        //修改政策解读--todo
-        PoliciesExplainDO policiesExplainDO = new PoliciesExplainDO();
+        //查询政策解读
+        PoliciesExplainDO policiesExplainDO = policiesExplainMapper.selectById(policiesExplainDTO.getId());
+        //参数校验
+        if(policiesExplainDO==null){
+            throw BizCode._4100.exception();
+        }
+        //属性拷贝
         BeanUtils.copyProperties(policiesExplainDTO, policiesExplainDO);
+        //修改政策解读
         policiesExplainMapper.updateById(policiesExplainDO);
     }
 

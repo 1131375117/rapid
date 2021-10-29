@@ -23,10 +23,7 @@ public class QueryPoliciesExplainDTO extends KeywordPageQueryDTO {
     @ApiModelProperty("政策法规id")
     private Long policiesId;
 
-    @ApiModelProperty("政策法规标题")
-    private String policiesTitle;
-
-    @ApiModelProperty("政策解读标题")
+    @ApiModelProperty("标题")
     private String title;
 
     @ApiModelProperty("来源")

@@ -67,11 +67,12 @@ public class PoliciesServiceImpl implements PoliciesService {
      */
     @Override
     public PageVO<PoliciesVO> getPolicesList(QueryPoliciesDTO queryPoliciesDTO) {
+        queryPoliciesDTO.paramReasonable();
         Page<PoliciesVO> page = new Page<>(queryPoliciesDTO.getPageNum(), queryPoliciesDTO.getPageSize());
         //获取排序字段
         String sort = getSort(queryPoliciesDTO);
         IPage<PoliciesVO> policiesDoPage = policiesMapper.queryPoliciesVOList(page, queryPoliciesDTO, sort);
-                //数据映射
+        //数据映射
         List<PoliciesVO> records = policiesDoPage.getRecords().stream().map(policiesDO -> {
             PoliciesVO policiesVO = new PoliciesVO();
             //属性拷贝
@@ -82,86 +83,18 @@ public class PoliciesServiceImpl implements PoliciesService {
         return PageVO.createPageVO(policiesDoPage, records);
 
     }
+
     /**
      * 获取排序字段
      */
     private String getSort(QueryPoliciesDTO queryPoliciesDTO) {
-        String sort = PoliciesSortType.RELEASE.getValue();
+        String sort = PoliciesSortType.RELEASE_DATE.getValue();
         if (queryPoliciesDTO.getPoliciesSortType().equals(PoliciesSortType.UPDATE_TIME)) {
             sort = SortType.UPDATE_TIME.name();
         }
         log.info("排序字段sort:{}", sort);
         return sort;
     }
-
-//        LambdaQueryWrapper<PoliciesDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-//        //模糊查询标题
-//        if (QueryPoliciesDTO.KeyWordField.TITLE.equals(queryPoliciesDTO.getKeyWordField())) {
-//            lambdaQueryWrapper.like(!StringUtils.isEmpty(queryPoliciesDTO.getTitle()),
-//                    PoliciesDO::getTitle,
-//                    queryPoliciesDTO.getTitle());
-//            //模糊查询文号
-//        } else if (QueryPoliciesDTO.KeyWordField.DOC_CODE.equals(queryPoliciesDTO.getKeyWordField())) {
-//            lambdaQueryWrapper.like(!StringUtils.isEmpty(queryPoliciesDTO.getDocCode()),
-//                    PoliciesDO::getDocCode,
-//                    queryPoliciesDTO.getDocCode());
-//        }
-//        //条件查询--所属税种码值
-//        lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getTaxCategoriesCode()),
-//                PoliciesDO::getTaxCategoriesCode,
-//                queryPoliciesDTO.getTaxCategoriesCode());
-//        //条件查询--纳税人资格认定类型码值
-//        lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getTaxpayerIdentifyTypeCodes()),
-//                PoliciesDO::getTaxpayerIdentifyTypeCodes,
-//                queryPoliciesDTO.getTaxpayerIdentifyTypeCodes());
-//        //条件查询--适用企业类型码值
-//        lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getEnterpriseTypeCodes()),
-//                PoliciesDO::getEnterpriseTypeCodes,
-//                queryPoliciesDTO.getEnterpriseTypeCodes());
-//        //条件查询--适用行业码值
-//        lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getAreaCode()),
-//                PoliciesDO::getIndustryCodes,
-//                queryPoliciesDTO.getIndustryCodes());
-//        //条件查询--所属区域码值
-//        lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getAreaCode()),
-//                PoliciesDO::getAreaCode,
-//                queryPoliciesDTO.getAreaCode());
-//        //条件查询--有效性
-//        lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getValidity()),
-//                PoliciesDO::getValidity, queryPoliciesDTO.getValidity());
-//        //条件查询--发布日期
-//        lambdaQueryWrapper.ge(!StringUtils.isEmpty(queryPoliciesDTO.getReleaseDate()),
-//                PoliciesDO::getReleaseDate, queryPoliciesDTO.getStartTime())
-//                .le(!StringUtils.isEmpty(queryPoliciesDTO.getReleaseDate()),
-//                        PoliciesDO::getReleaseDate, queryPoliciesDTO.getEndTime());
-//        //排序--发布时间
-//        if (QueryPoliciesDTO.SortField.RELEASE_DATE.equals(queryPoliciesDTO.getSortField())) {
-//            lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getReleaseDate()),
-//                    PoliciesDO::getReleaseDate,
-//                    queryPoliciesDTO.getReleaseDate()).orderByDesc(PoliciesDO::getReleaseDate);
-//        }
-//        //排序--更新时间
-//        if (QueryPoliciesDTO.SortField.UPDATE_TIME.equals(queryPoliciesDTO.getSortField())) {
-//            lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesDTO.getUpdateTime()),
-//                    PoliciesDO::getReleaseDate,
-//                    queryPoliciesDTO.getUpdateTime()).orderByDesc(PoliciesDO::getUpdateTime);
-//        }
-//        //分页
-//        IPage<PoliciesDO> policiesDoPage =
-//                //--todo
-//                policiesMapper.selectPage(new Page<>(queryPoliciesDTO.getPageNum(),
-//                        queryPoliciesDTO.getPageSize()), lambdaQueryWrapper);
-//
-//        //数据映射
-//        List<PoliciesVO> records = policiesDoPage.getRecords().stream().map(policiesDO -> {
-//            PoliciesVO policiesVO = new PoliciesVO();
-//            //属性拷贝
-//            BeanUtils.copyProperties(policiesDO, policiesVO);
-//            return policiesVO;
-//        }).collect(Collectors.toList());
-//        //返回结果
-//        return PageVO.createPageVO(policiesDoPage, records);
-//    }
 
     /**
      * 新增政策法规
@@ -254,7 +187,11 @@ public class PoliciesServiceImpl implements PoliciesService {
     public void updatePolicies(PoliciesCombinationDTO policiesCombinationDTO) {
 
         //修改政策法规
-        PoliciesDO policiesDO = new PoliciesDO();
+        PoliciesDO policiesDO = policiesMapper.selectById(policiesCombinationDTO.getId());
+        //参数校验
+        if (policiesDO == null) {
+            throw BizCode._4100.exception();
+        }
         BeanUtils.copyProperties(policiesCombinationDTO, policiesDO);
         policiesMapper.updateById(policiesDO);
         //修改政策解读
