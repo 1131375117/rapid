@@ -32,7 +32,7 @@ public class FrequentlyAskedQuestionDO {
     private String policiesIds;
 
     /**
-     * 问题
+     * 标题
      */
     private String title;
 

@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.annotation.IEnum;
 
 public enum PoliciesSortType implements IEnum<String> {
     //排序字段
-    RELEASE("release_date"),
+    RELEASE_DATE("release_date"),
     UPDATE_TIME("update_time");
 
     private final String name;

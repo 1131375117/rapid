@@ -1,6 +1,7 @@
 package cn.huacloud.taxpreference.services.producer.entity.dtos;
 
 import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
+import cn.huacloud.taxpreference.services.producer.entity.enums.KeywordType;
 import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesSortType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -19,8 +20,8 @@ import java.util.List;
 @ApiModel
 public class QueryPoliciesDTO extends KeywordPageQueryDTO {
 
-    @ApiModelProperty("查询条件类型")
-    private KeyWordField keyWordField;
+    @ApiModelProperty("政策法规id")
+    private Long id;
 
     @ApiModelProperty("标题")
     private String title;
@@ -58,12 +59,10 @@ public class QueryPoliciesDTO extends KeywordPageQueryDTO {
     @ApiModelProperty("更新日期")
     private LocalDateTime updateTime;
 
-    @ApiModelProperty("排序字段")
+    @ApiModelProperty("排序字段,RELEASE_DATE:按照发布时间排序,UPDATE_TIME:按照更新时间排序")
     private PoliciesSortType policiesSortType;
 
+    @ApiModelProperty("查询条件类型,TITLE:按照标题查询,DOC_CODE:按照文号查询")
+    private KeywordType keywordType;
 
-    public enum KeyWordField {
-        TITLE,
-        DOC_CODE;
-    }
 }

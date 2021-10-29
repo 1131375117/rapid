@@ -48,8 +48,8 @@ public class PoliciesExplainController {
     @PostMapping(value = "/policiesExplain/query")
     public ResultVO<PageVO<PoliciesExplainDetailVO>> getPoliciesExplainList(@RequestBody QueryPoliciesExplainDTO queryPoliciesExplainDTO) {
 
-        PageVO<PoliciesExplainDetailVO> policiesExplainVOPageVO = policiesExplainService.getPoliciesExplainList(queryPoliciesExplainDTO);
-        return ResultVO.ok(policiesExplainVOPageVO);
+        PageVO<PoliciesExplainDetailVO> policiesExplainPageVO = policiesExplainService.getPoliciesExplainList(queryPoliciesExplainDTO);
+        return ResultVO.ok(policiesExplainPageVO);
     }
 
     /**
@@ -87,7 +87,7 @@ public class PoliciesExplainController {
     @SaCheckPermission("producer_policiesExplain_detail")
     @ApiOperation("根据id获取政策解读详情")
     @GetMapping(value = "/policiesExplain/detail/{id}")
-    public ResultVO<PoliciesExplainDetailVO> getPoliciesById(@Validated @NotEmpty(message = "id不能为空")@PathVariable("id") Long id) {
+    public ResultVO<PoliciesExplainDetailVO> getPoliciesById(@Validated @NotEmpty(message = "id不能为空") @PathVariable("id") Long id) {
         PoliciesExplainDetailVO policiesExplainDetailVO = policiesExplainService.getPoliciesById(id);
         return ResultVO.ok(policiesExplainDetailVO);
 
@@ -115,7 +115,7 @@ public class PoliciesExplainController {
     @SaCheckPermission("producer_policiesExplain_delete")
     @ApiOperation("删除政策解读")
     @DeleteMapping("/policies/delete/{id}")
-    public ResultVO<Void> deletePoliciesById(@Validated @NotEmpty(message = "id不能为空")@PathVariable("id") Long id) {
+    public ResultVO<Void> deletePoliciesById(@Validated @NotEmpty(message = "id不能为空") @PathVariable("id") Long id) {
         policiesExplainService.deletePoliciesById(id);
         return ResultVO.ok();
     }
