@@ -9,7 +9,8 @@
     </update>
     <select id="queryProcessList"
             resultType="cn.huacloud.taxpreference.services.producer.entity.vos.ProcessListVO">
-        select t.tax_preference_name as taxPreferenceName,
+        select p.id as id,
+        t.tax_preference_name as taxPreferenceName,
         t.tax_categories_name as taxCategoriesName,
         p.process_status as processStatus,
         p.create_time as createTime,
@@ -20,25 +21,25 @@
         <where>
             and t.input_user_id = u.id
             and t.id = p.tax_preference_id
-            <if test="query.taxPreferenceName!=null and query.taxPreferenceName!= ''">
-               and t.tax_preference_name like "%"#{query.taxPreferenceName}"%"
+            <if test="query.keyword!=null and query.keyword!= ''">
+                and t.tax_preference_name like "%"#{query.keyword}"%"
             </if>
             <if test="query.taxCategoriesCode!=null and query.taxCategoriesCode!= ''">
-              and  t.taxCategoriesCode = #{query.taxCategoriesCode}
+                and t.tax_categories_code = #{query.taxCategoriesCode}
             </if>
             <if test="query.startTime!=null ">
-              and  t.create_time >= #{query.startTime}
+                and t.create_time >= #{query.startTime}
             </if>
             <if test="query.endTime!=null ">
-               and t.create_time &lt;= #{query.endTime}
+                and t.create_time &lt;= #{query.endTime}
             </if>
             <if test="query.userName!=null and query.userName!= ''">
-               and u.username = #{query.userName}
+                and u.username = #{query.userName}
             </if>
-            <if test="query.ProcessStatus.getValue()==@cn.huacloud.taxpreference.common.enums.process.ProcessStatus@NOT_APPROVED.getValue()">
+            <if test="!query.processStatus and query.processStatus!=null">
                 and p.process_status='待通过'
             </if>
-            <if test="query.ProcessStatus.getValue()!=@cn.huacloud.taxpreference.common.enums.process.ProcessStatus@NOT_APPROVED.getValue()">
+            <if test="query.processStatus and query.processStatus!=null">
                 and p.process_status!='待通过'
             </if>
             and latest_process=1
@@ -48,7 +49,9 @@
     </select>
     <select id="selectByTaxPreferenceId" resultType="java.lang.String">
         select process_status as processStatus
-            from t_process where tax_preference_id=#{id} and latest_process=1
+        from t_process
+        where tax_preference_id = #{id}
+          and latest_process = 1
     </select>
 
 </mapper>

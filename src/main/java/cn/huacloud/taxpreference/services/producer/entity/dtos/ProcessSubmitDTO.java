@@ -4,7 +4,6 @@ import cn.huacloud.taxpreference.common.enums.process.ProcessStatus;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -19,8 +18,8 @@ public class ProcessSubmitDTO {
     private Long id;
     @ApiModelProperty("审批说明")
     private String approvalNote;
-    @ApiModelProperty("审核状态")
-    @NotEmpty(message = "审核状态不能为空,NOT_APPROVED-待通过，APPROVED-已通过，RETURNED-已退回")
+    @ApiModelProperty("审核状态NOT_APPROVED-待通过，APPROVED-已通过，RETURNED-已退回")
+    @NotNull(message = "审核状态不能为空,NOT_APPROVED-待通过，APPROVED-已通过，RETURNED-已退回")
     private ProcessStatus taxPreferenceStatus;
 
 }

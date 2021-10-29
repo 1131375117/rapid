@@ -64,12 +64,12 @@ public class ProcessController {
      * 审核必传参数:税收优惠事项id,审核结果
      * 可选:备注审核信息(审核结果不通过时为必填)
      */
-    @PermissionInfo(name = "税收优惠事项审核流程提交", group = PermissionGroup.APPROVAL)
+    @PermissionInfo(name = "税收优惠事项审批", group = PermissionGroup.APPROVAL)
     @SaCheckPermission("producer_process_submit")
-    @ApiOperation("税收优惠事项审核提交")
+    @ApiOperation("税收优惠事项审批")
     @PostMapping("/submitProcess")
     public ResultVO<Void> insertTaxPreference(@RequestBody @Validated() ProcessSubmitDTO processSubmitDTO) {
-        if (ProcessStatus.RETURNED.name().equals(processSubmitDTO.getTaxPreferenceStatus().getValue())
+        if (ProcessStatus.RETURNED.name().equals(processSubmitDTO.getTaxPreferenceStatus().name())
                 && StringUtils.isBlank(processSubmitDTO.getApprovalNote())) {
             throw BizCode._4301.exception();
         }

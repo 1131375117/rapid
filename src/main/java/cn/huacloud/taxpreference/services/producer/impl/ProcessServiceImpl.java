@@ -1,6 +1,7 @@
 package cn.huacloud.taxpreference.services.producer.impl;
 
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
+import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.enums.process.ProcessStatus;
 import cn.huacloud.taxpreference.common.enums.taxpreference.TaxPreferenceStatus;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
@@ -14,7 +15,9 @@ import cn.huacloud.taxpreference.services.producer.entity.vos.ProcessListVO;
 import cn.huacloud.taxpreference.services.producer.mapper.ProcessServiceMapper;
 import cn.huacloud.taxpreference.services.producer.mapper.TaxPreferenceMapper;
 import cn.huacloud.taxpreference.services.user.entity.vos.LoginUserVO;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,11 +45,13 @@ public class ProcessServiceImpl implements ProcessService {
     private final ProcessServiceMapper processServiceMapper;
     private final TaxPreferenceMapper taxPreferenceMapper;
 
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResultVO<Void> insertProcessService(Long[] taxPreferenceIds, LoginUserVO currentUser) {
         log.info("新增流程参数:taxPreferenceIds={},currentUser={}",taxPreferenceIds,currentUser);
         for (Long taxPreferenceId : taxPreferenceIds) {
+            judgeProcessIng(taxPreferenceId);
             //新增先查询是否存在并更新流程状态
             processServiceMapper.updateByTaxPreferenceId(taxPreferenceId);
             ProcessDO processDO = new ProcessDO();
@@ -101,6 +106,19 @@ public class ProcessServiceImpl implements ProcessService {
         return ResultVO.ok(processInfoVOList);
     }
 
+    @Override
+    public void judgeProcessIng(Long id) {
+        LambdaQueryWrapper<ProcessDO> queryWrapper = Wrappers.lambdaQuery(ProcessDO.class)
+                .eq(ProcessDO::getTaxPreferenceId, id)
+                .eq(ProcessDO::getLatestProcess, true)
+                .eq(ProcessDO::getProcessStatus, ProcessStatus.NOT_APPROVED.getValue());
+
+        ProcessDO processDO = processServiceMapper.selectOne(queryWrapper);
+        if(processDO!=null){
+            throw BizCode._4312.exception();
+        }
+    }
+
     /**
      * 封装流程对象
      */
@@ -109,13 +127,8 @@ public class ProcessServiceImpl implements ProcessService {
         BeanUtils.copyProperties(processSubmitDTO, processDO);
         processDO.setApproverId(currentUser.getId());
         processDO.setApproverName(currentUser.getUsername());
-        processDO.setCreateTime(LocalDateTime.now());
-        if (ProcessStatus.NOT_APPROVED.name.equals(processDO.getProcessStatus())) {
-            processDO.setProcessStatus(ProcessStatus.RETURNED.getValue());
-        } else if (ProcessStatus.APPROVED.name.equals(processDO.getProcessStatus())) {
-            processDO.setProcessStatus(ProcessStatus.APPROVED.getValue());
-            processDO.setApprovalTime(LocalDateTime.now());
-        }
+        processDO.setApprovalTime(LocalDateTime.now());
+        processDO.setProcessStatus(processSubmitDTO.getTaxPreferenceStatus().getValue());
         log.info("封装结果:processDO:{}", processDO);
         return processDO;
     }
@@ -135,4 +148,6 @@ public class ProcessServiceImpl implements ProcessService {
         log.info("封装结果:taxPreferenceDO:{}", taxPreferenceDO);
         return taxPreferenceDO;
     }
+
+
 }
