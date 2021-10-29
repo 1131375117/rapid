@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
  *
  * @author wangkh
  */
-//@Ignore
+@Ignore
 @Slf4j
 public class SysCodeTool extends BaseApplicationTest {
 
@@ -72,7 +72,7 @@ public class SysCodeTool extends BaseApplicationTest {
             String codeValue = sysCodeDO.getCodeType().getValue() + "_" + toFistLetterPinyin(sysCodeDO.getCodeName());
             sysCodeDO.setCodeValue(codeValue);
             if (map.containsKey(codeValue)) {
-                log.error("系统码值重复：{} <-> {} {}", map.get(codeValue).getCodeName() , sysCodeDO.getCodeName(), codeValue);
+                log.error("系统码值重复：{} <-> {} {}", map.get(codeValue).getCodeName(), sysCodeDO.getCodeName(), codeValue);
             } else {
                 map.put(codeValue, sysCodeDO);
             }
@@ -127,9 +127,11 @@ public class SysCodeTool extends BaseApplicationTest {
         }
 
         for (Area area : areas) {
+
             SysCodeDO sysCodeDO = new SysCodeDO();
+            String codeValue = area.getCode() == null ? null : SysCodeType.AREA.getValue() + "_" + area.getCode();
             sysCodeDO.setCodeName(area.getName())
-                    .setCodeValue(SysCodeType.AREA.getValue() + "_" + area.getCode())
+                    .setCodeValue(codeValue)
                     .setId(nextId)
                     .setPid(pid)
                     .setCodeType(SysCodeType.AREA)
@@ -197,7 +199,7 @@ public class SysCodeTool extends BaseApplicationTest {
     /**
      * 适用企业类型
      */
-        private SysCodeProvider enterpriseType = nextId -> new ArrayList<>();
+    private SysCodeProvider enterpriseType = nextId -> readSingleFile("适用企业类型.txt", SysCodeType.ENTERPRISE_TYPE, nextId);
 
     /**
      * 纳税人登记注册类型

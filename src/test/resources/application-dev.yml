@@ -1,12 +1,16 @@
 # spring
 spring:
   datasource:
-    driver-class-name: org.h2.Driver
-    schema: classpath:sql/schema-h2.sql
-    data: classpath:sql/data-h2.sql
-    url: jdbc:h2:mem:tax-preference
-    username: root
-    password: test
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: "jdbc:mysql://172.16.122.17:3306/tax_preference_dev?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false"
+    username: tax_preference
+    password: tax_preference
+#    driver-class-name: org.h2.Driver
+#    schema: classpath:sql/schema-h2.sql
+#    data: classpath:sql/data-h2.sql
+#    url: jdbc:h2:mem:tax-preference
+#    username: root
+#    password: test
   # redis
   redis:
     host: 172.16.122.17
