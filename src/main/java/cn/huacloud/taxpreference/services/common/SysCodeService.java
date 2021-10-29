@@ -30,7 +30,14 @@ public interface SysCodeService {
     /**
      * 码字字符串集合获取视图对象集合
      * @param codeValues 多个系统码值，以","分割
-     * @return
+     * @return 码值视图集合
      */
     List<SysCodeVO> getListByCodeValues(String codeValues);
+
+    /**
+     * 码值拼接字符串获取名字拼接字符串
+     * @param codeValues 多个系统码值，以","分割
+     * @return 名字拼接字符串
+     */
+    String getStringNamesByCodeValues(String codeValues);
 }

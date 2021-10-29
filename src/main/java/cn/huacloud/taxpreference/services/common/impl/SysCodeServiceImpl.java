@@ -19,7 +19,9 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 系统码值服务实现
@@ -67,16 +69,31 @@ public class SysCodeServiceImpl implements SysCodeService {
             return new ArrayList<>();
         }
         Map<String, SysCodeDO> sysCodeMapCache = getSysCodeMapCache();
-        return Arrays.stream(codeValues.split(","))
-                .map(sysCodeMapCache::get)
-                .filter(Objects::nonNull)
-                .filter(this::isSysCodeDOValid)
-                .sorted(Comparator.comparing(SysCodeDO::getSort))
+        return getValidSortStreamByCodeValues(codeValues)
                 .map(sysCodeDO -> {
                     SysCodeVO sysCodeVO = new SysCodeVO();
                     BeanUtils.copyProperties(sysCodeDO, sysCodeVO);
                     return sysCodeVO;
                 }).collect(Collectors.toList());
+    }
+
+    @Override
+    public String getStringNamesByCodeValues(String codeValues) {
+        if (StringUtils.isBlank(codeValues)) {
+            return "";
+        }
+        return getValidSortStreamByCodeValues(codeValues)
+                .map(SysCodeDO::getCodeName)
+                .collect(Collectors.joining(","));
+    }
+
+    Stream<SysCodeDO> getValidSortStreamByCodeValues(String codeValues) {
+        Map<String, SysCodeDO> sysCodeMapCache = getSysCodeMapCache();
+        return Arrays.stream(codeValues.split(","))
+                .map(sysCodeMapCache::get)
+                .filter(Objects::nonNull)
+                .filter(this::isSysCodeDOValid)
+                .sorted(Comparator.comparing(SysCodeDO::getSort));
     }
 
     /**
@@ -109,6 +126,7 @@ public class SysCodeServiceImpl implements SysCodeService {
 
     /**
      * 查看系统码值是否有效
+     *
      * @param sysCodeDO 系统码值
      * @return 是否有效
      */
