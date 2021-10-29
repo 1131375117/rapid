@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.management.relation.RoleList;
 import java.util.List;
 
 /**
@@ -84,7 +83,7 @@ public class RoleController {
     @PermissionInfo(name = "给角色赋予权限", group = PermissionGroup.USER_MANAGE)
     @SaCheckPermission("role_set_permission")
     @ApiOperation("给角色赋予权限")
-    @GetMapping("/role/{roleId}/permission")
+    @PutMapping("/role/{roleId}/permission")
     public ResultVO<Void> setPermissionToRole(@PathVariable("roleId") Long roleId,
                                         @RequestParam("permissionCode") List<String> permissionCodes) {
         roleService.setPermissionToRole(roleId, permissionCodes);

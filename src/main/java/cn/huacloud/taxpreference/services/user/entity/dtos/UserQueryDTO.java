@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.user.entity.dtos;
 
+import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.enums.UserType;
 import io.swagger.annotations.ApiModelProperty;
@@ -10,7 +11,7 @@ import org.apache.commons.lang3.StringUtils;
  * @author wangkh
  */
 @Data
-public class UserQueryDTO extends PageQueryDTO {
+public class UserQueryDTO extends KeywordPageQueryDTO {
     @ApiModelProperty("用户账户光健字")
     private String userAccountKeyword;
     @ApiModelProperty("用户名称关键字")

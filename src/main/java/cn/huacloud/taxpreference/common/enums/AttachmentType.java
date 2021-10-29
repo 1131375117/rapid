@@ -3,17 +3,16 @@ package cn.huacloud.taxpreference.common.enums;
 import com.baomidou.mybatisplus.annotation.IEnum;
 
 /**
- * 系统码值状态
+ * 附件类型
  * @author wangkh
  */
-public enum SysCodeStatus implements IEnum<String> {
+public enum AttachmentType implements IEnum<String> {
 
-    VALID("有效"),
-    DISABLE("禁用");
+    POLICIES("政策法规");
 
     public final String name;
 
-    SysCodeStatus(String name) {
+    AttachmentType(String name) {
         this.name = name;
     }
 
