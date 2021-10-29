@@ -12,6 +12,7 @@ import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryAbolishDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryTaxPreferencesDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.TaxPreferenceDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.QueryTaxPreferencesVO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceAbolishVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -111,8 +112,8 @@ public class TaxPreferenceController {
     @SaCheckPermission("producer_taxPreference_getAbolishDetail")
     @ApiOperation("查询税收优惠废止信息")
     @PostMapping("/taxPreferenceAbolish/query")
-    public ResultVO<List<TaxPreferenceVO>> getTaxPreferenceAbolish(@RequestParam Long policiesId) {
-        List<TaxPreferenceVO> taxPreferenceVO = taxPreferenceService.getTaxPreferenceAbolish(policiesId);
+    public ResultVO<List<TaxPreferenceAbolishVO>> getTaxPreferenceAbolish(@RequestParam Long policiesId) {
+        List<TaxPreferenceAbolishVO> taxPreferenceVO = taxPreferenceService.getTaxPreferenceAbolish(policiesId);
         return ResultVO.ok(taxPreferenceVO);
     }
 

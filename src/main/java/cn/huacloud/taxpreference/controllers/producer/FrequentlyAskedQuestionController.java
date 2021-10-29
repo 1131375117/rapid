@@ -12,6 +12,8 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * 热点问答接口
  *
@@ -35,14 +37,14 @@ public class FrequentlyAskedQuestionController {
     /**
      * 新增热门问答
      *
-     * @param frequentlyAskedQuestionDTO
+     * @param frequentlyAskedQuestionDTOs
      * @return
      */
     @ApiOperation("新增热点解读")
     @PostMapping(value = "/frequentlyAskedQuestion")
-    public ResultVO<Void> insertFrequentlyAskedQuestion(@RequestBody FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO) {
+    public ResultVO<Void> insertFrequentlyAskedQuestion(@RequestBody List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOs) {
 
-        frequentlyAskedQuestionService.insertFrequentlyAskedQuestion(frequentlyAskedQuestionDTO, UserUtil.getCurrentUser().getId());
+        frequentlyAskedQuestionService.insertFrequentlyAskedQuestion(frequentlyAskedQuestionDTOs, UserUtil.getCurrentUser().getId());
         return ResultVO.ok();
     }
 

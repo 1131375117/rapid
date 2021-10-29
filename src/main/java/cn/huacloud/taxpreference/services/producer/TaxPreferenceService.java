@@ -7,6 +7,7 @@ import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryTaxPreferenc
 import cn.huacloud.taxpreference.services.producer.entity.dtos.TaxPreferenceDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.TaxPreferenceIdsDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.QueryTaxPreferencesVO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceAbolishVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceVO;
 
 import java.util.List;
@@ -80,6 +81,6 @@ public interface TaxPreferenceService {
      * @param policiesId
      * @return
      */
-    List<TaxPreferenceVO> getTaxPreferenceAbolish(Long policiesId);
+    List<TaxPreferenceAbolishVO> getTaxPreferenceAbolish(Long policiesId);
 
 }

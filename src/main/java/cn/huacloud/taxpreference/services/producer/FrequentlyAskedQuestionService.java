@@ -5,6 +5,8 @@ import cn.huacloud.taxpreference.services.producer.entity.dtos.FrequentlyAskedQu
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesExplainDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainDetailVO;
 
+import java.util.List;
+
 /**
  * 热点问答服务
  *
@@ -16,10 +18,10 @@ public interface FrequentlyAskedQuestionService {
     /**
      * 新增热点问答
      *
-     * @param frequentlyAskedQuestionDTO
+     * @param frequentlyAskedQuestionDTOS
      * @param id
      */
-    void insertFrequentlyAskedQuestion(FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO, Long id);
+    void insertFrequentlyAskedQuestion(List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOS, Long id);
 
     /**
      * 修改热点问答

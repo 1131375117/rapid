@@ -8,8 +8,6 @@ import cn.huacloud.taxpreference.services.producer.PoliciesExplainService;
 import cn.huacloud.taxpreference.services.producer.PoliciesService;
 import cn.huacloud.taxpreference.services.producer.TaxPreferenceService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
-import cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferenceDO;
-import cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferencePoliciesDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.*;
 import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesSortType;
 import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesStatusEnum;
@@ -18,7 +16,6 @@ import cn.huacloud.taxpreference.services.producer.entity.vos.*;
 import cn.huacloud.taxpreference.services.producer.mapper.PoliciesMapper;
 import cn.huacloud.taxpreference.services.producer.mapper.TaxPreferenceMapper;
 import cn.huacloud.taxpreference.services.producer.mapper.TaxPreferencePoliciesMapper;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
@@ -138,9 +135,11 @@ public class PoliciesServiceImpl implements PoliciesService {
         policiesExplainDTO.setPoliciesId(policiesDO.getId());
         policiesExplainService.insertPoliciesExplain(policiesExplainDTO, userId);
         //新增热点问答--todo
-        FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO = new FrequentlyAskedQuestionDTO();
-        BeanUtils.copyProperties(policiesCombinationDTO, frequentlyAskedQuestionDTO);
-        frequentlyAskedQuestionService.insertFrequentlyAskedQuestion(frequentlyAskedQuestionDTO, userId);
+      // List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOS = new ArrayList<>();
+      //  BeanUtils.copyProperties(policiesCombinationDTO, frequentlyAskedQuestionDTOS);
+        List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOList = policiesCombinationDTO.getFrequentlyAskedQuestionDTOList();
+            frequentlyAskedQuestionService.insertFrequentlyAskedQuestion(frequentlyAskedQuestionDTOList, userId);
+
     }
 
     /**
@@ -261,7 +260,7 @@ public class PoliciesServiceImpl implements PoliciesService {
     public PoliciesAbolishVO getAbolish(Long id) {
         //查询政策法规
         PoliciesDO policiesDO = policiesMapper.selectById(id);
-        List<TaxPreferenceVO> taxPreferenceAbolish = taxPreferenceService.getTaxPreferenceAbolish(id);
+        List<TaxPreferenceAbolishVO> taxPreferenceAbolish = taxPreferenceService.getTaxPreferenceAbolish(id);
         //设置返回结果值
         PoliciesAbolishVO policiesAbolishVO = new PoliciesAbolishVO();
         policiesAbolishVO.setPoliciesStatus(policiesDO.getPoliciesStatus());

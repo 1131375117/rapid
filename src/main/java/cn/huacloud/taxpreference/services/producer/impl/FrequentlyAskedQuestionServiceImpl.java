@@ -89,22 +89,24 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
     /**
      * 新增热点问答
      *
-     * @param frequentlyAskedQuestionDTO
+     * @param frequentlyAskedQuestionDTOS
      * @param id
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void insertFrequentlyAskedQuestion(FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO, Long id) {
-        log.info("新增热点问答dto={}",frequentlyAskedQuestionDTO);
-        FrequentlyAskedQuestionDO frequentlyAskedQuestionDO = new FrequentlyAskedQuestionDO();
-        BeanUtils.copyProperties(frequentlyAskedQuestionDTO, frequentlyAskedQuestionDO);
-        frequentlyAskedQuestionDO.setInputUserId(id);
-        frequentlyAskedQuestionDO.setReleaseDate(LocalDate.now());
-        frequentlyAskedQuestionDO.setCreateTime(LocalDateTime.now());
-        frequentlyAskedQuestionDO.setUpdateTime(LocalDateTime.now());
-        frequentlyAskedQuestionDO.setDeleted(0);
-        log.info("新增热点问答对象={}",frequentlyAskedQuestionDO);
-        frequentlyAskedQuestionMapper.insert(frequentlyAskedQuestionDO);
+    public void insertFrequentlyAskedQuestion(List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOS, Long id) {
+        log.info("新增热点问答dto={}",frequentlyAskedQuestionDTOS);
+        for (FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO : frequentlyAskedQuestionDTOS) {
+            FrequentlyAskedQuestionDO frequentlyAskedQuestionDO = new FrequentlyAskedQuestionDO();
+            BeanUtils.copyProperties(frequentlyAskedQuestionDTO, frequentlyAskedQuestionDO);
+            frequentlyAskedQuestionDO.setInputUserId(id);
+            frequentlyAskedQuestionDO.setReleaseDate(LocalDate.now());
+            frequentlyAskedQuestionDO.setCreateTime(LocalDateTime.now());
+            frequentlyAskedQuestionDO.setUpdateTime(LocalDateTime.now());
+            frequentlyAskedQuestionDO.setDeleted(false);
+            log.info("新增热点问答对象={}",frequentlyAskedQuestionDO);
+            frequentlyAskedQuestionMapper.insert(frequentlyAskedQuestionDO);
+        }
     }
 
     /**
