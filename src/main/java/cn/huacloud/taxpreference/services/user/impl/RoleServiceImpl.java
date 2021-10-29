@@ -17,6 +17,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
  * 权限服务实现
  * @author wangkh
  */
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class RoleServiceImpl implements RoleService {
@@ -97,6 +99,7 @@ public class RoleServiceImpl implements RoleService {
         roleDO.setRoleCode(roleVO.getRoleCode().toUpperCase());
         roleMapper.insert(roleDO);
         roleVO.setId(roleDO.getId());
+        log.info("添加角色成功，roleDO：{}", roleDO);
     }
 
     @Transactional
@@ -112,6 +115,7 @@ public class RoleServiceImpl implements RoleService {
         roleDO.setNote(roleVO.getNote());
         // 执行更新
         roleMapper.updateById(roleDO);
+        log.info("修改角色信息成功，roleDO：{}", roleDO);
     }
 
     @Override
@@ -132,6 +136,7 @@ public class RoleServiceImpl implements RoleService {
 
         // 执行删除
         roleMapper.deleteById(roleId);
+        log.info("删除角色信息成功，roleDO：{}", roleDO);
     }
 
     @Override
@@ -157,6 +162,7 @@ public class RoleServiceImpl implements RoleService {
 
         // 执行更新
         roleMapper.updateById(roleDO);
+        log.info("设置角色权限成功，roleDO：{}", roleDO);
     }
 
     /**

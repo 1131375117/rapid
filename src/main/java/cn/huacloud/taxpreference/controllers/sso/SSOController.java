@@ -16,6 +16,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author wangkh
  */
+@Slf4j
 @Api(tags = "用户登录")
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
@@ -62,10 +64,12 @@ public class SSOController {
         // 根据用户名查找用户
         UserDO userDO = userService.getUserDOByUserAccount(userAccount);
         if (userDO == null) {
+            log.info("用户登录, 用户账户不存在, userAccount: {}", userAccount);
             throw BizCode._4204.exception();
         }
         // 校验用户密码
         if (!userDO.getPassword().equals(SaSecureUtil.md5(password))) {
+            log.info("用户登录, 密码不正, userAccount: {}", userAccount);
             throw BizCode._4204.exception();
         }
 
@@ -80,6 +84,7 @@ public class SSOController {
         LoginUserVO loginUserVO = userService.getLoginUserVOById(userDO.getId());
         // 保存用户登录视图到 session
         StpUtil.getSession().set(UserUtil.LOGIN_USER, loginUserVO);
+        log.info("用户登录, 用户登录成功, userAccount: {}", userAccount);
         // 返回结果
         return ResultVO.ok(loginUserVO);
     }
@@ -102,7 +107,9 @@ public class SSOController {
     @ApiOperation("登出")
     @PostMapping("/sso/logout")
     public ResultVO<Void> logout() {
+        String currentUserAccount = UserUtil.getCurrentUserAccount();
         StpUtil.logout();
+        log.info("用户登出, userAccount: {}", currentUserAccount);
         return ResultVO.ok();
     }
 
@@ -124,6 +131,7 @@ public class SSOController {
         // 设置30分钟后过期
         stringRedisTemplate.expire(captchaRedisKey, 30, TimeUnit.MINUTES);
 
+        log.info("获取图片验证成功");
         return ResultVO.ok(captchaVO);
     }
 
