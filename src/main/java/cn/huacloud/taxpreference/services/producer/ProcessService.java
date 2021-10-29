@@ -48,4 +48,11 @@ public interface ProcessService {
      * @return
      */
     ResultVO<List<ProcessInfoVO>> queryProcessInfo(Long id);
+
+    /**
+     * 校验是否在审批流程中
+     * @param id
+     */
+       void judgeProcessIng(Long id) ;
+
 }
