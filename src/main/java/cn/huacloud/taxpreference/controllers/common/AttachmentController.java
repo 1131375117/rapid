@@ -8,13 +8,10 @@ import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.common.AttachmentService;
 import cn.huacloud.taxpreference.services.common.entity.vos.AttachmentVO;
 import cn.hutool.core.net.URLDecoder;
-import cn.hutool.core.net.URLEncoder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -56,8 +53,8 @@ public class AttachmentController {
     public ResponseEntity<InputStreamResource> downloadAttachment(HttpServletRequest request) {
         String uri = StringUtils.substringAfter(request.getRequestURI(), "/attachment/download/");
         String path = URLDecoder.decode(uri, StandardCharsets.UTF_8);
+        // 获取文件流
         InputStream inputStream = attachmentService.downloadAttachment(path);
-        // ByteArrayResource resource = new ByteArrayResource(IOUtils.toByteArray(inputStream));
         InputStreamResource resource = new InputStreamResource(inputStream);
 
         String fileName = StringUtils.substringAfter(path, "_");
