@@ -18,12 +18,13 @@ import org.springframework.stereotype.Repository;
 public interface PoliciesMapper extends BaseMapper<PoliciesDO> {
 
     /**
+     * 查询政策法规列表
      *
      * @param page
      * @param queryPoliciesDTO
      * @param sort
      * @return
      */
-    IPage<PoliciesVO> queryPoliciesVOList(@Param("page") Page<PoliciesVO> page, @Param("page")QueryPoliciesDTO queryPoliciesDTO, @Param("page")String sort);
+    IPage<PoliciesVO> queryPoliciesVOList(@Param("page") Page<PoliciesVO> page, @Param("queryPoliciesDTO") QueryPoliciesDTO queryPoliciesDTO, @Param("sort") String sort);
 
 }
