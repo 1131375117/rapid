@@ -61,7 +61,7 @@ public class QueryTaxPreferencesDTO extends KeywordPageQueryDTO {
     /**
      * 排序
      */
-    @ApiModelProperty("排序字段-CREATE_TIME,UPDATE_TIME")
+    @ApiModelProperty("排序字段->默认->CREATE_TIME,UPDATE_TIME")
     private SortType sortType;
 
     /**
@@ -75,7 +75,7 @@ public class QueryTaxPreferencesDTO extends KeywordPageQueryDTO {
     @ApiModelProperty("截止时间")
     private LocalDateTime endTime;
 
-    @ApiModelProperty("是否自我发布-MY_RELEASED:我的已发布,MY_UNRELEASED-我的未发布,ALL-全部")
+    @ApiModelProperty("是否自我发布-MY_RELEASED:我的已发布,MY_UNRELEASED-我的未发布,ALL-全部<-默认输入")
     private ReleaseMatter releaseMatter;
 
 

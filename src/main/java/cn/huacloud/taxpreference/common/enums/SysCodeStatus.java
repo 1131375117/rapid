@@ -1,10 +1,12 @@
 package cn.huacloud.taxpreference.common.enums;
 
+import com.baomidou.mybatisplus.annotation.IEnum;
+
 /**
  * 系统码值状态
  * @author wangkh
  */
-public enum SysCodeStatus {
+public enum SysCodeStatus implements IEnum<String> {
 
     VALID("有效"),
     DISABLE("禁用");
@@ -13,5 +15,10 @@ public enum SysCodeStatus {
 
     SysCodeStatus(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String getValue() {
+        return this.name();
     }
 }

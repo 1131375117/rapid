@@ -8,6 +8,7 @@ import cn.huacloud.taxpreference.common.enums.PermissionGroup;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.user.UserService;
 import cn.huacloud.taxpreference.services.user.entity.dtos.UserQueryDTO;
+import cn.huacloud.taxpreference.services.user.entity.dtos.UserRoleAddDTO;
 import cn.huacloud.taxpreference.services.user.entity.vos.ProducerUserVO;
 import cn.huacloud.taxpreference.services.user.entity.vos.UserListVO;
 import io.swagger.annotations.Api;
@@ -134,5 +135,13 @@ public class UserController {
     public ResultVO<Boolean> isUserAccountExist(String userAccount) {
         boolean exist = userService.isUserAccountExist(userAccount);
         return ResultVO.ok(exist);
+    }
+    @PermissionInfo(name = "为用户添加角色", group = PermissionGroup.USER_MANAGE)
+    @SaCheckPermission("producer_user_add_role")
+    @ApiOperation("为用户添加角色")
+    @PutMapping("/producer/user/addRole")
+    public ResultVO<Void> addRoleToUser(@RequestBody List<UserRoleAddDTO> userRoleAddVOList) {
+        userService.addRoleToUser(userRoleAddVOList);
+        return ResultVO.ok();
     }
 }

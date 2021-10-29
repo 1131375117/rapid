@@ -129,6 +129,9 @@ public class RoleServiceImpl implements RoleService {
         if (userDOS.size() > 0) {
             throw BizCode._4207.exception();
         }
+
+        // 执行删除
+        roleMapper.deleteById(roleId);
     }
 
     @Override

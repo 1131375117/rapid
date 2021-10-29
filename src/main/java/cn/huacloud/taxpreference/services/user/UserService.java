@@ -3,6 +3,7 @@ package cn.huacloud.taxpreference.services.user;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.services.user.entity.dos.UserDO;
 import cn.huacloud.taxpreference.services.user.entity.dtos.UserQueryDTO;
+import cn.huacloud.taxpreference.services.user.entity.dtos.UserRoleAddDTO;
 import cn.huacloud.taxpreference.services.user.entity.vos.LoginUserVO;
 import cn.huacloud.taxpreference.services.user.entity.vos.ProducerUserVO;
 import cn.huacloud.taxpreference.services.user.entity.vos.UserListVO;
@@ -88,4 +89,10 @@ public interface UserService {
      * @return
      */
     boolean isUserAccountExist(String userAccount);
+
+    /**
+     * 批量为用户添加新的角色
+     * @param userRoleAddVOList 用户角色添加视图
+     */
+    void addRoleToUser(List<UserRoleAddDTO> userRoleAddVOList);
 }
