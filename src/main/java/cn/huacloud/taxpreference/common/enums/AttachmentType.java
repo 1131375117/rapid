@@ -8,16 +8,23 @@ import com.baomidou.mybatisplus.annotation.IEnum;
  */
 public enum AttachmentType implements IEnum<String> {
 
-    POLICIES("政策法规");
+    POLICIES("政策法规", "policies");
 
     public final String name;
 
-    AttachmentType(String name) {
+    private final String pathPrefix;
+
+    AttachmentType(String name, String pathPrefix) {
         this.name = name;
+        this.pathPrefix = pathPrefix;
     }
 
     @Override
     public String getValue() {
         return this.name();
+    }
+
+    public String getPath(String md5, String attachmentName, String extension) {
+        return pathPrefix + "/" + md5 + "_" + attachmentName + "." + extension;
     }
 }

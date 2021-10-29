@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * @author wangkh
@@ -34,6 +35,10 @@ public class AttachmentDO {
      */
     private String attachmentName;
     /**
+     * 文件扩展名
+     */
+    private String extension;
+    /**
      * 附件路径
      */
     private String path;
@@ -44,5 +49,5 @@ public class AttachmentDO {
     /**
      * 创建时间
      */
-    private LocalDate createTime;
+    private LocalDateTime createTime;
 }

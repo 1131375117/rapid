@@ -36,7 +36,7 @@ public interface UserMapper extends BaseMapper<UserDO> {
     default List<UserDO> getUserDOByRoleCode(String roleCode) {
         LambdaQueryWrapper<UserDO> queryWrapper = Wrappers.lambdaQuery(UserDO.class)
                 .eq(UserDO::getDeleted, false)
-                .apply("FIND_IN_SET ('" + roleCode + "', roleCodes)");
+                .apply("FIND_IN_SET ('" + roleCode + "', role_Codes)");
         return selectList(queryWrapper);
     }
 }
