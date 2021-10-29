@@ -115,6 +115,7 @@ public class TaxPreferenceVO {
     @ApiModelProperty("标签管理")
     private String labels;
 
+
     /**
      * 政策法规信息
      */
@@ -126,6 +127,5 @@ public class TaxPreferenceVO {
      */
     @ApiModelProperty("申报信息")
     private List<SubmitConditionVO> submitConditionVOList;
-
 
 }

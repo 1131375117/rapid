@@ -16,6 +16,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +33,7 @@ import java.util.stream.Collectors;
  *
  * @author wuxin
  */
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class PoliciesExplainServiceImpl implements PoliciesExplainService {
@@ -99,6 +101,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
      */
     @Override
     public void insertPoliciesExplain(PoliciesExplainDTO policiesExplainDTO, Long userId) {
+        log.info("新增政策解读dto={}",policiesExplainDTO);
         PoliciesExplainDO policiesExplainDO = new PoliciesExplainDO();
         //转换
         BeanUtils.copyProperties(policiesExplainDTO, policiesExplainDO);
@@ -109,6 +112,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
         policiesExplainDO.setCreateTime(LocalDateTime.now());
         policiesExplainDO.setUpdateTime(LocalDateTime.now());
         policiesExplainDO.setDeleted(false);
+        log.info("新增政策解读对象={}",policiesExplainDO);
         policiesExplainMapper.insert(policiesExplainDO);
     }
 

@@ -13,6 +13,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
  *
  * @author wuxin
  */
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuestionService {
@@ -90,8 +92,10 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
      * @param frequentlyAskedQuestionDTO
      * @param id
      */
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void insertFrequentlyAskedQuestion(FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO, Long id) {
+        log.info("新增热点问答dto={}",frequentlyAskedQuestionDTO);
         FrequentlyAskedQuestionDO frequentlyAskedQuestionDO = new FrequentlyAskedQuestionDO();
         BeanUtils.copyProperties(frequentlyAskedQuestionDTO, frequentlyAskedQuestionDO);
         frequentlyAskedQuestionDO.setInputUserId(id);
@@ -99,6 +103,7 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
         frequentlyAskedQuestionDO.setCreateTime(LocalDateTime.now());
         frequentlyAskedQuestionDO.setUpdateTime(LocalDateTime.now());
         frequentlyAskedQuestionDO.setDeleted(0);
+        log.info("新增热点问答对象={}",frequentlyAskedQuestionDO);
         frequentlyAskedQuestionMapper.insert(frequentlyAskedQuestionDO);
     }
 

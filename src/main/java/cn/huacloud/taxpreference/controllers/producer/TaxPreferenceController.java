@@ -8,6 +8,7 @@ import cn.huacloud.taxpreference.common.enums.PermissionGroup;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.common.utils.UserUtil;
 import cn.huacloud.taxpreference.services.producer.TaxPreferenceService;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryAbolishDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryTaxPreferencesDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.TaxPreferenceDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.QueryTaxPreferencesVO;
@@ -19,6 +20,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotEmpty;
+import java.util.List;
 
 /**
  * 优惠政策接口
@@ -94,6 +96,24 @@ public class TaxPreferenceController {
     @PutMapping("reTaxPreference/{id}")
     public ResultVO<Void> taxPreference(@Validated @NotEmpty(message = "id不能为空") @PathVariable Long id) {
         return taxPreferenceService.reTaxPreference(id);
+    }
+
+    @PermissionInfo(name = "修改税收优惠状态", group = PermissionGroup.TAX_PREFERENCE)
+    @SaCheckPermission("producer_taxPreference_updateAbolishStatus")
+    @ApiOperation("修改税收优惠状态")
+    @PutMapping("/updateStatus")
+    public ResultVO<Void> updateStatus(@RequestBody QueryAbolishDTO queryAbolishDTO) {
+        taxPreferenceService.updateStatus(queryAbolishDTO);
+        return ResultVO.ok();
+    }
+
+    @PermissionInfo(name = "查询税收优惠废止信息", group = PermissionGroup.TAX_PREFERENCE)
+    @SaCheckPermission("producer_taxPreference_getAbolishDetail")
+    @ApiOperation("查询税收优惠废止信息")
+    @PostMapping("/taxPreferenceAbolish/query")
+    public ResultVO<List<TaxPreferenceVO>> getTaxPreferenceAbolish(@RequestParam Long policiesId) {
+        List<TaxPreferenceVO> taxPreferenceVO = taxPreferenceService.getTaxPreferenceAbolish(policiesId);
+        return ResultVO.ok(taxPreferenceVO);
     }
 
 }
