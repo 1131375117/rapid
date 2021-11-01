@@ -25,7 +25,7 @@ public class TaxPreferenceDTO {
     @Min(value = 1, message = "id必须为数字", groups = ValidationGroup.Update.class)
     private Long id;
 
-    @ApiModelProperty("创建人用户")
+    @ApiModelProperty("创建人用户,新增不传")
     private Long inputUserId;
 
     @ApiModelProperty("有效性-EFFECTIVE有效,INVALID无效")
@@ -109,7 +109,6 @@ public class TaxPreferenceDTO {
      * 标签管理
      */
     @ApiModelProperty("标签管理,多个按照逗号隔开")
-    @NotEmpty(message = "标签管理",groups = {ValidationGroup.Update.class,ValidationGroup.Create.class})
     private String labels;
 
 
