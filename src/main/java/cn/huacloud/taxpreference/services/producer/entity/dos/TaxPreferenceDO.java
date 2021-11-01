@@ -25,7 +25,7 @@ public class TaxPreferenceDO {
     /**
      * 收入税种种类名称
      */
-    private String taxCategoriesName="收入税种种类名称";
+    private String taxCategoriesName;
 
     /**
      * 收入税种种类码值
@@ -35,7 +35,7 @@ public class TaxPreferenceDO {
     /**
      * 纳税人登记注册类型名称
      */
-    private String taxpayerRegisterTypeName="纳税人登记注册类型名称";
+    private String taxpayerRegisterTypeName;
 
     /**
      * 纳税人登记注册类型码值
@@ -45,7 +45,7 @@ public class TaxPreferenceDO {
     /**
      * 纳税人类型名称
      */
-    private String taxpayerTypeName="taxpayerTypeName";
+    private String taxpayerTypeName;
 
     /**
      * 纳税人类型码值
@@ -55,7 +55,7 @@ public class TaxPreferenceDO {
     /**
      * 适用行业名称
      */
-    private String industryNames="适用行业名称";
+    private String industryNames;
 
     /**
      * 适用行业码值
