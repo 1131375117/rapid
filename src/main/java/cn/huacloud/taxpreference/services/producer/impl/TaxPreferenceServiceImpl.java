@@ -36,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @description: 优惠政策服务实现类
@@ -457,7 +458,16 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
      */
     @Override
     public List<TaxPreferenceAbolishVO> getTaxPreferenceAbolish(Long policiesId) {
-        log.info("policiesId={}", policiesId);
+
+        List<TaxPreferenceDO> taxPreferenceDOS=taxPreferenceMapper.selectByIdList(policiesId);
+        ArrayList<TaxPreferenceAbolishVO> TaxPreferenceAbolishVOList = new ArrayList<>();
+        for (TaxPreferenceDO taxPreferenceDO : taxPreferenceDOS) {
+            TaxPreferenceAbolishVO taxPreferenceAbolishVO = new TaxPreferenceAbolishVO();
+            BeanUtils.copyProperties(taxPreferenceDO,taxPreferenceAbolishVO);
+            TaxPreferenceAbolishVOList.add(taxPreferenceAbolishVO);
+        }
+        return TaxPreferenceAbolishVOList;
+        /*log.info("policiesId={}", policiesId);
         LambdaQueryWrapper<TaxPreferencePoliciesDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         //根据政策法规id查询关联表信息
         lambdaQueryWrapper.eq(!org.springframework.util.StringUtils.isEmpty(policiesId), TaxPreferencePoliciesDO::getPoliciesId, policiesId);
@@ -480,7 +490,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
             BeanUtils.copyProperties(taxPreferenceDO, taxPreferenceAbolishVO);
             TaxPreferenceVOList.add(taxPreferenceAbolishVO);
         }
-        log.info("TaxPreferenceVOList={}", TaxPreferenceVOList);
-        return TaxPreferenceVOList;
+        log.info("TaxPreferenceVOList={}", TaxPreferenceVOList);*/
+
     }
 }

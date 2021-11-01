@@ -15,4 +15,7 @@ public class TaxPreferenceAbolishVO extends TaxPreferenceVO{
     @ApiModelProperty("税收优惠id")
     private Long id;
 
+    @ApiModelProperty("税收优惠的名称")
+    private String tax_categories_name;
+
 }

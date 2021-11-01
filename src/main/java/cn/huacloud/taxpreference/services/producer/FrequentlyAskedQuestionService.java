@@ -19,16 +19,16 @@ public interface FrequentlyAskedQuestionService {
      * 新增热点问答
      *
      * @param frequentlyAskedQuestionDTOS
-     * @param id
+     * @param userId
      */
-    void insertFrequentlyAskedQuestion(List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOS, Long id);
+    void insertFrequentlyAskedQuestion(List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOS, Long userId);
 
     /**
      * 修改热点问答
      *
-     * @param frequentlyAskedQuestionDTO
+     * @param frequentlyAskedQuestionDTOS
      */
-    void updateFrequentlyAskedQuestion(FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO);
+    void updateFrequentlyAskedQuestion(List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOS);
 
     /**
      * 热点问答列表查询
@@ -37,4 +37,10 @@ public interface FrequentlyAskedQuestionService {
      * @return
      */
     PageVO<PoliciesExplainDetailVO> getFrequentlyAskedQuestionList(QueryPoliciesExplainDTO queryPoliciesExplainDTO);
+
+    /**
+     * 删除热点问答
+     * @param id
+     */
+    void deleteFrequentlyAskedQuestion(Long id);
 }

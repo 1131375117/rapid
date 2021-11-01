@@ -9,6 +9,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @description: 税收优惠
  * @author: fuhua
@@ -38,4 +40,12 @@ public interface TaxPreferenceMapper  extends BaseMapper<TaxPreferenceDO> {
      * @param id
      */
     void updateDeletedById(Long id);
+
+    /**
+     * 查询税收优惠的标题
+     * @param policiesId
+     * @return
+     */
+    List<TaxPreferenceDO> selectByIdList(Long policiesId);
+
 }
