@@ -67,15 +67,9 @@ public class PoliciesServiceImpl implements PoliciesService {
         //获取排序字段
         String sort = getSort(queryPoliciesDTO);
         IPage<PoliciesVO> policiesDoPage = policiesMapper.queryPoliciesVOList(page, queryPoliciesDTO, sort);
-        //数据映射
-        List<PoliciesVO> records = policiesDoPage.getRecords().stream().map(policiesDO -> {
-            PoliciesVO policiesVO = new PoliciesVO();
-            //属性拷贝
-            BeanUtils.copyProperties(policiesDO, policiesVO);
-            return policiesVO;
-        }).collect(Collectors.toList());
+        log.info("政策法规列表查询对象={}",policiesDoPage);
         //返回结果
-        return PageVO.createPageVO(policiesDoPage, records);
+        return PageVO.createPageVO(policiesDoPage, policiesDoPage.getRecords());
     }
 
     /**
@@ -138,12 +132,11 @@ public class PoliciesServiceImpl implements PoliciesService {
         List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOList = policiesCombinationDTO.getFrequentlyAskedQuestionDTOList();
         for (FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO : frequentlyAskedQuestionDTOList) {
             Long policiesId = policiesDO.getId();
-            frequentlyAskedQuestionDTO.setPoliciesIds(policiesId+"");
+            frequentlyAskedQuestionDTO.setPoliciesIds(String.valueOf(policiesId));
         }
         frequentlyAskedQuestionService.insertFrequentlyAskedQuestion(frequentlyAskedQuestionDTOList, userId);
 
     }
-
     /**
      * 拼接转换
      */

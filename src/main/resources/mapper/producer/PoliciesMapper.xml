@@ -3,6 +3,7 @@
 <mapper namespace="cn.huacloud.taxpreference.services.producer.mapper.PoliciesMapper">
     <select id="queryPoliciesVOList" resultType="cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesVO">
     SELECT
+    tp.id AS id,
 	tp.title AS title,
 	tp.doc_code AS docCode,
 	tp.area_name AS areaName,
