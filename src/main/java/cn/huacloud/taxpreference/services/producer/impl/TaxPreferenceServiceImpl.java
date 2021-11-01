@@ -6,6 +6,7 @@ import cn.huacloud.taxpreference.common.enums.taxpreference.SortType;
 import cn.huacloud.taxpreference.common.enums.taxpreference.TaxPreferenceStatus;
 import cn.huacloud.taxpreference.common.exception.TaxPreferenceException;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
+import cn.huacloud.taxpreference.services.common.SysCodeService;
 import cn.huacloud.taxpreference.services.producer.ProcessService;
 import cn.huacloud.taxpreference.services.producer.TaxPreferenceService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.*;
@@ -49,6 +50,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     private final ProcessServiceMapper processServiceMapper;
     private final ProcessService processService;
     private final PoliciesMapper policiesMapper;
+    private final SysCodeService sysCodeService;
     static final String TAX_PREFERENCE_ID = "tax_preference_id";
 
 
@@ -109,7 +111,6 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
             queryTaxPreferencesVO.setProcessStatus(processStatus);
         });
         PageVO<QueryTaxPreferencesVO> pageVO = PageVO.createPageVO(iPage, iPage.getRecords());
-        log.info("税收优惠查询结果:pageVO:{}", pageVO);
         return ResultVO.ok(pageVO);
     }
 
@@ -365,6 +366,12 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         taxPreferenceDO.setUpdateTime(LocalDateTime.now());
         taxPreferenceDO.setValidity(taxPreferenceDTO.getValidity().getValue());
         taxPreferenceDO.setTaxPreferenceStatus(TaxPreferenceStatus.UNRELEASED.getValue());
+        //收入税种种类名称
+        taxPreferenceDO.setTaxCategoriesName(sysCodeService.getCodeNameByCodeValue(taxPreferenceDTO.getTaxCategoriesCode()));
+        //taxpayer_register_type_name-纳税人登记注册类型名称
+        taxPreferenceDO.setTaxpayerRegisterTypeName(sysCodeService.getCodeNameByCodeValue(taxPreferenceDTO.getTaxpayerRegisterTypeCode()));
+        //纳税人类型名称-taxpayer_type_name
+        taxPreferenceDO.setTaxpayerTypeName(sysCodeService.getCodeNameByCodeValue(taxPreferenceDTO.getTaxpayerTypeCode()));
         //行业code
         taxPreferenceDO.setIndustryCodes(StringUtils.join(taxPreferenceDTO.getIndustryCodes(), ","));
         //适用企业类型
@@ -388,8 +395,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     private String convert2String(List<String> stringList) {
         Set<String> keySet = new HashSet<>();
         stringList.forEach(industryCode -> {
-            //todo 通过code查询名称
-            keySet.add("a");
+            keySet.add(sysCodeService.getCodeNameByCodeValue(industryCode));
         });
         log.info("keySet={}", keySet);
         return StringUtils.join(keySet, ",");
