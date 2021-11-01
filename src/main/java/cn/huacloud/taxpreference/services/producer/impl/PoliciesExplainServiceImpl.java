@@ -56,7 +56,6 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
         lambdaQueryWrapper.like(!StringUtils.isEmpty(queryPoliciesExplainDTO.getTitle()),
                 PoliciesExplainDO::getTitle,
                 queryPoliciesExplainDTO.getTitle());
-        //模糊查询--政策法规标题
         //模糊查询--政策解读来源
         lambdaQueryWrapper.like(!StringUtils.isEmpty(queryPoliciesExplainDTO.getDocSource())
                 , PoliciesExplainDO::getDocSource,

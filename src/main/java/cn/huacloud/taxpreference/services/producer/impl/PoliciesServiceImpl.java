@@ -20,6 +20,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -75,7 +76,6 @@ public class PoliciesServiceImpl implements PoliciesService {
         }).collect(Collectors.toList());
         //返回结果
         return PageVO.createPageVO(policiesDoPage, records);
-
     }
 
     /**
@@ -83,7 +83,7 @@ public class PoliciesServiceImpl implements PoliciesService {
      */
     private String getSort(QueryPoliciesDTO queryPoliciesDTO) {
         String sort = PoliciesSortType.RELEASE_DATE.getValue();
-        if (queryPoliciesDTO.getPoliciesSortType().equals(PoliciesSortType.UPDATE_TIME)) {
+        if (PoliciesSortType.UPDATE_TIME.equals(queryPoliciesDTO.getPoliciesSortType())) {
             sort = SortType.UPDATE_TIME.name();
         }
         log.info("排序字段sort:{}", sort);
@@ -136,6 +136,10 @@ public class PoliciesServiceImpl implements PoliciesService {
         policiesExplainService.insertPoliciesExplain(policiesExplainDTO, userId);
         //新增热点问答--todo
         List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOList = policiesCombinationDTO.getFrequentlyAskedQuestionDTOList();
+        for (FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO : frequentlyAskedQuestionDTOList) {
+            Long policiesId = policiesDO.getId();
+            frequentlyAskedQuestionDTO.setPoliciesIds(policiesId+"");
+        }
         frequentlyAskedQuestionService.insertFrequentlyAskedQuestion(frequentlyAskedQuestionDTOList, userId);
 
     }
