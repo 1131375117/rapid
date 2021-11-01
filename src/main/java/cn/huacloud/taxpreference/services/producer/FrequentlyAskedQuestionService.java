@@ -5,6 +5,8 @@ import cn.huacloud.taxpreference.services.producer.entity.dtos.FrequentlyAskedQu
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesExplainDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainDetailVO;
 
+import java.util.List;
+
 /**
  * 热点问答服务
  *
@@ -16,17 +18,17 @@ public interface FrequentlyAskedQuestionService {
     /**
      * 新增热点问答
      *
-     * @param frequentlyAskedQuestionDTO
-     * @param id
+     * @param frequentlyAskedQuestionDTOS
+     * @param userId
      */
-    void insertFrequentlyAskedQuestion(FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO, Long id);
+    void insertFrequentlyAskedQuestion(List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOS, Long userId);
 
     /**
      * 修改热点问答
      *
-     * @param frequentlyAskedQuestionDTO
+     * @param frequentlyAskedQuestionDTOS
      */
-    void updateFrequentlyAskedQuestion(FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO);
+    void updateFrequentlyAskedQuestion(List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOS);
 
     /**
      * 热点问答列表查询
@@ -35,4 +37,10 @@ public interface FrequentlyAskedQuestionService {
      * @return
      */
     PageVO<PoliciesExplainDetailVO> getFrequentlyAskedQuestionList(QueryPoliciesExplainDTO queryPoliciesExplainDTO);
+
+    /**
+     * 删除热点问答
+     * @param id
+     */
+    void deleteFrequentlyAskedQuestion(Long id);
 }

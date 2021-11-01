@@ -11,11 +11,13 @@ import com.baomidou.mybatisplus.annotation.IEnum;
 public enum ValidityEnum implements IEnum<String> {
 
     /**
-     * 全文有效
+     * FULL_TEXT_VALID 全文有效
      * FULL_TEXT_REPEAL 全文废止
      * PARTIAL_REPEAL 部分废止
      */
 
+
+            INVALID("失效"),
     FULL_TEXT_VALID("全文有效"),
     FULL_TEXT_REPEAL("全文废止"),
     PARTIAL_VALID("部分有效");

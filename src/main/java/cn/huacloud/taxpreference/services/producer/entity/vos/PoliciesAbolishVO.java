@@ -20,5 +20,5 @@ public class PoliciesAbolishVO {
     private String abolishNote;
 
     @ApiModelProperty("税收优惠名称集合")
-    private List<String> nameList;
+    private List<TaxPreferenceAbolishVO> taxPreferenceVOS;
 }

@@ -42,6 +42,12 @@
             <version>${pinyin4j.version}</version>
             <scope>test</scope>
         </dependency>
+        <!--hutool-crypto-->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-crypto</artifactId>
+            <version>${hutool.version}</version>
+        </dependency>
         <!--hutool captcha-->
         <dependency>
             <groupId>cn.hutool</groupId>

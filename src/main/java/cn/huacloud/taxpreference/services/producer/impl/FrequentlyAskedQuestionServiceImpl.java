@@ -13,6 +13,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
  *
  * @author wuxin
  */
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuestionService {
@@ -43,7 +45,7 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
      */
     @Override
     public PageVO<PoliciesExplainDetailVO> getFrequentlyAskedQuestionList(QueryPoliciesExplainDTO queryPoliciesExplainDTO) {
-
+        log.info("热点问答查询列表条件dto={}", queryPoliciesExplainDTO);
         LambdaQueryWrapper<FrequentlyAskedQuestionDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         //模糊查询--政策解读标题
         lambdaQueryWrapper.like(!StringUtils.isEmpty(queryPoliciesExplainDTO.getTitle()),
@@ -72,53 +74,81 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
                     queryPoliciesExplainDTO.getUpdateTime()).orderByDesc(FrequentlyAskedQuestionDO::getUpdateTime);
         }
         //分页
-        IPage<FrequentlyAskedQuestionDO> FrequentlyAskedQuestionDOPage = frequentlyAskedQuestionMapper.selectPage(new Page<FrequentlyAskedQuestionDO>(queryPoliciesExplainDTO.getPageNum(), queryPoliciesExplainDTO.getPageSize()), lambdaQueryWrapper);
+        IPage<FrequentlyAskedQuestionDO> frequentlyAskedQuestionDOPage = frequentlyAskedQuestionMapper.selectPage(new Page<FrequentlyAskedQuestionDO>(queryPoliciesExplainDTO.getPageNum(), queryPoliciesExplainDTO.getPageSize()), lambdaQueryWrapper);
         //数据映射
-        List<PoliciesExplainDetailVO> records = FrequentlyAskedQuestionDOPage.getRecords().stream().map(frequentlyAskedQuestionDO -> {
+        List<PoliciesExplainDetailVO> records = frequentlyAskedQuestionDOPage.getRecords().stream().map(frequentlyAskedQuestionDO -> {
             PoliciesExplainDetailVO policiesExplainDetailVO = new PoliciesExplainDetailVO();
             //属性拷贝
             BeanUtils.copyProperties(frequentlyAskedQuestionDO, policiesExplainDetailVO);
             return policiesExplainDetailVO;
         }).collect(Collectors.toList());
-
-        return PageVO.createPageVO(FrequentlyAskedQuestionDOPage, records);
+        log.info("热点问答查询列表对象={}", frequentlyAskedQuestionDOPage);
+        return PageVO.createPageVO(frequentlyAskedQuestionDOPage, records);
     }
 
     /**
      * 新增热点问答
      *
-     * @param frequentlyAskedQuestionDTO
-     * @param id
+     * @param frequentlyAskedQuestionDTOS
+     * @param userId
      */
+    @Transactional(rollbackFor = Exception.class)
     @Override
-    public void insertFrequentlyAskedQuestion(FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO, Long id) {
-        FrequentlyAskedQuestionDO frequentlyAskedQuestionDO = new FrequentlyAskedQuestionDO();
-        BeanUtils.copyProperties(frequentlyAskedQuestionDTO, frequentlyAskedQuestionDO);
-        frequentlyAskedQuestionDO.setInputUserId(id);
-        frequentlyAskedQuestionDO.setReleaseDate(LocalDate.now());
-        frequentlyAskedQuestionDO.setCreateTime(LocalDateTime.now());
-        frequentlyAskedQuestionDO.setUpdateTime(LocalDateTime.now());
-        frequentlyAskedQuestionDO.setDeleted(0);
-        frequentlyAskedQuestionMapper.insert(frequentlyAskedQuestionDO);
+    public void insertFrequentlyAskedQuestion(List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOS,    Long userId) {
+        log.info("新增热点问答dto={}", frequentlyAskedQuestionDTOS);
+        for (FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO : frequentlyAskedQuestionDTOS) {
+            FrequentlyAskedQuestionDO frequentlyAskedQuestionDO = new FrequentlyAskedQuestionDO();
+            BeanUtils.copyProperties(frequentlyAskedQuestionDTO, frequentlyAskedQuestionDO);
+            frequentlyAskedQuestionDO.setInputUserId(userId);
+            frequentlyAskedQuestionDO.setReleaseDate(LocalDate.now());
+            frequentlyAskedQuestionDO.setCreateTime(LocalDateTime.now());
+            frequentlyAskedQuestionDO.setUpdateTime(LocalDateTime.now());
+            frequentlyAskedQuestionDO.setDeleted(false);
+            log.info("新增热点问答对象={}", frequentlyAskedQuestionDO);
+            frequentlyAskedQuestionMapper.insert(frequentlyAskedQuestionDO);
+        }
     }
 
     /**
      * 修改热点问答
      *
-     * @param frequentlyAskedQuestionDTO
+     * @param frequentlyAskedQuestionDTOS
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void updateFrequentlyAskedQuestion(FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO) {
-        //查询热点问答
-        FrequentlyAskedQuestionDO frequentlyAskedQuestionDO = frequentlyAskedQuestionMapper.selectById(frequentlyAskedQuestionDTO.getId());
+    public void updateFrequentlyAskedQuestion(List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOS) {
+        for (FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO : frequentlyAskedQuestionDTOS) {
+
+
+            //查询热点问答
+            FrequentlyAskedQuestionDO frequentlyAskedQuestionDO = frequentlyAskedQuestionMapper.selectById(frequentlyAskedQuestionDTO.getId());
+            //参数校验
+            if (frequentlyAskedQuestionDO == null) {
+                throw BizCode._4100.exception();
+            }
+            //属性拷贝
+            BeanUtils.copyProperties(frequentlyAskedQuestionDTO, frequentlyAskedQuestionDO);
+            log.info("修改热点问答对象={}", frequentlyAskedQuestionDO);
+            //修改热点问答
+            frequentlyAskedQuestionMapper.updateById(frequentlyAskedQuestionDO);
+        }
+    }
+
+    /**
+     * 删除热点问答
+     *
+     * @param id
+     */
+    @Override
+    public void deleteFrequentlyAskedQuestion(Long id) {
+        FrequentlyAskedQuestionDO frequentlyAskedQuestionDO = frequentlyAskedQuestionMapper.selectById(id);
         //参数校验
-        if (frequentlyAskedQuestionDO == null) {
+        if(frequentlyAskedQuestionDO==null){
             throw BizCode._4100.exception();
         }
-        //属性拷贝
-        BeanUtils.copyProperties(frequentlyAskedQuestionDTO, frequentlyAskedQuestionDO);
-        //修改热点问答
+        frequentlyAskedQuestionDO.setDeleted(true);
+        log.info("删除问答查询列表对象={}", frequentlyAskedQuestionDO);
         frequentlyAskedQuestionMapper.updateById(frequentlyAskedQuestionDO);
+
     }
 }

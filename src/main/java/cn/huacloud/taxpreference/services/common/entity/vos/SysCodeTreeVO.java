@@ -13,7 +13,7 @@ import java.util.List;
  * 系统码值视图
  * @author wangkh
  */
-@ApiModel("系统码值视图")
+@ApiModel("系统码值树形视图")
 @Data
 public class SysCodeTreeVO implements TreeVO<SysCodeTreeVO> {
     /**

@@ -70,5 +70,5 @@ public class FrequentlyAskedQuestionDO {
     /**
      * 逻辑删除
      */
-    private Integer deleted;
+    private Boolean deleted;
 }

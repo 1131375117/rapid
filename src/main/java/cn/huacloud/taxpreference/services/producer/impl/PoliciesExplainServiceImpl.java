@@ -16,6 +16,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +33,7 @@ import java.util.stream.Collectors;
  *
  * @author wuxin
  */
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class PoliciesExplainServiceImpl implements PoliciesExplainService {
@@ -48,7 +50,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
      */
     @Override
     public PageVO<PoliciesExplainDetailVO> getPoliciesExplainList(QueryPoliciesExplainDTO queryPoliciesExplainDTO) {
-
+        log.info("政策解读列表查询条件dto",queryPoliciesExplainDTO);
         LambdaQueryWrapper<PoliciesExplainDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         //模糊查询--政策解读标题
         lambdaQueryWrapper.like(!StringUtils.isEmpty(queryPoliciesExplainDTO.getTitle()),
@@ -86,7 +88,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
             BeanUtils.copyProperties(policiesExplainDO, policiesExplainDetailVO);
             return policiesExplainDetailVO;
         }).collect(Collectors.toList());
-
+        log.info("政策解读列表查询对象",policiesExplainDOPage);
         return PageVO.createPageVO(policiesExplainDOPage, records);
     }
 
@@ -99,6 +101,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
      */
     @Override
     public void insertPoliciesExplain(PoliciesExplainDTO policiesExplainDTO, Long userId) {
+        log.info("新增政策解读dto={}",policiesExplainDTO);
         PoliciesExplainDO policiesExplainDO = new PoliciesExplainDO();
         //转换
         BeanUtils.copyProperties(policiesExplainDTO, policiesExplainDO);
@@ -109,6 +112,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
         policiesExplainDO.setCreateTime(LocalDateTime.now());
         policiesExplainDO.setUpdateTime(LocalDateTime.now());
         policiesExplainDO.setDeleted(false);
+        log.info("新增政策解读对象={}",policiesExplainDO);
         policiesExplainMapper.insert(policiesExplainDO);
     }
 
@@ -128,6 +132,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
         }
         //属性拷贝
         BeanUtils.copyProperties(policiesExplainDTO, policiesExplainDO);
+        log.info("修改政策解读对象={}",policiesExplainDO);
         //修改政策解读
         policiesExplainMapper.updateById(policiesExplainDO);
     }
@@ -145,6 +150,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
         PoliciesExplainDetailVO policiesExplainDetailVO = new PoliciesExplainDetailVO();
         //属性拷贝
         BeanUtils.copyProperties(policiesExplainDO, policiesExplainDetailVO);
+        log.info("政策解读对象详情={}",policiesExplainDO);
         //返回结果
         return policiesExplainDetailVO;
     }
@@ -159,6 +165,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
     public void deletePoliciesById(Long id) {
         PoliciesExplainDO policiesExplainDO = policiesExplainMapper.selectById(id);
         policiesExplainDO.setDeleted(true);
+        log.info("删除政策解读对象={}",policiesExplainDO);
         policiesExplainMapper.updateById(policiesExplainDO);
 
     }
@@ -176,7 +183,6 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
         lambdaQueryWrapper.like(PoliciesDO::getTitle, keywordPageQueryDTO.getKeyword());
         List<PoliciesDO> policiesDOS = policiesMapper.selectList(lambdaQueryWrapper);
         //遍历集合
-
         PoliciesTitleVO policiesTitleVO = null;
         List<PoliciesTitleVO> policiesTitleVOList = new ArrayList<>();
         for (PoliciesDO policiesDO : policiesDOS) {
@@ -186,6 +192,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
             policiesTitleVOList.add(policiesTitleVO);
         }
         //返回结果
+        log.info("模糊查询对象={}",policiesDOS);
         return policiesTitleVOList;
 
     }

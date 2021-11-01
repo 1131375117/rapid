@@ -86,4 +86,12 @@
 
     </select>
 
+    <select id="selectByIdList" resultType="cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferenceDO">
+        select tp.id,tp.tax_categories_name
+        from t_ tax_preference_ policies tpp
+        left join
+        t_ tax_preference tp tpp.tax_preference_id on tp.id
+        where id=#{policiesId}
+    </select>
+
 </mapper>

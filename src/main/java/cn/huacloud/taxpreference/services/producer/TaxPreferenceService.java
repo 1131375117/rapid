@@ -2,10 +2,15 @@ package cn.huacloud.taxpreference.services.producer;
 
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryAbolishDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryTaxPreferencesDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.TaxPreferenceDTO;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.TaxPreferenceIdsDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.QueryTaxPreferencesVO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceAbolishVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceVO;
+
+import java.util.List;
 
 
 /**
@@ -62,4 +67,20 @@ public interface TaxPreferenceService {
      * @return Void
      */
     ResultVO<Void> reTaxPreference(Long id);
+
+
+    /**
+     * 修改税收优惠状态
+     * @param queryAbolishDTO
+     * @return
+     */
+    void updateStatus(QueryAbolishDTO queryAbolishDTO);
+
+    /**
+     * 查询税收优惠废止的信息
+     * @param policiesId
+     * @return
+     */
+    List<TaxPreferenceAbolishVO> getTaxPreferenceAbolish(Long policiesId);
+
 }

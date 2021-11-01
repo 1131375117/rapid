@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IEnum;
 
 /**
  * 权限分组枚举
+ *
  * @author wangkh
  */
 public enum PermissionGroup implements IEnum<String> {
@@ -11,6 +12,8 @@ public enum PermissionGroup implements IEnum<String> {
     POLICIES("政策法规"),
     // 政策解读
     POLICIES_EXPLAIN("政策解读"),
+    // 热点问答
+    FREQUENTLY_ASKED_QUESTION("热点问答"),
     // 税收优惠事项
     TAX_PREFERENCE("税收优惠事项"),
     // 内容审核列表

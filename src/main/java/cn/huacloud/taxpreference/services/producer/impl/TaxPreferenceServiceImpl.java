@@ -14,10 +14,14 @@ import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryTaxPreferenc
 import cn.huacloud.taxpreference.services.producer.entity.dtos.SubmitConditionDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.TaxPreferenceDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.TaxPreferencePoliciesDTO;
-import cn.huacloud.taxpreference.services.producer.entity.vos.QueryTaxPreferencesVO;
-import cn.huacloud.taxpreference.services.producer.entity.vos.SubmitConditionVO;
-import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferencePoliciesVO;
-import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceVO;
+import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
+import cn.huacloud.taxpreference.services.producer.entity.dos.SubmitConditionDO;
+import cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferenceDO;
+import cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferencePoliciesDO;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.*;
+import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesStatusEnum;
+import cn.huacloud.taxpreference.services.producer.entity.enums.ValidityEnum;
+import cn.huacloud.taxpreference.services.producer.entity.vos.*;
 import cn.huacloud.taxpreference.services.producer.mapper.*;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -33,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @description: 优惠政策服务实现类
@@ -423,4 +428,75 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         return false;
     }
 
+    /**
+     * 修改税收优惠状态
+     *
+     * @param queryAbolishDTO
+     * @return
+     */
+    @Override
+    public void updateStatus(QueryAbolishDTO queryAbolishDTO) {
+        //根据税收优惠的id查询出税收优惠的列表
+        TaxPreferenceDO taxPreferenceDO = null;
+        if (queryAbolishDTO.getPoliciesStatus().equals(PoliciesStatusEnum.FULL_TEXT_REPEAL.name())) {
+            List<TaxPreferenceAbolishVO> taxPreferenceAbolish = getTaxPreferenceAbolish(queryAbolishDTO.getId());
+            for (TaxPreferenceAbolishVO preferenceAbolish : taxPreferenceAbolish) {
+                taxPreferenceDO = new TaxPreferenceDO();
+                BeanUtils.copyProperties(preferenceAbolish, taxPreferenceDO);
+                taxPreferenceDO.setValidity(ValidityEnum.INVALID.getValue());
+            }
+        } else if (queryAbolishDTO.getPoliciesStatus().equals(PoliciesStatusEnum.PARTIAL_REPEAL.name())) {
+            List<Long> ids = queryAbolishDTO.getIds();
+            for (Long id : ids) {
+                taxPreferenceDO = taxPreferenceMapper.selectById(id);
+                taxPreferenceDO.setValidity(ValidityEnum.INVALID.getValue());
+                taxPreferenceMapper.updateById(taxPreferenceDO);
+            }
+        }
+        taxPreferenceMapper.updateById(taxPreferenceDO);
+    }
+
+    /**
+     * 查询税收优惠废止的信息
+     *
+     * @param policiesId
+     * @return
+     */
+    @Override
+    public List<TaxPreferenceAbolishVO> getTaxPreferenceAbolish(Long policiesId) {
+
+        List<TaxPreferenceDO> taxPreferenceDOS=taxPreferenceMapper.selectByIdList(policiesId);
+        ArrayList<TaxPreferenceAbolishVO> TaxPreferenceAbolishVOList = new ArrayList<>();
+        for (TaxPreferenceDO taxPreferenceDO : taxPreferenceDOS) {
+            TaxPreferenceAbolishVO taxPreferenceAbolishVO = new TaxPreferenceAbolishVO();
+            BeanUtils.copyProperties(taxPreferenceDO,taxPreferenceAbolishVO);
+            TaxPreferenceAbolishVOList.add(taxPreferenceAbolishVO);
+        }
+        return TaxPreferenceAbolishVOList;
+        /*log.info("policiesId={}", policiesId);
+        LambdaQueryWrapper<TaxPreferencePoliciesDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        //根据政策法规id查询关联表信息
+        lambdaQueryWrapper.eq(!org.springframework.util.StringUtils.isEmpty(policiesId), TaxPreferencePoliciesDO::getPoliciesId, policiesId);
+        List<TaxPreferencePoliciesDO> taxPreferencePoliciesDOS = taxPreferencePoliciesMapper.selectList(lambdaQueryWrapper);
+        log.info("taxPreferencePoliciesDOS={}", taxPreferencePoliciesDOS);
+        //遍历关联表获取税收优惠的id
+        Long taxPreferenceId = null;
+        for (TaxPreferencePoliciesDO taxPreferencePoliciesDO : taxPreferencePoliciesDOS) {
+            taxPreferenceId = taxPreferencePoliciesDO.getTaxPreferenceId();
+            log.info("taxPreferenceId={}---", taxPreferenceId);
+        }
+        LambdaQueryWrapper<TaxPreferenceDO> taxPreferenceLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        taxPreferenceLambdaQueryWrapper.eq(!org.springframework.util.StringUtils.isEmpty(policiesId), TaxPreferenceDO::getId, taxPreferenceId);
+        List<TaxPreferenceDO> taxPreferenceDOS = taxPreferenceMapper.selectList(taxPreferenceLambdaQueryWrapper);
+        log.info("taxPreferenceDOS={}", taxPreferenceDOS);
+        List<TaxPreferenceAbolishVO> TaxPreferenceVOList = new ArrayList<>();
+        for (TaxPreferenceDO taxPreferenceDO : taxPreferenceDOS) {
+            TaxPreferenceAbolishVO taxPreferenceAbolishVO = new TaxPreferenceAbolishVO();
+            taxPreferenceDO.setValidity(ValidityEnum.INVALID.getValue());
+            BeanUtils.copyProperties(taxPreferenceDO, taxPreferenceAbolishVO);
+            TaxPreferenceVOList.add(taxPreferenceAbolishVO);
+        }
+        log.info("TaxPreferenceVOList={}", TaxPreferenceVOList);*/
+
+    }
 }
