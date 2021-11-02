@@ -57,13 +57,13 @@ FROM
             </foreach>
         </if>
         <if test="queryPoliciesDTO.enterpriseTypeCodes!=null and queryPoliciesDTO.enterpriseTypeCodes.size>0 ">
-            <foreach collection="queryPoliciesDTO.enterpriseTypeCodes" item="enterpriseTypeCode" >
+            <foreach collection="queryPoliciesDTO.enterpriseTypeCodes" item="enterpriseTypeCodes" >
                 and  FIND_IN_SET(#{enterpriseTypeCodes},tp.enterprise_type_codes)
             </foreach>
         </if>
         and tp.deleted=0
     </where>
-    order by #{sort}
+    order by ${sort} DESC
     
 </select>
 
@@ -91,8 +91,7 @@ FROM
            FROM
            t_tax_preference_policies t
            WHERE
-           t.policies_id =
-               #{id}
+           t.policies_id = #{id}
        </select>
 
 </mapper>
