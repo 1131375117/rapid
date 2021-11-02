@@ -19,7 +19,9 @@
                 #{updateTime}, #{deleted})
     </insert>
     <update id="updateDeletedById">
-        update t_tax_preference set deleted=1 where id=#{id}
+        update t_tax_preference
+        set deleted=1
+        where id = #{id}
     </update>
     <select id="queryTaxPreferenceVOList"
             resultType="cn.huacloud.taxpreference.services.producer.entity.vos.QueryTaxPreferencesVO">
@@ -88,14 +90,11 @@
     </select>
 
     <select id="selectByIdList" resultType="cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferenceDO">
-       SELECT
-        tp.id,
-        tp.tax_categories_name
-       FROM
-        t_policies t
-        LEFT JOIN t_tax_preference_policies ttp ON t.id = ttp.policies_id
-        LEFT JOIN t_tax_preference tp ON ttp.tax_preference_id = tp.id
-       WHERE
-        t.id =#{policiesId}
+        SELECT tp.id,
+               tp.tax_categories_name
+        FROM t_policies t
+                 LEFT JOIN t_tax_preference_policies ttp ON t.id = ttp.policies_id
+                 LEFT JOIN t_tax_preference tp ON ttp.tax_preference_id = tp.id
+        WHERE t.id = #{policiesId}
     </select>
 </mapper>
