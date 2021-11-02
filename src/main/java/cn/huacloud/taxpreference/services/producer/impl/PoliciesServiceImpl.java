@@ -10,7 +10,6 @@ import cn.huacloud.taxpreference.services.producer.PoliciesService;
 import cn.huacloud.taxpreference.services.producer.TaxPreferenceService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
-import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesExplainDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferencePoliciesDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.*;
 import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesSortType;
@@ -21,7 +20,6 @@ import cn.huacloud.taxpreference.services.producer.mapper.FrequentlyAskedQuestio
 import cn.huacloud.taxpreference.services.producer.mapper.PoliciesMapper;
 import cn.huacloud.taxpreference.services.producer.mapper.TaxPreferencePoliciesMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
@@ -63,9 +61,6 @@ public class PoliciesServiceImpl implements PoliciesService {
     private final TaxPreferencePoliciesMapper taxPreferencePoliciesMapper;
 
 
-
-
-
     /**
      * 政策列表查询
      *
@@ -78,6 +73,7 @@ public class PoliciesServiceImpl implements PoliciesService {
         Page<PoliciesVO> page = new Page<>(queryPoliciesDTO.getPageNum(), queryPoliciesDTO.getPageSize());
         //获取排序字段
         String sort = getSort(queryPoliciesDTO);
+        //列表查询
         IPage<PoliciesVO> policiesDoPage = policiesMapper.queryPoliciesVOList(page, queryPoliciesDTO, sort);
         log.info("政策法规列表查询对象={}", policiesDoPage);
         //返回结果
@@ -106,6 +102,8 @@ public class PoliciesServiceImpl implements PoliciesService {
     @Override
     public void insertPolicies(PoliciesCombinationDTO policiesCombinationDTO, Long userId) {
         log.info("新增政策法规组合dto={}", policiesCombinationDTO);
+        //校验标题和文号是否存在
+        judgeExists(policiesCombinationDTO);
         //新增政策法规
         PoliciesDO policiesDO = new PoliciesDO();
         BeanUtils.copyProperties(policiesCombinationDTO, policiesDO);
@@ -133,6 +131,8 @@ public class PoliciesServiceImpl implements PoliciesService {
         policiesDO.setUpdateTime(LocalDateTime.now());
         //设置删除
         policiesDO.setDeleted(false);
+        policiesDO.setAreaName(sysCodeService.getCodeNameByCodeValue(policiesCombinationDTO.getAreaCode()));
+
         log.info("新增政策法规对象={}", policiesDO);
         policiesMapper.insert(policiesDO);
         //新增政策解读
@@ -147,6 +147,34 @@ public class PoliciesServiceImpl implements PoliciesService {
             frequentlyAskedQuestionDTO.setPoliciesIds(String.valueOf(policiesId));
         }
         frequentlyAskedQuestionService.insertFrequentlyAskedQuestion(frequentlyAskedQuestionDTOList, userId);
+
+    }
+
+    /**
+     * 校验标题和文号是否重复
+     * @param policiesCombinationDTO
+     * @return
+     */
+    private Boolean judgeExists(PoliciesCombinationDTO policiesCombinationDTO) {
+        log.info("judgeExists:policiesCombinationDTO={}", policiesCombinationDTO);
+        //查询标题和文号
+        LambdaQueryWrapper<PoliciesDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(!org.springframework.util.StringUtils.isEmpty(policiesCombinationDTO.getTitle()),
+                PoliciesDO::getTitle, policiesCombinationDTO.getTitle()).or()
+                .eq(!org.springframework.util.StringUtils.isEmpty(policiesCombinationDTO.getDocCode()),
+                        PoliciesDO::getDocCode, policiesCombinationDTO.getDocCode());
+        List<PoliciesDO> policiesDOS = policiesMapper.selectList(lambdaQueryWrapper);
+        //判断是否重复
+        if (policiesDOS.size() >= 1) {
+            throw BizCode._4305.exception();
+        }
+        //判断修改的条件
+//        if (policiesCombinationDTO.getId() != null
+//                && !policiesDOS.get(0).getId().equals(policiesCombinationDTO.getId())) {
+//            throw BizCode._4305.exception();
+//        }
+        return false;
+
 
     }
 
@@ -192,7 +220,8 @@ public class PoliciesServiceImpl implements PoliciesService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void updatePolicies(PoliciesCombinationDTO policiesCombinationDTO) {
-
+        //判断标题和文号是否重复
+        judgeExists(policiesCombinationDTO);
         //修改政策法规
         PoliciesDO policiesDO = policiesMapper.selectById(policiesCombinationDTO.getId());
         //参数校验
@@ -242,47 +271,45 @@ public class PoliciesServiceImpl implements PoliciesService {
         policiesDO.setDeleted(true);
         log.info("删除政策法规对象={}", policiesDO);
         //删除政策解读
-        List<Long> policiesExplainIds=policiesMapper.selectExplainId(policiesDO.getId());
+        List<Long> policiesExplainIds = policiesMapper.selectExplainId(policiesDO.getId());
         for (Long policiesExplainId : policiesExplainIds) {
             policiesExplainService.deletePoliciesById(policiesExplainId);
         }
         //删除热点问答
-        List<FrequentlyAskedQuestionDO>  frequentlyAskedQuestionIds=policiesMapper.selectFrequentlyAskedQuestionId(policiesDO.getId());
-        log.info("热点问答={}",frequentlyAskedQuestionIds);
+        List<FrequentlyAskedQuestionDO> frequentlyAskedQuestionIds = policiesMapper.selectFrequentlyAskedQuestionId(policiesDO.getId());
+        log.info("热点问答={}", frequentlyAskedQuestionIds);
         for (FrequentlyAskedQuestionDO frequentlyAskedQuestionId : frequentlyAskedQuestionIds) {
             ArrayList<String> strings = new ArrayList<>();
             List<String> ids = Arrays.asList(frequentlyAskedQuestionId.getPoliciesIds().split(","));
             strings.addAll(ids);
             strings.remove(String.valueOf(policiesDO.getId()));
             System.out.println(strings);
-            frequentlyAskedQuestionId.setPoliciesIds(StringUtils.join(strings,","));
-                frequentlyAskedQuestionMapper.updateById(frequentlyAskedQuestionId);
+            frequentlyAskedQuestionId.setPoliciesIds(StringUtils.join(strings, ","));
+            frequentlyAskedQuestionMapper.updateById(frequentlyAskedQuestionId);
         }
         //删除税收优惠
-        Long[] taxPreferenceIds=policiesMapper.selectTaxPreferenceId(policiesDO.getId());
-        if(taxPreferenceIds!=null&&taxPreferenceIds.length>0){
-            throw BizCode._4311.exception();
-        }
-
-       /* log.info("taxPreferenceIds={}",taxPreferenceIds);
+        Long[] taxPreferenceIds = policiesMapper.selectTaxPreferenceId(policiesDO.getId());
+        log.info("taxPreferenceIds={}",taxPreferenceIds);
         for (Long taxPreferenceId : taxPreferenceIds) {
-
             LambdaQueryWrapper<TaxPreferencePoliciesDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-            lambdaQueryWrapper.eq(TaxPreferencePoliciesDO::getTaxPreferenceId,taxPreferenceId);
+            lambdaQueryWrapper.eq(TaxPreferencePoliciesDO::getTaxPreferenceId, taxPreferenceId);
             Long count = taxPreferencePoliciesMapper.selectCount(lambdaQueryWrapper);
-            if(count==1){
-                Long[] taxPreferenceIdArr =new Long[]{taxPreferenceId};
-                log.info("税收优惠id={}",taxPreferenceIdArr);
-                taxPreferenceService.deleteTaxPreference(taxPreferenceIdArr);
+//            if(count==1){
+//                Long[] taxPreferenceIdArr =new Long[]{taxPreferenceId};
+//                log.info("税收优惠id={}",taxPreferenceIdArr);
+//                taxPreferenceService.deleteTaxPreference(taxPreferenceIdArr);
+//            }
+            if (count > 1) {
+                LambdaQueryWrapper<TaxPreferencePoliciesDO> queryWrapper = new LambdaQueryWrapper<>();
+                queryWrapper.eq(!org.springframework.util.StringUtils.isEmpty(policiesDO.getId()),
+                        TaxPreferencePoliciesDO::getPoliciesId, policiesDO.getId());
+                taxPreferencePoliciesMapper.delete(queryWrapper);
+                log.info("count:{},taxPreferenceId:{}", count, taxPreferenceId);
             }
-            LambdaQueryWrapper<TaxPreferencePoliciesDO> queryWrapper = new LambdaQueryWrapper<>();
-            queryWrapper.eq(!org.springframework.util.StringUtils.isEmpty(policiesDO.getId()),
-                    TaxPreferencePoliciesDO::getPoliciesId, policiesDO.getId());
-            taxPreferencePoliciesMapper.delete(queryWrapper);
-            log.info("count:{},taxPreferenceId:{}",count,taxPreferenceId);
         }
-*/
-
+        if (taxPreferenceIds != null && taxPreferenceIds.length > 0) {
+            throw BizCode._4306.exception();
+        }
         policiesMapper.updateById(policiesDO);
 
     }
