@@ -1,13 +1,16 @@
 package cn.huacloud.taxpreference.services.producer.impl;
 
+import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.services.producer.FrequentlyAskedQuestionService;
+import cn.huacloud.taxpreference.services.producer.PoliciesExplainService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.FrequentlyAskedQuestionDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesExplainDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainDetailVO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesTitleVO;
 import cn.huacloud.taxpreference.services.producer.mapper.FrequentlyAskedQuestionMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -35,6 +38,8 @@ import java.util.stream.Collectors;
 public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuestionService {
 
     private final FrequentlyAskedQuestionMapper frequentlyAskedQuestionMapper;
+
+    private final PoliciesExplainService policiesExplainService;
 
 
     /**
@@ -94,7 +99,7 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void insertFrequentlyAskedQuestion(List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOS,    Long userId) {
+    public void insertFrequentlyAskedQuestion(List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOS, Long userId) {
         log.info("新增热点问答dto={}", frequentlyAskedQuestionDTOS);
         for (FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO : frequentlyAskedQuestionDTOS) {
             FrequentlyAskedQuestionDO frequentlyAskedQuestionDO = new FrequentlyAskedQuestionDO();
@@ -105,6 +110,9 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
             frequentlyAskedQuestionDO.setUpdateTime(LocalDateTime.now());
             frequentlyAskedQuestionDO.setDeleted(false);
             log.info("新增热点问答对象={}", frequentlyAskedQuestionDO);
+            if(!frequentlyAskedQuestionDTO.getRelatedPolicy()) {
+                frequentlyAskedQuestionDO.setPoliciesIds(null);
+            }
             frequentlyAskedQuestionMapper.insert(frequentlyAskedQuestionDO);
         }
     }
@@ -151,4 +159,7 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
         frequentlyAskedQuestionMapper.updateById(frequentlyAskedQuestionDO);
 
     }
+
+
+
 }

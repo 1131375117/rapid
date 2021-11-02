@@ -11,11 +11,11 @@ import java.util.List;
  * @create: 2021-10-21 09:32
  **/
 @Data
-public class TaxPreferenceAbolishVO extends TaxPreferenceVO{
+public class TaxPreferenceAbolishVO{
     @ApiModelProperty("税收优惠id")
     private Long id;
 
     @ApiModelProperty("税收优惠的名称")
-    private String tax_categories_name;
+    private String taxCategoriesName;
 
 }

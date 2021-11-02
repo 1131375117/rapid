@@ -56,7 +56,6 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
         lambdaQueryWrapper.like(!StringUtils.isEmpty(queryPoliciesExplainDTO.getTitle()),
                 PoliciesExplainDO::getTitle,
                 queryPoliciesExplainDTO.getTitle());
-        //模糊查询--政策法规标题
         //模糊查询--政策解读来源
         lambdaQueryWrapper.like(!StringUtils.isEmpty(queryPoliciesExplainDTO.getDocSource())
                 , PoliciesExplainDO::getDocSource,
@@ -180,7 +179,12 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
     public List<PoliciesTitleVO> fuzzyQuery(KeywordPageQueryDTO keywordPageQueryDTO) {
         //模糊查询-title
         LambdaQueryWrapper<PoliciesDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.like(PoliciesDO::getTitle, keywordPageQueryDTO.getKeyword());
+        System.out.println("keywordPageQueryDTO="+keywordPageQueryDTO);
+        System.out.println(keywordPageQueryDTO!=null);
+        if(keywordPageQueryDTO != null) {
+            lambdaQueryWrapper.like(
+                    PoliciesDO::getTitle, keywordPageQueryDTO.getKeyword());
+        }
         List<PoliciesDO> policiesDOS = policiesMapper.selectList(lambdaQueryWrapper);
         //遍历集合
         PoliciesTitleVO policiesTitleVO = null;

@@ -3,6 +3,7 @@
 <mapper namespace="cn.huacloud.taxpreference.services.producer.mapper.PoliciesMapper">
     <select id="queryPoliciesVOList" resultType="cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesVO">
     SELECT
+    tp.id AS id,
 	tp.title AS title,
 	tp.doc_code AS docCode,
 	tp.area_name AS areaName,
@@ -65,4 +66,33 @@ FROM
     order by #{sort}
     
 </select>
+
+    <select id="selectExplainId" resultType="java.lang.Long">
+        SELECT
+        pe.id
+        FROM
+            t_policies p
+            LEFT JOIN t_policies_explain pe ON p.id = pe.policies_id
+        WHERE
+	    p.id =#{policiesId}
+    </select>
+    <select id="selectFrequentlyAskedQuestionId" resultType="cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO">
+        SELECT
+	        p.id,p.policies_ids AS policiesIds
+        FROM
+            t_frequently_asked_question p
+        WHERE
+            FIND_IN_SET(#{id},p.policies_ids)
+    </select>
+
+       <select id="selectTaxPreferenceId" resultType="java.lang.Long">
+           SELECT
+           t.tax_preference_id
+           FROM
+           t_tax_preference_policies t
+           WHERE
+           t.policies_id =
+               #{id}
+       </select>
+
 </mapper>

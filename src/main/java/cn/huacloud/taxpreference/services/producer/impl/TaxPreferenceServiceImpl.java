@@ -473,30 +473,5 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
             TaxPreferenceAbolishVOList.add(taxPreferenceAbolishVO);
         }
         return TaxPreferenceAbolishVOList;
-        /*log.info("policiesId={}", policiesId);
-        LambdaQueryWrapper<TaxPreferencePoliciesDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        //根据政策法规id查询关联表信息
-        lambdaQueryWrapper.eq(!org.springframework.util.StringUtils.isEmpty(policiesId), TaxPreferencePoliciesDO::getPoliciesId, policiesId);
-        List<TaxPreferencePoliciesDO> taxPreferencePoliciesDOS = taxPreferencePoliciesMapper.selectList(lambdaQueryWrapper);
-        log.info("taxPreferencePoliciesDOS={}", taxPreferencePoliciesDOS);
-        //遍历关联表获取税收优惠的id
-        Long taxPreferenceId = null;
-        for (TaxPreferencePoliciesDO taxPreferencePoliciesDO : taxPreferencePoliciesDOS) {
-            taxPreferenceId = taxPreferencePoliciesDO.getTaxPreferenceId();
-            log.info("taxPreferenceId={}---", taxPreferenceId);
-        }
-        LambdaQueryWrapper<TaxPreferenceDO> taxPreferenceLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        taxPreferenceLambdaQueryWrapper.eq(!org.springframework.util.StringUtils.isEmpty(policiesId), TaxPreferenceDO::getId, taxPreferenceId);
-        List<TaxPreferenceDO> taxPreferenceDOS = taxPreferenceMapper.selectList(taxPreferenceLambdaQueryWrapper);
-        log.info("taxPreferenceDOS={}", taxPreferenceDOS);
-        List<TaxPreferenceAbolishVO> TaxPreferenceVOList = new ArrayList<>();
-        for (TaxPreferenceDO taxPreferenceDO : taxPreferenceDOS) {
-            TaxPreferenceAbolishVO taxPreferenceAbolishVO = new TaxPreferenceAbolishVO();
-            taxPreferenceDO.setValidity(ValidityEnum.INVALID.getValue());
-            BeanUtils.copyProperties(taxPreferenceDO, taxPreferenceAbolishVO);
-            TaxPreferenceVOList.add(taxPreferenceAbolishVO);
-        }
-        log.info("TaxPreferenceVOList={}", TaxPreferenceVOList);*/
-
     }
 }
