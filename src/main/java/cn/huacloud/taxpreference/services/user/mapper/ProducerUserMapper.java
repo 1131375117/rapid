@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -33,6 +34,9 @@ public interface ProducerUserMapper extends BaseMapper<ProducerUserDO> {
      * @return map key: userId, value: producerUserDO
      */
     default Map<Long, ProducerUserDO> getMapByUserIds(List<Long> userIds) {
+        if (userIds.isEmpty()) {
+            return new HashMap<>();
+        }
         LambdaQueryWrapper<ProducerUserDO> queryWrapper = Wrappers.lambdaQuery(ProducerUserDO.class)
                 .in(ProducerUserDO::getUserId, userIds);
         return selectList(queryWrapper).stream().collect(Collectors.toMap(ProducerUserDO::getUserId, value -> value));
