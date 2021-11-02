@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.producer.impl;
 
+import cn.huacloud.taxpreference.common.constants.TaxpayerTypeConstants;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.enums.taxpreference.SortType;
@@ -10,14 +11,6 @@ import cn.huacloud.taxpreference.services.common.SysCodeService;
 import cn.huacloud.taxpreference.services.producer.ProcessService;
 import cn.huacloud.taxpreference.services.producer.TaxPreferenceService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.*;
-import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryTaxPreferencesDTO;
-import cn.huacloud.taxpreference.services.producer.entity.dtos.SubmitConditionDTO;
-import cn.huacloud.taxpreference.services.producer.entity.dtos.TaxPreferenceDTO;
-import cn.huacloud.taxpreference.services.producer.entity.dtos.TaxPreferencePoliciesDTO;
-import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
-import cn.huacloud.taxpreference.services.producer.entity.dos.SubmitConditionDO;
-import cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferenceDO;
-import cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferencePoliciesDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.*;
 import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesStatusEnum;
 import cn.huacloud.taxpreference.services.producer.entity.enums.ValidityEnum;
@@ -37,7 +30,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @description: 优惠政策服务实现类
@@ -58,14 +50,14 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     private final SysCodeService sysCodeService;
     static final String TAX_PREFERENCE_ID = "tax_preference_id";
 
-
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResultVO<Void> insertTaxPreference(TaxPreferenceDTO taxPreferenceDTO) {
         log.info("新增政策法规dto={}", taxPreferenceDTO);
         //检查优惠事项名称是否存在
         judgeExists(taxPreferenceDTO);
-
+        //检测纳税人类型和标签管理
+        checkLabels(taxPreferenceDTO);
         //新增-税收优惠表t_tax_preference
         TaxPreferenceDO taxPreferenceDO = getTaxPreferenceDO(taxPreferenceDTO);
         taxPreferenceDO.setCreateTime(LocalDateTime.now());
@@ -81,6 +73,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         return ResultVO.ok();
     }
 
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResultVO<Void> updateTaxPreference(TaxPreferenceDTO taxPreferenceDTO) {
@@ -90,6 +83,8 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         processService.judgeProcessIng(taxPreferenceDTO.getId());
         //判断是否存在
         judgeExists(taxPreferenceDTO);
+        //判断标签
+        checkLabels(taxPreferenceDTO);
         //修改-税收优惠表t_tax_preference
         TaxPreferenceDO taxPreferenceDO = getTaxPreferenceDO(taxPreferenceDTO);
         taxPreferenceMapper.updateById(taxPreferenceDO);
@@ -113,7 +108,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         List<QueryTaxPreferencesVO> records = iPage.getRecords();
         records.forEach(queryTaxPreferencesVO -> {
             String processStatus = processServiceMapper.selectByTaxPreferenceId(queryTaxPreferencesVO.getId());
-            queryTaxPreferencesVO.setProcessStatus(processStatus);
+            queryTaxPreferencesVO.setProcessStatus(processStatus==null?"无":processStatus);
         });
         PageVO<QueryTaxPreferencesVO> pageVO = PageVO.createPageVO(iPage, iPage.getRecords());
         return ResultVO.ok(pageVO);
@@ -288,6 +283,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
                     //获取政策法规详细信息
                     PoliciesDO policiesDO = getPoliciesDO(taxPreferencePoliciesVO);
                     taxPreferencePoliciesVO.setPoliciesName(policiesDO.getTitle());
+                    taxPreferencePoliciesVO.setDocCode(policiesDO.getDocCode());
                     taxPreferencePoliciesVOList.add(taxPreferencePoliciesVO);
                 }
         );
@@ -383,6 +379,8 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         taxPreferenceDO.setEnterpriseTypeCodes(StringUtils.join(taxPreferenceDTO.getEnterpriseTypeCodes(), ","));
         //信用等级
         taxPreferenceDO.setTaxpayerCreditRatings(StringUtils.join(taxPreferenceDTO.getTaxpayerCreditRatings(), ","));
+        //设置标签
+        taxPreferenceDO.setLabels(StringUtils.join(taxPreferenceDTO.getLabels(),","));
         //行业名称
         String industryNames = convert2String(taxPreferenceDTO.getIndustryCodes());
         taxPreferenceDO.setIndustryNames(industryNames);
@@ -426,6 +424,53 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
             throw BizCode._4302.exception();
         }
         return false;
+    }
+
+    /**
+     *判断纳税人是否与标签冲突
+     */
+    private void checkLabels(TaxPreferenceDTO taxPreferenceDTO) {
+        if(TaxpayerTypeConstants.YBNSR.equals(taxPreferenceDTO.getTaxpayerTypeCode())){
+            taxPreferenceDTO.getLabels().forEach(s -> {
+                //根据标签名称获取code
+                String codeValue = getNamesByCodeValues(s);
+                if(!StringUtils.isEmpty(codeValue)&& TaxpayerTypeConstants.XGMNSR.equals(codeValue)){
+                    throw BizCode._4313.exception();
+                }
+            });
+        }
+        if(TaxpayerTypeConstants.XGMNSR.equals(taxPreferenceDTO.getTaxpayerTypeCode())){
+            taxPreferenceDTO.getLabels().forEach(s -> {
+                //根据标签名称获取code
+                String codeValue = getNamesByCodeValues(s);
+                if(!StringUtils.isEmpty(codeValue)&& TaxpayerTypeConstants.YBNSR.equals(codeValue)){
+                    throw BizCode._4313.exception();
+                }
+            });
+        }
+        if(TaxpayerTypeConstants.JMQY.equals(taxPreferenceDTO.getTaxpayerTypeCode())){
+            taxPreferenceDTO.getLabels().forEach(s -> {
+                //根据标签名称获取code
+                String codeValue = getNamesByCodeValues(s);
+                if(!StringUtils.isEmpty(codeValue)&& TaxpayerTypeConstants.FJMQY.equals(codeValue)){
+                    throw BizCode._4313.exception();
+                }
+            });
+        }
+        if(TaxpayerTypeConstants.FJMQY.equals(taxPreferenceDTO.getTaxpayerTypeCode())){
+            taxPreferenceDTO.getLabels().forEach(s -> {
+                //根据标签名称获取code
+                String codeValue = getNamesByCodeValues(s);
+                if(!StringUtils.isEmpty(codeValue)&& TaxpayerTypeConstants.JMQY.equals(codeValue)){
+                    throw BizCode._4313.exception();
+                }
+            });
+        }
+
+    }
+
+    private String getNamesByCodeValues(String s) {
+        return sysCodeService.getStringNamesByCodeValues(s);
     }
 
     /**

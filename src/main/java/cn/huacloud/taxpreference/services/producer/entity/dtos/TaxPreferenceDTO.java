@@ -53,7 +53,12 @@ public class TaxPreferenceDTO {
     @ApiModelProperty("纳税人类型码值")
     @NotEmpty(message = "纳税人类型码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
     private String taxpayerTypeCode;
-
+    /**
+     * 纳税人类型名称
+     */
+    @ApiModelProperty("纳税人类型名称")
+    @NotEmpty(message = "纳税人类型码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+    private String taxpayerTypeName;
 
     /**
      * 适用行业码值
@@ -108,8 +113,15 @@ public class TaxPreferenceDTO {
     /**
      * 标签管理
      */
-    @ApiModelProperty("标签管理,多个按照逗号隔开")
-    private String labels;
+    @ApiModelProperty("标签管理")
+    private List<String> labels;
+
+    /**
+     * 减免事项
+     */
+    @ApiModelProperty("减免事项,多个按照逗号隔开")
+    @NotEmpty(message = "提交税务机关资料不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+    private String taxPreferenceItem;
 
 
     /**

@@ -24,6 +24,9 @@ public class TaxPreferencePoliciesVO {
      */
     @ApiModelProperty("政策法规name")
     private String policiesName;
+
+    @ApiModelProperty("政策法规文号")
+    private String docCode;
     /**
      * 有效期起-政策法规
      */

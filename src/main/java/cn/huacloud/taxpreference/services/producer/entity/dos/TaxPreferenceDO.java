@@ -144,5 +144,9 @@ public class TaxPreferenceDO {
      */
     private String labels;
 
+    /**
+     * 减免事项
+     */
+    private String taxPreferenceItem;
 
 }

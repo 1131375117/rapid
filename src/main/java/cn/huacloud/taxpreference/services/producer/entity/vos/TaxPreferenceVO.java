@@ -115,6 +115,11 @@ public class TaxPreferenceVO {
     @ApiModelProperty("标签管理")
     private String labels;
 
+    /**
+     * 减免事项
+     */
+    @ApiModelProperty("减免事项,多个按照逗号隔开")
+    private String taxPreferenceItem;
 
     /**
      * 政策法规信息
