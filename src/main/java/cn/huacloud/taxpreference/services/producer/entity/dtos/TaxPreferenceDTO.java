@@ -108,8 +108,15 @@ public class TaxPreferenceDTO {
     /**
      * 标签管理
      */
-    @ApiModelProperty("标签管理,多个按照逗号隔开")
-    private String labels;
+    @ApiModelProperty("标签管理")
+    private List<String> labels;
+
+    /**
+     * 减免事项
+     */
+    @ApiModelProperty("减免事项,多个按照逗号隔开")
+    @NotEmpty(message = "减免事项", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+    private String taxPreferenceItem;
 
 
     /**

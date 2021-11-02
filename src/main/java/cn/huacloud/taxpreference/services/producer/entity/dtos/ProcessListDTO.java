@@ -1,6 +1,6 @@
 package cn.huacloud.taxpreference.services.producer.entity.dtos;
 
-import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
+import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  * @create: 2021-10-25 14:35
  **/
 @Data
-public class ProcessListDTO extends PageQueryDTO {
+public class ProcessListDTO extends KeywordPageQueryDTO {
   /*  @ApiModelProperty("优惠事项名称")
     private String taxPreferenceName;*/
     @ApiModelProperty("税种码值")
