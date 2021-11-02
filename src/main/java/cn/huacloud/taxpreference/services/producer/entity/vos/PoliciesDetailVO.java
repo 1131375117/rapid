@@ -79,7 +79,7 @@ public class PoliciesDetailVO {
      * 适用企业类型名称
      */
     @ApiModelProperty("适用企业类型名称")
-    private String taxpayerCreditRatings;
+    private String enterpriseTypeNames;
 
     /**
      * 适用企业类型码值
@@ -123,10 +123,11 @@ public class PoliciesDetailVO {
     @ApiModelProperty("正文")
     private String content;
 
+
     /**
-     * 标签集合
+     * 废止信息
      */
-    @ApiModelProperty("标签集合")
-    private List<String> labels;
+    @ApiModelProperty("废止信息")
+    private String abolishNote;
 
 }

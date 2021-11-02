@@ -131,7 +131,12 @@ public class PoliciesServiceImpl implements PoliciesService {
         policiesDO.setUpdateTime(LocalDateTime.now());
         //设置删除
         policiesDO.setDeleted(false);
+        //设置所属区域名称
         policiesDO.setAreaName(sysCodeService.getCodeNameByCodeValue(policiesCombinationDTO.getAreaCode()));
+        //设置所属税种名称
+        policiesDO.setTaxCategoriesName(sysCodeService.getCodeNameByCodeValue(policiesCombinationDTO.getTaxCategoriesCode()));
+        //设置标签
+        policiesDO.setLabels(StringUtils.join(policiesCombinationDTO.getLabels(),","));
 
         log.info("新增政策法规对象={}", policiesDO);
         policiesMapper.insert(policiesDO);
@@ -165,14 +170,14 @@ public class PoliciesServiceImpl implements PoliciesService {
                         PoliciesDO::getDocCode, policiesCombinationDTO.getDocCode());
         List<PoliciesDO> policiesDOS = policiesMapper.selectList(lambdaQueryWrapper);
         //判断是否重复
-        if (policiesDOS.size() >= 1) {
+        if (policiesDOS.size() > 1) {
             throw BizCode._4305.exception();
         }
         //判断修改的条件
-//        if (policiesCombinationDTO.getId() != null
-//                && !policiesDOS.get(0).getId().equals(policiesCombinationDTO.getId())) {
-//            throw BizCode._4305.exception();
-//        }
+        if (policiesDOS.size() == 1
+                && !policiesDOS.get(0).getId().equals(policiesCombinationDTO.getId())) {
+            throw BizCode._4305.exception();
+        }
         return false;
 
 
@@ -339,7 +344,7 @@ public class PoliciesServiceImpl implements PoliciesService {
             //判断条件--部分废止
             policiesDO.setPoliciesStatus(PoliciesStatusEnum.PARTIAL_REPEAL.getValue());
             //设置政策法规的有效性
-            policiesDO.setValidity("部分有效");
+            policiesDO.setValidity(ValidityEnum.PARTIAL_VALID.getValue());
         }
         taxPreferenceService.updateStatus(queryAbolishDTO);
         log.info("废止政策法规对象={}", policiesDO);
