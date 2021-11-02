@@ -23,7 +23,8 @@
     </update>
     <select id="queryTaxPreferenceVOList"
             resultType="cn.huacloud.taxpreference.services.producer.entity.vos.QueryTaxPreferencesVO">
-        select p.id,p.tax_preference_name as taxPreferenceName,p.industry_names as industryNames ,p.taxpayer_type_name as taxpayerTypeName,
+        select p.id,p.tax_preference_name as taxPreferenceName,p.industry_names as industryNames ,p.taxpayer_type_name
+        as taxpayerTypeName,
         p.tax_categories_name as taxCategoriesName,p.enterprise_type_names as enterpriseTypeNames,
         p.validity,p.create_time as createTime,p.taxpayer_credit_ratings as taxpayerCreditRatings,
         p.taxpayer_register_type_name as taxpayerRegisterTypeName
@@ -50,7 +51,7 @@
                 and p.input_user_id=#{userId} and tax_preference_status='已发布'
             </if>
             <if test="queryTaxPreferencesDTO.releaseMatter.getValue()==@cn.huacloud.taxpreference.common.enums.taxpreference.ReleaseMatter@MY_UNRELEASED.getValue()">
-            and p.input_user_id=#{userId} and tax_preference_status='待发布'
+                and p.input_user_id=#{userId} and tax_preference_status='待发布'
             </if>
             <if test="queryTaxPreferencesDTO.startTime!=null ">
                 and t.create_time >= #{queryTaxPreferencesDTO.startTime}
@@ -59,39 +60,42 @@
                 and t.create_time &lt;= #{queryTaxPreferencesDTO.endTime}
             </if>
             <if test="queryTaxPreferencesDTO.taxpayerCreditRatings!=null and queryTaxPreferencesDTO.taxpayerCreditRatings.size>0 ">
-                and  (1!=1
+                and (1!=1
                 <foreach collection="queryTaxPreferencesDTO.taxpayerCreditRatings" item="credit">
                     or FIND_IN_SET(#{credit},p.taxpayer_credit_ratings)
                 </foreach>
                 )
             </if>
             <if test=" queryTaxPreferencesDTO.industryCodes!=null and queryTaxPreferencesDTO.industryCodes.size>0 ">
-                and  (1!=1
-                <foreach collection="queryTaxPreferencesDTO.industryCodes" item="industryCode" >
-                    or  FIND_IN_SET(#{industryCode},p.industry_codes)
+                and (1!=1
+                <foreach collection="queryTaxPreferencesDTO.industryCodes" item="industryCode">
+                    or FIND_IN_SET(#{industryCode},p.industry_codes)
                 </foreach>
-            )
+                )
             </if>
             <if test="queryTaxPreferencesDTO.enterpriseTypeCodes!=null and queryTaxPreferencesDTO.enterpriseTypeCodes.size>0 ">
-                and  (1!=1
-                <foreach collection="queryTaxPreferencesDTO.enterpriseTypeCodes" item="enterpriseTypeCode" >
-                    or  FIND_IN_SET(#{enterpriseTypeCode},p.enterprise_type_codes)
+                and (1!=1
+                <foreach collection="queryTaxPreferencesDTO.enterpriseTypeCodes" item="enterpriseTypeCode">
+                    or FIND_IN_SET(#{enterpriseTypeCode},p.enterprise_type_codes)
                 </foreach>
                 )
             </if>
 
 
         </where>
-            order by #{sort}
+        order by #{sort}
 
     </select>
 
     <select id="selectByIdList" resultType="cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferenceDO">
-        select tp.id,tp.tax_categories_name
-        from t_ tax_preference_ policies tpp
-        left join
-        t_ tax_preference tp tpp.tax_preference_id on tp.id
-        where id=#{policiesId}
+       SELECT
+        tp.id,
+        tp.tax_categories_name
+       FROM
+        t_policies t
+        LEFT JOIN t_tax_preference_policies ttp ON t.id = ttp.policies_id
+        LEFT JOIN t_tax_preference tp ON ttp.tax_preference_id = tp.id
+       WHERE
+        t.id =#{policiesId}
     </select>
-
 </mapper>

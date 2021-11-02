@@ -13,6 +13,8 @@ import org.junit.Test;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * 简单测试类
@@ -20,6 +22,13 @@ import java.util.ArrayList;
  */
 @Slf4j
 public class SampleTest {
+
+    @Test
+    public void testStreamFirst() {
+        List<String> list = new ArrayList<>();
+        Optional<String> first = list.stream().findFirst();
+        log.info("isPresent: {}", first.isPresent());
+    }
 
     @Test
     public void pinyin4jTest() throws Exception {

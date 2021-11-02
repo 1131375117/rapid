@@ -136,9 +136,9 @@ public class UserController {
         boolean exist = userService.isUserAccountExist(userAccount);
         return ResultVO.ok(exist);
     }
-    @PermissionInfo(name = "为用户添加角色", group = PermissionGroup.USER_MANAGE)
+    @PermissionInfo(name = "批量为用户添加角色", group = PermissionGroup.USER_MANAGE)
     @SaCheckPermission("producer_user_add_role")
-    @ApiOperation("为用户添加角色")
+    @ApiOperation("批量为用户添加角色")
     @PutMapping("/producer/user/addRole")
     public ResultVO<Void> addRoleToUser(@RequestBody List<UserRoleAddDTO> userRoleAddVOList) {
         userService.addRoleToUser(userRoleAddVOList);

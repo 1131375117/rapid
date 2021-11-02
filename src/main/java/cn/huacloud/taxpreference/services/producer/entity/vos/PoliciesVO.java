@@ -25,12 +25,8 @@ public class PoliciesVO {
     private String docCode;
     @ApiModelProperty("所属税种名称")
     private String taxCategoriesName;
-    @ApiModelProperty("所属税种码值")
-    private String taxCategoriesCode;
     @ApiModelProperty("所属区域名称")
     private String areaName;
-    @ApiModelProperty("所属区域码值")
-    private String areaCode;
     @ApiModelProperty("有效性")
     private String validity;
     @ApiModelProperty("发布时间")
