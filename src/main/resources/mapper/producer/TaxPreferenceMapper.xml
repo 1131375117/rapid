@@ -54,10 +54,10 @@
                 and p.input_user_id=#{userId} and tax_preference_status='待发布'
             </if>
             <if test="queryTaxPreferencesDTO.startTime!=null ">
-                and t.create_time >= #{queryTaxPreferencesDTO.startTime}
+                and p.create_time >= #{queryTaxPreferencesDTO.startTime}
             </if>
             <if test="queryTaxPreferencesDTO.endTime!=null ">
-                and t.create_time &lt;= #{queryTaxPreferencesDTO.endTime}
+                and p.create_time &lt;= #{queryTaxPreferencesDTO.endTime}
             </if>
             <if test="queryTaxPreferencesDTO.taxpayerCreditRatings!=null and queryTaxPreferencesDTO.taxpayerCreditRatings.size>0 ">
                 and (1!=1
@@ -83,7 +83,7 @@
 
 
         </where>
-        order by #{sort}
+        order by ${sort} DESC
 
     </select>
 
