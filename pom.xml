@@ -30,11 +30,11 @@
     </properties>
 
     <dependencies>
+        <!--guava-->
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
-
         <!--pinyin4j-->
         <dependency>
             <groupId>com.belerweb</groupId>
