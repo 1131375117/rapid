@@ -88,6 +88,7 @@ public class PoliciesCombinationDTO {
     @NotEmpty(message = "政策法规状态不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
     private String policiesStatus;
 
+    @ApiModelProperty("政策法规id")
     private Long policiesId;
 
     @ApiModelProperty("热点问答集合")

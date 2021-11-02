@@ -21,11 +21,11 @@ import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 /**
- * 热点问答接口
+ * 热门问答接口
  *
  * @author wuxin
  */
-@Api(tags = "热点问答")
+@Api(tags = "热门问答")
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
 @RestController
@@ -33,11 +33,12 @@ public class FrequentlyAskedQuestionController {
 
     private final FrequentlyAskedQuestionService frequentlyAskedQuestionService;
 
-    @PermissionInfo(name = "热点问答列表查询", group = PermissionGroup.FREQUENTLY_ASKED_QUESTION)
+    @PermissionInfo(name = "热门问答列表查询", group = PermissionGroup.FREQUENTLY_ASKED_QUESTION)
     @SaCheckPermission("producer_frequentlyAskedQuestion_query")
-    @ApiOperation("热点问答列表查询")
+    @ApiOperation("热门问答列表查询")
     @PostMapping(value = "/getFrequentlyAskedQuestionList/query")
     public ResultVO<PageVO<PoliciesExplainDetailVO>> getFrequentlyAskedQuestionList(@RequestBody QueryPoliciesExplainDTO queryPoliciesExplainDTO) {
+         queryPoliciesExplainDTO.paramReasonable();
         PageVO<PoliciesExplainDetailVO> frequentlyAskedQuestionPageVO = frequentlyAskedQuestionService.getFrequentlyAskedQuestionList(queryPoliciesExplainDTO);
         return ResultVO.ok(frequentlyAskedQuestionPageVO);
     }
@@ -48,9 +49,9 @@ public class FrequentlyAskedQuestionController {
      * @param frequentlyAskedQuestionDTOS
      * @return
      */
-    @PermissionInfo(name = "新增热点问答", group = PermissionGroup.FREQUENTLY_ASKED_QUESTION)
+    @PermissionInfo(name = "新增热门问答", group = PermissionGroup.FREQUENTLY_ASKED_QUESTION)
     @SaCheckPermission("producer_frequentlyAskedQuestion_insert")
-    @ApiOperation("新增热点问答")
+    @ApiOperation("新增热门问答")
     @PostMapping(value = "/frequentlyAskedQuestion")
     public ResultVO<Void> insertFrequentlyAskedQuestion(@Validated(ValidationGroup.Create.class)@RequestBody List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOS) {
 
@@ -58,27 +59,25 @@ public class FrequentlyAskedQuestionController {
         return ResultVO.ok();
     }
 
-
     /**
-     * 修改热点问答
+     * 修改热门问答
      *
      * @param frequentlyAskedQuestionDTOS
      * @return
      */
-    @PermissionInfo(name = "修改热点问答", group = PermissionGroup.FREQUENTLY_ASKED_QUESTION)
+    @PermissionInfo(name = "修改热门问答", group = PermissionGroup.FREQUENTLY_ASKED_QUESTION)
     @SaCheckPermission("producer_frequentlyAskedQuestion_update")
-    @ApiOperation("修改热点问答")
+    @ApiOperation("修改热门问答")
     @PutMapping(value = "/frequentlyAskedQuestion/update")
     public ResultVO<Void> updateFrequentlyAskedQuestion(@Validated(ValidationGroup.Update.class)@RequestBody List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOS) {
         frequentlyAskedQuestionService.updateFrequentlyAskedQuestion(frequentlyAskedQuestionDTOS);
         return ResultVO.ok();
-
     }
 
-    @PermissionInfo(name = "删除热点问答", group = PermissionGroup.FREQUENTLY_ASKED_QUESTION)
+    @PermissionInfo(name = "删除热门问答", group = PermissionGroup.FREQUENTLY_ASKED_QUESTION)
     @SaCheckPermission("producer_frequentlyAskedQuestion_delete")
-    @ApiOperation("删除热点问答")
-    @DeleteMapping(value = "/frequentlyAskedQuestion/delete")
+    @ApiOperation("删除热门问答")
+    @DeleteMapping(value = "/frequentlyAskedQuestion/delete/{id}")
     public ResultVO<Void> deleteFrequentlyAskedQuestion(@Validated @NotEmpty(message = "id不能为空")@PathVariable("id") Long id){
         frequentlyAskedQuestionService.deleteFrequentlyAskedQuestion(id);
         return ResultVO.ok();

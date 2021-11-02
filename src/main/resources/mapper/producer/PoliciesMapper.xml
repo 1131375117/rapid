@@ -63,7 +63,7 @@ FROM
         </if>
         and tp.deleted=0
     </where>
-    order by ${sort}
+    order by ${sort} DESC
     
 </select>
 

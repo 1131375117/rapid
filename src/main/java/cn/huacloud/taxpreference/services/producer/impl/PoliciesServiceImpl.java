@@ -140,6 +140,7 @@ public class PoliciesServiceImpl implements PoliciesService {
 
         log.info("新增政策法规对象={}", policiesDO);
         policiesMapper.insert(policiesDO);
+        policiesCombinationDTO.setId(policiesDO.getId());
         //新增政策解读
         PoliciesExplainDTO policiesExplainDTO = new PoliciesExplainDTO();
         BeanUtils.copyProperties(policiesCombinationDTO, policiesExplainDTO);
@@ -299,11 +300,6 @@ public class PoliciesServiceImpl implements PoliciesService {
             LambdaQueryWrapper<TaxPreferencePoliciesDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
             lambdaQueryWrapper.eq(TaxPreferencePoliciesDO::getTaxPreferenceId, taxPreferenceId);
             Long count = taxPreferencePoliciesMapper.selectCount(lambdaQueryWrapper);
-//            if(count==1){
-//                Long[] taxPreferenceIdArr =new Long[]{taxPreferenceId};
-//                log.info("税收优惠id={}",taxPreferenceIdArr);
-//                taxPreferenceService.deleteTaxPreference(taxPreferenceIdArr);
-//            }
             if (count > 1) {
                 LambdaQueryWrapper<TaxPreferencePoliciesDO> queryWrapper = new LambdaQueryWrapper<>();
                 queryWrapper.eq(!org.springframework.util.StringUtils.isEmpty(policiesDO.getId()),
@@ -311,9 +307,9 @@ public class PoliciesServiceImpl implements PoliciesService {
                 taxPreferencePoliciesMapper.delete(queryWrapper);
                 log.info("count:{},taxPreferenceId:{}", count, taxPreferenceId);
             }
-        }
-        if (taxPreferenceIds != null && taxPreferenceIds.length > 0) {
-            throw BizCode._4306.exception();
+            if (count==1) {
+                throw BizCode._4306.exception();
+            }
         }
         policiesMapper.updateById(policiesDO);
 
@@ -336,11 +332,11 @@ public class PoliciesServiceImpl implements PoliciesService {
         }
 
         //判断条件--全文废止
-        if (queryAbolishDTO.getPoliciesStatus().equals(PoliciesStatusEnum.FULL_TEXT_REPEAL.name())) {
+        if (PoliciesStatusEnum.FULL_TEXT_REPEAL.getValue().equals(queryAbolishDTO.getPoliciesStatus())) {
             //设置政策法规的有效性
             policiesDO.setValidity(ValidityEnum.FULL_TEXT_REPEAL.getValue());
             //设置税收优惠的有效性
-        } else if (queryAbolishDTO.getPoliciesStatus().equals(PoliciesStatusEnum.PARTIAL_REPEAL.name())) {
+        } else if (PoliciesStatusEnum.PARTIAL_REPEAL.getValue().equals(queryAbolishDTO.getPoliciesStatus())) {
             //判断条件--部分废止
             policiesDO.setPoliciesStatus(PoliciesStatusEnum.PARTIAL_REPEAL.getValue());
             //设置政策法规的有效性

@@ -1,16 +1,13 @@
 package cn.huacloud.taxpreference.services.producer.impl;
 
-import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.services.producer.FrequentlyAskedQuestionService;
 import cn.huacloud.taxpreference.services.producer.PoliciesExplainService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO;
-import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.FrequentlyAskedQuestionDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesExplainDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainDetailVO;
-import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesTitleVO;
 import cn.huacloud.taxpreference.services.producer.mapper.FrequentlyAskedQuestionMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -28,7 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 热点问答服务实现类
+ * 热门问答服务实现类
  *
  * @author wuxin
  */
@@ -43,14 +40,14 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
 
 
     /**
-     * 热点问答列表查询
+     * 热门问答列表查询
      *
      * @param queryPoliciesExplainDTO 查询条件
      * @return
      */
     @Override
     public PageVO<PoliciesExplainDetailVO> getFrequentlyAskedQuestionList(QueryPoliciesExplainDTO queryPoliciesExplainDTO) {
-        log.info("热点问答查询列表条件dto={}", queryPoliciesExplainDTO);
+        log.info("热门问答查询列表条件dto={}", queryPoliciesExplainDTO);
         LambdaQueryWrapper<FrequentlyAskedQuestionDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         //模糊查询--政策解读标题
         lambdaQueryWrapper.like(!StringUtils.isEmpty(queryPoliciesExplainDTO.getTitle()),
@@ -87,12 +84,12 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
             BeanUtils.copyProperties(frequentlyAskedQuestionDO, policiesExplainDetailVO);
             return policiesExplainDetailVO;
         }).collect(Collectors.toList());
-        log.info("热点问答查询列表对象={}", frequentlyAskedQuestionDOPage);
+        log.info("热门问答查询列表对象={}", frequentlyAskedQuestionDOPage);
         return PageVO.createPageVO(frequentlyAskedQuestionDOPage, records);
     }
 
     /**
-     * 新增热点问答
+     * 新增热门问答
      *
      * @param frequentlyAskedQuestionDTOS
      * @param userId
@@ -100,7 +97,7 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void insertFrequentlyAskedQuestion(List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOS, Long userId) {
-        log.info("新增热点问答dto={}", frequentlyAskedQuestionDTOS);
+        log.info("新增热门问答dto={}", frequentlyAskedQuestionDTOS);
         for (FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO : frequentlyAskedQuestionDTOS) {
             FrequentlyAskedQuestionDO frequentlyAskedQuestionDO = new FrequentlyAskedQuestionDO();
             BeanUtils.copyProperties(frequentlyAskedQuestionDTO, frequentlyAskedQuestionDO);
@@ -109,7 +106,7 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
             frequentlyAskedQuestionDO.setCreateTime(LocalDateTime.now());
             frequentlyAskedQuestionDO.setUpdateTime(LocalDateTime.now());
             frequentlyAskedQuestionDO.setDeleted(false);
-            log.info("新增热点问答对象={}", frequentlyAskedQuestionDO);
+            log.info("新增热门问答对象={}", frequentlyAskedQuestionDO);
             if(!frequentlyAskedQuestionDTO.getRelatedPolicy()) {
                 frequentlyAskedQuestionDO.setPoliciesIds(null);
             }
@@ -118,7 +115,7 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
     }
 
     /**
-     * 修改热点问答
+     * 修改热门问答
      *
      * @param frequentlyAskedQuestionDTOS
      */
@@ -126,9 +123,7 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
     @Override
     public void updateFrequentlyAskedQuestion(List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOS) {
         for (FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO : frequentlyAskedQuestionDTOS) {
-
-
-            //查询热点问答
+            //查询热门问答
             FrequentlyAskedQuestionDO frequentlyAskedQuestionDO = frequentlyAskedQuestionMapper.selectById(frequentlyAskedQuestionDTO.getId());
             //参数校验
             if (frequentlyAskedQuestionDO == null) {
@@ -136,14 +131,14 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
             }
             //属性拷贝
             BeanUtils.copyProperties(frequentlyAskedQuestionDTO, frequentlyAskedQuestionDO);
-            log.info("修改热点问答对象={}", frequentlyAskedQuestionDO);
-            //修改热点问答
+            log.info("修改热门问答对象={}", frequentlyAskedQuestionDO);
+            //修改热门问答
             frequentlyAskedQuestionMapper.updateById(frequentlyAskedQuestionDO);
         }
     }
 
     /**
-     * 删除热点问答
+     * 删除热门问答
      *
      * @param id
      */
@@ -159,7 +154,4 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
         frequentlyAskedQuestionMapper.updateById(frequentlyAskedQuestionDO);
 
     }
-
-
-
 }

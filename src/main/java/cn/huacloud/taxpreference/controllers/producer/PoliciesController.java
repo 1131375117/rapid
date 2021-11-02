@@ -64,9 +64,9 @@ public class PoliciesController {
     @SaCheckPermission("producer_policies_insert")
     @ApiOperation(value = "政策法规新增")
     @PostMapping(value = "/policies/insert")
-    public ResultVO<Void> insertPolicies(@Validated(ValidationGroup.Create.class) @RequestBody PoliciesCombinationDTO policiesCombinationDTO) {
+    public ResultVO<PoliciesCombinationDTO> insertPolicies(@Validated(ValidationGroup.Create.class) @RequestBody PoliciesCombinationDTO policiesCombinationDTO) {
         policiesService.insertPolicies(policiesCombinationDTO, UserUtil.getCurrentUser().getId());
-        return ResultVO.ok();
+        return ResultVO.ok(policiesCombinationDTO);
     }
 
     /**

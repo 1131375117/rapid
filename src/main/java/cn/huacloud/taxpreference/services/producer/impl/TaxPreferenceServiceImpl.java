@@ -488,14 +488,14 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     public void updateStatus(QueryAbolishDTO queryAbolishDTO) {
         //根据税收优惠的id查询出税收优惠的列表
         TaxPreferenceDO taxPreferenceDO = null;
-        if (queryAbolishDTO.getPoliciesStatus().equals(PoliciesStatusEnum.FULL_TEXT_REPEAL.name())) {
+        if (PoliciesStatusEnum.FULL_TEXT_REPEAL.getValue().equals(queryAbolishDTO.getPoliciesStatus())) {
             List<TaxPreferenceAbolishVO> taxPreferenceAbolish = getTaxPreferenceAbolish(queryAbolishDTO.getId());
             for (TaxPreferenceAbolishVO preferenceAbolish : taxPreferenceAbolish) {
                 taxPreferenceDO = new TaxPreferenceDO();
                 BeanUtils.copyProperties(preferenceAbolish, taxPreferenceDO);
                 taxPreferenceDO.setValidity(ValidityEnum.INVALID.getValue());
             }
-        } else if (queryAbolishDTO.getPoliciesStatus().equals(PoliciesStatusEnum.PARTIAL_REPEAL.name())) {
+        } else if (PoliciesStatusEnum.PARTIAL_REPEAL.getValue().equals(queryAbolishDTO.getPoliciesStatus())) {
             List<Long> ids = queryAbolishDTO.getIds();
             for (Long id : ids) {
                 taxPreferenceDO = taxPreferenceMapper.selectById(id);
@@ -503,6 +503,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
                 taxPreferenceMapper.updateById(taxPreferenceDO);
             }
         }
+        log.info("taxPreferenceDO:{}",taxPreferenceDO);
         taxPreferenceMapper.updateById(taxPreferenceDO);
     }
 

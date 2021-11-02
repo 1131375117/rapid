@@ -47,7 +47,7 @@ public class PoliciesExplainController {
     @ApiOperation("政策解读列表查询")
     @PostMapping(value = "/policiesExplain/query")
     public ResultVO<PageVO<PoliciesExplainDetailVO>> getPoliciesExplainList(@RequestBody QueryPoliciesExplainDTO queryPoliciesExplainDTO) {
-
+        queryPoliciesExplainDTO.paramReasonable();
         PageVO<PoliciesExplainDetailVO> policiesExplainPageVO = policiesExplainService.getPoliciesExplainList(queryPoliciesExplainDTO);
         return ResultVO.ok(policiesExplainPageVO);
     }
@@ -119,9 +119,5 @@ public class PoliciesExplainController {
         policiesExplainService.deletePoliciesById(id);
         return ResultVO.ok();
     }
-
-    /**
-     * 文件上传
-     */
 
 }
