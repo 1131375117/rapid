@@ -40,4 +40,13 @@ public interface SysCodeService {
      * @return 名字拼接字符串
      */
     String getStringNamesByCodeValues(String codeValues);
+
+    /**
+     * 根据类型和名称获取码值对象视图
+     * 不包含失效码值
+     * @param codeType 码值类型
+     * @param codeName 码值名称
+     * @return 码值视图，没有匹配码值返回 null
+     */
+    SysCodeVO getCodeVOByCodeName(SysCodeType codeType, String codeName);
 }

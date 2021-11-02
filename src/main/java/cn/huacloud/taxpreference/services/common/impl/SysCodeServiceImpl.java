@@ -85,6 +85,20 @@ public class SysCodeServiceImpl implements SysCodeService {
                 .collect(Collectors.joining(","));
     }
 
+    @Override
+    public SysCodeVO getCodeVOByCodeName(SysCodeType codeType, String codeName) {
+        Optional<SysCodeDO> first = getSysCodeCache().stream()
+                .filter(sysCodeDO -> sysCodeDO.getCodeType() == codeType
+                        && sysCodeDO.getCodeName().equals(codeName)).findFirst();
+        if (first.isPresent()) {
+            SysCodeVO sysCodeVO = new SysCodeVO();
+            BeanUtils.copyProperties(first.get(), sysCodeVO);
+            return sysCodeVO;
+        } else {
+            return null;
+        }
+    }
+
     Stream<SysCodeDO> getValidSortStreamByCodeValues(String codeValues) {
         Map<String, SysCodeDO> sysCodeMapCache = getSysCodeMapCache();
         return Arrays.stream(codeValues.split(","))

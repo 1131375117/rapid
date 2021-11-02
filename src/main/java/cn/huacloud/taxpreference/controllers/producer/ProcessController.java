@@ -83,7 +83,7 @@ public class ProcessController {
     @SaCheckPermission("producer_process_approval_detail")
     @ApiOperation("税收优惠事项审批信息")
     @PostMapping("/queryProcessInfo/{id}")
-    public ResultVO<List<ProcessInfoVO>> queryProcessInfo(@Validated() @NotEmpty(message = "id不能为空") @PathVariable Long id) {
+    public ResultVO<List<ProcessInfoVO>> queryProcessInfo(@Validated() @NotEmpty(message = "税收优惠id不能为空") @PathVariable Long id) {
         return processService.queryProcessInfo(id);
     }
 
