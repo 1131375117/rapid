@@ -12,7 +12,7 @@ public interface TaxpayerTypeConstants {
     /**选择企业所得税-居民企业*/
     String JMQY="TAXPAYER_TYPE_XZQYSDS-JMQY";
     /**选择企业所得税-非居民企业*/
-    String FJMQY="TTAXPAYER_TYPE_XZQYSDS-FJMQY";
+    String FJMQY="TAXPAYER_TYPE_XZQYSDS-FJMQY";
 
 
 

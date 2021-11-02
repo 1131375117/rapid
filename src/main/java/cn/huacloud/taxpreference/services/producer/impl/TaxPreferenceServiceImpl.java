@@ -3,11 +3,13 @@ package cn.huacloud.taxpreference.services.producer.impl;
 import cn.huacloud.taxpreference.common.constants.TaxpayerTypeConstants;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.BizCode;
+import cn.huacloud.taxpreference.common.enums.SysCodeType;
 import cn.huacloud.taxpreference.common.enums.taxpreference.SortType;
 import cn.huacloud.taxpreference.common.enums.taxpreference.TaxPreferenceStatus;
 import cn.huacloud.taxpreference.common.exception.TaxPreferenceException;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
+import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeVO;
 import cn.huacloud.taxpreference.services.producer.ProcessService;
 import cn.huacloud.taxpreference.services.producer.TaxPreferenceService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.*;
@@ -412,14 +414,13 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         log.info("judgeExists:taxPreferenceDTO={}", taxPreferenceDTO);
         LambdaQueryWrapper<TaxPreferenceDO> queryWrapper = Wrappers.lambdaQuery(TaxPreferenceDO.class)
                 .eq(TaxPreferenceDO::getTaxPreferenceName, taxPreferenceDTO.getTaxPreferenceName())
-                .eq(TaxPreferenceDO::getDeleted, 0);
+                .eq(TaxPreferenceDO::getDeleted, false);
         List<TaxPreferenceDO> taxPreferenceDOs = taxPreferenceMapper.selectList(queryWrapper);
         log.info("judgeExists:taxPreferenceDOs={}", taxPreferenceDOs);
         if (taxPreferenceDOs.size() > 1) {
             throw BizCode._4302.exception();
         }
         if (taxPreferenceDOs.size() == 1
-                && taxPreferenceDTO.getId() != null
                 && !taxPreferenceDOs.get(0).getId().equals(taxPreferenceDTO.getId())) {
             throw BizCode._4302.exception();
         }
@@ -470,7 +471,11 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     }
 
     private String getNamesByCodeValues(String s) {
-        return sysCodeService.getStringNamesByCodeValues(s);
+        SysCodeVO sysCodeVO = sysCodeService.getCodeVOByCodeName(SysCodeType.TAXPAYER_TYPE, s);
+        if(sysCodeVO==null){
+            return null;
+        }
+       return sysCodeVO.getCodeValue();
     }
 
     /**
