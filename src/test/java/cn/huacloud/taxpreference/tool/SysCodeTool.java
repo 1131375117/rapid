@@ -17,6 +17,7 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -209,7 +210,25 @@ public class SysCodeTool extends BaseApplicationTest {
     /**
      * 纳税人类型
      */
-    private SysCodeProvider taxpayerType = nextId -> readSingleFile("纳税人类型.txt", SysCodeType.TAXPAYER_TYPE, nextId);
+    private SysCodeProvider taxpayerType = nextId -> {
+        List<SysCodeDO> sysCodeDOList = readSingleFile("纳税人类型.txt", SysCodeType.TAXPAYER_TYPE, nextId);
+        // TAX_CATEGORIES_ZZS、TAX_CATEGORIES_QYSDS
+        for (SysCodeDO sysCodeDO : sysCodeDOList) {
+            String codeName = sysCodeDO.getCodeName();
+            if (codeName.startsWith("增值税")) {
+                sysCodeDO.setCodeName(StringUtils.substringAfter(codeName, "-"));
+                sysCodeDO.setExtendsField1("TAX_CATEGORIES_ZZS");
+                sysCodeDO.setExtendsField2("增值税");
+            } else if (codeName.startsWith("企业所得税")) {
+                sysCodeDO.setCodeName(StringUtils.substringAfter(codeName, "-"));
+                sysCodeDO.setExtendsField1("TAX_CATEGORIES_QYSDS");
+                sysCodeDO.setExtendsField2("企业所得税");
+            } else {
+                throw new RuntimeException("未知的税种类型");
+            }
+        }
+        return sysCodeDOList;
+    };
 
     public List<SysCodeDO> readSingleFile(String fileName, SysCodeType sysCodeType, Long nextId) {
         try {
