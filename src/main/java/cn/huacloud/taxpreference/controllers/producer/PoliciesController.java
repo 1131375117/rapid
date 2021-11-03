@@ -123,7 +123,7 @@ public class PoliciesController {
     @PermissionInfo(name = "查询政策法规废止信息", group = PermissionGroup.POLICIES)
     @SaCheckPermission("producer_policies_abolish_detail")
     @ApiOperation("查询政策法规废止信息")
-    @PostMapping(value = "/policies/abolish/{id}")
+    @GetMapping(value = "/policies/abolish/{id}")
     public ResultVO<PoliciesAbolishVO> getAbolish(@Validated @NotEmpty(message = "id不能为空") @PathVariable("id") Long id) {
         PoliciesAbolishVO policiesAbolishVO = policiesService.getAbolish(id);
         return ResultVO.ok(policiesAbolishVO);

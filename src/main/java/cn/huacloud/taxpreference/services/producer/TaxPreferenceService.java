@@ -70,15 +70,15 @@ public interface TaxPreferenceService {
 
 
     /**
-     * 修改税收优惠状态
-     * @param queryAbolishDTO
+     * 根据政策法规废止状态修改税收优惠状态
+     * @param queryAbolishDTO 条件
      * @return
      */
     void updateStatus(QueryAbolishDTO queryAbolishDTO);
 
     /**
      * 查询税收优惠废止的信息
-     * @param policiesId
+     * @param policiesId 政策法规id
      * @return
      */
     List<TaxPreferenceAbolishVO> getTaxPreferenceAbolish(Long policiesId);

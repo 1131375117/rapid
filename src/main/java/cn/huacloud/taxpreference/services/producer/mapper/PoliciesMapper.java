@@ -32,6 +32,7 @@ public interface PoliciesMapper extends BaseMapper<PoliciesDO> {
 
     /**
      * 根据政策法规id查询政策解读id
+     *
      * @param policiesId
      * @return
      */
@@ -39,6 +40,7 @@ public interface PoliciesMapper extends BaseMapper<PoliciesDO> {
 
     /**
      * 根据政策法规id查询热门问答id
+     *
      * @param id
      * @return
      */
@@ -46,8 +48,9 @@ public interface PoliciesMapper extends BaseMapper<PoliciesDO> {
 
     /**
      * 根据政策法规id查询税收优惠id
+     *
      * @param id
      * @return
      */
-    Long[] selectTaxPreferenceId( Long id);
+    Long[] selectTaxPreferenceId(Long id);
 }

@@ -23,9 +23,6 @@ public class QueryAbolishDTO {
     @ApiModelProperty("废止说明")
     private String abolishNote;
 
-    @ApiModelProperty("有效性")
-    private String validity;
-
     @ApiModelProperty("税收优惠的id集合")
     private List<Long> ids;
 
