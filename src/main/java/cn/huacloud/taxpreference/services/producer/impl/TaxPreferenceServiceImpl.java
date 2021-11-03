@@ -522,8 +522,15 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
      */
     @Override
     public List<TaxPreferenceAbolishVO> getTaxPreferenceAbolish(Long policiesId) {
+        if(policiesId==null){
+            return null;
+        }
+
         //根据政策法规id查询税收优惠标题
-        List<TaxPreferenceDO> taxPreferenceDOS=taxPreferenceMapper.selectByIdList(policiesId);
+        List<TaxPreferenceDO> taxPreferenceDOS = taxPreferenceMapper.selectByIdList(policiesId);
+        if(taxPreferenceDOS.size()==1&&taxPreferenceDOS.get(0)==null){
+            return null;
+        }
         List<TaxPreferenceAbolishVO> TaxPreferenceAbolishVOList = new ArrayList<>();
         for (TaxPreferenceDO taxPreferenceDO : taxPreferenceDOS) {
             TaxPreferenceAbolishVO taxPreferenceAbolishVO = new TaxPreferenceAbolishVO();
@@ -532,5 +539,33 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
             TaxPreferenceAbolishVOList.add(taxPreferenceAbolishVO);
         }
         return TaxPreferenceAbolishVOList;
+    }
+
+    /**
+     * 删除税收优惠关联表
+     *
+     * @param id 政策法规id
+     */
+    @Override
+    public void deleteTaxPreferencePolicies(Long id) {
+        LambdaQueryWrapper<TaxPreferencePoliciesDO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(!org.springframework.util.StringUtils.isEmpty(id),
+                TaxPreferencePoliciesDO::getPoliciesId,id);
+        taxPreferencePoliciesMapper.delete(queryWrapper);
+    }
+
+    /**
+     * 根据税收优惠id查询关联表中的数据条数
+     *
+     * @param taxPreferenceId
+     */
+    @Override
+    public Long getTaxPreferencePoliciesCount(Long taxPreferenceId) {
+        //根据税收优惠id查询关联表中的数据条数
+        LambdaQueryWrapper<TaxPreferencePoliciesDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(TaxPreferencePoliciesDO::getTaxPreferenceId, taxPreferenceId);
+        Long count = taxPreferencePoliciesMapper.selectCount(lambdaQueryWrapper);
+        log.info("与政策法规关联的税收优惠条数={}", count);
+        return count;
     }
 }

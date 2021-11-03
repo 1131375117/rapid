@@ -11,14 +11,11 @@ import java.util.List;
  * @create: 2021-10-21 09:32
  **/
 @Data
-public class TaxPreferenceAbolishVO {
+public class TaxPreferenceCountVO {
+
     @ApiModelProperty("税收优惠id")
-    private Long id;
+    private Long taxPreferenceId;
 
-    @ApiModelProperty("税收优惠的名称")
-    private String taxPreferenceName;
-
-    @ApiModelProperty("有效性")
-    private String validity;
-
+    @ApiModelProperty("税收优惠数量")
+    private Long count;
 }

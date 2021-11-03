@@ -22,6 +22,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotEmpty;
+import java.util.List;
 
 
 /**
@@ -130,6 +131,21 @@ public class PoliciesController {
     }
 
     /**
+     * 校验删除政策法规
+     *
+     * @param id 政策法规id
+     * @return
+     */
+    @PermissionInfo(name = "校验删除政策法规", group = PermissionGroup.POLICIES)
+    @SaCheckPermission("producer_policies_delete")
+    @ApiOperation("校验删除政策法规")
+    @DeleteMapping(value = "/policies/checkDelete/{id}")
+    public ResultVO<Void> deletePoliciesById(@Validated @NotEmpty(message = "id不能为空") @PathVariable("id") Long id) {
+        policiesService.deletePoliciesById(id);
+        return ResultVO.ok();
+    }
+
+    /**
      * 删除政策法规
      *
      * @param id 政策法规id
@@ -138,9 +154,9 @@ public class PoliciesController {
     @PermissionInfo(name = "删除政策法规", group = PermissionGroup.POLICIES)
     @SaCheckPermission("producer_policies_delete")
     @ApiOperation("删除政策法规")
-    @DeleteMapping(value = "/policies/{id}")
-    public ResultVO<Void> deletePoliciesById(@Validated @NotEmpty(message = "id不能为空") @PathVariable("id") Long id) {
-        policiesService.deletePoliciesById(id);
+    @DeleteMapping(value = "/policies/{id}/")
+    public ResultVO<Void> confirmDeletePoliciesById(@Validated @NotEmpty(message = "id不能为空") @PathVariable("id") Long id) {
+        policiesService.confirmDeletePoliciesById(id);
         return ResultVO.ok();
     }
 }

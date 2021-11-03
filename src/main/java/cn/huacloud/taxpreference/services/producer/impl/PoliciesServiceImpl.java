@@ -3,6 +3,8 @@ package cn.huacloud.taxpreference.services.producer.impl;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.enums.taxpreference.SortType;
+import cn.huacloud.taxpreference.common.exception.TaxPreferenceException;
+import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
 import cn.huacloud.taxpreference.services.producer.FrequentlyAskedQuestionService;
 import cn.huacloud.taxpreference.services.producer.PoliciesExplainService;
@@ -10,6 +12,7 @@ import cn.huacloud.taxpreference.services.producer.PoliciesService;
 import cn.huacloud.taxpreference.services.producer.TaxPreferenceService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
+import cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferenceDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferencePoliciesDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.*;
 import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesSortType;
@@ -143,7 +146,7 @@ public class PoliciesServiceImpl implements PoliciesService {
         policiesCombinationDTO.setId(policiesDO.getId());
         //新增政策解读
         PoliciesExplainDTO policiesExplainDTO = new PoliciesExplainDTO();
-        BeanUtils.copyProperties(policiesCombinationDTO, policiesExplainDTO);
+        BeanUtils.copyProperties(policiesCombinationDTO.getPoliciesExplainDTO(), policiesExplainDTO);
         policiesExplainDTO.setPoliciesId(policiesDO.getId());
         policiesExplainService.insertPoliciesExplain(policiesExplainDTO, userId);
         //新增热点问答
@@ -263,7 +266,7 @@ public class PoliciesServiceImpl implements PoliciesService {
     }
 
     /**
-     * 删除政策法规
+     * 校验删除政策法规
      *
      * @param id
      */
@@ -277,12 +280,78 @@ public class PoliciesServiceImpl implements PoliciesService {
         }
         policiesDO.setDeleted(true);
         log.info("删除政策法规对象={}", policiesDO);
-        //删除政策解读
-        List<Long> policiesExplainIds = policiesMapper.selectExplainId(policiesDO.getId());
-        for (Long policiesExplainId : policiesExplainIds) {
-            policiesExplainService.deletePoliciesById(policiesExplainId);
+
+        //删除税收优惠,根据政策法规id查询税收优惠id--关联表中
+        List<TaxPreferenceCountVO> taxPreferenceCountVOS = policiesMapper.selectTaxPreferenceId(policiesDO.getId());
+        for (TaxPreferenceCountVO taxPreferenceCountVO : taxPreferenceCountVOS) {
+            Long count = taxPreferenceCountVO.getCount();
+
+            //查询优惠事项
+            List<TaxPreferenceAbolishVO> taxPreferenceAbolish = taxPreferenceService.getTaxPreferenceAbolish(policiesDO.getId());
+
+            //根据税收优惠id查询关联表中的数据条数
+
+
+            //判断查询结果是否是多个，多个把关联表的关系删除
+            if (count > 1) {
+                TaxPreferenceException exception = BizCode._4308.exception(taxPreferenceAbolish);
+
+            } else if (count == 1) {
+                //判断查询结果是单个，提示无法删除
+                TaxPreferenceException exception = BizCode._4306.exception(taxPreferenceAbolish);
+                throw exception;
+            } else {
+                //政策法规、政策解读、热门问答删除
+                throw BizCode._4307.exception();
+            }
         }
-        //删除热点问答
+
+
+    }
+
+
+    @Override
+    public void confirmDeletePoliciesById(Long id) {
+        PoliciesDO policiesDO = policiesMapper.selectById(id);
+        //参数校验
+        if (policiesDO == null) {
+            throw BizCode._4100.exception();
+        }
+        policiesDO.setDeleted(true);
+        log.info("删除政策法规对象={}", policiesDO);
+        //删除税收优惠,根据政策法规id查询税收优惠id--关联表中
+        List<TaxPreferenceCountVO> taxPreferenceCountVOS = policiesMapper.selectTaxPreferenceId(policiesDO.getId());
+        for (TaxPreferenceCountVO taxPreferenceCountVO : taxPreferenceCountVOS) {
+            Long count = taxPreferenceCountVO.getCount();
+            if (count > 1) {
+                List<TaxPreferenceAbolishVO> taxPreferenceAbolish = taxPreferenceService.getTaxPreferenceAbolish(policiesDO.getId());
+                taxPreferenceService.deleteTaxPreferencePolicies(policiesDO.getId());
+                TaxPreferenceException exception = BizCode._4308.exception(taxPreferenceAbolish);
+
+            } else if (count == 1) {
+                List<TaxPreferenceAbolishVO> taxPreferenceAbolish = taxPreferenceService.getTaxPreferenceAbolish(policiesDO.getId());
+
+                //判断查询结果是单个，提示无法删除
+                TaxPreferenceException exception = BizCode._4306.exception(taxPreferenceAbolish);
+                throw exception;
+            } else {
+
+                deletePolciesExplain(policiesDO);
+                //删除热点问答
+                deleteFrequentlyAskedQuestion(policiesDO);
+                policiesMapper.updateById(policiesDO);
+            }
+        }
+        if(taxPreferenceCountVOS.isEmpty()){
+            deletePolciesExplain(policiesDO);
+            //删除热点问答
+            deleteFrequentlyAskedQuestion(policiesDO);
+        }
+
+    }
+
+
+    private void deleteFrequentlyAskedQuestion(PoliciesDO policiesDO) {
         List<FrequentlyAskedQuestionDO> frequentlyAskedQuestionIds = policiesMapper.selectFrequentlyAskedQuestionId(policiesDO.getId());
         log.info("热点问答id集合={}", frequentlyAskedQuestionIds);
         for (FrequentlyAskedQuestionDO frequentlyAskedQuestionId : frequentlyAskedQuestionIds) {
@@ -293,76 +362,62 @@ public class PoliciesServiceImpl implements PoliciesService {
             frequentlyAskedQuestionId.setPoliciesIds(StringUtils.join(list, ","));
             frequentlyAskedQuestionMapper.updateById(frequentlyAskedQuestionId);
         }
-        //删除税收优惠,根据政策法规id查询税收优惠id--关联表中
-        Long[] taxPreferenceIds = policiesMapper.selectTaxPreferenceId(policiesDO.getId());
-        log.info("taxPreferenceIds={}", taxPreferenceIds);
-        for (Long taxPreferenceId : taxPreferenceIds) {
-            //根据税收优惠id查询关联表中的数据条数
-            LambdaQueryWrapper<TaxPreferencePoliciesDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-            lambdaQueryWrapper.eq(TaxPreferencePoliciesDO::getTaxPreferenceId, taxPreferenceId);
-            Long count = taxPreferencePoliciesMapper.selectCount(lambdaQueryWrapper);
-            log.info("与政策法规关联的税收优惠条数={}", count);
-            //判断查询结果是否是多个，多个把关联表的关系删除
-            if (count > 1) {
-                LambdaQueryWrapper<TaxPreferencePoliciesDO> queryWrapper = new LambdaQueryWrapper<>();
-                queryWrapper.eq(!org.springframework.util.StringUtils.isEmpty(policiesDO.getId()),
-                        TaxPreferencePoliciesDO::getPoliciesId, policiesDO.getId());
-                taxPreferencePoliciesMapper.delete(queryWrapper);
-            } else if (count == 1) {
-                //判断查询结果是单个，提示无法删除
-                throw BizCode._4306.exception();
-            }
-            policiesMapper.updateById(policiesDO);
+    }
+
+    private void deletePolciesExplain(PoliciesDO policiesDO) {
+        List<Long> policiesExplainIds = policiesMapper.selectExplainId(policiesDO.getId());
+        for (Long policiesExplainId : policiesExplainIds) {
+            policiesExplainService.deletePoliciesById(policiesExplainId);
         }
     }
 
-        /**
-         * 政策法规废止
-         *
-         * @param queryAbolishDTO 政策法规废止参数
-         */
-        @Override
-        public void abolish (QueryAbolishDTO queryAbolishDTO){
-            //查询政策法规
-            Long id = queryAbolishDTO.getId();
-            PoliciesDO policiesDO = policiesMapper.selectById(id);
-            //参数校验
-            if (policiesDO == null) {
-                throw BizCode._4100.exception();
-            }
-            //判断条件--全文废止
-            if (PoliciesStatusEnum.FULL_TEXT_REPEAL.getValue().equals(queryAbolishDTO.getPoliciesStatus())) {
-                //设置政策法规的有效性
-                policiesDO.setValidity(ValidityEnum.FULL_TEXT_REPEAL.getValue());
-                //设置税收优惠的有效性
-            } else if (PoliciesStatusEnum.PARTIAL_REPEAL.getValue().equals(queryAbolishDTO.getPoliciesStatus())) {
-                //判断条件--部分废止
-                policiesDO.setPoliciesStatus(PoliciesStatusEnum.PARTIAL_REPEAL.getValue());
-                //设置政策法规的有效性
-                policiesDO.setValidity(ValidityEnum.PARTIAL_VALID.getValue());
-            }
-            taxPreferenceService.updateStatus(queryAbolishDTO);
-            log.info("废止政策法规对象={}", policiesDO);
-            policiesMapper.updateById(policiesDO);
+    /**
+     * 政策法规废止
+     *
+     * @param queryAbolishDTO 政策法规废止参数
+     */
+    @Override
+    public void abolish(QueryAbolishDTO queryAbolishDTO) {
+        //查询政策法规
+        Long id = queryAbolishDTO.getId();
+        PoliciesDO policiesDO = policiesMapper.selectById(id);
+        //参数校验
+        if (policiesDO == null) {
+            throw BizCode._4100.exception();
         }
-
-        /**
-         * 查询废止信息
-         *
-         * @param id 政策法规id
-         */
-        @Override
-        public PoliciesAbolishVO getAbolish (Long id){
-            //查询政策法规
-            PoliciesDO policiesDO = policiesMapper.selectById(id);
-            List<TaxPreferenceAbolishVO> taxPreferenceAbolish = taxPreferenceService.getTaxPreferenceAbolish(id);
-            //设置返回结果值
-            PoliciesAbolishVO policiesAbolishVO = new PoliciesAbolishVO();
-            policiesAbolishVO.setPoliciesStatus(policiesDO.getPoliciesStatus());
-            policiesAbolishVO.setAbolishNote(policiesDO.getAbolishNote());
-            policiesAbolishVO.setTaxPreferenceVOS(taxPreferenceAbolish);
-            //返回结果
-            log.info("查询政策法规废止的对象={}", policiesAbolishVO);
-            return policiesAbolishVO;
+        //判断条件--全文废止
+        if (PoliciesStatusEnum.FULL_TEXT_REPEAL.getValue().equals(queryAbolishDTO.getPoliciesStatus())) {
+            //设置政策法规的有效性
+            policiesDO.setValidity(ValidityEnum.FULL_TEXT_REPEAL.getValue());
+            //设置税收优惠的有效性
+        } else if (PoliciesStatusEnum.PARTIAL_REPEAL.getValue().equals(queryAbolishDTO.getPoliciesStatus())) {
+            //判断条件--部分废止
+            policiesDO.setPoliciesStatus(PoliciesStatusEnum.PARTIAL_REPEAL.getValue());
+            //设置政策法规的有效性
+            policiesDO.setValidity(ValidityEnum.PARTIAL_VALID.getValue());
         }
+        taxPreferenceService.updateStatus(queryAbolishDTO);
+        log.info("废止政策法规对象={}", policiesDO);
+        policiesMapper.updateById(policiesDO);
     }
+
+    /**
+     * 查询废止信息
+     *
+     * @param id 政策法规id
+     */
+    @Override
+    public PoliciesAbolishVO getAbolish(Long id) {
+        //查询政策法规
+        PoliciesDO policiesDO = policiesMapper.selectById(id);
+        List<TaxPreferenceAbolishVO> taxPreferenceAbolish = taxPreferenceService.getTaxPreferenceAbolish(id);
+        //设置返回结果值
+        PoliciesAbolishVO policiesAbolishVO = new PoliciesAbolishVO();
+        policiesAbolishVO.setPoliciesStatus(policiesDO.getPoliciesStatus());
+        policiesAbolishVO.setAbolishNote(policiesDO.getAbolishNote());
+        policiesAbolishVO.setTaxPreferenceVOS(taxPreferenceAbolish);
+        //返回结果
+        log.info("查询政策法规废止的对象={}", policiesAbolishVO);
+        return policiesAbolishVO;
+    }
+}

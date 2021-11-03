@@ -99,22 +99,4 @@ public class TaxPreferenceController {
         return taxPreferenceService.reTaxPreference(id);
     }
 
-    @PermissionInfo(name = "修改税收优惠状态", group = PermissionGroup.TAX_PREFERENCE)
-    @SaCheckPermission("producer_taxPreference_updateAbolishStatus")
-    @ApiOperation("修改税收优惠状态")
-    @PutMapping("/updateStatus")
-    public ResultVO<Void> updateStatus(@Validated(ValidationGroup.Update.class)@RequestBody QueryAbolishDTO queryAbolishDTO) {
-        taxPreferenceService.updateStatus(queryAbolishDTO);
-        return ResultVO.ok();
-    }
-
-    @PermissionInfo(name = "查询税收优惠废止信息", group = PermissionGroup.TAX_PREFERENCE)
-    @SaCheckPermission("producer_taxPreference_getAbolishDetail")
-    @ApiOperation("查询税收优惠废止信息")
-    @GetMapping("/taxPreferenceAbolish/query/{id}")
-    public ResultVO<List<TaxPreferenceAbolishVO>> getTaxPreferenceAbolish(@Validated @NotEmpty(message = "id不能为空")@PathVariable("id") Long policiesId) {
-        List<TaxPreferenceAbolishVO> taxPreferenceVO = taxPreferenceService.getTaxPreferenceAbolish(policiesId);
-        return ResultVO.ok(taxPreferenceVO);
-    }
-
 }
