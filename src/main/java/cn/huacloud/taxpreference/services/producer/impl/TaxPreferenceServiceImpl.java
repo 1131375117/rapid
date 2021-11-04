@@ -553,19 +553,4 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
                 TaxPreferencePoliciesDO::getPoliciesId,id);
         taxPreferencePoliciesMapper.delete(queryWrapper);
     }
-
-    /**
-     * 根据税收优惠id查询关联表中的数据条数
-     *
-     * @param taxPreferenceId
-     */
-    @Override
-    public Long getTaxPreferencePoliciesCount(Long taxPreferenceId) {
-        //根据税收优惠id查询关联表中的数据条数
-        LambdaQueryWrapper<TaxPreferencePoliciesDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(TaxPreferencePoliciesDO::getTaxPreferenceId, taxPreferenceId);
-        Long count = taxPreferencePoliciesMapper.selectCount(lambdaQueryWrapper);
-        log.info("与政策法规关联的税收优惠条数={}", count);
-        return count;
-    }
 }

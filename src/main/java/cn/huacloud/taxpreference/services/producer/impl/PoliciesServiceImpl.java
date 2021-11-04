@@ -61,8 +61,6 @@ public class PoliciesServiceImpl implements PoliciesService {
 
     private final TaxPreferenceService taxPreferenceService;
 
-    private final TaxPreferencePoliciesMapper taxPreferencePoliciesMapper;
-
 
     /**
      * 政策列表查询
@@ -285,17 +283,11 @@ public class PoliciesServiceImpl implements PoliciesService {
         List<TaxPreferenceCountVO> taxPreferenceCountVOS = policiesMapper.selectTaxPreferenceId(policiesDO.getId());
         for (TaxPreferenceCountVO taxPreferenceCountVO : taxPreferenceCountVOS) {
             Long count = taxPreferenceCountVO.getCount();
-
             //查询优惠事项
             List<TaxPreferenceAbolishVO> taxPreferenceAbolish = taxPreferenceService.getTaxPreferenceAbolish(policiesDO.getId());
-
-            //根据税收优惠id查询关联表中的数据条数
-
-
             //判断查询结果是否是多个，多个把关联表的关系删除
             if (count > 1) {
                 TaxPreferenceException exception = BizCode._4308.exception(taxPreferenceAbolish);
-
             } else if (count == 1) {
                 //判断查询结果是单个，提示无法删除
                 TaxPreferenceException exception = BizCode._4306.exception(taxPreferenceAbolish);
@@ -305,11 +297,16 @@ public class PoliciesServiceImpl implements PoliciesService {
                 throw BizCode._4307.exception();
             }
         }
-
-
+        if(taxPreferenceCountVOS.isEmpty()){
+            TaxPreferenceException exception = BizCode._4307.exception();
+        }
     }
 
 
+    /**
+     * 删除政策法规
+     * @param id
+     */
     @Override
     public void confirmDeletePoliciesById(Long id) {
         PoliciesDO policiesDO = policiesMapper.selectById(id);
@@ -327,23 +324,20 @@ public class PoliciesServiceImpl implements PoliciesService {
                 List<TaxPreferenceAbolishVO> taxPreferenceAbolish = taxPreferenceService.getTaxPreferenceAbolish(policiesDO.getId());
                 taxPreferenceService.deleteTaxPreferencePolicies(policiesDO.getId());
                 TaxPreferenceException exception = BizCode._4308.exception(taxPreferenceAbolish);
-
             } else if (count == 1) {
                 List<TaxPreferenceAbolishVO> taxPreferenceAbolish = taxPreferenceService.getTaxPreferenceAbolish(policiesDO.getId());
-
                 //判断查询结果是单个，提示无法删除
                 TaxPreferenceException exception = BizCode._4306.exception(taxPreferenceAbolish);
                 throw exception;
             } else {
-
-                deletePolciesExplain(policiesDO);
+                deletePoliciesExplain(policiesDO);
                 //删除热点问答
                 deleteFrequentlyAskedQuestion(policiesDO);
                 policiesMapper.updateById(policiesDO);
             }
         }
-        if(taxPreferenceCountVOS.isEmpty()){
-            deletePolciesExplain(policiesDO);
+        if (taxPreferenceCountVOS.isEmpty()) {
+            deletePoliciesExplain(policiesDO);
             //删除热点问答
             deleteFrequentlyAskedQuestion(policiesDO);
         }
@@ -351,6 +345,10 @@ public class PoliciesServiceImpl implements PoliciesService {
     }
 
 
+    /**
+     * 删除热门问答
+     * @param policiesDO
+     */
     private void deleteFrequentlyAskedQuestion(PoliciesDO policiesDO) {
         List<FrequentlyAskedQuestionDO> frequentlyAskedQuestionIds = policiesMapper.selectFrequentlyAskedQuestionId(policiesDO.getId());
         log.info("热点问答id集合={}", frequentlyAskedQuestionIds);
@@ -364,7 +362,11 @@ public class PoliciesServiceImpl implements PoliciesService {
         }
     }
 
-    private void deletePolciesExplain(PoliciesDO policiesDO) {
+    /**
+     * 删除政策法规
+     * @param policiesDO
+     */
+    private void deletePoliciesExplain(PoliciesDO policiesDO) {
         List<Long> policiesExplainIds = policiesMapper.selectExplainId(policiesDO.getId());
         for (Long policiesExplainId : policiesExplainIds) {
             policiesExplainService.deletePoliciesById(policiesExplainId);

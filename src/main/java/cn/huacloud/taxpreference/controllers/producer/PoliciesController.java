@@ -16,6 +16,7 @@ import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesDetailVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -65,7 +66,7 @@ public class PoliciesController {
     @SaCheckPermission("producer_policies_insert")
     @ApiOperation(value = "政策法规新增")
     @PostMapping(value = "/policies/insert")
-    public ResultVO<PoliciesCombinationDTO> insertPolicies(@Validated(ValidationGroup.Create.class) @RequestBody PoliciesCombinationDTO policiesCombinationDTO) {
+    public ResultVO<PoliciesCombinationDTO> insertPolicies(@Validated(ValidationGroup.Create.class) @ApiParam("政策法规组合") @RequestBody PoliciesCombinationDTO policiesCombinationDTO) {
         policiesService.insertPolicies(policiesCombinationDTO, UserUtil.getCurrentUser().getId());
         return ResultVO.ok(policiesCombinationDTO);
     }

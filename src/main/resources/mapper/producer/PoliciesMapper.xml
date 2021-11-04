@@ -87,11 +87,21 @@
     </select>
     <select id="selectTaxPreferenceId"
             resultType="cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceCountVO">
+        SELECT
+            count( tax_preference_id ) AS count,
+            tax_preference_id
+        FROM
+            t_tax_preference_policies
+        WHERE
+            tax_preference_id IN (
+            SELECT
+                tax_preference_id
+            FROM
+                t_tax_preference_policies
+        WHERE
+            policies_id = #{policiesId} ) GROUP BY tax_preference_id
 
-        select count(tax_preference_id) as count,tax_preference_id from t_tax_preference_policies where tax_preference_id in
-(select tax_preference_id
-from t_tax_preference_policies
-where policies_id=#{policiesId} ) GROUP BY tax_preference_id
+
     </select>
 
 

@@ -89,9 +89,4 @@ public interface TaxPreferenceService {
      */
     void deleteTaxPreferencePolicies(Long id);
 
-    /**
-     * 根据税收优惠id查询关联表中的数据条数
-     * @param taxPreferenceId 税收优惠id
-     */
-    Long getTaxPreferencePoliciesCount(Long taxPreferenceId);
 }
