@@ -479,28 +479,35 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     }
 
     /**
-     * 修改税收优惠状态
+     * 根据政策法规废止状态修改税收优惠状态
      *
-     * @param queryAbolishDTO
+     * @param queryAbolishDTO 条件
      * @return
      */
     @Override
     public void updateStatus(QueryAbolishDTO queryAbolishDTO) {
         //根据税收优惠的id查询出税收优惠的列表
         TaxPreferenceDO taxPreferenceDO = null;
+        //判断废止状态--全文废止
         if (PoliciesStatusEnum.FULL_TEXT_REPEAL.getValue().equals(queryAbolishDTO.getPoliciesStatus())) {
+            //调用查询废止接口
             List<TaxPreferenceAbolishVO> taxPreferenceAbolish = getTaxPreferenceAbolish(queryAbolishDTO.getId());
             for (TaxPreferenceAbolishVO preferenceAbolish : taxPreferenceAbolish) {
                 taxPreferenceDO = new TaxPreferenceDO();
+                //属性拷贝
                 BeanUtils.copyProperties(preferenceAbolish, taxPreferenceDO);
+                //设置税收优惠状态--失效
                 taxPreferenceDO.setValidity(ValidityEnum.INVALID.getValue());
             }
+            //判断废止状态--部分废止
         } else if (PoliciesStatusEnum.PARTIAL_REPEAL.getValue().equals(queryAbolishDTO.getPoliciesStatus())) {
             List<Long> ids = queryAbolishDTO.getIds();
+            //遍历选中的id集合
             for (Long id : ids) {
+                //根据id查询税收优惠对象
                 taxPreferenceDO = taxPreferenceMapper.selectById(id);
+                //设置税收优惠状态--失效
                 taxPreferenceDO.setValidity(ValidityEnum.INVALID.getValue());
-                taxPreferenceMapper.updateById(taxPreferenceDO);
             }
         }
         log.info("taxPreferenceDO:{}",taxPreferenceDO);
@@ -510,19 +517,40 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     /**
      * 查询税收优惠废止的信息
      *
-     * @param policiesId
+     * @param policiesId 政策法规id
      * @return
      */
     @Override
     public List<TaxPreferenceAbolishVO> getTaxPreferenceAbolish(Long policiesId) {
+        if(policiesId==null){
+            return null;
+        }
 
-        List<TaxPreferenceDO> taxPreferenceDOS=taxPreferenceMapper.selectByIdList(policiesId);
-        ArrayList<TaxPreferenceAbolishVO> TaxPreferenceAbolishVOList = new ArrayList<>();
+        //根据政策法规id查询税收优惠标题
+        List<TaxPreferenceDO> taxPreferenceDOS = taxPreferenceMapper.selectByIdList(policiesId);
+        if(taxPreferenceDOS.size()==1&&taxPreferenceDOS.get(0)==null){
+            return null;
+        }
+        List<TaxPreferenceAbolishVO> TaxPreferenceAbolishVOList = new ArrayList<>();
         for (TaxPreferenceDO taxPreferenceDO : taxPreferenceDOS) {
             TaxPreferenceAbolishVO taxPreferenceAbolishVO = new TaxPreferenceAbolishVO();
+            //属性拷贝
             BeanUtils.copyProperties(taxPreferenceDO,taxPreferenceAbolishVO);
             TaxPreferenceAbolishVOList.add(taxPreferenceAbolishVO);
         }
         return TaxPreferenceAbolishVOList;
+    }
+
+    /**
+     * 删除税收优惠关联表
+     *
+     * @param id 政策法规id
+     */
+    @Override
+    public void deleteTaxPreferencePolicies(Long id) {
+        LambdaQueryWrapper<TaxPreferencePoliciesDO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(!org.springframework.util.StringUtils.isEmpty(id),
+                TaxPreferencePoliciesDO::getPoliciesId,id);
+        taxPreferencePoliciesMapper.delete(queryWrapper);
     }
 }

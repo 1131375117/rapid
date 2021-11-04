@@ -13,6 +13,7 @@ import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesExpl
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainDetailVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -53,7 +54,7 @@ public class FrequentlyAskedQuestionController {
     @SaCheckPermission("producer_frequentlyAskedQuestion_insert")
     @ApiOperation("新增热门问答")
     @PostMapping(value = "/frequentlyAskedQuestion")
-    public ResultVO<Void> insertFrequentlyAskedQuestion(@Validated(ValidationGroup.Create.class)@RequestBody List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOS) {
+    public ResultVO<Void> insertFrequentlyAskedQuestion(@Validated(ValidationGroup.Create.class)@ApiParam("热门问答集合") @RequestBody List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOS) {
 
         frequentlyAskedQuestionService.insertFrequentlyAskedQuestion(frequentlyAskedQuestionDTOS, UserUtil.getCurrentUser().getId());
         return ResultVO.ok();

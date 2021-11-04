@@ -94,5 +94,6 @@ public class PoliciesCombinationDTO {
     @ApiModelProperty("热点问答集合")
     private List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOList;
 
-
+    @ApiModelProperty("政策法规对象")
+    private PoliciesExplainDTO policiesExplainDTO;
 }

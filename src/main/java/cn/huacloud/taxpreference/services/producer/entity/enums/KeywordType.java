@@ -8,8 +8,11 @@ import com.baomidou.mybatisplus.annotation.IEnum;
  *
  * @author wuxin
  */
+
 public enum KeywordType implements IEnum<String> {
+    //政策法规标题
     TITLE,
+    //政策法规文号
     DOC_CODE;
 
     @Override

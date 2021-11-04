@@ -58,9 +58,9 @@ public class GlobalExceptionHandler {
      * @return resultVO
      */
     @ExceptionHandler(TaxPreferenceException.class)
-    public ResultVO<Void> handleTaxPreferenceException(TaxPreferenceException e) {
+    public ResultVO<Object> handleTaxPreferenceException(TaxPreferenceException e) {
         log.info("接口调用业务异常", e);
-        return new ResultVO<>(e.getCode(), e.getMessage(), null);
+        return new ResultVO<>(e.getCode(), e.getMessage(), e.getData());
     }
 
     /**

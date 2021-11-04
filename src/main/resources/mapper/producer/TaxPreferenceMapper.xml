@@ -89,9 +89,10 @@
 
     </select>
 
-    <select id="selectByIdList" resultType="cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferenceDO">
-        SELECT tp.id,
-               tp.tax_categories_name
+    <select id="selectByIdList" resultType="cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferenceDO" parameterType="long" >
+        SELECT tp.id as id,
+               tp.tax_preference_name as taxPreferenceName,
+               tp.validity as validity
         FROM t_policies t
                  LEFT JOIN t_tax_preference_policies ttp ON t.id = ttp.policies_id
                  LEFT JOIN t_tax_preference tp ON ttp.tax_preference_id = tp.id

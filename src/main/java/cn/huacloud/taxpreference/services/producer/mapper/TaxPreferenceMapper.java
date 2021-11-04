@@ -43,7 +43,7 @@ public interface TaxPreferenceMapper  extends BaseMapper<TaxPreferenceDO> {
 
     /**
      * 查询税收优惠的标题
-     * @param policiesId
+     * @param policiesId 政策法规id
      * @return
      */
     List<TaxPreferenceDO> selectByIdList(Long policiesId);

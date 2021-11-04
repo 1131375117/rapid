@@ -46,7 +46,9 @@ public class QueryPoliciesExplainDTO extends KeywordPageQueryDTO {
     private SortField sortField;
 
     public enum SortField {
+        //发布时间
         RELEASE_DATE,
+        //更新时间
         UPDATE_TIME;
     }
 

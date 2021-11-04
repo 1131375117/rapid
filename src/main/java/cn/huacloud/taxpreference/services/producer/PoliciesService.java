@@ -50,11 +50,17 @@ public interface PoliciesService {
      void updatePolicies(PoliciesCombinationDTO policiesCombinationDTO);
 
     /**
-     * 删除政策法规
+     * 校验删除政策法规
      *
      * @param id 政策法规id
      */
      void deletePoliciesById(Long id);
+
+    /**
+     * 删除政策法规
+     * @param id
+     */
+    void confirmDeletePoliciesById(Long id);
 
     /**
      * 政策法规废止

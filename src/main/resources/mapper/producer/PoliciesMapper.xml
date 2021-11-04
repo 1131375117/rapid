@@ -2,70 +2,70 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.huacloud.taxpreference.services.producer.mapper.PoliciesMapper">
     <select id="queryPoliciesVOList" resultType="cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesVO">
-    SELECT
-    tp.id AS id,
-	tp.title AS title,
-	tp.doc_code AS docCode,
-	tp.area_name AS areaName,
-	tp.doc_source AS docSource,
-	tp.tax_categories_name AS taxCategoriesName,
-	tp.taxpayer_identify_type_names AS taxpayerIdentifyTypeNames,
-	tp.enterprise_type_names AS enterpriseTypeCodes,
-	tp.industry_names AS industryNames,
-	tp.validity AS validity,
-	tp.release_date AS releaseDate,
-	tp.digest AS digest,
-	tp.content AS content,
-	tp.labels AS labels,
-	tp.policies_status AS policiesStatus,
-	tp.abolish_note AS abolishNote,
-	tp.input_user_id AS inputUserId,
-	tp.create_time AS createTime,
-	tp.update_time AS updateTime
-FROM
-	t_policies tp
-	<where>
-        <if test="queryPoliciesDTO.taxCategoriesCode != null and queryPoliciesDTO.taxCategoriesCode != '' ">
-            and tp.tax_categories_code= #{queryPoliciesDTO.taxCategoriesCode}
-        </if>
-        <if test="queryPoliciesDTO.areaCode != null and queryPoliciesDTO.areaCode != '' ">
-            and tp.area_code=#{queryPoliciesDTO.areaCode}
-        </if>
-        <if test="queryPoliciesDTO.validity!=null and queryPoliciesDTO.validity!='' ">
-            and tp.validity=#{queryPoliciesDTO.validity}
-        </if>
-        <if test="queryPoliciesDTO.startTime!=null ">
-            and  tp.release_date >= #{queryPoliciesDTO.startTime}
-        </if>
-        <if test="queryPoliciesDTO.endTime!=null ">
-            and tp.release_date &lt;= #{queryPoliciesDTO.endTime}
-        </if>
-        <if test="(queryPoliciesDTO.title!=null and queryPoliciesDTO.title!='') and  queryPoliciesDTO.keywordType.getValue()==@cn.huacloud.taxpreference.services.producer.entity.enums.KeywordType@TITLE.getValue()">
-            and tp.title like "%"#{queryPoliciesDTO.title}"%"
-        </if>
-        <if test="(queryPoliciesDTO.docCode!=null and  queryPoliciesDTO.docCode!='') and  queryPoliciesDTO.keywordType.getValue()==@cn.huacloud.taxpreference.services.producer.entity.enums.KeywordType@DOC_CODE.getValue()">
-            and tp.doc_code like "%"#{queryPoliciesDTO.docCode}"%"
-        </if>
-        <if test="queryPoliciesDTO.taxpayerIdentifyTypeCodes!=null and queryPoliciesDTO.taxpayerIdentifyTypeCodes.size>0 ">
-            <foreach collection="queryPoliciesDTO.taxpayerIdentifyTypeCodes" item="taxpayer">
-                and FIND_IN_SET(#{taxpayer},tp.taxpayer_identify_type_codes)
-            </foreach>
-        </if>
-        <if test=" queryPoliciesDTO.industryCodes!=null and queryPoliciesDTO.industryCodes.size>0 ">
-            <foreach collection="queryPoliciesDTO.industryCodes" item="industryCodes" >
-                and  FIND_IN_SET(#{industryCodes},tp.industry_codes)
-            </foreach>
-        </if>
-        <if test="queryPoliciesDTO.enterpriseTypeCodes!=null and queryPoliciesDTO.enterpriseTypeCodes.size>0 ">
-            <foreach collection="queryPoliciesDTO.enterpriseTypeCodes" item="enterpriseTypeCodes" >
-                and  FIND_IN_SET(#{enterpriseTypeCodes},tp.enterprise_type_codes)
-            </foreach>
-        </if>
-        and tp.deleted=0
-    </where>
-    order by ${sort} DESC
-    
-</select>
+        SELECT
+        tp.id AS id,
+        tp.title AS title,
+        tp.doc_code AS docCode,
+        tp.area_name AS areaName,
+        tp.doc_source AS docSource,
+        tp.tax_categories_name AS taxCategoriesName,
+        tp.taxpayer_identify_type_names AS taxpayerIdentifyTypeNames,
+        tp.enterprise_type_names AS enterpriseTypeCodes,
+        tp.industry_names AS industryNames,
+        tp.validity AS validity,
+        tp.release_date AS releaseDate,
+        tp.digest AS digest,
+        tp.content AS content,
+        tp.labels AS labels,
+        tp.policies_status AS policiesStatus,
+        tp.abolish_note AS abolishNote,
+        tp.input_user_id AS inputUserId,
+        tp.create_time AS createTime,
+        tp.update_time AS updateTime
+        FROM
+        t_policies tp
+        <where>
+            <if test="queryPoliciesDTO.taxCategoriesCode != null and queryPoliciesDTO.taxCategoriesCode != '' ">
+                and tp.tax_categories_code= #{queryPoliciesDTO.taxCategoriesCode}
+            </if>
+            <if test="queryPoliciesDTO.areaCode != null and queryPoliciesDTO.areaCode != '' ">
+                and tp.area_code=#{queryPoliciesDTO.areaCode}
+            </if>
+            <if test="queryPoliciesDTO.validity!=null and queryPoliciesDTO.validity!='' ">
+                and tp.validity=#{queryPoliciesDTO.validity}
+            </if>
+            <if test="queryPoliciesDTO.startTime!=null ">
+                and tp.release_date >= #{queryPoliciesDTO.startTime}
+            </if>
+            <if test="queryPoliciesDTO.endTime!=null ">
+                and tp.release_date &lt;= #{queryPoliciesDTO.endTime}
+            </if>
+            <if test="(queryPoliciesDTO.title!=null and queryPoliciesDTO.title!='') and  queryPoliciesDTO.keywordType.getValue()==@cn.huacloud.taxpreference.services.producer.entity.enums.KeywordType@TITLE.getValue()">
+                and tp.title like "%"#{queryPoliciesDTO.title}"%"
+            </if>
+            <if test="(queryPoliciesDTO.docCode!=null and  queryPoliciesDTO.docCode!='') and  queryPoliciesDTO.keywordType.getValue()==@cn.huacloud.taxpreference.services.producer.entity.enums.KeywordType@DOC_CODE.getValue()">
+                and tp.doc_code like "%"#{queryPoliciesDTO.docCode}"%"
+            </if>
+            <if test="queryPoliciesDTO.taxpayerIdentifyTypeCodes!=null and queryPoliciesDTO.taxpayerIdentifyTypeCodes.size>0 ">
+                <foreach collection="queryPoliciesDTO.taxpayerIdentifyTypeCodes" item="taxpayer">
+                    and FIND_IN_SET(#{taxpayer},tp.taxpayer_identify_type_codes)
+                </foreach>
+            </if>
+            <if test=" queryPoliciesDTO.industryCodes!=null and queryPoliciesDTO.industryCodes.size>0 ">
+                <foreach collection="queryPoliciesDTO.industryCodes" item="industryCodes">
+                    and FIND_IN_SET(#{industryCodes},tp.industry_codes)
+                </foreach>
+            </if>
+            <if test="queryPoliciesDTO.enterpriseTypeCodes!=null and queryPoliciesDTO.enterpriseTypeCodes.size>0 ">
+                <foreach collection="queryPoliciesDTO.enterpriseTypeCodes" item="enterpriseTypeCodes">
+                    and FIND_IN_SET(#{enterpriseTypeCodes},tp.enterprise_type_codes)
+                </foreach>
+            </if>
+            and tp.deleted=0
+        </where>
+        order by ${sort} DESC
+
+    </select>
 
     <select id="selectExplainId" resultType="java.lang.Long">
         SELECT
@@ -76,7 +76,8 @@ FROM
         WHERE
 	    p.id =#{policiesId}
     </select>
-    <select id="selectFrequentlyAskedQuestionId" resultType="cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO">
+    <select id="selectFrequentlyAskedQuestionId"
+            resultType="cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO">
         SELECT
 	        p.id,p.policies_ids AS policiesIds
         FROM
@@ -84,14 +85,24 @@ FROM
         WHERE
             FIND_IN_SET(#{id},p.policies_ids)
     </select>
+    <select id="selectTaxPreferenceId"
+            resultType="cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceCountVO">
+        SELECT
+            count( tax_preference_id ) AS count,
+            tax_preference_id
+        FROM
+            t_tax_preference_policies
+        WHERE
+            tax_preference_id IN (
+            SELECT
+                tax_preference_id
+            FROM
+                t_tax_preference_policies
+        WHERE
+            policies_id = #{policiesId} ) GROUP BY tax_preference_id
 
-       <select id="selectTaxPreferenceId" resultType="java.lang.Long">
-           SELECT
-           t.tax_preference_id
-           FROM
-           t_tax_preference_policies t
-           WHERE
-           t.policies_id = #{id}
-       </select>
+
+    </select>
+
 
 </mapper>
