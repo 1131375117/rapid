@@ -553,4 +553,16 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
                 TaxPreferencePoliciesDO::getPoliciesId,id);
         taxPreferencePoliciesMapper.delete(queryWrapper);
     }
+
+    /**
+     * 根据政策法规id查询关联的税收优惠
+     *
+     * @param policiesId 政策法规id
+     * @return
+     */
+    @Override
+    public List<TaxPreferenceCountVO> getTaxPreferenceId(Long policiesId) {
+        List<TaxPreferenceCountVO> taxPreferenceCountVOS = taxPreferenceMapper.selectTaxPreferenceId(policiesId);
+        return taxPreferenceCountVOS;
+    }
 }

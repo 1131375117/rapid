@@ -3,6 +3,7 @@ package cn.huacloud.taxpreference.services.producer.mapper;
 import cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferenceDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryTaxPreferencesDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.QueryTaxPreferencesVO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceCountVO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -47,5 +48,12 @@ public interface TaxPreferenceMapper  extends BaseMapper<TaxPreferenceDO> {
      * @return
      */
     List<TaxPreferenceDO> selectByIdList(Long policiesId);
+
+    /**
+     * 根据政策法规id查询关联的税收优惠
+     * @param policiesId 政策法规id
+     * @return
+     */
+    List<TaxPreferenceCountVO> selectTaxPreferenceId(Long policiesId);
 
 }

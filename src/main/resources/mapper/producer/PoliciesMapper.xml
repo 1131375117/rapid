@@ -79,30 +79,11 @@
     <select id="selectFrequentlyAskedQuestionId"
             resultType="cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO">
         SELECT
-	        p.id,p.policies_ids AS policiesIds
+	        tfaq.id,tfaq.policies_ids AS policiesIds
         FROM
-            t_frequently_asked_question p
+            t_frequently_asked_question tfaq
         WHERE
-            FIND_IN_SET(#{id},p.policies_ids)
+            FIND_IN_SET(#{policies},tfaq.policies_ids)
     </select>
-    <select id="selectTaxPreferenceId"
-            resultType="cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceCountVO">
-        SELECT
-            count( tax_preference_id ) AS count,
-            tax_preference_id
-        FROM
-            t_tax_preference_policies
-        WHERE
-            tax_preference_id IN (
-            SELECT
-                tax_preference_id
-            FROM
-                t_tax_preference_policies
-        WHERE
-            policies_id = #{policiesId} ) GROUP BY tax_preference_id
-
-
-    </select>
-
 
 </mapper>

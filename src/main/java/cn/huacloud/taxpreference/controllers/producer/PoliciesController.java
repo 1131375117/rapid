@@ -12,6 +12,7 @@ import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesCombinati
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryAbolishDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesAbolishVO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesCheckDeleteVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesDetailVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesVO;
 import io.swagger.annotations.Api;
@@ -25,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
-
 /**
  * 政策法规接口
  *
@@ -38,126 +38,133 @@ import java.util.List;
 @RestController
 public class PoliciesController {
 
-    private final PoliciesService policiesService;
+  private final PoliciesService policiesService;
 
-    /**
-     * 政策列表查询接口
-     *
-     * @param queryPoliciesDTO 政策法规查询条件
-     * @return
-     */
-    @PermissionInfo(name = "政策法规列表查询", group = PermissionGroup.POLICIES)
-    @SaCheckPermission("producer_policies_query")
-    @ApiOperation(value = "政策法规列表查询")
-    @PostMapping(value = "/policies/query")
-    public ResultVO<PageVO<PoliciesVO>> getPolices(@RequestBody QueryPoliciesDTO queryPoliciesDTO) {
-        PageVO<PoliciesVO> policesList = policiesService.getPolicesList(queryPoliciesDTO);
-        return ResultVO.ok(policesList);
+  /**
+   * 政策列表查询接口
+   *
+   * @param queryPoliciesDTO 政策法规查询条件
+   * @return
+   */
+  @PermissionInfo(name = "政策法规列表查询", group = PermissionGroup.POLICIES)
+  @SaCheckPermission("producer_policies_query")
+  @ApiOperation(value = "政策法规列表查询")
+  @PostMapping(value = "/policies/query")
+  public ResultVO<PageVO<PoliciesVO>> getPolices(@RequestBody QueryPoliciesDTO queryPoliciesDTO) {
+    PageVO<PoliciesVO> policesList = policiesService.getPolicesList(queryPoliciesDTO);
+    return ResultVO.ok(policesList);
+  }
 
-    }
+  /**
+   * 新增政策法规接口
+   *
+   * @param policiesCombinationDTO 政策法规条件组合
+   * @return
+   */
+  @PermissionInfo(name = "政策法规新增", group = PermissionGroup.POLICIES)
+  @SaCheckPermission("producer_policies_insert")
+  @ApiOperation(value = "政策法规新增")
+  @PostMapping(value = "/policies")
+  public ResultVO<PoliciesCombinationDTO> insertPolicies(
+      @Validated(ValidationGroup.Create.class) @ApiParam("政策法规组合") @RequestBody
+          PoliciesCombinationDTO policiesCombinationDTO) {
+    policiesService.insertPolicies(policiesCombinationDTO, UserUtil.getCurrentUser().getId());
+    return ResultVO.ok(policiesCombinationDTO);
+  }
 
-    /**
-     * 新增政策法规接口
-     *
-     * @param policiesCombinationDTO 政策法规条件组合
-     * @return
-     */
-    @PermissionInfo(name = "政策法规新增", group = PermissionGroup.POLICIES)
-    @SaCheckPermission("producer_policies_insert")
-    @ApiOperation(value = "政策法规新增")
-    @PostMapping(value = "/policies/insert")
-    public ResultVO<PoliciesCombinationDTO> insertPolicies(@Validated(ValidationGroup.Create.class) @ApiParam("政策法规组合") @RequestBody PoliciesCombinationDTO policiesCombinationDTO) {
-        policiesService.insertPolicies(policiesCombinationDTO, UserUtil.getCurrentUser().getId());
-        return ResultVO.ok(policiesCombinationDTO);
-    }
+  /**
+   * 根据id获取政策法规详情
+   *
+   * @param id 政策法规id
+   * @return
+   */
+  @PermissionInfo(name = "根据id获取政策法规详情", group = PermissionGroup.POLICIES)
+  @SaCheckPermission("producer_policies_detail")
+  @ApiOperation(value = "根据id获取政策法规详情")
+  @GetMapping(value = "/policies/detail/{id}")
+  public ResultVO<PoliciesCombinationDTO> getPoliciesById(
+      @Validated @NotEmpty(message = "id不能为空") @PathVariable("id") Long id) {
+    PoliciesCombinationDTO policiesDetailVO = policiesService.getPoliciesById(id);
+    return ResultVO.ok(policiesDetailVO);
+  }
 
-    /**
-     * 根据id获取政策法规详情
-     *
-     * @param id 政策法规id
-     * @return
-     */
-    @PermissionInfo(name = "根据id获取政策法规详情", group = PermissionGroup.POLICIES)
-    @SaCheckPermission("producer_policies_detail")
-    @ApiOperation(value = "根据id获取政策法规详情")
-    @GetMapping(value = "/policies/detail/{id}")
-    public ResultVO<PoliciesDetailVO> getPoliciesById(@Validated @NotEmpty(message = "id不能为空") @PathVariable("id") Long id) {
-        PoliciesDetailVO policiesDetailVO = policiesService.getPoliciesById(id);
-        return ResultVO.ok(policiesDetailVO);
-    }
+  /**
+   * 修改政策法规
+   *
+   * @param policiesCombinationDTO 政策法规条件组合
+   * @return
+   */
+  @PermissionInfo(name = "修改政策法规", group = PermissionGroup.POLICIES)
+  @SaCheckPermission("producer_policies_update")
+  @ApiOperation(value = "修改政策法规")
+  @PutMapping(value = "/policies")
+  public ResultVO<Void> updatePolicies(
+      @Validated(ValidationGroup.Update.class) @RequestBody
+          PoliciesCombinationDTO policiesCombinationDTO) {
+    policiesService.updatePolicies(policiesCombinationDTO);
+    return ResultVO.ok();
+  }
 
-    /**
-     * 修改政策法规
-     *
-     * @param policiesCombinationDTO 政策法规条件组合
-     * @return
-     */
-    @PermissionInfo(name = "修改政策法规", group = PermissionGroup.POLICIES)
-    @SaCheckPermission("producer_policies_update")
-    @ApiOperation(value = "修改政策法规")
-    @PutMapping(value = "/policies/update")
-    public ResultVO<Void> updatePolicies(@Validated(ValidationGroup.Update.class) @RequestBody PoliciesCombinationDTO policiesCombinationDTO) {
-        policiesService.updatePolicies(policiesCombinationDTO);
-        return ResultVO.ok();
-    }
+  /**
+   * 政策法规废止
+   *
+   * @param queryAbolishDTO 政策法规废止条件
+   * @return
+   */
+  @PermissionInfo(name = "政策法规废止", group = PermissionGroup.POLICIES)
+  @SaCheckPermission("producer_policies_abolish")
+  @ApiOperation("政策法规废止")
+  @PutMapping(value = "/policies/abolish")
+  public ResultVO<Void> abolish(@RequestBody QueryAbolishDTO queryAbolishDTO) {
+    policiesService.abolish(queryAbolishDTO);
+    return ResultVO.ok();
+  }
 
-    /**
-     * 政策法规废止
-     *
-     * @param queryAbolishDTO 政策法规废止条件
-     * @return
-     */
-    @PermissionInfo(name = "政策法规废止", group = PermissionGroup.POLICIES)
-    @SaCheckPermission("producer_policies_abolish")
-    @ApiOperation("政策法规废止")
-    @PutMapping(value = "/policies/abolish/update")
-    public ResultVO<Void> abolish(@RequestBody QueryAbolishDTO queryAbolishDTO) {
-        policiesService.abolish(queryAbolishDTO);
-        return ResultVO.ok();
-    }
+  /**
+   * 查询废止信息
+   *
+   * @param id 政策法规id
+   * @return
+   */
+  @PermissionInfo(name = "查询政策法规废止信息", group = PermissionGroup.POLICIES)
+  @SaCheckPermission("producer_policies_abolish_detail")
+  @ApiOperation("查询政策法规废止信息")
+  @GetMapping(value = "/policies/abolish/{id}")
+  public ResultVO<PoliciesAbolishVO> getAbolish(
+      @Validated @NotEmpty(message = "id不能为空") @PathVariable("id") Long id) {
+    PoliciesAbolishVO policiesAbolishVO = policiesService.getAbolish(id);
+    return ResultVO.ok(policiesAbolishVO);
+  }
 
-    /**
-     * 查询废止信息
-     *
-     * @param id 政策法规id
-     * @return
-     */
-    @PermissionInfo(name = "查询政策法规废止信息", group = PermissionGroup.POLICIES)
-    @SaCheckPermission("producer_policies_abolish_detail")
-    @ApiOperation("查询政策法规废止信息")
-    @GetMapping(value = "/policies/abolish/{id}")
-    public ResultVO<PoliciesAbolishVO> getAbolish(@Validated @NotEmpty(message = "id不能为空") @PathVariable("id") Long id) {
-        PoliciesAbolishVO policiesAbolishVO = policiesService.getAbolish(id);
-        return ResultVO.ok(policiesAbolishVO);
-    }
+  /**
+   * 校验删除政策法规
+   *
+   * @param id 政策法规id
+   * @return
+   */
+  @PermissionInfo(name = "校验删除政策法规", group = PermissionGroup.POLICIES)
+  @SaCheckPermission("producer_policies_checkDelete")
+  @ApiOperation("校验删除政策法规")
+  @GetMapping(value = "/policies/checkDelete/{id}")
+  public ResultVO<PoliciesCheckDeleteVO> checkDeletePoliciesById(
+      @Validated @NotEmpty(message = "id不能为空") @PathVariable("id") Long id) {
+    PoliciesCheckDeleteVO policiesCheckDeleteVO = policiesService.checkDeletePoliciesById(id);
+    return ResultVO.ok(policiesCheckDeleteVO);
+  }
 
-    /**
-     * 校验删除政策法规
-     *
-     * @param id 政策法规id
-     * @return
-     */
-    @PermissionInfo(name = "校验删除政策法规", group = PermissionGroup.POLICIES)
-    @SaCheckPermission("producer_policies_delete")
-    @ApiOperation("校验删除政策法规")
-    @DeleteMapping(value = "/policies/checkDelete/{id}")
-    public ResultVO<Void> deletePoliciesById(@Validated @NotEmpty(message = "id不能为空") @PathVariable("id") Long id) {
-        policiesService.deletePoliciesById(id);
-        return ResultVO.ok();
-    }
-
-    /**
-     * 删除政策法规
-     *
-     * @param id 政策法规id
-     * @return
-     */
-    @PermissionInfo(name = "删除政策法规", group = PermissionGroup.POLICIES)
-    @SaCheckPermission("producer_policies_delete")
-    @ApiOperation("删除政策法规")
-    @DeleteMapping(value = "/policies/{id}/")
-    public ResultVO<Void> confirmDeletePoliciesById(@Validated @NotEmpty(message = "id不能为空") @PathVariable("id") Long id) {
-        policiesService.confirmDeletePoliciesById(id);
-        return ResultVO.ok();
-    }
+  /**
+   * 删除政策法规
+   *
+   * @param id 政策法规id
+   * @return
+   */
+  @PermissionInfo(name = "删除政策法规", group = PermissionGroup.POLICIES)
+  @SaCheckPermission("producer_policies_delete")
+  @ApiOperation("删除政策法规")
+  @DeleteMapping(value = "/policies/{id}")
+  public ResultVO<Void> confirmDeletePoliciesById(
+      @Validated @NotEmpty(message = "id不能为空") @PathVariable("id") Long id) {
+    policiesService.confirmDeletePoliciesById(id);
+    return ResultVO.ok();
+  }
 }

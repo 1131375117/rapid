@@ -42,18 +42,11 @@ public interface PoliciesMapper extends BaseMapper<PoliciesDO> {
     /**
      * 根据政策法规id查询热门问答id
      *
-     * @param id
+     * @param policiesId 政策法规id
      * @return
      */
-    List<FrequentlyAskedQuestionDO> selectFrequentlyAskedQuestionId(Long id);
+    List<FrequentlyAskedQuestionDO> selectFrequentlyAskedQuestionId(Long policiesId);
 
-    List<TaxPreferenceCountVO> selectTaxPreferenceId(Long id);
 
-    /**
-     * 根据政策法规id查询税收优惠id
-     *
-     * @param id
-     * @return
-     */
 
 }

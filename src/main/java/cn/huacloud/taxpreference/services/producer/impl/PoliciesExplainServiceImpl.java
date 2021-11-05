@@ -38,166 +38,203 @@ import java.util.stream.Collectors;
 @Service
 public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 
-    private final PoliciesExplainMapper policiesExplainMapper;
+  private final PoliciesExplainMapper policiesExplainMapper;
 
-    private final PoliciesMapper policiesMapper;
+  private final PoliciesMapper policiesMapper;
 
-    /**
-     * 政策解读列表
-     *
-     * @param queryPoliciesExplainDTO
-     * @return
-     */
-    @Override
-    public PageVO<PoliciesExplainDetailVO> getPoliciesExplainList(QueryPoliciesExplainDTO queryPoliciesExplainDTO) {
-        log.info("政策解读列表查询条件dto",queryPoliciesExplainDTO);
-        LambdaQueryWrapper<PoliciesExplainDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        //模糊查询--政策解读标题
-        lambdaQueryWrapper.like(!StringUtils.isEmpty(queryPoliciesExplainDTO.getTitle()),
-                PoliciesExplainDO::getTitle,
-                queryPoliciesExplainDTO.getTitle());
-        //模糊查询--政策解读来源
-        lambdaQueryWrapper.like(!StringUtils.isEmpty(queryPoliciesExplainDTO.getDocSource())
-                , PoliciesExplainDO::getDocSource,
-                queryPoliciesExplainDTO.getDocSource());
-        //条件查询--发布日期
-        lambdaQueryWrapper.ge(!StringUtils.isEmpty(queryPoliciesExplainDTO.getReleaseDate()),
-                PoliciesExplainDO::getReleaseDate, queryPoliciesExplainDTO.getStartTime())
-                .le(!StringUtils.isEmpty(queryPoliciesExplainDTO.getReleaseDate()),
-                        PoliciesExplainDO::getReleaseDate, queryPoliciesExplainDTO.getEndTime());
+  /**
+   * 政策解读列表
+   *
+   * @param queryPoliciesExplainDTO
+   * @return
+   */
+  @Override
+  public PageVO<PoliciesExplainDetailVO> getPoliciesExplainList(
+      QueryPoliciesExplainDTO queryPoliciesExplainDTO) {
+    log.info("政策解读列表查询条件dto", queryPoliciesExplainDTO);
+    LambdaQueryWrapper<PoliciesExplainDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+    // 模糊查询--政策解读标题
+    lambdaQueryWrapper.like(
+        !StringUtils.isEmpty(queryPoliciesExplainDTO.getTitle()),
+        PoliciesExplainDO::getTitle,
+        queryPoliciesExplainDTO.getTitle());
+    // 模糊查询--政策解读来源
+    lambdaQueryWrapper.like(
+        !StringUtils.isEmpty(queryPoliciesExplainDTO.getDocSource()),
+        PoliciesExplainDO::getDocSource,
+        queryPoliciesExplainDTO.getDocSource());
+    // 条件查询--发布日期
+    lambdaQueryWrapper
+        .ge(
+            !StringUtils.isEmpty(queryPoliciesExplainDTO.getReleaseDate()),
+            PoliciesExplainDO::getReleaseDate,
+            queryPoliciesExplainDTO.getStartTime())
+        .le(
+            !StringUtils.isEmpty(queryPoliciesExplainDTO.getReleaseDate()),
+            PoliciesExplainDO::getReleaseDate,
+            queryPoliciesExplainDTO.getEndTime());
 
-        //排序--发布时间
-        if (QueryPoliciesExplainDTO.SortField.RELEASE_DATE.equals(queryPoliciesExplainDTO.getSortField())) {
-            lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesExplainDTO.getReleaseDate()),
-                    PoliciesExplainDO::getReleaseDate,
-                    queryPoliciesExplainDTO.getReleaseDate()).orderByDesc(PoliciesExplainDO::getReleaseDate);
-        }
-        //排序--更新时间
-        if (QueryPoliciesExplainDTO.SortField.UPDATE_TIME.equals(queryPoliciesExplainDTO.getSortField())) {
-            lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryPoliciesExplainDTO.getUpdateTime()),
-                    PoliciesExplainDO::getUpdateTime,
-                    queryPoliciesExplainDTO.getUpdateTime()).orderByDesc(PoliciesExplainDO::getUpdateTime);
-        }
-        //分页
-        IPage<PoliciesExplainDO> policiesExplainDOPage = policiesExplainMapper.selectPage(new Page<PoliciesExplainDO>(queryPoliciesExplainDTO.getPageNum(), queryPoliciesExplainDTO.getPageSize()), lambdaQueryWrapper);
-        //数据映射
-        List<PoliciesExplainDetailVO> records = policiesExplainDOPage.getRecords().stream().map(policiesExplainDO -> {
-            PoliciesExplainDetailVO policiesExplainDetailVO = new PoliciesExplainDetailVO();
-            //属性拷贝
-            BeanUtils.copyProperties(policiesExplainDO, policiesExplainDetailVO);
-            return policiesExplainDetailVO;
-        }).collect(Collectors.toList());
-        log.info("政策解读列表查询对象",policiesExplainDOPage);
-        return PageVO.createPageVO(policiesExplainDOPage, records);
+    // 排序--发布时间
+    if (QueryPoliciesExplainDTO.SortField.RELEASE_DATE.equals(
+        queryPoliciesExplainDTO.getSortField())) {
+      lambdaQueryWrapper
+          .eq(
+              !StringUtils.isEmpty(queryPoliciesExplainDTO.getReleaseDate()),
+              PoliciesExplainDO::getReleaseDate,
+              queryPoliciesExplainDTO.getReleaseDate())
+          .orderByDesc(PoliciesExplainDO::getReleaseDate);
     }
-
-
-    /**
-     * 新增政策解读
-     *
-     * @param policiesExplainDTO
-     * @param userId
-     */
-    @Override
-    public void insertPoliciesExplain(PoliciesExplainDTO policiesExplainDTO, Long userId) {
-        log.info("新增政策解读dto={}",policiesExplainDTO);
-        PoliciesExplainDO policiesExplainDO = new PoliciesExplainDO();
-        //转换
-        BeanUtils.copyProperties(policiesExplainDTO, policiesExplainDO);
-        //设置值
-        policiesExplainDO.setPoliciesId(policiesExplainDTO.getPoliciesId());
-        policiesExplainDO.setInputUserId(userId);
-        policiesExplainDO.setReleaseDate(LocalDate.now());
-        policiesExplainDO.setCreateTime(LocalDateTime.now());
-        policiesExplainDO.setUpdateTime(LocalDateTime.now());
-        policiesExplainDO.setDeleted(false);
-        log.info("新增政策解读对象={}",policiesExplainDO);
-        policiesExplainMapper.insert(policiesExplainDO);
+    // 排序--更新时间
+    if (QueryPoliciesExplainDTO.SortField.UPDATE_TIME.equals(
+        queryPoliciesExplainDTO.getSortField())) {
+      lambdaQueryWrapper
+          .eq(
+              !StringUtils.isEmpty(queryPoliciesExplainDTO.getUpdateTime()),
+              PoliciesExplainDO::getUpdateTime,
+              queryPoliciesExplainDTO.getUpdateTime())
+          .orderByDesc(PoliciesExplainDO::getUpdateTime);
     }
+    // 分页
+    IPage<PoliciesExplainDO> policiesExplainDOPage =
+        policiesExplainMapper.selectPage(
+            new Page<PoliciesExplainDO>(
+                queryPoliciesExplainDTO.getPageNum(), queryPoliciesExplainDTO.getPageSize()),
+            lambdaQueryWrapper);
+    // 数据映射
+    List<PoliciesExplainDetailVO> records =
+        policiesExplainDOPage.getRecords().stream()
+            .map(
+                policiesExplainDO -> {
+                  PoliciesExplainDetailVO policiesExplainDetailVO = new PoliciesExplainDetailVO();
+                  // 属性拷贝
+                  BeanUtils.copyProperties(policiesExplainDO, policiesExplainDetailVO);
+                  return policiesExplainDetailVO;
+                })
+            .collect(Collectors.toList());
+    log.info("政策解读列表查询对象", policiesExplainDOPage);
+    return PageVO.createPageVO(policiesExplainDOPage, records);
+  }
 
-    /**
-     * 修改政策解读
-     *
-     * @param policiesExplainDTO
-     */
-    @Transactional(rollbackFor = Exception.class)
-    @Override
-    public void updatePolicesExplain(PoliciesExplainDTO policiesExplainDTO) {
-        //查询政策解读
-        PoliciesExplainDO policiesExplainDO = policiesExplainMapper.selectById(policiesExplainDTO.getId());
-        //参数校验
-        if(policiesExplainDO==null){
-            throw BizCode._4100.exception();
-        }
-        //属性拷贝
-        BeanUtils.copyProperties(policiesExplainDTO, policiesExplainDO);
-        log.info("修改政策解读对象={}",policiesExplainDO);
-        //修改政策解读
-        policiesExplainMapper.updateById(policiesExplainDO);
+  /**
+   * 新增政策解读
+   *
+   * @param policiesExplainDTO
+   * @param userId
+   */
+  @Override
+  public void insertPoliciesExplain(PoliciesExplainDTO policiesExplainDTO, Long userId) {
+    log.info("新增政策解读dto={}", policiesExplainDTO);
+    PoliciesExplainDO policiesExplainDO = new PoliciesExplainDO();
+    // 转换
+    BeanUtils.copyProperties(policiesExplainDTO, policiesExplainDO);
+    // 设置值
+    policiesExplainDO.setPoliciesId(policiesExplainDTO.getPoliciesId());
+    policiesExplainDO.setInputUserId(userId);
+    policiesExplainDO.setReleaseDate(LocalDate.now());
+    policiesExplainDO.setCreateTime(LocalDateTime.now());
+    policiesExplainDO.setUpdateTime(LocalDateTime.now());
+    policiesExplainDO.setDeleted(false);
+    log.info("新增政策解读对象={}", policiesExplainDO);
+    policiesExplainMapper.insert(policiesExplainDO);
+  }
+
+  /**
+   * 修改政策解读
+   *
+   * @param policiesExplainDTO
+   */
+  @Transactional(rollbackFor = Exception.class)
+  @Override
+  public void updatePolicesExplain(PoliciesExplainDTO policiesExplainDTO) {
+    // 查询政策解读
+    PoliciesExplainDO policiesExplainDO =
+        policiesExplainMapper.selectById(policiesExplainDTO.getId());
+    // 参数校验
+    if (policiesExplainDO == null) {
+      throw BizCode._4100.exception();
     }
+    // 属性拷贝
+    BeanUtils.copyProperties(policiesExplainDTO, policiesExplainDO);
+    log.info("修改政策解读对象={}", policiesExplainDO);
+    // 修改政策解读
+    policiesExplainMapper.updateById(policiesExplainDO);
+  }
 
-    /**
-     * 根据id查询政策解读详情
-     *
-     * @param id
-     * @return
-     */
-    @Override
-    public PoliciesExplainDetailVO getPoliciesById(Long id) {
-        //根据政策解读id查询
-        PoliciesExplainDO policiesExplainDO = policiesExplainMapper.selectById(id);
-        PoliciesExplainDetailVO policiesExplainDetailVO = new PoliciesExplainDetailVO();
-        //属性拷贝
-        BeanUtils.copyProperties(policiesExplainDO, policiesExplainDetailVO);
-        log.info("政策解读对象详情={}",policiesExplainDO);
-        //返回结果
-        return policiesExplainDetailVO;
+  /**
+   * 根据id查询政策解读详情
+   *
+   * @param id
+   * @return
+   */
+  @Override
+  public PoliciesExplainDetailVO getPoliciesById(Long id) {
+    // 根据政策解读id查询
+    PoliciesExplainDO policiesExplainDO = policiesExplainMapper.selectById(id);
+    PoliciesExplainDetailVO policiesExplainDetailVO = new PoliciesExplainDetailVO();
+    // 属性拷贝
+    BeanUtils.copyProperties(policiesExplainDO, policiesExplainDetailVO);
+    log.info("政策解读对象详情={}", policiesExplainDO);
+    // 返回结果
+    return policiesExplainDetailVO;
+  }
+
+  /**
+   * 根据id删除政策解读
+   *
+   * @param id 政策解读id
+   */
+  @Transactional(rollbackFor = Exception.class)
+  @Override
+  public void deletePoliciesById(Long id) {
+    PoliciesExplainDO policiesExplainDO = policiesExplainMapper.selectById(id);
+    policiesExplainDO.setDeleted(true);
+    log.info("删除政策解读对象={}", policiesExplainDO);
+    policiesExplainMapper.updateById(policiesExplainDO);
+  }
+
+  /**
+   * 关联政策模糊查询
+   *
+   * @param keywordPageQueryDTO 关联政策查询条件
+   * @return
+   */
+  @Override
+  public List<PoliciesTitleVO> fuzzyQuery(KeywordPageQueryDTO keywordPageQueryDTO) {
+    // 模糊查询-title
+    LambdaQueryWrapper<PoliciesDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+    System.out.println("keywordPageQueryDTO=" + keywordPageQueryDTO);
+    System.out.println(keywordPageQueryDTO != null);
+    if (keywordPageQueryDTO != null) {
+      lambdaQueryWrapper.like(PoliciesDO::getTitle, keywordPageQueryDTO.getKeyword());
     }
-
-    /**
-     * 根据id删除政策解读
-     *
-     * @param id 政策解读id
-     */
-    @Transactional(rollbackFor = Exception.class)
-    @Override
-    public void deletePoliciesById(Long id) {
-        PoliciesExplainDO policiesExplainDO = policiesExplainMapper.selectById(id);
-        policiesExplainDO.setDeleted(true);
-        log.info("删除政策解读对象={}",policiesExplainDO);
-        policiesExplainMapper.updateById(policiesExplainDO);
-
+    List<PoliciesDO> policiesDOS = policiesMapper.selectList(lambdaQueryWrapper);
+    // 遍历集合
+    PoliciesTitleVO policiesTitleVO = null;
+    List<PoliciesTitleVO> policiesTitleVOList = new ArrayList<>();
+    for (PoliciesDO policiesDO : policiesDOS) {
+      policiesTitleVO = new PoliciesTitleVO();
+      // 属性拷贝
+      BeanUtils.copyProperties(policiesDO, policiesTitleVO);
+      policiesTitleVOList.add(policiesTitleVO);
     }
+    // 返回结果
+    log.info("模糊查询对象={}", policiesDOS);
+    return policiesTitleVOList;
+  }
 
-    /**
-     * 关联政策模糊查询
-     *
-     * @param keywordPageQueryDTO 关联政策查询条件
-     * @return
-     */
-    @Override
-    public List<PoliciesTitleVO> fuzzyQuery(KeywordPageQueryDTO keywordPageQueryDTO) {
-        //模糊查询-title
-        LambdaQueryWrapper<PoliciesDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        System.out.println("keywordPageQueryDTO="+keywordPageQueryDTO);
-        System.out.println(keywordPageQueryDTO!=null);
-        if(keywordPageQueryDTO != null) {
-            lambdaQueryWrapper.like(
-                    PoliciesDO::getTitle, keywordPageQueryDTO.getKeyword());
-        }
-        List<PoliciesDO> policiesDOS = policiesMapper.selectList(lambdaQueryWrapper);
-        //遍历集合
-        PoliciesTitleVO policiesTitleVO = null;
-        List<PoliciesTitleVO> policiesTitleVOList = new ArrayList<>();
-        for (PoliciesDO policiesDO : policiesDOS) {
-            policiesTitleVO = new PoliciesTitleVO();
-            //属性拷贝
-            BeanUtils.copyProperties(policiesDO, policiesTitleVO);
-            policiesTitleVOList.add(policiesTitleVO);
-        }
-        //返回结果
-        log.info("模糊查询对象={}",policiesDOS);
-        return policiesTitleVOList;
-
-    }
+  /**
+   * 根据政策法规id查询政策解读信息
+   *
+   * @param policiesId
+   * @return
+   */
+  @Override
+  public PoliciesExplainDTO getPoliciesByPoliciesId(Long policiesId) {
+    LambdaQueryWrapper<PoliciesExplainDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+    lambdaQueryWrapper.eq(PoliciesExplainDO::getPoliciesId, policiesId);
+    PoliciesExplainDO policiesExplainDO = policiesExplainMapper.selectOne(lambdaQueryWrapper);
+    PoliciesExplainDTO policiesExplainDTO = new PoliciesExplainDTO();
+    BeanUtils.copyProperties(policiesExplainDO,policiesExplainDTO);
+    return policiesExplainDTO;
+  }
 }

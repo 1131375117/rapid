@@ -130,4 +130,7 @@ public class PoliciesDetailVO {
     @ApiModelProperty("废止信息")
     private String abolishNote;
 
+    @ApiModelProperty("标签管理")
+    private String labels;
+
 }

@@ -69,7 +69,7 @@ public class FrequentlyAskedQuestionController {
     @PermissionInfo(name = "修改热门问答", group = PermissionGroup.FREQUENTLY_ASKED_QUESTION)
     @SaCheckPermission("producer_frequentlyAskedQuestion_update")
     @ApiOperation("修改热门问答")
-    @PutMapping(value = "/frequentlyAskedQuestion/update")
+    @PutMapping(value = "/frequentlyAskedQuestion")
     public ResultVO<Void> updateFrequentlyAskedQuestion(@Validated(ValidationGroup.Update.class)@RequestBody List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOS) {
         frequentlyAskedQuestionService.updateFrequentlyAskedQuestion(frequentlyAskedQuestionDTOS);
         return ResultVO.ok();
@@ -78,7 +78,7 @@ public class FrequentlyAskedQuestionController {
     @PermissionInfo(name = "删除热门问答", group = PermissionGroup.FREQUENTLY_ASKED_QUESTION)
     @SaCheckPermission("producer_frequentlyAskedQuestion_delete")
     @ApiOperation("删除热门问答")
-    @DeleteMapping(value = "/frequentlyAskedQuestion/delete/{id}")
+    @DeleteMapping(value = "/frequentlyAskedQuestion/{id}")
     public ResultVO<Void> deleteFrequentlyAskedQuestion(@Validated @NotEmpty(message = "id不能为空")@PathVariable("id") Long id){
         frequentlyAskedQuestionService.deleteFrequentlyAskedQuestion(id);
         return ResultVO.ok();

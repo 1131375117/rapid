@@ -5,6 +5,7 @@ import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesCombinati
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryAbolishDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesAbolishVO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesCheckDeleteVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesDetailVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesVO;
 
@@ -39,7 +40,7 @@ public interface PoliciesService {
      * @param id 政策法规id
      * @return
      */
-     PoliciesDetailVO getPoliciesById(Long id);
+    PoliciesCombinationDTO getPoliciesById(Long id);
 
 
     /**
@@ -51,10 +52,10 @@ public interface PoliciesService {
 
     /**
      * 校验删除政策法规
-     *
      * @param id 政策法规id
+     * @return
      */
-     void deletePoliciesById(Long id);
+    PoliciesCheckDeleteVO checkDeletePoliciesById(Long id);
 
     /**
      * 删除政策法规

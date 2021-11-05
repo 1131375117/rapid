@@ -8,6 +8,7 @@ import cn.huacloud.taxpreference.services.producer.entity.dtos.TaxPreferenceDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.TaxPreferenceIdsDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.QueryTaxPreferencesVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceAbolishVO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceCountVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceVO;
 
 import java.util.List;
@@ -89,4 +90,10 @@ public interface TaxPreferenceService {
      */
     void deleteTaxPreferencePolicies(Long id);
 
+    /**
+     * 根据政策法规id查询关联的税收优惠
+     * @param policiesId 政策法规id
+     * @return
+     */
+    List<TaxPreferenceCountVO> getTaxPreferenceId(Long policiesId);
 }

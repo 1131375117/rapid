@@ -1,8 +1,10 @@
 package cn.huacloud.taxpreference.services.producer;
 
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
+import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.FrequentlyAskedQuestionDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesExplainDTO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.FrequentlyAskedQuestionVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainDetailVO;
 
 import java.util.List;
@@ -43,4 +45,11 @@ public interface FrequentlyAskedQuestionService {
      * @param id
      */
     void deleteFrequentlyAskedQuestion(Long id);
+
+    /**
+     * 根据政策法规id查询热门问答信息
+     * @param policiesId
+     * @return
+     */
+    List<FrequentlyAskedQuestionDTO> getFrequentlyAskedQuestionByPoliciesId(Long policiesId);
 }

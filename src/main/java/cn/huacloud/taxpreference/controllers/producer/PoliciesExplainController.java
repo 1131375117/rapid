@@ -59,7 +59,7 @@ public class PoliciesExplainController {
     @PermissionInfo(name = "新增政策解读", group = PermissionGroup.POLICIES_EXPLAIN)
     @SaCheckPermission("producer_policiesExplain_insert")
     @ApiOperation("新增政策解读")
-    @PostMapping(value = "/policiesExplain/insert")
+    @PostMapping(value = "/policiesExplain")
     public ResultVO<Void> insertPoliciesExplain(@Validated(ValidationGroup.Create.class) @RequestBody PoliciesExplainDTO policiesExplainDTO) {
 
 
@@ -100,7 +100,7 @@ public class PoliciesExplainController {
     @PermissionInfo(name = "修改政策解读", group = PermissionGroup.POLICIES_EXPLAIN)
     @SaCheckPermission("producer_policiesExplain_update")
     @ApiOperation("修改政策解读")
-    @PutMapping(value = "/policesExplain/update")
+    @PutMapping(value = "/policesExplain")
     public ResultVO<Void> updatePolicesExplain(@Validated(ValidationGroup.Update.class) @RequestBody PoliciesExplainDTO policiesExplainDTO) {
         policiesExplainService.updatePolicesExplain(policiesExplainDTO);
         return ResultVO.ok();
@@ -114,7 +114,7 @@ public class PoliciesExplainController {
     @PermissionInfo(name = "删除政策解读", group = PermissionGroup.POLICIES_EXPLAIN)
     @SaCheckPermission("producer_policiesExplain_delete")
     @ApiOperation("删除政策解读")
-    @DeleteMapping("/policies/delete/{id}")
+    @DeleteMapping("/policiesExplain/{id}")
     public ResultVO<Void> deletePoliciesById(@Validated @NotEmpty(message = "id不能为空") @PathVariable("id") Long id) {
         policiesExplainService.deletePoliciesById(id);
         return ResultVO.ok();

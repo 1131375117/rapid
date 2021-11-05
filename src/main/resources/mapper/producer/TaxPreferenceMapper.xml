@@ -98,4 +98,19 @@
                  LEFT JOIN t_tax_preference tp ON ttp.tax_preference_id = tp.id
         WHERE t.id = #{policiesId}
     </select>
+
+    <select id="selectTaxPreferenceId"
+            resultType="cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceCountVO">
+        SELECT
+            count( ttp.tax_preference_id ) AS count,
+            ttp.tax_preference_id,
+            t.tax_preference_name
+        FROM
+            t_tax_preference_policies ttp
+            LEFT JOIN t_tax_preference t ON t.id = ttp.tax_preference_id
+        WHERE
+            ttp.tax_preference_id IN ( SELECT tax_preference_id FROM t_tax_preference_policies WHERE policies_id = #{policiesId} )
+        GROUP BY
+            ttp.tax_preference_id
+    </select>
 </mapper>

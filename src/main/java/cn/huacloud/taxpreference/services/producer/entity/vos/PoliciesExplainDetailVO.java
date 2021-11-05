@@ -28,7 +28,7 @@ public class PoliciesExplainDetailVO {
     /**
      * 政策Id
      */
-    @ApiModelProperty("主键Id")
+    @ApiModelProperty("政策Id")
     private Long policiesId;
 
     /**
