@@ -23,7 +23,7 @@ public enum PoliciesStatusEnum implements IEnum<String> {
     private final String name;
 
     PoliciesStatusEnum(String name) {
-        this.name = name();
+        this.name = name;
     }
 
     @Override

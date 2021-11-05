@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Data
 @ApiModel
-public class PoliciesCombinationDTO {
+public class PoliciesDTO {
 
     @ApiModelProperty("政策法规主键id")
     private Long id;
@@ -31,28 +31,30 @@ public class PoliciesCombinationDTO {
     @NotEmpty(message = "文号不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
     private String docCode;
 
+
     @ApiModelProperty("所属区域码值")
     @NotEmpty(message = "所属区域码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
     private String areaCode;
-
-    @ApiModelProperty("所属区域名称")
-    private String areaName;
 
     @ApiModelProperty("来源")
     @NotEmpty(message = "来源不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
     private String docSource;
 
+
     @ApiModelProperty("所属税种码值")
     @NotEmpty(message = "所属税种码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
     private String taxCategoriesCode;
+
 
     @ApiModelProperty("纳税人资格认定类型码值")
     @NotEmpty(message = "纳税人资格认定类型码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
     private List<String> taxpayerIdentifyTypeCodes;
 
+
     @ApiModelProperty("适用企业类型码值")
     @NotEmpty(message = "适用企业类型码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
     private List<String> enterpriseTypeCodes;
+
 
     @ApiModelProperty("适用行业码值")
     @NotEmpty(message = "适用行业码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
@@ -77,9 +79,7 @@ public class PoliciesCombinationDTO {
     @ApiModelProperty("标签管理")
     private List<String> labels;
 
-    @ApiModelProperty("热点问答集合")
-    private List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOList;
+    @ApiModelProperty("废止说明")
+    private String abolishNote;
 
-    @ApiModelProperty("政策法规对象")
-    private PoliciesExplainDTO policiesExplainDTO;
 }

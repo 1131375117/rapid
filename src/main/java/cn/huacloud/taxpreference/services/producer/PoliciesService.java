@@ -2,6 +2,7 @@ package cn.huacloud.taxpreference.services.producer;
 
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesCombinationDTO;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryAbolishDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesAbolishVO;
@@ -78,4 +79,5 @@ public interface PoliciesService {
      * @return
      */
      PoliciesAbolishVO getAbolish(Long id);
+
 }

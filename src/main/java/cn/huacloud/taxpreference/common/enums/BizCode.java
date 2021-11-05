@@ -40,8 +40,6 @@ public enum BizCode {
     _4304(4304, "政策法规不存在"),
     _4305(4305, "政策法规标题或文号已存在"),
     _4306(4306, "当前政策已关联税收优惠事项，请先删除优惠事项,在进行政策删除操作！"),
-    _4307(4306, "删除政策政策法规会自动将已关联录入的政策解读、热点问答全部删除，请确认是否继续操作！"),
-    _4308(4308, "删除政策政策法规会自动将已关联录入的政策解读、热点问答和税收优惠全部删除，请确认是否继续操作！"),
 
     // 44xx 公用服务
     _4400(4400, "指定的附件已经设置过docId，无法再次设置"),
@@ -82,12 +80,6 @@ public enum BizCode {
     public TaxPreferenceException exception() {
         TaxPreferenceException bizException = new TaxPreferenceException(this.msg);
         bizException.setCode(this.code);
-        return bizException;
-    }
-    public TaxPreferenceException exception(Object data) {
-        TaxPreferenceException bizException = new TaxPreferenceException(this.msg);
-        bizException.setCode(this.code);
-        bizException.setData(data);
         return bizException;
     }
 

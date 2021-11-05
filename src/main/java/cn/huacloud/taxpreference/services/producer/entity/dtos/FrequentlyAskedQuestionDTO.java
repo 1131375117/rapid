@@ -45,6 +45,4 @@ public class FrequentlyAskedQuestionDTO {
     @ApiModelProperty("发布日期")
     private LocalDate releaseDate;
 
-    @ApiModelProperty("关联政策")
-    private Boolean relatedPolicy;
 }

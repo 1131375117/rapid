@@ -9,6 +9,7 @@ import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.common.utils.UserUtil;
 import cn.huacloud.taxpreference.services.producer.PoliciesService;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesCombinationDTO;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryAbolishDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesAbolishVO;
@@ -71,6 +72,9 @@ public class PoliciesController {
     policiesService.insertPolicies(policiesCombinationDTO, UserUtil.getCurrentUser().getId());
     return ResultVO.ok(policiesCombinationDTO);
   }
+
+
+
 
   /**
    * 根据id获取政策法规详情
