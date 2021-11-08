@@ -1,0 +1,32 @@
+# spring
+spring:
+  # datasource
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: "jdbc:mysql://172.16.122.17:3306/tax_preference_test?useUnicode=true&characterEncoding=UTF-8&useSSL=false"
+    username: tax_preference_test
+    password: tax_preference_test
+  # redis
+  redis:
+    host: 172.16.122.17
+    port: 6379
+    password: foobared
+    database: 4
+
+# mybatis plus
+mybatis-plus:
+  configuration:
+    # print SQL
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# tax preference
+tax-preference:
+  # 数据库加密
+  encrypt:
+    key: "6b32c10d8ed53774"
+  # 对象存储
+  minio:
+    endpoint: "http://172.16.122.17:9000"
+    bucket: "tax-preference-test"
+    access-key: "tax_preference_test"
+    secret-key: "tax_preference_test"
