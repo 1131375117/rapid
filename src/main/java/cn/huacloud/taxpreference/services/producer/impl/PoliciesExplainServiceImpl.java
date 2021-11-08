@@ -234,7 +234,9 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
     lambdaQueryWrapper.eq(PoliciesExplainDO::getPoliciesId, policiesId);
     PoliciesExplainDO policiesExplainDO = policiesExplainMapper.selectOne(lambdaQueryWrapper);
     PoliciesExplainDTO policiesExplainDTO = new PoliciesExplainDTO();
-    BeanUtils.copyProperties(policiesExplainDO,policiesExplainDTO);
+    if(policiesExplainDO!=null){
+      BeanUtils.copyProperties(policiesExplainDO,policiesExplainDTO);
+    }
     return policiesExplainDTO;
   }
 }

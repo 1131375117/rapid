@@ -93,8 +93,8 @@
         SELECT tp.id as id,
                tp.tax_preference_name as taxPreferenceName,
                tp.validity as validity
-        FROM t_policies t
-                 LEFT JOIN t_tax_preference_policies ttp ON t.id = ttp.policies_id
+        FROM  t_tax_preference_policies ttp
+                 LEFT JOIN t_policies t ON t.id = ttp.policies_id
                  LEFT JOIN t_tax_preference tp ON ttp.tax_preference_id = tp.id
         WHERE t.id = #{policiesId}
     </select>

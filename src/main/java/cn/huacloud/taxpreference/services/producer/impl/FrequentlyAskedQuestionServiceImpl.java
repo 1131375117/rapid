@@ -132,6 +132,7 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
       frequentlyAskedQuestionDO.setCreateTime(LocalDateTime.now());
       frequentlyAskedQuestionDO.setUpdateTime(LocalDateTime.now());
       frequentlyAskedQuestionDO.setDeleted(false);
+      frequentlyAskedQuestionDO.setId(null);
       log.info("新增热门问答对象={}", frequentlyAskedQuestionDO);
       frequentlyAskedQuestionMapper.insert(frequentlyAskedQuestionDO);
     }
@@ -192,12 +193,15 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
     lambdaQueryWrapper.eq(FrequentlyAskedQuestionDO::getPoliciesIds, policiesIds);
     List<FrequentlyAskedQuestionDO> frequentlyAskedQuestionDOS =
         frequentlyAskedQuestionMapper.selectList(lambdaQueryWrapper);
-    List<FrequentlyAskedQuestionDTO> FrequentlyAskedQuestionVOList = new ArrayList<>();
-    for (FrequentlyAskedQuestionDO frequentlyAskedQuestionDO : frequentlyAskedQuestionDOS) {
-      FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO = new FrequentlyAskedQuestionDTO();
-      BeanUtils.copyProperties(frequentlyAskedQuestionDO, frequentlyAskedQuestionDTO);
-      FrequentlyAskedQuestionVOList.add(frequentlyAskedQuestionDTO);
+    if (frequentlyAskedQuestionDOS != null) {
+      List<FrequentlyAskedQuestionDTO> FrequentlyAskedQuestionVOList = new ArrayList<>();
+      for (FrequentlyAskedQuestionDO frequentlyAskedQuestionDO : frequentlyAskedQuestionDOS) {
+        FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO = new FrequentlyAskedQuestionDTO();
+        BeanUtils.copyProperties(frequentlyAskedQuestionDO, frequentlyAskedQuestionDTO);
+        FrequentlyAskedQuestionVOList.add(frequentlyAskedQuestionDTO);
+      }
+      return FrequentlyAskedQuestionVOList;
     }
-    return FrequentlyAskedQuestionVOList;
+    return null;
   }
 }

@@ -226,6 +226,7 @@ public class PoliciesServiceImpl implements PoliciesService {
     if (policiesDO == null) {
       throw BizCode._4100.exception();
     }
+
     PoliciesExplainDTO policiesExplainDTO =
         policiesExplainService.getPoliciesByPoliciesId(policiesDO.getId());
 

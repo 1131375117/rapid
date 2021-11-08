@@ -60,11 +60,10 @@ public class PoliciesExplainController {
     @SaCheckPermission("producer_policiesExplain_insert")
     @ApiOperation("新增政策解读")
     @PostMapping(value = "/policiesExplain")
-    public ResultVO<Void> insertPoliciesExplain(@Validated(ValidationGroup.Create.class) @RequestBody PoliciesExplainDTO policiesExplainDTO) {
-
+    public ResultVO<PoliciesExplainDTO> insertPoliciesExplain(@Validated(ValidationGroup.Create.class) @RequestBody PoliciesExplainDTO policiesExplainDTO) {
 
         policiesExplainService.insertPoliciesExplain(policiesExplainDTO, UserUtil.getCurrentUser().getId());
-        return ResultVO.ok();
+        return ResultVO.ok(policiesExplainDTO);
     }
 
     /**
