@@ -6,6 +6,7 @@ import cn.huacloud.taxpreference.common.constants.UserConstants;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.enums.UserType;
+import cn.huacloud.taxpreference.common.utils.UserUtil;
 import cn.huacloud.taxpreference.services.user.RoleService;
 import cn.huacloud.taxpreference.services.user.UserService;
 import cn.huacloud.taxpreference.services.user.entity.dos.ProducerUserDO;
@@ -176,7 +177,23 @@ public class UserServiceImpl implements UserService {
         if (userDO == null) {
             throw BizCode._4100.exception();
         }
+        // 管理员账号名称不能被修改
+        if (UserConstants.ADMIN_USER_NAME.equalsIgnoreCase(userDO.getUserAccount())
+                && !UserConstants.ADMIN_USER_NAME.equalsIgnoreCase(producerUserVO.getUserAccount())) {
+            throw BizCode._4212.exception();
+        }
+
+        // 检查要修改的userAccount是否存在
+        UserDO checkUser = userMapper.getUserDOByAccountWithDelete(producerUserVO.getUserAccount());
+        if (checkUser != null && !checkUser.getId().equals(producerUserVO.getId())) {
+            throw BizCode._4212.exception();
+        }
+
         BeanUtils.copyProperties(producerUserVO, userDO);
+
+        // password md5
+        producerUserVO.setPassword(SaSecureUtil.md5(producerUserVO.getPassword()));
+
         // execute save
         userMapper.updateById(userDO);
 

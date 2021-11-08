@@ -8,6 +8,7 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 /**
  * 生产者用户视图对象
@@ -27,6 +28,7 @@ public class ProducerUserVO {
     private String userAccount;
 
     @NotEmpty(message = "用户密码不能为空", groups = {ValidationGroup.Create.class, ValidationGroup.Update.class})
+    @Pattern(regexp = "(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[^a-zA-Z0-9]).{8,30}", message = "密码中必须包含大小字母、数字、特称字符，至少8个字符，最多30个字符", groups = {ValidationGroup.Create.class, ValidationGroup.Update.class})
     @ApiModelProperty("用户密码")
     private String password;
 

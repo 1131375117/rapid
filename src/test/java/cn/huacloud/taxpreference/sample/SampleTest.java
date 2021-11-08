@@ -15,6 +15,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 简单测试类
@@ -22,6 +24,22 @@ import java.util.Optional;
  */
 @Slf4j
 public class SampleTest {
+
+    @Test
+    public void testPassword() {
+        String patternStr = "(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[^a-zA-Z0-9]).{8,30}";
+        Pattern pattern = Pattern.compile(patternStr);
+        String password1 = "12345678Aa";
+        String password2 = "12345678Aa!";
+
+        Matcher matcher1 = pattern.matcher(password1);
+        boolean find1 = matcher1.find();
+        log.info("{} <=> {}", password1, find1);
+
+        Matcher matcher2 = pattern.matcher(password2);
+        boolean find2 = matcher2.find();
+        log.info("{} <=> {}", password2, find2);
+    }
 
     @Test
     public void testStreamFirst() {
