@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
         } else if (e instanceof NotRoleException) {
             resultVO = BizCode._4201.getResultVO(e.getMessage());
         } else if (e instanceof NotPermissionException) {
-            resultVO = BizCode._4203.getResultVO(e.getMessage());
+            resultVO = BizCode._4202.getResultVO(e.getMessage());
         } else {
             resultVO = BizCode._500.getResultVO();
             resultVO.setData(e.getMessage());

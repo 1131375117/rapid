@@ -192,7 +192,7 @@ public class UserServiceImpl implements UserService {
         BeanUtils.copyProperties(producerUserVO, userDO);
 
         // password md5
-        producerUserVO.setPassword(SaSecureUtil.md5(producerUserVO.getPassword()));
+        userDO.setPassword(SaSecureUtil.md5(producerUserVO.getPassword()));
 
         // execute save
         userMapper.updateById(userDO);
