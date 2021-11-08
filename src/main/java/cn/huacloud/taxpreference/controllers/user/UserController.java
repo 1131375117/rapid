@@ -4,6 +4,7 @@ import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.huacloud.taxpreference.common.annotations.PermissionInfo;
 import cn.huacloud.taxpreference.common.constants.ValidationGroup;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
+import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.enums.PermissionGroup;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.user.UserService;
@@ -55,6 +56,10 @@ public class UserController {
     @ApiOperation("新增后台用户")
     @PostMapping("/producer/user")
     public ResultVO<ProducerUserVO> saveProducerUser(@Validated(ValidationGroup.Create.class) @RequestBody ProducerUserVO producerUserVO) {
+        boolean userAccountExist = userService.isUserAccountExist(producerUserVO.getUserAccount());
+        if (userAccountExist) {
+            throw BizCode._4212.exception();
+        }
         userService.saveProducerUser(producerUserVO);
         return ResultVO.ok(producerUserVO);
     }

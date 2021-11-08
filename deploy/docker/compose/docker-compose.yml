@@ -19,8 +19,8 @@ services:
     networks:
       - tax_preference_network
     ports:
-      - "10080:10080"
-      - "5080:5005"
+      - "9090:9090"
+      - "5090:5005"
 
 networks:
   tax_preference_network:

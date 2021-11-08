@@ -39,4 +39,15 @@ public interface UserMapper extends BaseMapper<UserDO> {
                 .apply("FIND_IN_SET ('" + roleCode + "', role_Codes)");
         return selectList(queryWrapper);
     }
+
+    /**
+     * 根据用户账户查询 UserDO包括被删除
+     * @param userAccount 用户账户
+     * @return userDO
+     */
+    default UserDO getUserDOByAccountWithDelete(String userAccount) {
+        LambdaQueryWrapper<UserDO> queryWrapper = Wrappers.lambdaQuery(UserDO.class)
+                .eq(UserDO::getUserAccount, userAccount);
+        return selectOne(queryWrapper);
+    }
 }

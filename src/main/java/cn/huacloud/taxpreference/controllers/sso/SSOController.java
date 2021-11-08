@@ -51,15 +51,15 @@ public class SSOController {
     @PostMapping("/sso/login")
     public ResultVO<LoginUserVO> login(@RequestParam("userAccount") String userAccount,
                                        @RequestParam("password") String password,
-                                       @RequestParam(name = "captchaKey", defaultValue = "2c54df8c-5f8c-489b-bf3c-84bd14d1d669") String captchaKey,
+                                       @RequestParam(name = "captchaId", defaultValue = "2c54df8c-5f8c-489b-bf3c-84bd14d1d669") String captchaId,
                                        @RequestParam(name = "captchaCode", defaultValue = "1234") String captchaCode) {
         // 校验验证码
-        /*String captchaRedisKey = getCaptchaRedisKey(captchaKey);
+        String captchaRedisKey = getCaptchaRedisKey(captchaId);
         String serverCaptchaCode = stringRedisTemplate.opsForValue().get(captchaRedisKey);
-        if (serverCaptchaCode == null || !serverCaptchaCode.equalsIgnoreCase(captchaCode)) {
+        /*if (serverCaptchaCode == null || !serverCaptchaCode.equalsIgnoreCase(captchaCode)) {
             throw BizCode._4210.exception();
-        }
-        stringRedisTemplate.delete(captchaRedisKey);*/
+        }*/
+        stringRedisTemplate.delete(captchaRedisKey);
 
         // 根据用户名查找用户
         UserDO userDO = userService.getUserDOByUserAccount(userAccount);
