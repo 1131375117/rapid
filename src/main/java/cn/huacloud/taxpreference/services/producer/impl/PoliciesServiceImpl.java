@@ -102,13 +102,13 @@ public class PoliciesServiceImpl implements PoliciesService {
     BeanUtils.copyProperties(policiesCombinationDTO, policiesDO);
     // 设置纳税人、使用企业、适用行业码值
     policiesDO.setTaxpayerIdentifyTypeCodes(
-        org.apache.commons.lang3.StringUtils.join(
+       StringUtils.join(
             policiesCombinationDTO.getTaxpayerIdentifyTypeCodes(), ","));
     policiesDO.setEnterpriseTypeCodes(
-        org.apache.commons.lang3.StringUtils.join(
+       StringUtils.join(
             policiesCombinationDTO.getEnterpriseTypeCodes(), ","));
     policiesDO.setIndustryCodes(
-        org.apache.commons.lang3.StringUtils.join(policiesCombinationDTO.getIndustryCodes(), ","));
+        StringUtils.join(policiesCombinationDTO.getIndustryCodes(), ","));
     // 进行切分
     String taxpayerIdentifyTypeNames =
         convert2String(policiesCombinationDTO.getTaxpayerIdentifyTypeCodes());
@@ -180,12 +180,12 @@ public class PoliciesServiceImpl implements PoliciesService {
     LambdaQueryWrapper<PoliciesDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
     lambdaQueryWrapper
         .eq(
-            !org.springframework.util.StringUtils.isEmpty(policiesCombinationDTO.getTitle()),
+            StringUtils.isNotBlank(policiesCombinationDTO.getTitle()),
             PoliciesDO::getTitle,
             policiesCombinationDTO.getTitle())
         .or()
         .eq(
-            !org.springframework.util.StringUtils.isEmpty(policiesCombinationDTO.getDocCode()),
+            StringUtils.isNotBlank(policiesCombinationDTO.getDocCode()),
             PoliciesDO::getDocCode,
             policiesCombinationDTO.getDocCode());
     List<PoliciesDO> policiesDOS = policiesMapper.selectList(lambdaQueryWrapper);
@@ -296,11 +296,12 @@ public class PoliciesServiceImpl implements PoliciesService {
     policiesMapper.updateById(policiesDO);
     // 修改政策解读
     PoliciesExplainDTO policiesExplainDTO = new PoliciesExplainDTO();
-    BeanUtils.copyProperties(policiesCombinationDTO, policiesExplainDTO);
+    BeanUtils.copyProperties(policiesCombinationDTO.getPoliciesExplainDTO(), policiesExplainDTO);
     policiesExplainService.updatePolicesExplain(policiesExplainDTO);
     // 修改热点问答
-    FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO = new FrequentlyAskedQuestionDTO();
-    BeanUtils.copyProperties(policiesCombinationDTO, frequentlyAskedQuestionDTO);
+//    FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO = new FrequentlyAskedQuestionDTO();
+//    BeanUtils.copyProperties(policiesCombinationDTO.getFrequentlyAskedQuestionDTOList(),
+//            frequentlyAskedQuestionDTO);
     List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOList =
         policiesCombinationDTO.getFrequentlyAskedQuestionDTOList();
     frequentlyAskedQuestionService.updateFrequentlyAskedQuestion(frequentlyAskedQuestionDTOList);
@@ -322,27 +323,31 @@ public class PoliciesServiceImpl implements PoliciesService {
     policiesDO.setDeleted(true);
     log.info("删除政策法规对象={}", policiesDO);
 
-    // 删除税收优惠,根据政策法规id查询税收优惠id--关联表中
+    // 根据政策法规id在关联表中查询所有税收优惠的信息
     List<TaxPreferenceCountVO> taxPreferenceCountVOS =
         taxPreferenceService.getTaxPreferenceId(policiesDO.getId());
+    // 判断当前政策法规id是否和税收优惠先关联
     if (taxPreferenceCountVOS.isEmpty()) {
       return new PoliciesCheckDeleteVO().setCheckStatus(PoliciesCheckDeleteVO.CheckStatus.OK);
     }
 
     Map<CheckStatus, List<TaxPreferenceCountVO>> map = new LinkedHashMap<>();
     for (TaxPreferenceCountVO taxPreferenceCountVO : taxPreferenceCountVOS) {
+      // 获取税收优惠的数量
       long count = taxPreferenceCountVO.getCount();
+      // 判断当前关联表中税收优惠的数量--大于一，表示一个政策法规关联了多个优惠事项
       if (count > 1) {
         List<TaxPreferenceCountVO> list =
             map.computeIfAbsent(CheckStatus.INFO, key -> new ArrayList<>());
         list.add(taxPreferenceCountVO);
+        // 判断当前关联表中税收优惠的数量--等于一，表示一个政策法规关联了一个优惠事项
       } else if (count == 1) {
         List<TaxPreferenceCountVO> list =
             map.computeIfAbsent(CheckStatus.CAN_NOT, key -> new ArrayList<>());
         list.add(taxPreferenceCountVO);
       }
     }
-
+    // 判断是否包含了该状态值
     if (map.containsKey(CheckStatus.CAN_NOT)) {
       return new PoliciesCheckDeleteVO()
           .setCheckStatus(PoliciesCheckDeleteVO.CheckStatus.CAN_NOT)
@@ -428,15 +433,15 @@ public class PoliciesServiceImpl implements PoliciesService {
   }
 
   /**
-   * 删除政策法规
+   * 删除政策解读
    *
    * @param policiesDO 政策法规对象
    */
   private void deletePoliciesExplain(PoliciesDO policiesDO) {
-    List<Long> policiesExplainIds = policiesMapper.selectExplainId(policiesDO.getId());
-    for (Long policiesExplainId : policiesExplainIds) {
-      policiesExplainService.deletePoliciesById(policiesExplainId);
-    }
+    //根据政策法规查询关联的政策解读id
+    Long policiesExplainId = policiesMapper.selectExplainId(policiesDO.getId());
+    //根据id删除政策解读
+    policiesExplainService.deletePoliciesById(policiesExplainId);
   }
 
   /**

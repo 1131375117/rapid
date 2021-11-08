@@ -144,8 +144,7 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
    */
   @Transactional(rollbackFor = Exception.class)
   @Override
-  public void updateFrequentlyAskedQuestion(
-      List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOS) {
+  public void updateFrequentlyAskedQuestion(List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOS) {
     for (FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO : frequentlyAskedQuestionDTOS) {
       // 查询热门问答
       FrequentlyAskedQuestionDO frequentlyAskedQuestionDO =

@@ -37,7 +37,7 @@ public interface PoliciesMapper extends BaseMapper<PoliciesDO> {
      * @param policiesId
      * @return
      */
-    List<Long> selectExplainId(Long policiesId);
+    Long selectExplainId(Long policiesId);
 
     /**
      * 根据政策法规id查询热门问答id

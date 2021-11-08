@@ -9,12 +9,10 @@ import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.common.utils.UserUtil;
 import cn.huacloud.taxpreference.services.producer.PoliciesService;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesCombinationDTO;
-import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryAbolishDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesAbolishVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesCheckDeleteVO;
-import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesDetailVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,7 +23,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotEmpty;
-import java.util.List;
 
 /**
  * 政策法规接口
