@@ -45,7 +45,7 @@
             <if test="queryTaxPreferencesDTO.taxpayerTypeCode != null and queryTaxPreferencesDTO.taxpayerTypeCode != '' ">
                 and p.taxpayer_type_code=#{queryTaxPreferencesDTO.taxpayerTypeCode}
             </if>
-            <if test="queryTaxPreferencesDTO.validity!=null and queryTaxPreferencesDTO.validity!='' ">
+            <if test="queryTaxPreferencesDTO.validity!=null">
                 and p.validity=#{queryTaxPreferencesDTO.validity}
             </if>
 

@@ -15,7 +15,6 @@ import cn.huacloud.taxpreference.services.producer.TaxPreferenceService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.*;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.*;
 import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesStatusEnum;
-import cn.huacloud.taxpreference.services.producer.entity.enums.ValidityEnum;
 import cn.huacloud.taxpreference.services.producer.entity.vos.*;
 import cn.huacloud.taxpreference.services.producer.mapper.*;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -209,7 +208,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
   private void revokeTaxPreference(Long id) {
     TaxPreferenceDO taxPreferenceDO = new TaxPreferenceDO();
     taxPreferenceDO.setId(id);
-    taxPreferenceDO.setTaxPreferenceStatus(TaxPreferenceStatus.UNRELEASED.getValue());
+    taxPreferenceDO.setTaxPreferenceStatus(TaxPreferenceStatus.UNRELEASED);
     taxPreferenceMapper.updateById(taxPreferenceDO);
   }
 
@@ -357,8 +356,6 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     BeanUtils.copyProperties(taxPreferenceDTO, taxPreferenceDO);
     taxPreferenceDO.setDeleted(false);
     taxPreferenceDO.setUpdateTime(LocalDateTime.now());
-    taxPreferenceDO.setValidity(taxPreferenceDTO.getValidity().getValue());
-    taxPreferenceDO.setTaxPreferenceStatus(TaxPreferenceStatus.UNRELEASED.getValue());
     // 收入税种种类名称
     taxPreferenceDO.setTaxCategoriesName(
         sysCodeService.getCodeNameByCodeValue(taxPreferenceDTO.getTaxCategoriesCode()));
@@ -505,7 +502,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         // 属性拷贝
         BeanUtils.copyProperties(preferenceAbolish, taxPreferenceDO);
         // 设置税收优惠状态--失效
-        taxPreferenceDO.setValidity(ValidityEnum.INVALID.getValue());
+      /*  taxPreferenceDO.setValidity(PreferenceValidation.);*/
       }
         // 判断废止状态--部分废止
       } else if (PoliciesStatusEnum.PARTIAL_REPEAL.getValue()
@@ -516,7 +513,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
           // 根据id查询税收优惠对象
           taxPreferenceDO = taxPreferenceMapper.selectById(id);
           // 设置税收优惠状态--失效
-          taxPreferenceDO.setValidity(ValidityEnum.INVALID.getValue());
+         /* taxPreferenceDO.setValidity(ValidityEnum.INVALID.getValue());*/
         }
       }
     }

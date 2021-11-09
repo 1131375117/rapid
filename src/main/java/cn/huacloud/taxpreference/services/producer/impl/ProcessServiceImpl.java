@@ -3,7 +3,6 @@ package cn.huacloud.taxpreference.services.producer.impl;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.enums.process.ProcessStatus;
-import cn.huacloud.taxpreference.common.enums.taxpreference.TaxPreferenceStatus;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.producer.ProcessService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.ProcessDO;
@@ -60,7 +59,7 @@ public class ProcessServiceImpl implements ProcessService {
             processDO.setLatestProcess(true);
             processDO.setCreatorId(currentUser.getId());
             processDO.setCreatorName(currentUser.getUsername());
-            processDO.setProcessStatus(ProcessStatus.NOT_APPROVED.getValue());
+
             processServiceMapper.insert(processDO);
         }
         return ResultVO.ok();
@@ -128,7 +127,7 @@ public class ProcessServiceImpl implements ProcessService {
         processDO.setApproverId(currentUser.getId());
         processDO.setApproverName(currentUser.getUsername());
         processDO.setApprovalTime(LocalDateTime.now());
-        processDO.setProcessStatus(processSubmitDTO.getTaxPreferenceStatus().getValue());
+
         log.info("封装结果:processDO:{}", processDO);
         return processDO;
     }
@@ -139,12 +138,7 @@ public class ProcessServiceImpl implements ProcessService {
     private TaxPreferenceDO getTaxPreferenceDO(ProcessDO processDO) {
         TaxPreferenceDO taxPreferenceDO = new TaxPreferenceDO();
         taxPreferenceDO.setId(processDO.getTaxPreferenceId());
-        taxPreferenceDO.setTaxPreferenceStatus(processDO.getProcessStatus());
-        if (ProcessStatus.APPROVED.getValue().equals(processDO.getProcessStatus())) {
-            taxPreferenceDO.setTaxPreferenceStatus(TaxPreferenceStatus.RELEASED.getValue());
-        } else {
-            taxPreferenceDO.setTaxPreferenceStatus(TaxPreferenceStatus.UNRELEASED.getValue());
-        }
+     //   taxPreferenceDO.setTaxPreferenceStatus(processDO.getProcessStatus());
         log.info("封装结果:taxPreferenceDO:{}", taxPreferenceDO);
         return taxPreferenceDO;
     }

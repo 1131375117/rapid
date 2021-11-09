@@ -11,14 +11,11 @@ import cn.huacloud.taxpreference.services.user.entity.vos.CaptchaVO;
 import cn.huacloud.taxpreference.services.user.entity.vos.LoginUserVO;
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.LineCaptcha;
-import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -54,12 +51,12 @@ public class SSOController {
                                        @RequestParam(name = "captchaId", defaultValue = "2c54df8c-5f8c-489b-bf3c-84bd14d1d669") String captchaId,
                                        @RequestParam(name = "captchaCode", defaultValue = "1234") String captchaCode) {
         // 校验验证码
-        String captchaRedisKey = getCaptchaRedisKey(captchaId);
+/*        String captchaRedisKey = getCaptchaRedisKey(captchaId);
         String serverCaptchaCode = stringRedisTemplate.opsForValue().get(captchaRedisKey);
         if (serverCaptchaCode == null || !serverCaptchaCode.equalsIgnoreCase(captchaCode)) {
             throw BizCode._4210.exception();
         }
-        stringRedisTemplate.delete(captchaRedisKey);
+        stringRedisTemplate.delete(captchaRedisKey);*/
 
         // 根据用户名查找用户
         UserDO userDO = userService.getUserDOByUserAccount(userAccount);
