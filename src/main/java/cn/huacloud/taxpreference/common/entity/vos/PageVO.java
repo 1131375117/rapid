@@ -13,6 +13,7 @@ import java.util.List;
  * @author wangkh
  */
 @Data
+@Accessors(chain = true)
 @ApiModel
 public class PageVO<T> {
 

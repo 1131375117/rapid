@@ -30,6 +30,11 @@
     </properties>
 
     <dependencies>
+        <!--elasticsearch client-->
+        <dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>elasticsearch-rest-high-level-client</artifactId>
+        </dependency>
         <!--guava-->
         <dependency>
             <groupId>com.google.guava</groupId>
