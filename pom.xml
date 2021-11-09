@@ -12,8 +12,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <spring.boot.version>2.2.5.RELEASE</spring.boot.version>
-        <spring.cloud.version>Hoxton.SR3</spring.cloud.version>
+        <spring.boot.version>2.5.6</spring.boot.version>
+        <spring.cloud.version>2020.0.4</spring.cloud.version>
         <!--docker-->
         <dockerfile.maven.plugin.version>1.4.13</dockerfile.maven.plugin.version>
         <docker.registry>hai-registry:5000</docker.registry>
@@ -39,6 +39,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
+            <version>31.0.1-jre</version>
         </dependency>
         <!--pinyin4j-->
         <dependency>

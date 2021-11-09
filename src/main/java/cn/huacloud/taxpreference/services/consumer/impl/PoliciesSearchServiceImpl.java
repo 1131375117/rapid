@@ -3,24 +3,17 @@ package cn.huacloud.taxpreference.services.consumer.impl;
 import cn.huacloud.taxpreference.services.consumer.PoliciesSearchService;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.PoliciesSearchQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesSearchVO;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.common.text.Text;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
-
 import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
-import org.springframework.stereotype.Service;
-
-import static org.elasticsearch.index.query.QueryBuilders.*;
 
 import java.util.List;
-import java.util.Map;
+
+import static org.elasticsearch.index.query.QueryBuilders.matchPhraseQuery;
 
 /**
  * @author wangkh
@@ -36,7 +29,7 @@ public class PoliciesSearchServiceImpl implements PoliciesSearchService {
 
     @Override
     public QueryBuilder getQueryBuilder(PoliciesSearchQueryDTO pageQuery) {
-        BoolQueryBuilder queryBuilder = boolQuery();
+        BoolQueryBuilder queryBuilder = generatorDefaultQueryBuilder(pageQuery);
 
         // 关键字查询
         String keyword = pageQuery.getKeyword();
@@ -47,16 +40,12 @@ public class PoliciesSearchServiceImpl implements PoliciesSearchService {
             }
         }
 
-        // 固定条件过滤
-
-
         return queryBuilder;
     }
 
     @Override
     public PoliciesSearchVO mapSearchHit(SearchHit searchHit) throws Exception {
         PoliciesSearchVO policiesSearchVO = objectMapper.readValue(searchHit.getSourceAsString(), PoliciesSearchVO.class);
-
         // 设置高亮字段
         policiesSearchVO.setTitle(getHighlightString(searchHit, "title"));
         policiesSearchVO.setContent(getHighlightString(searchHit, "content"));

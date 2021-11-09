@@ -6,16 +6,16 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * ES过滤字段注解
+ * ES范围字段
  * @author wangkh
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface FilterField {
+public @interface RangeField {
 
     /**
      * ES字段名称
-     * 例如：title taxCategories.codeValue
+     * 例如：releaseDate
      * @return ES字段名称
      */
     String value();

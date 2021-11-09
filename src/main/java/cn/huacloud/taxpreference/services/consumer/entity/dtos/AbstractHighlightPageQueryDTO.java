@@ -1,7 +1,7 @@
 package cn.huacloud.taxpreference.services.consumer.entity.dtos;
 
 import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
-import cn.huacloud.taxpreference.common.utils.StringUtils;
+import cn.huacloud.taxpreference.common.utils.SpringUtils;
 import org.elasticsearch.search.sort.SortBuilder;
 import org.springframework.core.env.Environment;
 
@@ -21,7 +21,7 @@ public abstract class AbstractHighlightPageQueryDTO extends KeywordPageQueryDTO 
      * @return 搜索索引范围
      */
     public String[] indices() {
-        Environment environment = StringUtils.getBean(Environment.class);
+        Environment environment = SpringUtils.getBean(Environment.class);
         Optional<String> profile = Arrays.stream(environment.getActiveProfiles())
                 // 只考虑开发和测试环境
                 .filter(value -> "dev".equalsIgnoreCase(value) || "test".equalsIgnoreCase(value))
