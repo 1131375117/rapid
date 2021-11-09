@@ -97,7 +97,7 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
     // 分页
     IPage<FrequentlyAskedQuestionDO> frequentlyAskedQuestionDOPage =
         frequentlyAskedQuestionMapper.selectPage(
-            new Page<FrequentlyAskedQuestionDO>(
+            new Page<>(
                 queryPoliciesExplainDTO.getPageNum(), queryPoliciesExplainDTO.getPageSize()),
             lambdaQueryWrapper);
     // 数据映射
@@ -153,15 +153,14 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
       FrequentlyAskedQuestionDO frequentlyAskedQuestionDO =
           frequentlyAskedQuestionMapper.selectById(frequentlyAskedQuestionDTO.getId());
       // 参数校验
-      if (frequentlyAskedQuestionDO == null) {
-        throw BizCode._4100.exception();
+      if (frequentlyAskedQuestionDO != null) {
+        // 属性拷贝
+        BeanUtils.copyProperties(frequentlyAskedQuestionDTO, frequentlyAskedQuestionDO);
+        log.info("修改热门问答对象={}", frequentlyAskedQuestionDO);
+        // 修改热门问答
+        frequentlyAskedQuestionMapper.updateById(frequentlyAskedQuestionDO);
       }
-      // 属性拷贝
-      BeanUtils.copyProperties(frequentlyAskedQuestionDTO, frequentlyAskedQuestionDO);
-      log.info("修改热门问答对象={}", frequentlyAskedQuestionDO);
-      // 修改热门问答
-      frequentlyAskedQuestionMapper.updateById(frequentlyAskedQuestionDO);
-    }
+      }
   }
 
   /**

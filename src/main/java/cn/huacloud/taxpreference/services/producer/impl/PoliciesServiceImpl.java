@@ -301,9 +301,6 @@ public class PoliciesServiceImpl implements PoliciesService {
     BeanUtils.copyProperties(policiesCombinationDTO.getPoliciesExplainDTO(), policiesExplainDTO);
     policiesExplainService.updatePolicesExplain(policiesExplainDTO);
     // 修改热点问答
-//    FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO = new FrequentlyAskedQuestionDTO();
-//    BeanUtils.copyProperties(policiesCombinationDTO.getFrequentlyAskedQuestionDTOList(),
-//            frequentlyAskedQuestionDTO);
     List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOList =
         policiesCombinationDTO.getFrequentlyAskedQuestionDTOList();
     frequentlyAskedQuestionService.updateFrequentlyAskedQuestion(frequentlyAskedQuestionDTOList);
