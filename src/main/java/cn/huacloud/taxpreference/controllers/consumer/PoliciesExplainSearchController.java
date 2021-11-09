@@ -8,19 +8,19 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * @author wangkh
  */
-@Api(tags = "政策法规检索")
+@Api(tags = "政策解读检索")
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
 @RestController
-public class PoliciesSearchController {
+public class PoliciesExplainSearchController {
 
-    // 政策简单列表
+    // 政策解读简单列表
 
-    // 最新地方政策
+    // 政策检索
 
-    // 政策法规搜索
+    // 根据政策ID查询相关政策解读
 
-    // 政策法规详情
+    // 政策解读详情
 
 
 }

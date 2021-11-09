@@ -8,19 +8,14 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * @author wangkh
  */
-@Api(tags = "政策法规检索")
+@Api(tags = "税收优惠检索")
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
 @RestController
-public class PoliciesSearchController {
+public class TaxPreferenceSearchController {
 
-    // 政策简单列表
+    // 税收优惠搜索
 
-    // 最新地方政策
-
-    // 政策法规搜索
-
-    // 政策法规详情
-
+    // 税收优惠详情
 
 }

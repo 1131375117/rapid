@@ -8,19 +8,15 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * @author wangkh
  */
-@Api(tags = "政策法规检索")
+@Api(tags = "热点内容检索")
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
 @RestController
-public class PoliciesSearchController {
+public class HotContentController {
 
-    // 政策简单列表
+    // 本周热点内容
 
-    // 最新地方政策
+    // 猜你关注
 
-    // 政策法规搜索
-
-    // 政策法规详情
-
-
+    // 热门标签列表
 }
