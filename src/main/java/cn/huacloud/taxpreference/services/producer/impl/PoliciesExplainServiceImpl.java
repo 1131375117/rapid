@@ -12,6 +12,7 @@ import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainDet
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesTitleVO;
 import cn.huacloud.taxpreference.services.producer.mapper.PoliciesExplainMapper;
 import cn.huacloud.taxpreference.services.producer.mapper.PoliciesMapper;
+import cn.huacloud.taxpreference.services.user.entity.dos.UserDO;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -73,6 +74,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
             !StringUtils.isEmpty(queryPoliciesExplainDTO.getReleaseDate()),
             PoliciesExplainDO::getReleaseDate,
             queryPoliciesExplainDTO.getEndTime());
+    lambdaQueryWrapper.eq(PoliciesExplainDO::getDeleted, false);
 
     // 排序--发布时间
     if (QueryPoliciesExplainDTO.SortField.RELEASE_DATE.equals(
@@ -97,7 +99,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
     // 分页
     IPage<PoliciesExplainDO> policiesExplainDOPage =
         policiesExplainMapper.selectPage(
-            new Page<PoliciesExplainDO>(
+            new Page<>(
                 queryPoliciesExplainDTO.getPageNum(), queryPoliciesExplainDTO.getPageSize()),
             lambdaQueryWrapper);
     // 数据映射

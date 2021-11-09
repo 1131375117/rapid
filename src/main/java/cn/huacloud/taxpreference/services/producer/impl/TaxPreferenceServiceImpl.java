@@ -500,24 +500,25 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
       // 调用查询废止接口
       List<TaxPreferenceAbolishVO> taxPreferenceAbolish =
           getTaxPreferenceAbolish(queryAbolishDTO.getId());
+      if(taxPreferenceAbolish!=null){
       for (TaxPreferenceAbolishVO preferenceAbolish : taxPreferenceAbolish) {
-
         // 属性拷贝
         BeanUtils.copyProperties(preferenceAbolish, taxPreferenceDO);
         // 设置税收优惠状态--失效
         taxPreferenceDO.setValidity(ValidityEnum.INVALID.getValue());
       }
-      // 判断废止状态--部分废止
-    } else if (PoliciesStatusEnum.PARTIAL_REPEAL
-        .getValue()
-        .equals(queryAbolishDTO.getPoliciesStatus())) {
-      List<Long> ids = queryAbolishDTO.getIds();
-      // 遍历选中的id集合
-      for (Long id : ids) {
-        // 根据id查询税收优惠对象
-        taxPreferenceDO = taxPreferenceMapper.selectById(id);
-        // 设置税收优惠状态--失效
-        taxPreferenceDO.setValidity(ValidityEnum.INVALID.getValue());
+        // 判断废止状态--部分废止
+      } else if (PoliciesStatusEnum.PARTIAL_REPEAL
+          .getValue()
+          .equals(queryAbolishDTO.getPoliciesStatus())) {
+        List<Long> ids = queryAbolishDTO.getIds();
+        // 遍历选中的id集合
+        for (Long id : ids) {
+          // 根据id查询税收优惠对象
+          taxPreferenceDO = taxPreferenceMapper.selectById(id);
+          // 设置税收优惠状态--失效
+          taxPreferenceDO.setValidity(ValidityEnum.INVALID.getValue());
+        }
       }
     }
     log.info("taxPreferenceDO:{}", taxPreferenceDO);

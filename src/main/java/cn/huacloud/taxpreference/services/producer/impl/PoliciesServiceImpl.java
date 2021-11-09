@@ -467,8 +467,7 @@ public class PoliciesServiceImpl implements PoliciesService {
       policiesDO.setPoliciesStatus(PoliciesStatusEnum.FULL_TEXT_REPEAL.getValue());
       policiesDO.setValidity(ValidityEnum.FULL_TEXT_REPEAL.getValue());
       // 设置税收优惠的有效性
-    } else if (PoliciesStatusEnum.PARTIAL_REPEAL
-        .getValue()
+    } else if (PoliciesStatusEnum.PARTIAL_REPEAL.getValue()
         .equals(queryAbolishDTO.getPoliciesStatus())) {
       // 判断条件--部分废止
       policiesDO.setPoliciesStatus(PoliciesStatusEnum.PARTIAL_REPEAL.getValue());
