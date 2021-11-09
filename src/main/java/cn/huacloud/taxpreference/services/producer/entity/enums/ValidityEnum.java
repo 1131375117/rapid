@@ -30,6 +30,6 @@ public enum ValidityEnum implements IEnum<String> {
 
     @Override
     public String getValue() {
-        return this.name;
+        return this.name();
     }
 }

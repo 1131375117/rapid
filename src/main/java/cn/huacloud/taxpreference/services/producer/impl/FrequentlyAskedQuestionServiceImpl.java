@@ -5,6 +5,7 @@ import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.services.producer.FrequentlyAskedQuestionService;
 import cn.huacloud.taxpreference.services.producer.PoliciesExplainService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO;
+import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesExplainDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.FrequentlyAskedQuestionDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesExplainDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.FrequentlyAskedQuestionVO;
@@ -72,6 +73,7 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
             FrequentlyAskedQuestionDO::getReleaseDate,
             queryPoliciesExplainDTO.getEndTime());
 
+    lambdaQueryWrapper.eq(FrequentlyAskedQuestionDO::getDeleted, false);
     // 排序--发布时间
     if (QueryPoliciesExplainDTO.SortField.RELEASE_DATE.equals(
         queryPoliciesExplainDTO.getSortField())) {

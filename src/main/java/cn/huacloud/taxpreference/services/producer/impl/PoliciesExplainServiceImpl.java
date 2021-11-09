@@ -152,14 +152,13 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
     PoliciesExplainDO policiesExplainDO =
         policiesExplainMapper.selectById(policiesExplainDTO.getId());
     // 参数校验
-    if (policiesExplainDO == null) {
-      throw BizCode._4100.exception();
+    if (policiesExplainDO != null) {
+      // 属性拷贝
+      BeanUtils.copyProperties(policiesExplainDTO, policiesExplainDO);
+      log.info("修改政策解读对象={}", policiesExplainDO);
+      // 修改政策解读
+      policiesExplainMapper.updateById(policiesExplainDO);
     }
-    // 属性拷贝
-    BeanUtils.copyProperties(policiesExplainDTO, policiesExplainDO);
-    log.info("修改政策解读对象={}", policiesExplainDO);
-    // 修改政策解读
-    policiesExplainMapper.updateById(policiesExplainDO);
   }
 
   /**
@@ -203,25 +202,28 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
   @Override
   public List<PoliciesTitleVO> fuzzyQuery(KeywordPageQueryDTO keywordPageQueryDTO) {
     // 模糊查询-title
-    LambdaQueryWrapper<PoliciesDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-    System.out.println("keywordPageQueryDTO=" + keywordPageQueryDTO);
-    System.out.println(keywordPageQueryDTO != null);
-    if (keywordPageQueryDTO != null) {
-      lambdaQueryWrapper.like(PoliciesDO::getTitle, keywordPageQueryDTO.getKeyword());
-    }
-    List<PoliciesDO> policiesDOS = policiesMapper.selectList(lambdaQueryWrapper);
+
+//    LambdaQueryWrapper<PoliciesDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+//    System.out.println("keywordPageQueryDTO=" + keywordPageQueryDTO);
+//    System.out.println(keywordPageQueryDTO != null);
+//    if (keywordPageQueryDTO != null) {
+//      lambdaQueryWrapper.like(PoliciesDO::getTitle, keywordPageQueryDTO.getKeyword());
+//    }
+//
+//    List<PoliciesDO> policiesDOS = policiesMapper.selectList(lambdaQueryWrapper);
     // 遍历集合
-    PoliciesTitleVO policiesTitleVO = null;
-    List<PoliciesTitleVO> policiesTitleVOList = new ArrayList<>();
-    for (PoliciesDO policiesDO : policiesDOS) {
-      policiesTitleVO = new PoliciesTitleVO();
-      // 属性拷贝
-      BeanUtils.copyProperties(policiesDO, policiesTitleVO);
-      policiesTitleVOList.add(policiesTitleVO);
-    }
-    // 返回结果
-    log.info("模糊查询对象={}", policiesDOS);
-    return policiesTitleVOList;
+//    PoliciesTitleVO policiesTitleVO = null;
+//    List<PoliciesTitleVO> policiesTitleVOList = new ArrayList<>();
+//    for (PoliciesDO policiesDO : policiesDOS) {
+//      policiesTitleVO = new PoliciesTitleVO();
+//      // 属性拷贝
+//      BeanUtils.copyProperties(policiesDO, policiesTitleVO);
+//      policiesTitleVOList.add(policiesTitleVO);
+//      policiesTitleVO.setPoliciesId(policiesDO.getId());
+//    }
+//    // 返回结果
+//    log.info("模糊查询对象={}", policiesDOS);
+    return null;
   }
 
   /**

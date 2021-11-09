@@ -508,8 +508,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         taxPreferenceDO.setValidity(ValidityEnum.INVALID.getValue());
       }
         // 判断废止状态--部分废止
-      } else if (PoliciesStatusEnum.PARTIAL_REPEAL
-          .getValue()
+      } else if (PoliciesStatusEnum.PARTIAL_REPEAL.getValue()
           .equals(queryAbolishDTO.getPoliciesStatus())) {
         List<Long> ids = queryAbolishDTO.getIds();
         // 遍历选中的id集合
