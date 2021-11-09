@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.huacloud.taxpreference.services.producer.mapper.PoliciesExplainMapper">
+
+    <select id="getRelatedPolicy"
+            resultType="cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesTitleVO">
+        SELECT
+            pe.policies_id,
+            p.title,
+        IF
+            ( pe.policies_id != NULL OR pe.policies_id != '', 1, 0 ) AS relatedPolicy
+        FROM
+            `t_policies_explain` pe
+            RIGHT JOIN t_policies p ON pe.policies_id = p.id
+        WHERE
+        <if test="keywordPageQueryDTO.keyword!=null and keywordPageQueryDTO.keyword!=''">
+            p.title LIKE "%"#{keywordPageQueryDTO.keyword}"%"
+        </if>
+        GROUP BY
+            p.id;
+    </select>
+</mapper>

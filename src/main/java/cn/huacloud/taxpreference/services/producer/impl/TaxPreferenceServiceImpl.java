@@ -500,7 +500,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
       // 调用查询废止接口
       List<TaxPreferenceAbolishVO> taxPreferenceAbolish =
           getTaxPreferenceAbolish(queryAbolishDTO.getId());
-      if(taxPreferenceAbolish!=null){
+      if(taxPreferenceAbolish.size()>0){
       for (TaxPreferenceAbolishVO preferenceAbolish : taxPreferenceAbolish) {
         // 属性拷贝
         BeanUtils.copyProperties(preferenceAbolish, taxPreferenceDO);
@@ -508,7 +508,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         taxPreferenceDO.setValidity(ValidityEnum.INVALID.getValue());
       }
         // 判断废止状态--部分废止
-      } else if (PoliciesStatusEnum.PARTIAL_REPEAL.getValue()
+      }} else if (PoliciesStatusEnum.PARTIAL_REPEAL.getValue()
           .equals(queryAbolishDTO.getPoliciesStatus())) {
         List<Long> ids = queryAbolishDTO.getIds();
         // 遍历选中的id集合
@@ -519,7 +519,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
           taxPreferenceDO.setValidity(ValidityEnum.INVALID.getValue());
         }
       }
-    }
+
     log.info("taxPreferenceDO:{}", taxPreferenceDO);
     if (taxPreferenceDO.getId() != null) {
       taxPreferenceMapper.updateById(taxPreferenceDO);
