@@ -26,6 +26,11 @@ import java.util.regex.Pattern;
 public class SampleTest {
 
     @Test
+    public void htmlTest() {
+        String html = "";
+    }
+
+    @Test
     public void testPassword() {
         String patternStr = "(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[^a-zA-Z0-9]).{8,30}";
         Pattern pattern = Pattern.compile(patternStr);
