@@ -40,12 +40,11 @@
             <if test="queryPoliciesDTO.endTime!=null ">
                 and tp.release_date &lt;= #{queryPoliciesDTO.endTime}
             </if>
-            <if test="(queryPoliciesDTO.title!=null and queryPoliciesDTO.title!='') and  queryPoliciesDTO.keywordType.getValue()==@cn.huacloud.taxpreference.services.producer.entity.enums.KeywordType@TITLE.getValue()">
-                and tp.title like "%"#{queryPoliciesDTO.title}"%"
+            <if test="queryPoliciesDTO.keyword!=null and queryPoliciesDTO.keyword!=''">
+                and (tp.title like "%"#{queryPoliciesDTO.keyword}"%"
+                or  tp.doc_code like "%"#{queryPoliciesDTO.keyword}"%")
             </if>
-            <if test="(queryPoliciesDTO.docCode!=null and  queryPoliciesDTO.docCode!='') and  queryPoliciesDTO.keywordType.getValue()==@cn.huacloud.taxpreference.services.producer.entity.enums.KeywordType@DOC_CODE.getValue()">
-                and tp.doc_code like "%"#{queryPoliciesDTO.docCode}"%"
-            </if>
+
             <if test="queryPoliciesDTO.taxpayerIdentifyTypeCodes!=null and queryPoliciesDTO.taxpayerIdentifyTypeCodes.size>0 ">
                 <foreach collection="queryPoliciesDTO.taxpayerIdentifyTypeCodes" item="taxpayer">
                     and FIND_IN_SET(#{taxpayer},tp.taxpayer_identify_type_codes)

@@ -1,6 +1,7 @@
 package cn.huacloud.taxpreference.services.producer.entity.vos;
 
 import cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferenceDO;
+import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesStatusEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -14,7 +15,7 @@ public class PoliciesAbolishVO {
 
 
     @ApiModelProperty("废止状态")
-    private String policiesStatus;
+    private PoliciesStatusEnum policiesStatus;
 
     @ApiModelProperty("废止说明")
     private String abolishNote;

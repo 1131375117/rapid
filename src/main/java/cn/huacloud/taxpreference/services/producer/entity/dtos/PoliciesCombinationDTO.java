@@ -2,6 +2,7 @@ package cn.huacloud.taxpreference.services.producer.entity.dtos;
 
 
 import cn.huacloud.taxpreference.common.constants.ValidationGroup;
+import cn.huacloud.taxpreference.services.producer.entity.enums.ValidityEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -59,8 +60,8 @@ public class PoliciesCombinationDTO {
     private List<String> industryCodes;
 
     @ApiModelProperty("有效性")
-    @NotEmpty(message = "有效性不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
-    private String validity;
+    @NotNull(message = "有效性不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+    private ValidityEnum validity;
 
     @ApiModelProperty("发布日期")
     @NotNull(message = "发布日期不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})

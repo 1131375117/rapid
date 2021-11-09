@@ -19,6 +19,6 @@ public enum TaxPreferenceStatus implements IEnum<String> {
 
     @Override
     public String getValue() {
-        return this.name;
+        return this.name();
     }
 }

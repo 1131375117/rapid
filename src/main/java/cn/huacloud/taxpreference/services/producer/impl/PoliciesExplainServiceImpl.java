@@ -12,6 +12,7 @@ import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainDet
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesTitleVO;
 import cn.huacloud.taxpreference.services.producer.mapper.PoliciesExplainMapper;
 import cn.huacloud.taxpreference.services.producer.mapper.PoliciesMapper;
+import cn.huacloud.taxpreference.services.user.entity.dos.UserDO;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -73,6 +74,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
             !StringUtils.isEmpty(queryPoliciesExplainDTO.getReleaseDate()),
             PoliciesExplainDO::getReleaseDate,
             queryPoliciesExplainDTO.getEndTime());
+    lambdaQueryWrapper.eq(PoliciesExplainDO::getDeleted, false);
 
     // 排序--发布时间
     if (QueryPoliciesExplainDTO.SortField.RELEASE_DATE.equals(
@@ -97,7 +99,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
     // 分页
     IPage<PoliciesExplainDO> policiesExplainDOPage =
         policiesExplainMapper.selectPage(
-            new Page<PoliciesExplainDO>(
+            new Page<>(
                 queryPoliciesExplainDTO.getPageNum(), queryPoliciesExplainDTO.getPageSize()),
             lambdaQueryWrapper);
     // 数据映射
@@ -150,14 +152,13 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
     PoliciesExplainDO policiesExplainDO =
         policiesExplainMapper.selectById(policiesExplainDTO.getId());
     // 参数校验
-    if (policiesExplainDO == null) {
-      throw BizCode._4100.exception();
+    if (policiesExplainDO != null) {
+      // 属性拷贝
+      BeanUtils.copyProperties(policiesExplainDTO, policiesExplainDO);
+      log.info("修改政策解读对象={}", policiesExplainDO);
+      // 修改政策解读
+      policiesExplainMapper.updateById(policiesExplainDO);
     }
-    // 属性拷贝
-    BeanUtils.copyProperties(policiesExplainDTO, policiesExplainDO);
-    log.info("修改政策解读对象={}", policiesExplainDO);
-    // 修改政策解读
-    policiesExplainMapper.updateById(policiesExplainDO);
   }
 
   /**
@@ -201,25 +202,10 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
   @Override
   public List<PoliciesTitleVO> fuzzyQuery(KeywordPageQueryDTO keywordPageQueryDTO) {
     // 模糊查询-title
-    LambdaQueryWrapper<PoliciesDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-    System.out.println("keywordPageQueryDTO=" + keywordPageQueryDTO);
-    System.out.println(keywordPageQueryDTO != null);
-    if (keywordPageQueryDTO != null) {
-      lambdaQueryWrapper.like(PoliciesDO::getTitle, keywordPageQueryDTO.getKeyword());
-    }
-    List<PoliciesDO> policiesDOS = policiesMapper.selectList(lambdaQueryWrapper);
-    // 遍历集合
-    PoliciesTitleVO policiesTitleVO = null;
-    List<PoliciesTitleVO> policiesTitleVOList = new ArrayList<>();
-    for (PoliciesDO policiesDO : policiesDOS) {
-      policiesTitleVO = new PoliciesTitleVO();
-      // 属性拷贝
-      BeanUtils.copyProperties(policiesDO, policiesTitleVO);
-      policiesTitleVOList.add(policiesTitleVO);
-    }
-    // 返回结果
-    log.info("模糊查询对象={}", policiesDOS);
-    return policiesTitleVOList;
+
+    List<PoliciesTitleVO> relatedPolicyList=policiesExplainMapper.getRelatedPolicy(keywordPageQueryDTO);
+
+    return relatedPolicyList;
   }
 
   /**

@@ -1,6 +1,8 @@
 package cn.huacloud.taxpreference.services.producer.entity.dos;
 
 
+import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesStatusEnum;
+import cn.huacloud.taxpreference.services.producer.entity.enums.ValidityEnum;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -92,7 +94,7 @@ public class PoliciesDO {
     /**
      * 有效性
      */
-    private String validity;
+    private ValidityEnum validity;
 
     /**
      * 发布日期
@@ -117,7 +119,7 @@ public class PoliciesDO {
     /**
      * 政策法规状态
      */
-    private String policiesStatus;
+    private PoliciesStatusEnum policiesStatus;
 
     /**
      * 废止说明
@@ -143,6 +145,4 @@ public class PoliciesDO {
      * 逻辑删除
      */
     private Boolean deleted;
-
-
 }

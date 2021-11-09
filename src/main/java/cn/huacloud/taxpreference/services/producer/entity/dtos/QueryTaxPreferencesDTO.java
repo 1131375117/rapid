@@ -1,6 +1,7 @@
 package cn.huacloud.taxpreference.services.producer.entity.dtos;
 
 import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
+import cn.huacloud.taxpreference.common.enums.taxpreference.PreferenceValidation;
 import cn.huacloud.taxpreference.common.enums.taxpreference.ReleaseMatter;
 import cn.huacloud.taxpreference.common.enums.taxpreference.SortType;
 import io.swagger.annotations.ApiModelProperty;
@@ -56,7 +57,7 @@ public class QueryTaxPreferencesDTO extends KeywordPageQueryDTO {
      * 有效性
      */
     @ApiModelProperty("有效性-(EFFECTIVE-有效,INVALID-无效)")
-    private String validity;
+    private PreferenceValidation validity;
 
     /**
      * 排序
