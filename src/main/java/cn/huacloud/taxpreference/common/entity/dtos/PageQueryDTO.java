@@ -38,4 +38,13 @@ public class PageQueryDTO {
     public <T> IPage<T> createQueryPage() {
         return new Page<>(pageNum, pageSize);
     }
+
+    /**
+     * 获取分页偏移量
+     * @return 分页偏移量
+     */
+    public Integer from() {
+        int from = (pageNum - 1) * pageSize;
+        return Math.max(from, 0);
+    }
 }

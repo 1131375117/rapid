@@ -12,6 +12,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
 import java.lang.reflect.Method;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +29,9 @@ public class SampleTest {
 
     @Test
     public void htmlTest() {
-        String html = "";
+        LocalDate now = LocalDate.now();
+        log.info(now.toString());
+        log.info(LocalDateTime.now().toString());
     }
 
     @Test
