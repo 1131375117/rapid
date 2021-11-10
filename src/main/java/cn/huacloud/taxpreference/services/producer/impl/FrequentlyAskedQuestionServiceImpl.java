@@ -57,6 +57,10 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
         !StringUtils.isEmpty(queryPoliciesExplainDTO.getTitle()),
         FrequentlyAskedQuestionDO::getTitle,
         queryPoliciesExplainDTO.getTitle());
+    lambdaQueryWrapper.like(
+            !StringUtils.isEmpty(queryPoliciesExplainDTO.getKeyword()),
+            FrequentlyAskedQuestionDO::getTitle,
+            queryPoliciesExplainDTO.getKeyword());
     // 模糊查询--政策解读来源
     lambdaQueryWrapper.like(
         !StringUtils.isEmpty(queryPoliciesExplainDTO.getDocSource()),
@@ -74,6 +78,12 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
             queryPoliciesExplainDTO.getEndTime());
 
     lambdaQueryWrapper.eq(FrequentlyAskedQuestionDO::getDeleted, false);
+    lambdaQueryWrapper
+            .eq(
+                    !StringUtils.isEmpty(queryPoliciesExplainDTO.getReleaseDate()),
+                    FrequentlyAskedQuestionDO::getReleaseDate,
+                    queryPoliciesExplainDTO.getReleaseDate())
+            .orderByDesc(FrequentlyAskedQuestionDO::getReleaseDate);
     // 排序--发布时间
     if (QueryPoliciesExplainDTO.SortField.RELEASE_DATE.equals(
         queryPoliciesExplainDTO.getSortField())) {
@@ -108,6 +118,7 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
                   PoliciesExplainDetailVO policiesExplainDetailVO = new PoliciesExplainDetailVO();
                   // 属性拷贝
                   BeanUtils.copyProperties(frequentlyAskedQuestionDO, policiesExplainDetailVO);
+//                  policiesExplainDetailVO.setPoliciesIds(frequentlyAskedQuestionDO.getPoliciesIds());
                   return policiesExplainDetailVO;
                 })
             .collect(Collectors.toList());
@@ -204,5 +215,20 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
       return FrequentlyAskedQuestionVOList;
     }
     return null;
+  }
+
+
+  /**
+   * 根据热门问答id查询详情
+   *
+   * @param id
+   * @return
+   */
+  @Override
+  public PoliciesExplainDetailVO getFrequentlyAskedQuestionById(Long id) {
+    FrequentlyAskedQuestionDO frequentlyAskedQuestionDO = frequentlyAskedQuestionMapper.selectById(id);
+    PoliciesExplainDetailVO policiesExplainDetailVO = new PoliciesExplainDetailVO();
+    BeanUtils.copyProperties(frequentlyAskedQuestionDO,policiesExplainDetailVO);
+    return policiesExplainDetailVO;
   }
 }

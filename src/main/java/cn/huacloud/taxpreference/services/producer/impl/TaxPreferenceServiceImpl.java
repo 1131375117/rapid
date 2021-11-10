@@ -500,6 +500,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
       // 调用查询废止接口
       List<TaxPreferenceAbolishVO> taxPreferenceAbolish =
           getTaxPreferenceAbolish(queryAbolishDTO.getId());
+
       if(taxPreferenceAbolish.size()>0){
       for (TaxPreferenceAbolishVO preferenceAbolish : taxPreferenceAbolish) {
         // 属性拷贝

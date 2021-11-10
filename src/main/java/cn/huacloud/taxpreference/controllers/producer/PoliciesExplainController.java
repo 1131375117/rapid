@@ -56,9 +56,9 @@ public class PoliciesExplainController {
      * 新增政策解读接口
      * 标题、来源、发布日期、正文
      */
-    @PermissionInfo(name = "新增政策解读", group = PermissionGroup.POLICIES_EXPLAIN)
+    @PermissionInfo(name = "政策解读新增", group = PermissionGroup.POLICIES_EXPLAIN)
     @SaCheckPermission("producer_policiesExplain_insert")
-    @ApiOperation("新增政策解读")
+    @ApiOperation("政策解读新增")
     @PostMapping(value = "/policiesExplain")
     public ResultVO<PoliciesExplainDTO> insertPoliciesExplain(@Validated(ValidationGroup.Create.class) @RequestBody PoliciesExplainDTO policiesExplainDTO) {
 
@@ -69,12 +69,12 @@ public class PoliciesExplainController {
     /**
      * 关联政策（模糊查询，政策法规）
      */
-    @PermissionInfo(name = "查询关联政策", group = PermissionGroup.POLICIES_EXPLAIN)
+    @PermissionInfo(name = "关联政策查询", group = PermissionGroup.POLICIES_EXPLAIN)
     @SaCheckPermission("producer_relatedPolicies_query")
-    @ApiOperation("查询关联政策")
+    @ApiOperation("关联政策查询")
     @PostMapping("/policies/relatedPolicies/query")
-    public ResultVO<List<PoliciesTitleVO>> fuzzyQuery(@RequestBody KeywordPageQueryDTO keywordPageQueryDTO) {
-        List<PoliciesTitleVO> policiesTitleVOList = policiesExplainService.fuzzyQuery(keywordPageQueryDTO);
+    public ResultVO<List<PoliciesTitleVO>> fuzzyQuery() {
+        List<PoliciesTitleVO> policiesTitleVOList = policiesExplainService.fuzzyQuery();
         return ResultVO.ok(policiesTitleVOList);
     }
 
@@ -82,11 +82,11 @@ public class PoliciesExplainController {
      * 根据ID获取政策解读详情
      * 政策解读id
      */
-    @PermissionInfo(name = "根据id获取政策解读详情", group = PermissionGroup.POLICIES_EXPLAIN)
+    @PermissionInfo(name = "政策解读详情", group = PermissionGroup.POLICIES_EXPLAIN)
     @SaCheckPermission("producer_policiesExplain_detail")
-    @ApiOperation("根据id获取政策解读详情")
+    @ApiOperation("政策解读详情")
     @GetMapping(value = "/policiesExplain/detail/{id}")
-    public ResultVO<PoliciesExplainDetailVO> getPoliciesById(@Validated @NotEmpty(message = "id不能为空") @PathVariable("id") Long id) {
+    public ResultVO<PoliciesExplainDetailVO> getPoliciesExplainById(@Validated @NotEmpty(message = "id不能为空") @PathVariable("id") Long id) {
         PoliciesExplainDetailVO policiesExplainDetailVO = policiesExplainService.getPoliciesById(id);
         return ResultVO.ok(policiesExplainDetailVO);
 
@@ -96,9 +96,9 @@ public class PoliciesExplainController {
      * 修改政策解读
      * 政策解读id
      */
-    @PermissionInfo(name = "修改政策解读", group = PermissionGroup.POLICIES_EXPLAIN)
+    @PermissionInfo(name = "政策解读修改", group = PermissionGroup.POLICIES_EXPLAIN)
     @SaCheckPermission("producer_policiesExplain_update")
-    @ApiOperation("修改政策解读")
+    @ApiOperation("政策解读修改")
     @PutMapping(value = "/policesExplain")
     public ResultVO<Void> updatePolicesExplain(@Validated(ValidationGroup.Update.class) @RequestBody PoliciesExplainDTO policiesExplainDTO) {
         policiesExplainService.updatePolicesExplain(policiesExplainDTO);
@@ -110,9 +110,9 @@ public class PoliciesExplainController {
      * 删除政策解读
      * 政策解读id
      */
-    @PermissionInfo(name = "删除政策解读", group = PermissionGroup.POLICIES_EXPLAIN)
+    @PermissionInfo(name = "政策解读删除", group = PermissionGroup.POLICIES_EXPLAIN)
     @SaCheckPermission("producer_policiesExplain_delete")
-    @ApiOperation("删除政策解读")
+    @ApiOperation("政策解读删除")
     @DeleteMapping("/policiesExplain/{id}")
     public ResultVO<Void> deletePoliciesById(@Validated @NotEmpty(message = "id不能为空") @PathVariable("id") Long id) {
         policiesExplainService.deletePoliciesById(id);

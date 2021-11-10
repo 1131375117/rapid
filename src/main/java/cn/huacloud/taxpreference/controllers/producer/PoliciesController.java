@@ -79,9 +79,9 @@ public class PoliciesController {
    * @param id 政策法规id
    * @return
    */
-  @PermissionInfo(name = "根据id获取政策法规详情", group = PermissionGroup.POLICIES)
+  @PermissionInfo(name = "政策法规详情", group = PermissionGroup.POLICIES)
   @SaCheckPermission("producer_policies_detail")
-  @ApiOperation(value = "根据id获取政策法规详情")
+  @ApiOperation(value = "政策法规详情")
   @GetMapping(value = "/policies/detail/{id}")
   public ResultVO<PoliciesCombinationDTO> getPoliciesById(
       @Validated @NotEmpty(message = "id不能为空") @PathVariable("id") Long id) {
@@ -95,9 +95,9 @@ public class PoliciesController {
    * @param policiesCombinationDTO 政策法规条件组合
    * @return
    */
-  @PermissionInfo(name = "修改政策法规", group = PermissionGroup.POLICIES)
+  @PermissionInfo(name = "政策法规修改", group = PermissionGroup.POLICIES)
   @SaCheckPermission("producer_policies_update")
-  @ApiOperation(value = "修改政策法规")
+  @ApiOperation(value = "政策法规修改")
   @PutMapping(value = "/policies")
   public ResultVO<Void> updatePolicies(
       @Validated(ValidationGroup.Update.class) @RequestBody
@@ -127,9 +127,9 @@ public class PoliciesController {
    * @param id 政策法规id
    * @return
    */
-  @PermissionInfo(name = "查询政策法规废止信息", group = PermissionGroup.POLICIES)
+  @PermissionInfo(name = "政策法规废止信息查询", group = PermissionGroup.POLICIES)
   @SaCheckPermission("producer_policies_abolish_detail")
-  @ApiOperation("查询政策法规废止信息")
+  @ApiOperation("政策法规废止信息查询")
   @GetMapping(value = "/policies/abolish/{id}")
   public ResultVO<PoliciesAbolishVO> getAbolish(
       @Validated @NotEmpty(message = "id不能为空") @PathVariable("id") Long id) {
@@ -143,9 +143,9 @@ public class PoliciesController {
    * @param id 政策法规id
    * @return
    */
-  @PermissionInfo(name = "校验删除政策法规", group = PermissionGroup.POLICIES)
+  @PermissionInfo(name = "政策法规校验删除", group = PermissionGroup.POLICIES)
   @SaCheckPermission("producer_policies_checkDelete")
-  @ApiOperation("校验删除政策法规")
+  @ApiOperation("政策法规校验删除")
   @GetMapping(value = "/policies/checkDelete/{id}")
   public ResultVO<PoliciesCheckDeleteVO> checkDeletePoliciesById(
       @Validated @NotEmpty(message = "id不能为空") @PathVariable("id") Long id) {
@@ -159,9 +159,9 @@ public class PoliciesController {
    * @param id 政策法规id
    * @return
    */
-  @PermissionInfo(name = "删除政策法规", group = PermissionGroup.POLICIES)
+  @PermissionInfo(name = "政策法规删除", group = PermissionGroup.POLICIES)
   @SaCheckPermission("producer_policies_delete")
-  @ApiOperation("删除政策法规")
+  @ApiOperation("政策法规删除")
   @DeleteMapping(value = "/policies/{id}")
   public ResultVO<Void> confirmDeletePoliciesById(
       @Validated @NotEmpty(message = "id不能为空") @PathVariable("id") Long id) {

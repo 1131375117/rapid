@@ -16,6 +16,6 @@ public class PoliciesTitleVO {
     private Long policiesId;
     @ApiModelProperty("政策法规名称")
     private String title;
-
+    @ApiModelProperty()
     private Boolean relatedPolicy;
 }
