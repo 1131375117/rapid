@@ -13,8 +13,7 @@ import java.time.LocalDateTime;
  **/
 @Data
 public class ProcessListDTO extends KeywordPageQueryDTO {
-  /*  @ApiModelProperty("优惠事项名称")
-    private String taxPreferenceName;*/
+
     @ApiModelProperty("税种码值")
     private String taxCategoriesCode;
     @ApiModelProperty("时间范围")

@@ -3,6 +3,7 @@ package cn.huacloud.taxpreference.services.producer.impl;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.enums.process.ProcessStatus;
+import cn.huacloud.taxpreference.common.enums.taxpreference.TaxPreferenceStatus;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.producer.ProcessService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.ProcessDO;
@@ -59,7 +60,7 @@ public class ProcessServiceImpl implements ProcessService {
             processDO.setLatestProcess(true);
             processDO.setCreatorId(currentUser.getId());
             processDO.setCreatorName(currentUser.getUsername());
-
+            processDO.setProcessStatus(ProcessStatus.NOT_APPROVED);
             processServiceMapper.insert(processDO);
         }
         return ResultVO.ok();
@@ -83,8 +84,10 @@ public class ProcessServiceImpl implements ProcessService {
         ProcessDO processDO = getProcessDO(processSubmitDTO, currentUser);
         processServiceMapper.updateById(processDO);
         processDO = processServiceMapper.selectById(processDO.getId());
-        TaxPreferenceDO taxPreferenceDO = getTaxPreferenceDO(processDO);
-        taxPreferenceMapper.updateById(taxPreferenceDO);
+        if(processDO!=null){
+            TaxPreferenceDO taxPreferenceDO = getTaxPreferenceDO(processDO);
+            taxPreferenceMapper.updateById(taxPreferenceDO);
+        }
         return ResultVO.ok();
     }
 
@@ -110,7 +113,7 @@ public class ProcessServiceImpl implements ProcessService {
         LambdaQueryWrapper<ProcessDO> queryWrapper = Wrappers.lambdaQuery(ProcessDO.class)
                 .eq(ProcessDO::getTaxPreferenceId, id)
                 .eq(ProcessDO::getLatestProcess, true)
-                .eq(ProcessDO::getProcessStatus, ProcessStatus.NOT_APPROVED.getValue());
+                .eq(ProcessDO::getProcessStatus, ProcessStatus.NOT_APPROVED);
 
         ProcessDO processDO = processServiceMapper.selectOne(queryWrapper);
         if(processDO!=null){
@@ -127,7 +130,7 @@ public class ProcessServiceImpl implements ProcessService {
         processDO.setApproverId(currentUser.getId());
         processDO.setApproverName(currentUser.getUsername());
         processDO.setApprovalTime(LocalDateTime.now());
-
+        processDO.setProcessStatus(processSubmitDTO.getTaxPreferenceStatus());
         log.info("封装结果:processDO:{}", processDO);
         return processDO;
     }
@@ -135,10 +138,14 @@ public class ProcessServiceImpl implements ProcessService {
     /**
      * 封装税收优惠
      */
-    private TaxPreferenceDO getTaxPreferenceDO(ProcessDO processDO) {
+    private TaxPreferenceDO getTaxPreferenceDO( ProcessDO processDO) {
         TaxPreferenceDO taxPreferenceDO = new TaxPreferenceDO();
         taxPreferenceDO.setId(processDO.getTaxPreferenceId());
-     //   taxPreferenceDO.setTaxPreferenceStatus(processDO.getProcessStatus());
+        if (ProcessStatus.APPROVED.equals(processDO.getProcessStatus())) {
+            taxPreferenceDO.setTaxPreferenceStatus(TaxPreferenceStatus.RELEASED);
+        } else {
+            taxPreferenceDO.setTaxPreferenceStatus(TaxPreferenceStatus.UNRELEASED);
+        }
         log.info("封装结果:taxPreferenceDO:{}", taxPreferenceDO);
         return taxPreferenceDO;
     }

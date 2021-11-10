@@ -62,7 +62,6 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     // 新增-税收优惠表t_tax_preference
     TaxPreferenceDO taxPreferenceDO = getTaxPreferenceDO(taxPreferenceDTO);
     taxPreferenceDO.setCreateTime(LocalDateTime.now());
-
     log.info("税收优惠新增对象:{}", taxPreferenceDO);
     taxPreferenceMapper.insert(taxPreferenceDO);
 
@@ -233,7 +232,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
   /** 校验发布状态 */
   private void judgeRelease(Long id) {
     TaxPreferenceDO taxPreferenceDO = getTaxPreferenceDO(id);
-    if (TaxPreferenceStatus.RELEASED.getValue().equals(taxPreferenceDO.getTaxPreferenceStatus())) {
+    if (TaxPreferenceStatus.RELEASED.equals(taxPreferenceDO.getTaxPreferenceStatus())) {
       throw BizCode._4311.exception();
     }
   }
@@ -356,6 +355,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     BeanUtils.copyProperties(taxPreferenceDTO, taxPreferenceDO);
     taxPreferenceDO.setDeleted(false);
     taxPreferenceDO.setUpdateTime(LocalDateTime.now());
+    taxPreferenceDO.setTaxPreferenceStatus(TaxPreferenceStatus.UNRELEASED);
     // 收入税种种类名称
     taxPreferenceDO.setTaxCategoriesName(
         sysCodeService.getCodeNameByCodeValue(taxPreferenceDTO.getTaxCategoriesCode()));
