@@ -44,9 +44,9 @@ public class PoliciesController {
    * @param queryPoliciesDTO 政策法规查询条件
    * @return
    */
-  @PermissionInfo(name = "政策法规列表查询", group = PermissionGroup.POLICIES)
+  @PermissionInfo(name = "政策法规分页列表", group = PermissionGroup.POLICIES)
   @SaCheckPermission("producer_policies_query")
-  @ApiOperation(value = "政策法规列表查询")
+  @ApiOperation(value = "政策法规分页列表")
   @PostMapping(value = "/policies/query")
   public ResultVO<PageVO<PoliciesVO>> getPolices(@RequestBody QueryPoliciesDTO queryPoliciesDTO) {
     PageVO<PoliciesVO> policesList = policiesService.getPolicesList(queryPoliciesDTO);

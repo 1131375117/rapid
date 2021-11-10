@@ -34,9 +34,9 @@ public class FrequentlyAskedQuestionController {
 
     private final FrequentlyAskedQuestionService frequentlyAskedQuestionService;
 
-    @PermissionInfo(name = "热门问答列表查询", group = PermissionGroup.FREQUENTLY_ASKED_QUESTION)
+    @PermissionInfo(name = "热门问答分页列表", group = PermissionGroup.FREQUENTLY_ASKED_QUESTION)
     @SaCheckPermission("producer_frequentlyAskedQuestion_query")
-    @ApiOperation("热门问答列表查询")
+    @ApiOperation("热门问答分页列表")
     @PostMapping(value = "/getFrequentlyAskedQuestionList/query")
     public ResultVO<PageVO<PoliciesExplainDetailVO>> getFrequentlyAskedQuestionList(@RequestBody QueryPoliciesExplainDTO queryPoliciesExplainDTO) {
          queryPoliciesExplainDTO.paramReasonable();

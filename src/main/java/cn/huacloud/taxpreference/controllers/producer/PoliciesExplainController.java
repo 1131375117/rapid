@@ -42,9 +42,9 @@ public class PoliciesExplainController {
      * 根据发布时间和更新时间排序
      * 分页
      */
-    @PermissionInfo(name = "政策解读列表查询", group = PermissionGroup.POLICIES_EXPLAIN)
+    @PermissionInfo(name = "政策解读分页列表", group = PermissionGroup.POLICIES_EXPLAIN)
     @SaCheckPermission("producer_policiesExplain_query")
-    @ApiOperation("政策解读列表查询")
+    @ApiOperation("政策解读分页列表")
     @PostMapping(value = "/policiesExplain/query")
     public ResultVO<PageVO<PoliciesExplainDetailVO>> getPoliciesExplainList(@RequestBody QueryPoliciesExplainDTO queryPoliciesExplainDTO) {
         queryPoliciesExplainDTO.paramReasonable();
