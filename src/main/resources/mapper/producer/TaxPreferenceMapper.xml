@@ -45,15 +45,11 @@
             <if test="queryTaxPreferencesDTO.taxpayerTypeCode != null and queryTaxPreferencesDTO.taxpayerTypeCode != '' ">
                 and p.taxpayer_type_code=#{queryTaxPreferencesDTO.taxpayerTypeCode}
             </if>
-            <if test="queryTaxPreferencesDTO.validity!=null and queryTaxPreferencesDTO.validity!='' ">
+            <if test="queryTaxPreferencesDTO.validity!=null">
                 and p.validity=#{queryTaxPreferencesDTO.validity}
             </if>
-
-            <if test="queryTaxPreferencesDTO.releaseMatter.getValue()==@cn.huacloud.taxpreference.common.enums.taxpreference.ReleaseMatter@MY_RELEASED.getValue()">
-                and p.input_user_id=#{userId} and tax_preference_status='已发布'
-            </if>
-            <if test="queryTaxPreferencesDTO.releaseMatter.getValue()==@cn.huacloud.taxpreference.common.enums.taxpreference.ReleaseMatter@MY_UNRELEASED.getValue()">
-                and p.input_user_id=#{userId} and tax_preference_status='待发布'
+            <if test="queryTaxPreferencesDTO.releaseMatter!=null">
+                and p.input_user_id=#{userId} and tax_preference_status=#{queryTaxPreferencesDTO.releaseMatter}
             </if>
             <if test="queryTaxPreferencesDTO.startTime!=null ">
                 and p.create_time >= #{queryTaxPreferencesDTO.startTime}

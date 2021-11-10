@@ -1,5 +1,7 @@
 package cn.huacloud.taxpreference.services.producer.entity.dos;
 
+import cn.huacloud.taxpreference.common.enums.taxpreference.PreferenceValidation;
+import cn.huacloud.taxpreference.common.enums.taxpreference.TaxPreferenceStatus;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -95,7 +97,7 @@ public class TaxPreferenceDO {
     /**
      * 有效性
      */
-    private String validity;
+    private PreferenceValidation validity;
 
     /**
      * 留存备查资料
@@ -137,7 +139,7 @@ public class TaxPreferenceDO {
     /**
      * 审批状态
      */
-    private String taxPreferenceStatus;
+    private TaxPreferenceStatus taxPreferenceStatus;
 
     /**
      * 标签管理

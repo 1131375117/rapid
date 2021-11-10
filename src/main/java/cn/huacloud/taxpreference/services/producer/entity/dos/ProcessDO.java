@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.producer.entity.dos;
 
+import cn.huacloud.taxpreference.common.enums.process.ProcessStatus;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -55,7 +56,7 @@ public class ProcessDO {
     /**
      * 流程状态
      */
-    private String processStatus;
+    private ProcessStatus processStatus;
     /**
      * 是否为最新流程
      */

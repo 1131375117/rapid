@@ -8,21 +8,17 @@ import cn.huacloud.taxpreference.common.enums.PermissionGroup;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.common.utils.UserUtil;
 import cn.huacloud.taxpreference.services.producer.TaxPreferenceService;
-import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryAbolishDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryTaxPreferencesDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.TaxPreferenceDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.QueryTaxPreferencesVO;
-import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceAbolishVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotEmpty;
-import java.util.List;
 
 /**
  * 优惠政策接口
@@ -41,7 +37,7 @@ public class TaxPreferenceController {
     @SaCheckPermission("producer_taxPreference_query")
     @ApiOperation("税收优惠查询接口")
     @PostMapping("queryTaxPreference")
-    public ResultVO<PageVO<QueryTaxPreferencesVO>> queryTaxPreference(@NotNull @RequestBody QueryTaxPreferencesDTO queryTaxPreferencesDTO) {
+    public ResultVO<PageVO<QueryTaxPreferencesVO>> queryTaxPreference( @RequestBody QueryTaxPreferencesDTO queryTaxPreferencesDTO) {
         queryTaxPreferencesDTO.paramReasonable();
         return taxPreferenceService.queryTaxPreferenceList(queryTaxPreferencesDTO, UserUtil.getCurrentUser().getId());
     }
