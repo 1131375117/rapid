@@ -12,6 +12,9 @@ spring:
     port: 6379
     password: foobared
     database: 4
+  elasticsearch:
+    rest:
+      uris: http://172.16.122.17:9200
 
 # mybatis plus
 mybatis-plus:

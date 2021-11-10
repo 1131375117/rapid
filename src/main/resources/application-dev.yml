@@ -12,6 +12,9 @@ spring:
     port: 6379
     password: foobared
     database: 2
+  elasticsearch:
+    rest:
+      uris: http://172.16.122.17:9200
 
 # mybatis plus
 mybatis-plus:
@@ -30,3 +33,4 @@ tax-preference:
     bucket: "tax-preference-dev"
     access-key: "tax_preference"
     secret-key: "tax_preference"
+
