@@ -4,6 +4,7 @@ import cn.huacloud.taxpreference.common.constants.TaxpayerTypeConstants;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.enums.SysCodeType;
+import cn.huacloud.taxpreference.common.enums.taxpreference.PreferenceValidation;
 import cn.huacloud.taxpreference.common.enums.taxpreference.SortType;
 import cn.huacloud.taxpreference.common.enums.taxpreference.TaxPreferenceStatus;
 import cn.huacloud.taxpreference.common.exception.TaxPreferenceException;
@@ -497,12 +498,13 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
       // 调用查询废止接口
       List<TaxPreferenceAbolishVO> taxPreferenceAbolish =
           getTaxPreferenceAbolish(queryAbolishDTO.getId());
+
       if(taxPreferenceAbolish.size()>0){
       for (TaxPreferenceAbolishVO preferenceAbolish : taxPreferenceAbolish) {
         // 属性拷贝
         BeanUtils.copyProperties(preferenceAbolish, taxPreferenceDO);
         // 设置税收优惠状态--失效
-      /*  taxPreferenceDO.setValidity(PreferenceValidation.);*/
+      taxPreferenceDO.setValidity(PreferenceValidation.INVALID);
       }
         // 判断废止状态--部分废止
       }} else if (PoliciesStatusEnum.PARTIAL_REPEAL.getValue()
@@ -513,7 +515,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
           // 根据id查询税收优惠对象
           taxPreferenceDO = taxPreferenceMapper.selectById(id);
           // 设置税收优惠状态--失效
-         /* taxPreferenceDO.setValidity(ValidityEnum.INVALID.getValue());*/
+          taxPreferenceDO.setValidity(PreferenceValidation.INVALID);
         }
       }
 

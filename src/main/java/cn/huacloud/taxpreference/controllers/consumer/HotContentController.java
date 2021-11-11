@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Api(tags = "热点内容检索")
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/search")
 @RestController
 public class HotContentController {
 

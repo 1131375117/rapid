@@ -52,4 +52,11 @@ public interface FrequentlyAskedQuestionService {
      * @return
      */
     List<FrequentlyAskedQuestionDTO> getFrequentlyAskedQuestionByPoliciesId(Long policiesId);
+
+    /**
+     * 根据热门问答id查询详情
+     * @param id
+     * @return
+     */
+    PoliciesExplainDetailVO getFrequentlyAskedQuestionById(Long id);
 }

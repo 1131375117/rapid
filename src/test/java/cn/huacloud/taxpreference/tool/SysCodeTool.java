@@ -142,10 +142,10 @@ public class SysCodeTool extends BaseApplicationTest {
             nextId++;
             List<Area> cityList = area.getCityList();
             if (cityList != null) {
-                sysCodeDO.setLeaf(true);
+                sysCodeDO.setLeaf(false);
                 nextId = forEachArea(list, cityList, sysCodeDO.getId(), nextId, sysCodeDO.getCodeName());
             } else {
-                sysCodeDO.setLeaf(false);
+                sysCodeDO.setLeaf(true);
             }
         }
         return nextId;

@@ -12,7 +12,14 @@ spring:
     port: 6379
     password: foobared
     database: 4
-
+  elasticsearch:
+    rest:
+      uris: http://172.16.122.17:9200
+  rabbitmq:
+    host: 172.16.122.17
+    virtual-host: tax_preference_test
+    username: tax_preference_test
+    password: tax_preference_test
 # mybatis plus
 mybatis-plus:
   configuration:
@@ -30,3 +37,6 @@ tax-preference:
     bucket: "tax-preference-test"
     access-key: "tax_preference_test"
     secret-key: "tax_preference_test"
+  index:
+    policies:
+      index: policies_index_2021-11-11

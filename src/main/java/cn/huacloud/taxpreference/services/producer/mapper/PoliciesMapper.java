@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.producer.mapper;
 
+import cn.huacloud.taxpreference.services.consumer.entity.ess.PoliciesES;
 import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesDTO;
@@ -9,6 +10,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -48,5 +50,10 @@ public interface PoliciesMapper extends BaseMapper<PoliciesDO> {
     List<FrequentlyAskedQuestionDO> selectFrequentlyAskedQuestionId(Long policiesId);
 
 
-
+    default PoliciesES queryES(Long id) {
+        PoliciesDO policiesDO = selectById(id);
+        PoliciesES policiesES = new PoliciesES();
+        BeanUtils.copyProperties(policiesDO, policiesES);
+        return policiesES;
+    }
 }

@@ -1,0 +1,16 @@
+spring:
+  cloud:
+    function:
+      definition: "savePoliciesSuppler;deletePoliciesSuppler;savePolicies;deletePolicies"
+    stream:
+      bindings:
+        savePoliciesSuppler-out-0:
+          destination: savePoliciesExchange
+        savePolicies-in-0:
+          destination: savePoliciesExchange
+          group: savePoliciesQueue
+        deletePoliciesSuppler-out-0:
+          destination: deletePoliciesExchange
+        deletePolicies-in-0:
+          destination: deletePoliciesExchange
+          group: deletePoliciesQueue

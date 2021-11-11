@@ -5,10 +5,9 @@ import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.services.producer.FrequentlyAskedQuestionService;
 import cn.huacloud.taxpreference.services.producer.PoliciesExplainService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO;
-import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesExplainDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.FrequentlyAskedQuestionDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesExplainDTO;
-import cn.huacloud.taxpreference.services.producer.entity.vos.FrequentlyAskedQuestionVO;
+import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesSortType;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainDetailVO;
 import cn.huacloud.taxpreference.services.producer.mapper.FrequentlyAskedQuestionMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -57,6 +56,10 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
         !StringUtils.isEmpty(queryPoliciesExplainDTO.getTitle()),
         FrequentlyAskedQuestionDO::getTitle,
         queryPoliciesExplainDTO.getTitle());
+    lambdaQueryWrapper.like(
+            !StringUtils.isEmpty(queryPoliciesExplainDTO.getKeyword()),
+            FrequentlyAskedQuestionDO::getTitle,
+            queryPoliciesExplainDTO.getKeyword());
     // 模糊查询--政策解读来源
     lambdaQueryWrapper.like(
         !StringUtils.isEmpty(queryPoliciesExplainDTO.getDocSource()),
@@ -65,17 +68,17 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
     // 条件查询--发布日期
     lambdaQueryWrapper
         .ge(
-            !StringUtils.isEmpty(queryPoliciesExplainDTO.getReleaseDate()),
+            !StringUtils.isEmpty(queryPoliciesExplainDTO.getStartTime()),
             FrequentlyAskedQuestionDO::getReleaseDate,
             queryPoliciesExplainDTO.getStartTime())
         .le(
-            !StringUtils.isEmpty(queryPoliciesExplainDTO.getReleaseDate()),
+            !StringUtils.isEmpty(queryPoliciesExplainDTO.getEndTime()),
             FrequentlyAskedQuestionDO::getReleaseDate,
             queryPoliciesExplainDTO.getEndTime());
 
     lambdaQueryWrapper.eq(FrequentlyAskedQuestionDO::getDeleted, false);
     // 排序--发布时间
-    if (QueryPoliciesExplainDTO.SortField.RELEASE_DATE.equals(
+    if (PoliciesSortType.RELEASE_DATE.equals(
         queryPoliciesExplainDTO.getSortField())) {
       lambdaQueryWrapper
           .eq(
@@ -85,7 +88,7 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
           .orderByDesc(FrequentlyAskedQuestionDO::getReleaseDate);
     }
     // 排序--更新时间
-    if (QueryPoliciesExplainDTO.SortField.UPDATE_TIME.equals(
+    if (PoliciesSortType.UPDATE_TIME.equals(
         queryPoliciesExplainDTO.getSortField())) {
       lambdaQueryWrapper
           .eq(
@@ -108,6 +111,7 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
                   PoliciesExplainDetailVO policiesExplainDetailVO = new PoliciesExplainDetailVO();
                   // 属性拷贝
                   BeanUtils.copyProperties(frequentlyAskedQuestionDO, policiesExplainDetailVO);
+//                  policiesExplainDetailVO.setPoliciesIds(frequentlyAskedQuestionDO.getPoliciesIds());
                   return policiesExplainDetailVO;
                 })
             .collect(Collectors.toList());
@@ -154,6 +158,7 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
           frequentlyAskedQuestionMapper.selectById(frequentlyAskedQuestionDTO.getId());
       // 参数校验
       if (frequentlyAskedQuestionDO != null) {
+        frequentlyAskedQuestionDO.setUpdateTime(LocalDateTime.now());
         // 属性拷贝
         BeanUtils.copyProperties(frequentlyAskedQuestionDTO, frequentlyAskedQuestionDO);
         log.info("修改热门问答对象={}", frequentlyAskedQuestionDO);
@@ -204,5 +209,20 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
       return FrequentlyAskedQuestionVOList;
     }
     return null;
+  }
+
+
+  /**
+   * 根据热门问答id查询详情
+   *
+   * @param id
+   * @return
+   */
+  @Override
+  public PoliciesExplainDetailVO getFrequentlyAskedQuestionById(Long id) {
+    FrequentlyAskedQuestionDO frequentlyAskedQuestionDO = frequentlyAskedQuestionMapper.selectById(id);
+    PoliciesExplainDetailVO policiesExplainDetailVO = new PoliciesExplainDetailVO();
+    BeanUtils.copyProperties(frequentlyAskedQuestionDO,policiesExplainDetailVO);
+    return policiesExplainDetailVO;
   }
 }

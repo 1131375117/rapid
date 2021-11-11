@@ -3,6 +3,7 @@ package cn.huacloud.taxpreference.services.consumer.impl;
 import cn.huacloud.taxpreference.services.consumer.PoliciesSearchService;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.PoliciesSearchQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesSearchVO;
+import cn.huacloud.taxpreference.sync.es.trigger.impl.PoliciesEventTrigger;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.search.SearchHit;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -19,7 +21,7 @@ import static org.elasticsearch.index.query.QueryBuilders.matchPhraseQuery;
  * @author wangkh
  */
 @RequiredArgsConstructor
-//@Service
+@Service
 public class PoliciesSearchServiceImpl implements PoliciesSearchService {
 
     @Getter

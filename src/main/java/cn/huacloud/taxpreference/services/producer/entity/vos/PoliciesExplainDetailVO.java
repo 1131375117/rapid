@@ -28,7 +28,7 @@ public class PoliciesExplainDetailVO {
     /**
      * 政策Id
      */
-    @ApiModelProperty("政策Id")
+    @ApiModelProperty("政策解读中政策Id")
     private Long policiesId;
 
     /**
@@ -60,5 +60,8 @@ public class PoliciesExplainDetailVO {
      */
     @ApiModelProperty("录入人用户Id")
     private Long inputUserId;
+
+    @ApiModelProperty("热门问答中政策id")
+    private String policiesIds;
 
 }

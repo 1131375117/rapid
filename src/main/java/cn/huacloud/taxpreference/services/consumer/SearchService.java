@@ -155,6 +155,7 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
             for (FieldHandler fieldHandler : fieldHandlers) {
                 if (fieldHandler.supported(fieldWrapper.getField())) {
                     fieldHandler.apply(boolQueryBuilder, fieldWrapper);
+                    break;
                 }
             }
         }

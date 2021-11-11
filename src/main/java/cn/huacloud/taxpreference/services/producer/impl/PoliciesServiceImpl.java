@@ -294,6 +294,9 @@ public class PoliciesServiceImpl implements PoliciesService {
     policiesDO.setTaxpayerIdentifyTypeNames(taxpayerIdentifyTypeNames);
     policiesDO.setEnterpriseTypeNames(enterpriseTypeCodes);
     policiesDO.setIndustryNames(industryNames);
+    policiesDO.setLabels(
+        org.apache.commons.lang3.StringUtils.join(policiesCombinationDTO.getLabels(), ","));
+    policiesDO.setUpdateTime(LocalDateTime.now());
     log.info("修改政策法规对象={}", policiesDO);
     policiesMapper.updateById(policiesDO);
     // 修改政策解读
@@ -464,6 +467,7 @@ public class PoliciesServiceImpl implements PoliciesService {
       // 设置政策法规的有效性
       policiesDO.setPoliciesStatus(PoliciesStatusEnum.FULL_TEXT_REPEAL);
       policiesDO.setValidity(ValidityEnum.FULL_TEXT_REPEAL);
+      policiesDO.setAbolishNote(queryAbolishDTO.getAbolishNote());
       // 设置税收优惠的有效性
     } else if (PoliciesStatusEnum.PARTIAL_REPEAL.getValue()
         .equals(queryAbolishDTO.getPoliciesStatus())) {
@@ -471,6 +475,7 @@ public class PoliciesServiceImpl implements PoliciesService {
       policiesDO.setPoliciesStatus(PoliciesStatusEnum.PARTIAL_REPEAL);
       // 设置政策法规的有效性
       policiesDO.setValidity(ValidityEnum.PARTIAL_VALID);
+      policiesDO.setAbolishNote(queryAbolishDTO.getAbolishNote());
     }
     //// TODO: 2021/11/9
     taxPreferenceService.updateStatus(queryAbolishDTO);

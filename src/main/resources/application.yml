@@ -3,7 +3,7 @@ server:
 # spring
 spring:
   profiles:
-    active: dev
+    active: stream,dev
   application:
     name: tax-preference-server
     # file upload

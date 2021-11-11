@@ -31,6 +31,11 @@
     </properties>
 
     <dependencies>
+        <!--stream binder rabbit-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-stream-binder-rabbit</artifactId>
+        </dependency>
         <!--elasticsearch client-->
         <dependency>
             <groupId>org.elasticsearch.client</groupId>

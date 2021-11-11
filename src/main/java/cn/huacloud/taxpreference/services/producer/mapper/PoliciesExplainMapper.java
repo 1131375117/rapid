@@ -16,6 +16,11 @@ import java.util.List;
  */
 @Repository
 public interface PoliciesExplainMapper extends BaseMapper<PoliciesExplainDO> {
-    List<PoliciesTitleVO> getRelatedPolicy(@Param("keywordPageQueryDTO") KeywordPageQueryDTO keywordPageQueryDTO);
+    /**
+     * 查询该政策解读是否被关联了政策法规
+     * @param
+     * @return
+     */
+    List<PoliciesTitleVO> getRelatedPolicy();
 
 }

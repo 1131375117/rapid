@@ -1,0 +1,112 @@
+{
+  "index_patterns": [
+    "policies_index*"
+  ],
+  "template": {
+    "settings": {
+      "number_of_shards": 1
+    },
+    "aliases": {
+      "policies": {}
+    },
+    "mappings": {
+      "_source": {
+        "enabled": true
+      },
+      "properties": {
+        "id": {
+          "type": "long"
+        },
+        "title": {
+          "type": "text",
+          "analyzer": "ik_max_word"
+        },
+        "docCode": {
+          "type": "keyword"
+        },
+        "area": {
+          "properties": {
+            "codeName": {
+              "type": "keyword"
+            },
+            "codeValue": {
+              "type": "keyword"
+            }
+          }
+        },
+        "docSource": {
+          "type": "keyword"
+        },
+        "taxCategories": {
+          "properties": {
+            "codeName": {
+              "type": "keyword"
+            },
+            "codeValue": {
+              "type": "keyword"
+            }
+          }
+        },
+        "taxpayerIdentifyTypes": {
+          "properties": {
+            "codeName": {
+              "type": "keyword"
+            },
+            "codeValue": {
+              "type": "keyword"
+            }
+          }
+        },
+        "enterpriseTypes": {
+          "properties": {
+            "codeName": {
+              "type": "keyword"
+            },
+            "codeValue": {
+              "type": "keyword"
+            }
+          }
+        },
+        "industries": {
+          "properties": {
+            "codeName": {
+              "type": "keyword"
+            },
+            "codeValue": {
+              "type": "keyword"
+            }
+          }
+        },
+        "validity": {
+          "properties": {
+            "codeName": {
+              "type": "keyword"
+            },
+            "codeValue": {
+              "type": "keyword"
+            }
+          }
+        },
+        "releaseDate": {
+          "type": "date",
+          "format": "yyyy-MM-dd'T'HH:mm:ss"
+        },
+        "digest": {
+          "type": "text",
+          "analyzer": "ik_max_word"
+        },
+        "content": {
+          "type": "text",
+          "analyzer": "ik_max_word"
+        },
+        "labels": {
+          "type": "keyword"
+        }
+      }
+    }
+  },
+  "priority": 500,
+  "_meta": {
+    "description": "政策法规索引模板，更新时间2021年11月10日"
+  }
+}
