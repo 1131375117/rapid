@@ -61,10 +61,9 @@ public interface PoliciesExplainService {
     /**
      * 关联政策模糊查询
      *
-     * @param keywordPageQueryDTO 关联政策查询条件
      * @return
      */
-    List<PoliciesTitleVO> fuzzyQuery(KeywordPageQueryDTO keywordPageQueryDTO);
+    List<PoliciesTitleVO> fuzzyQuery();
 
 
     /**

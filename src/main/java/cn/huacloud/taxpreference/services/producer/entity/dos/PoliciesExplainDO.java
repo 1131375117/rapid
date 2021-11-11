@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.producer.entity.dos;
 
+import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesExplainStatusEnum;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -69,4 +70,9 @@ public class PoliciesExplainDO {
      */
 
     private Boolean deleted;
+
+    /**
+     * 政策解读状态
+     */
+    private PoliciesExplainStatusEnum policiesExplainStatus;
 }

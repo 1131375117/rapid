@@ -21,4 +21,5 @@ public class TaxPreferenceAbolishVO {
     @ApiModelProperty("有效性")
     private String validity;
 
+
 }

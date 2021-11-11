@@ -76,7 +76,7 @@ public class QueryTaxPreferencesDTO extends KeywordPageQueryDTO {
     @ApiModelProperty("截止时间")
     private LocalDateTime endTime;
 
-    @ApiModelProperty("是否自我发布-MY_RELEASED:我的已发布,MY_UNRELEASED-我的未发布,ALL-全部<-默认输入")
+    @ApiModelProperty("是否自我发布-RELEASED:我的已发布,UNRELEASED-我的未发布,null-全部<-默认输入")
     private ReleaseMatter releaseMatter;
 
 

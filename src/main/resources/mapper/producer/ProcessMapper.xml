@@ -37,10 +37,10 @@
                 and u.username = #{query.userName}
             </if>
             <if test="!query.processStatus and query.processStatus!=null">
-                and p.process_status='待通过'
+                and p.process_status='NOT_APPROVED'
             </if>
             <if test="query.processStatus and query.processStatus!=null">
-                and p.process_status!='待通过'
+                and p.process_status!='NOT_APPROVED'
             </if>
             and latest_process=1
             and t.deleted = 0

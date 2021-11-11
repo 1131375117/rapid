@@ -8,9 +8,8 @@ import com.baomidou.mybatisplus.annotation.IEnum;
 
 public enum ReleaseMatter implements IEnum<String> {
     //是否属于我发布的事项
-    ALL,
-    MY_RELEASED,
-    MY_UNRELEASED
+    RELEASED,
+    UNRELEASED
     ;
 
     @Override

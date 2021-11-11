@@ -12,11 +12,8 @@
         FROM
             `t_policies_explain` pe
             RIGHT JOIN t_policies p ON pe.policies_id = p.id
-        WHERE
-        <if test="keywordPageQueryDTO.keyword!=null and keywordPageQueryDTO.keyword!=''">
-            p.title LIKE "%"#{keywordPageQueryDTO.keyword}"%"
-        </if>
         GROUP BY
-            p.id;
+            p.id
+            LIMIT 0,50;
     </select>
 </mapper>
