@@ -375,7 +375,7 @@ public class UserServiceImpl implements UserService {
         if (StringUtils.isBlank(target)) {
             return element;
         }
-        List<String> targetList = Arrays.asList(target.split(target));
+        List<String> targetList = Arrays.asList(target.split(","));
         Set<String> treeSet = new TreeSet<>(targetList);
         treeSet.add(element);
         return String.join(",", treeSet);
