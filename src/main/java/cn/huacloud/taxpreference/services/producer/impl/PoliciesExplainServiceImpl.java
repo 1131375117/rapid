@@ -1,11 +1,11 @@
 package cn.huacloud.taxpreference.services.producer.impl;
 
-import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.services.producer.PoliciesExplainService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesExplainDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesExplainDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesExplainDTO;
+import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesExplainStatusEnum;
 import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesSortType;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainDetailVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesTitleVO;
@@ -51,16 +51,16 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
       QueryPoliciesExplainDTO queryPoliciesExplainDTO) {
     log.info("政策解读列表查询条件dto", queryPoliciesExplainDTO);
     LambdaQueryWrapper<PoliciesExplainDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-    lambdaQueryWrapper.eq(
-            !StringUtils.isEmpty(queryPoliciesExplainDTO.getReleaseDate()),
-            PoliciesExplainDO::getReleaseDate,
-            queryPoliciesExplainDTO.getReleaseDate())
-            .orderByDesc(PoliciesExplainDO::getReleaseDate);
     // 模糊查询--政策解读标题
     lambdaQueryWrapper.like(
         !StringUtils.isEmpty(queryPoliciesExplainDTO.getKeyword()),
         PoliciesExplainDO::getTitle,
         queryPoliciesExplainDTO.getKeyword());
+    // 模糊查询--政策解读标题
+    lambdaQueryWrapper.like(
+            !StringUtils.isEmpty(queryPoliciesExplainDTO.getTitle()),
+            PoliciesExplainDO::getTitle,
+            queryPoliciesExplainDTO.getTitle());
     // 模糊查询--政策解读来源
     lambdaQueryWrapper.like(
         !StringUtils.isEmpty(queryPoliciesExplainDTO.getDocSource()),
@@ -69,18 +69,17 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
     // 条件查询--发布日期
     lambdaQueryWrapper
         .ge(
-            !StringUtils.isEmpty(queryPoliciesExplainDTO.getReleaseDate()),
+            !StringUtils.isEmpty(queryPoliciesExplainDTO.getStartTime()),
             PoliciesExplainDO::getReleaseDate,
             queryPoliciesExplainDTO.getStartTime())
         .le(
-            !StringUtils.isEmpty(queryPoliciesExplainDTO.getReleaseDate()),
+            !StringUtils.isEmpty(queryPoliciesExplainDTO.getEndTime()),
             PoliciesExplainDO::getReleaseDate,
             queryPoliciesExplainDTO.getEndTime());
     lambdaQueryWrapper.eq(PoliciesExplainDO::getDeleted, false);
 
     // 排序--发布时间
-    if (PoliciesSortType.RELEASE_DATE.equals(
-        queryPoliciesExplainDTO.getSortField())) {
+    if (PoliciesSortType.RELEASE_DATE.equals(queryPoliciesExplainDTO.getSortField())) {
       lambdaQueryWrapper
           .eq(
               !StringUtils.isEmpty(queryPoliciesExplainDTO.getReleaseDate()),
@@ -89,8 +88,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
           .orderByDesc(PoliciesExplainDO::getReleaseDate);
     }
     // 排序--更新时间
-    if (PoliciesSortType.UPDATE_TIME.equals(
-        queryPoliciesExplainDTO.getSortField())) {
+    if (PoliciesSortType.UPDATE_TIME.equals(queryPoliciesExplainDTO.getSortField())) {
       lambdaQueryWrapper
           .eq(
               !StringUtils.isEmpty(queryPoliciesExplainDTO.getUpdateTime()),
@@ -99,7 +97,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
           .orderByDesc(PoliciesExplainDO::getUpdateTime);
     }
     // 分页
-    IPage<PoliciesExplainDO> policiesExplainDOPage =
+      IPage<PoliciesExplainDO> policiesExplainDOPage =
         policiesExplainMapper.selectPage(
             new Page<>(
                 queryPoliciesExplainDTO.getPageNum(), queryPoliciesExplainDTO.getPageSize()),
@@ -138,6 +136,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
     policiesExplainDO.setCreateTime(LocalDateTime.now());
     policiesExplainDO.setUpdateTime(LocalDateTime.now());
     policiesExplainDO.setDeleted(false);
+    policiesExplainDO.setPoliciesExplainStatus(PoliciesExplainStatusEnum.PUBLISHED);
     log.info("新增政策解读对象={}", policiesExplainDO);
     policiesExplainMapper.insert(policiesExplainDO);
   }

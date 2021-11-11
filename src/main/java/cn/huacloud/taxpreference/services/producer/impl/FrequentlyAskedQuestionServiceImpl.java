@@ -5,11 +5,9 @@ import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.services.producer.FrequentlyAskedQuestionService;
 import cn.huacloud.taxpreference.services.producer.PoliciesExplainService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO;
-import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesExplainDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.FrequentlyAskedQuestionDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesExplainDTO;
 import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesSortType;
-import cn.huacloud.taxpreference.services.producer.entity.vos.FrequentlyAskedQuestionVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainDetailVO;
 import cn.huacloud.taxpreference.services.producer.mapper.FrequentlyAskedQuestionMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -70,21 +68,15 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
     // 条件查询--发布日期
     lambdaQueryWrapper
         .ge(
-            !StringUtils.isEmpty(queryPoliciesExplainDTO.getReleaseDate()),
+            !StringUtils.isEmpty(queryPoliciesExplainDTO.getStartTime()),
             FrequentlyAskedQuestionDO::getReleaseDate,
             queryPoliciesExplainDTO.getStartTime())
         .le(
-            !StringUtils.isEmpty(queryPoliciesExplainDTO.getReleaseDate()),
+            !StringUtils.isEmpty(queryPoliciesExplainDTO.getEndTime()),
             FrequentlyAskedQuestionDO::getReleaseDate,
             queryPoliciesExplainDTO.getEndTime());
 
     lambdaQueryWrapper.eq(FrequentlyAskedQuestionDO::getDeleted, false);
-    lambdaQueryWrapper
-            .eq(
-                    !StringUtils.isEmpty(queryPoliciesExplainDTO.getReleaseDate()),
-                    FrequentlyAskedQuestionDO::getReleaseDate,
-                    queryPoliciesExplainDTO.getReleaseDate())
-            .orderByDesc(FrequentlyAskedQuestionDO::getReleaseDate);
     // 排序--发布时间
     if (PoliciesSortType.RELEASE_DATE.equals(
         queryPoliciesExplainDTO.getSortField())) {
