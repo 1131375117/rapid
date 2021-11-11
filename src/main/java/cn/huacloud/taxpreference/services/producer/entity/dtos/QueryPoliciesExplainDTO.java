@@ -1,6 +1,7 @@
 package cn.huacloud.taxpreference.services.producer.entity.dtos;
 
 import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
+import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesSortType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
@@ -43,13 +44,6 @@ public class QueryPoliciesExplainDTO extends KeywordPageQueryDTO {
     private LocalDateTime updateTime;
 
     @ApiModelProperty(value = "排序",notes = "RELEASE_DATE:发布时间,UPDATE_TIME:更新时间")
-    private SortField sortField;
-
-    public enum SortField {
-        //发布时间
-        RELEASE_DATE,
-        //更新时间
-        UPDATE_TIME;
-    }
+    private PoliciesSortType sortField;
 
 }

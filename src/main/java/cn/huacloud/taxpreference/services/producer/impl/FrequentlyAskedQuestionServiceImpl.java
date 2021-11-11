@@ -8,6 +8,7 @@ import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQue
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesExplainDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.FrequentlyAskedQuestionDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesExplainDTO;
+import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesSortType;
 import cn.huacloud.taxpreference.services.producer.entity.vos.FrequentlyAskedQuestionVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainDetailVO;
 import cn.huacloud.taxpreference.services.producer.mapper.FrequentlyAskedQuestionMapper;
@@ -85,7 +86,7 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
                     queryPoliciesExplainDTO.getReleaseDate())
             .orderByDesc(FrequentlyAskedQuestionDO::getReleaseDate);
     // 排序--发布时间
-    if (QueryPoliciesExplainDTO.SortField.RELEASE_DATE.equals(
+    if (PoliciesSortType.RELEASE_DATE.equals(
         queryPoliciesExplainDTO.getSortField())) {
       lambdaQueryWrapper
           .eq(
@@ -95,7 +96,7 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
           .orderByDesc(FrequentlyAskedQuestionDO::getReleaseDate);
     }
     // 排序--更新时间
-    if (QueryPoliciesExplainDTO.SortField.UPDATE_TIME.equals(
+    if (PoliciesSortType.UPDATE_TIME.equals(
         queryPoliciesExplainDTO.getSortField())) {
       lambdaQueryWrapper
           .eq(
@@ -165,6 +166,7 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
           frequentlyAskedQuestionMapper.selectById(frequentlyAskedQuestionDTO.getId());
       // 参数校验
       if (frequentlyAskedQuestionDO != null) {
+        frequentlyAskedQuestionDO.setUpdateTime(LocalDateTime.now());
         // 属性拷贝
         BeanUtils.copyProperties(frequentlyAskedQuestionDTO, frequentlyAskedQuestionDO);
         log.info("修改热门问答对象={}", frequentlyAskedQuestionDO);

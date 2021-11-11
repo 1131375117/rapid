@@ -6,6 +6,7 @@ import cn.huacloud.taxpreference.services.producer.PoliciesExplainService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesExplainDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesExplainDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesExplainDTO;
+import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesSortType;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainDetailVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesTitleVO;
 import cn.huacloud.taxpreference.services.producer.mapper.PoliciesExplainMapper;
@@ -78,7 +79,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
     lambdaQueryWrapper.eq(PoliciesExplainDO::getDeleted, false);
 
     // 排序--发布时间
-    if (QueryPoliciesExplainDTO.SortField.RELEASE_DATE.equals(
+    if (PoliciesSortType.RELEASE_DATE.equals(
         queryPoliciesExplainDTO.getSortField())) {
       lambdaQueryWrapper
           .eq(
@@ -88,7 +89,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
           .orderByDesc(PoliciesExplainDO::getReleaseDate);
     }
     // 排序--更新时间
-    if (QueryPoliciesExplainDTO.SortField.UPDATE_TIME.equals(
+    if (PoliciesSortType.UPDATE_TIME.equals(
         queryPoliciesExplainDTO.getSortField())) {
       lambdaQueryWrapper
           .eq(
@@ -154,6 +155,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
         policiesExplainMapper.selectById(policiesExplainDTO.getId());
     // 参数校验
     if (policiesExplainDO != null) {
+      policiesExplainDO.setUpdateTime(LocalDateTime.now());
       // 属性拷贝
       BeanUtils.copyProperties(policiesExplainDTO, policiesExplainDO);
       log.info("修改政策解读对象={}", policiesExplainDO);

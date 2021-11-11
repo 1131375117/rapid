@@ -294,6 +294,9 @@ public class PoliciesServiceImpl implements PoliciesService {
     policiesDO.setTaxpayerIdentifyTypeNames(taxpayerIdentifyTypeNames);
     policiesDO.setEnterpriseTypeNames(enterpriseTypeCodes);
     policiesDO.setIndustryNames(industryNames);
+    policiesDO.setLabels(
+        org.apache.commons.lang3.StringUtils.join(policiesCombinationDTO.getLabels(), ","));
+    policiesDO.setUpdateTime(LocalDateTime.now());
     log.info("修改政策法规对象={}", policiesDO);
     policiesMapper.updateById(policiesDO);
     // 修改政策解读
