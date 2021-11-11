@@ -15,6 +15,11 @@ spring:
   elasticsearch:
     rest:
       uris: http://172.16.122.17:9200
+  rabbitmq:
+    host: 172.16.122.17
+    virtual-host: tax_preference_dev
+    username: tax_preference_dev
+    password: tax_preference_dev
 
 # mybatis plus
 mybatis-plus:
@@ -33,4 +38,6 @@ tax-preference:
     bucket: "tax-preference-dev"
     access-key: "tax_preference"
     secret-key: "tax_preference"
-
+  index:
+    policies:
+      index: policies_index_2021-11-11

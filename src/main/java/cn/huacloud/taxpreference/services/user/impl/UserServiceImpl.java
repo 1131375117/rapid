@@ -327,6 +327,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void addRoleToUser(List<UserRoleAddDTO> userRoleAddVOList) {
+
         Map<String, RoleVO> allRoleVOMap = roleService.getAllRoleVOMap();
         for (UserRoleAddDTO addDTO : userRoleAddVOList) {
             UserDO userDO = userMapper.selectById(addDTO.getUserId());
@@ -334,6 +335,12 @@ public class UserServiceImpl implements UserService {
             if (userDO == null) {
                 throw BizCode._4100.exception();
             }
+
+            // 跳过管理员
+            if (UserConstants.ADMIN_USER_NAME.equalsIgnoreCase(userDO.getUserAccount())) {
+                continue;
+            }
+
             // 权限校验
             if (!allRoleVOMap.containsKey(addDTO.getAddRoleCode())) {
                 continue;
@@ -365,7 +372,7 @@ public class UserServiceImpl implements UserService {
      * @return 合并后的字符串
      */
     private static String separatorStrAddElement(String target, String element) {
-        if (org.apache.commons.lang3.StringUtils.isBlank(target)) {
+        if (StringUtils.isBlank(target)) {
             return element;
         }
         List<String> targetList = Arrays.asList(target.split(target));
