@@ -21,9 +21,9 @@ public interface FrequentlyAskedQuestionService {
      * 新增热门问答
      *
      * @param frequentlyAskedQuestionDTOS
-     * @param userId
+     *
      */
-    void insertFrequentlyAskedQuestion(List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOS, Long userId);
+    void insertFrequentlyAskedQuestion(List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOS,Long userId);
 
     /**
      * 修改热门问答

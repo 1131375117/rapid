@@ -123,18 +123,17 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
    * 新增热门问答
    *
    * @param frequentlyAskedQuestionDTOS
-   * @param userId
    */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void insertFrequentlyAskedQuestion(
-      List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOS, Long userId) {
+      List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOS,Long userId) {
     log.info("新增热门问答dto={}", frequentlyAskedQuestionDTOS);
     for (FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO : frequentlyAskedQuestionDTOS) {
       FrequentlyAskedQuestionDO frequentlyAskedQuestionDO = new FrequentlyAskedQuestionDO();
       BeanUtils.copyProperties(frequentlyAskedQuestionDTO, frequentlyAskedQuestionDO);
-      frequentlyAskedQuestionDO.setInputUserId(userId);
       frequentlyAskedQuestionDO.setReleaseDate(LocalDate.now());
+      frequentlyAskedQuestionDO.setInputUserId(userId);
       frequentlyAskedQuestionDO.setCreateTime(LocalDateTime.now());
       frequentlyAskedQuestionDO.setUpdateTime(LocalDateTime.now());
       frequentlyAskedQuestionDO.setDeleted(false);

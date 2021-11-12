@@ -80,4 +80,5 @@ public interface PoliciesService {
      */
      PoliciesAbolishVO getAbolish(Long id);
 
+    Boolean checkTitleAndDocCode(String titleOrDocCode);
 }

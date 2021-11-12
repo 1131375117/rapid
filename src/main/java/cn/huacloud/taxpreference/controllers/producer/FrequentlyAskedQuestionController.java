@@ -55,8 +55,7 @@ public class FrequentlyAskedQuestionController {
     @ApiOperation("热门问答新增")
     @PostMapping(value = "/frequentlyAskedQuestion")
     public ResultVO<Void> insertFrequentlyAskedQuestion(@Validated(ValidationGroup.Create.class)@ApiParam("热门问答集合") @RequestBody List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOS) {
-
-        frequentlyAskedQuestionService.insertFrequentlyAskedQuestion(frequentlyAskedQuestionDTOS, UserUtil.getCurrentUser().getId());
+        frequentlyAskedQuestionService.insertFrequentlyAskedQuestion(frequentlyAskedQuestionDTOS,UserUtil.getCurrentUser().getId());
         return ResultVO.ok();
     }
 

@@ -102,6 +102,7 @@ public class PoliciesController {
   public ResultVO<Void> updatePolicies(
       @Validated(ValidationGroup.Update.class) @RequestBody
           PoliciesCombinationDTO policiesCombinationDTO) {
+    policiesCombinationDTO.setInputUserId(UserUtil.getCurrentUser().getId());
     policiesService.updatePolicies(policiesCombinationDTO);
     return ResultVO.ok();
   }
@@ -169,14 +170,14 @@ public class PoliciesController {
     return ResultVO.ok();
   }
 
-  @PermissionInfo(name = "政策法规删除", group = PermissionGroup.POLICIES)
+  @PermissionInfo(name = "政策法规标题和文号校验", group = PermissionGroup.POLICIES)
   @SaCheckPermission("producer_policies_checkTitleAndDocCode")
   @ApiOperation("政策法规标题和文号校验")
-  @GetMapping(value = "/policies/{id}")
-  public ResultVO<Void> checkTitleAndDocCode(
-          @Validated @NotEmpty(message = "id不能为空") @PathVariable("id") Long id) {
-    policiesService.confirmDeletePoliciesById(id);
-    return ResultVO.ok();
+  @GetMapping(value = "/policies/checkTitleAndDocCode")
+  public ResultVO<Boolean> checkTitleAndDocCode(
+          @Validated  @RequestParam String titleOrDocCode) {
+    Boolean aBoolean = policiesService.checkTitleAndDocCode(titleOrDocCode);
+    return ResultVO.ok(aBoolean);
   }
 
 }

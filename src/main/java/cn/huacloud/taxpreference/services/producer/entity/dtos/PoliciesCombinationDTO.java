@@ -83,4 +83,7 @@ public class PoliciesCombinationDTO {
 
     @ApiModelProperty("政策法规对象")
     private PoliciesExplainDTO policiesExplainDTO;
+
+    @ApiModelProperty("用户id")
+    private Long inputUserId;
 }
