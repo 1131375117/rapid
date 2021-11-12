@@ -168,4 +168,15 @@ public class PoliciesController {
     policiesService.confirmDeletePoliciesById(id);
     return ResultVO.ok();
   }
+
+  @PermissionInfo(name = "政策法规删除", group = PermissionGroup.POLICIES)
+  @SaCheckPermission("producer_policies_checkTitleAndDocCode")
+  @ApiOperation("政策法规标题和文号校验")
+  @GetMapping(value = "/policies/{id}")
+  public ResultVO<Void> checkTitleAndDocCode(
+          @Validated @NotEmpty(message = "id不能为空") @PathVariable("id") Long id) {
+    policiesService.confirmDeletePoliciesById(id);
+    return ResultVO.ok();
+  }
+
 }
