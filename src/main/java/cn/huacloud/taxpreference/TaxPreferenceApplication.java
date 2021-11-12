@@ -21,6 +21,7 @@ public class TaxPreferenceApplication {
         ConfigurableApplicationContext context = SpringApplication.run(TaxPreferenceApplication.class, args);
         // 打印 swagger 地址
         Environment environment = context.getBean(Environment.class);
+
         log.info("SwaggerUrl: http://localhost:{}/swagger-ui.html", environment.getProperty("server.port"));
     }
 }
