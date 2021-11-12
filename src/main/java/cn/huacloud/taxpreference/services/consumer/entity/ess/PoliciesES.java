@@ -1,8 +1,10 @@
 package cn.huacloud.taxpreference.services.consumer.entity.ess;
 
 import cn.huacloud.taxpreference.services.consumer.entity.vos.SysCodeSearchVO;
+import cn.huacloud.taxpreference.sync.es.consumer.GetID;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -10,8 +12,11 @@ import java.util.List;
  * @author wangkh
  */
 @Data
-public class PoliciesSearchES {
+public class PoliciesES implements GetID<Long> {
 
+    /**
+     * ID主键
+     */
     private Long id;
     /**
      * 标题
@@ -52,7 +57,7 @@ public class PoliciesSearchES {
     /**
      * 发布日期
      */
-    private String releaseDate;
+    private LocalDate releaseDate;
     /**
      * 摘要
      */
