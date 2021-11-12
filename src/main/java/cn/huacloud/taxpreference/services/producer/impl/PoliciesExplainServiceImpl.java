@@ -38,7 +38,6 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 
   private final PoliciesExplainMapper policiesExplainMapper;
 
-  private final PoliciesMapper policiesMapper;
 
   /**
    * 政策解读列表
