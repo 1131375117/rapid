@@ -2,7 +2,7 @@ package cn.huacloud.taxpreference.tool;
 
 import cn.huacloud.taxpreference.BaseApplicationTest;
 import cn.huacloud.taxpreference.common.enums.SysCodeType;
-import cn.huacloud.taxpreference.services.backup.*;
+import cn.huacloud.taxpreference.services.backup.Tax;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeVO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO;
@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -32,7 +33,7 @@ import java.util.List;
  * @create: 2021-11-10 14:09
  **/
 @Slf4j
-public class PolicyBackupTool extends BaseApplicationTest {
+public class PolicyBackupTool extends BaseApplicationTest  {
     @Autowired
     FrequentlyAskedQuestionMapper frequentlyAskedQuestionMapper;
     @Autowired
@@ -43,23 +44,13 @@ public class PolicyBackupTool extends BaseApplicationTest {
     PoliciesExplainMapper policiesExplainMapper;
     private final HashMap<String, Tax> sourceMap = new HashMap<>();
     @Autowired
-    CountryTax countryTax;
-    @Autowired
-    HeBeiTax heBeiTax;
-    @Autowired
-    NeiMengGuTax neiMengGuTax;
-    @Autowired
-    ShanXiTax shanXiTax;
-
-    public PolicyBackupTool() {
-        sourceMap.put(countryTax.sourceType(), countryTax);
-        sourceMap.put(neiMengGuTax.sourceType(), neiMengGuTax);
-        sourceMap.put(shanXiTax.sourceType(), shanXiTax);
-        sourceMap.put(heBeiTax.sourceType(), heBeiTax);
-    }
+    ApplicationContext applicationContext;
 
     @Test
     public void backup() throws SQLException {
+        applicationContext.getBeansOfType(Tax.class).values().forEach(tax ->
+                sourceMap.put(tax.sourceType(), tax)
+        );
         List<Entity> policy_qa_datas = Db.use().findAll("popular_qa_datas");
         List<Entity> policyList = Db.use().findAll("policy_datas");
         insertQA(policy_qa_datas);
@@ -71,9 +62,8 @@ public class PolicyBackupTool extends BaseApplicationTest {
     }
 
     /**
-     *
      * 新增政策解读
-     * */
+     */
     private void insertExplains(Entity policy, PoliciesDO policiesDO) {
         PoliciesExplainDO policiesExplainDO = new PoliciesExplainDO();
         policiesExplainDO.setPoliciesId(policiesDO.getId());
@@ -128,4 +118,5 @@ public class PolicyBackupTool extends BaseApplicationTest {
             frequentlyAskedQuestionMapper.insert(frequentlyAskedQuestionDO);
         }
     }
+
 }
