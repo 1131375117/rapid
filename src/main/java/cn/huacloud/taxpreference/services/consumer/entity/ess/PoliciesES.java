@@ -1,6 +1,6 @@
 package cn.huacloud.taxpreference.services.consumer.entity.ess;
 
-import cn.huacloud.taxpreference.services.consumer.entity.vos.SysCodeSearchVO;
+import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeSimpleVO;
 import cn.huacloud.taxpreference.sync.es.consumer.GetID;
 import lombok.Data;
 
@@ -29,7 +29,7 @@ public class PoliciesES implements GetID<Long> {
     /**
      * 所属区域
      */
-    private SysCodeSearchVO area;
+    private SysCodeSimpleVO area;
     /**
      * 来源
      */
@@ -37,23 +37,23 @@ public class PoliciesES implements GetID<Long> {
     /**
      * 所属税种
      */
-    private SysCodeSearchVO taxCategories;
+    private SysCodeSimpleVO taxCategories;
     /**
      * 纳税人资格认定类型
      */
-    private List<SysCodeSearchVO> taxpayerIdentifyTypes;
+    private List<SysCodeSimpleVO> taxpayerIdentifyTypes;
     /**
      * 适用企业类型
      */
-    private List<SysCodeSearchVO> enterpriseTypes;
+    private List<SysCodeSimpleVO> enterpriseTypes;
     /**
      * 适用行业
      */
-    private List<SysCodeSearchVO> industries;
+    private List<SysCodeSimpleVO> industries;
     /**
      * 有效性
      */
-    private SysCodeSearchVO validity;
+    private SysCodeSimpleVO validity;
     /**
      * 发布日期
      */

@@ -5,6 +5,7 @@ import cn.huacloud.taxpreference.common.enums.SysCodeStatus;
 import cn.huacloud.taxpreference.common.enums.SysCodeType;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
 import cn.huacloud.taxpreference.services.common.entity.dos.SysCodeDO;
+import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeSimpleVO;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeTreeVO;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeVO;
 import cn.huacloud.taxpreference.services.common.mapper.SysCodeMapper;
@@ -97,6 +98,28 @@ public class SysCodeServiceImpl implements SysCodeService {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public List<SysCodeSimpleVO> getSimpleVOListByCodeValues(String codeValues) {
+        if (StringUtils.isBlank(codeValues)) {
+            return new ArrayList<>();
+        }
+        return getValidSortStreamByCodeValues(codeValues)
+                .map(sysCodeDO -> new SysCodeSimpleVO()
+                        .setCodeName(sysCodeDO.getCodeName())
+                        .setCodeValue(sysCodeDO.getCodeValue()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public SysCodeSimpleVO getSimpleVOByCode(String codeValue) {
+        SysCodeDO sysCodeDO = getSysCodeMapCache().get(codeValue);
+        if (sysCodeDO == null) {
+            return new SysCodeSimpleVO();
+        }
+        return new SysCodeSimpleVO().setCodeName(sysCodeDO.getCodeName())
+                .setCodeValue(sysCodeDO.getCodeValue());
     }
 
     Stream<SysCodeDO> getValidSortStreamByCodeValues(String codeValues) {

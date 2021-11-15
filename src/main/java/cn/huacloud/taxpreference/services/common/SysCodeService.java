@@ -1,9 +1,9 @@
 package cn.huacloud.taxpreference.services.common;
 
 import cn.huacloud.taxpreference.common.enums.SysCodeType;
-import cn.huacloud.taxpreference.services.common.entity.dos.SysCodeDO;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeTreeVO;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeVO;
+import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeSimpleVO;
 
 import java.util.List;
 
@@ -49,4 +49,18 @@ public interface SysCodeService {
      * @return 码值视图，没有匹配码值返回 null
      */
     SysCodeVO getCodeVOByCodeName(SysCodeType codeType, String codeName);
+
+    /**
+     * 码字字符串集合获取简单视图对象集合
+     * @param codeValues 多个系统码值，以","分割
+     * @return 码值搜简单图集合
+     */
+    List<SysCodeSimpleVO> getSimpleVOListByCodeValues(String codeValues);
+
+    /**
+     * 根据系统码值获取码值简单视图
+     * @param codeValue 系统码值
+     * @return 码值视图
+     */
+    SysCodeSimpleVO getSimpleVOByCode(String codeValue);
 }

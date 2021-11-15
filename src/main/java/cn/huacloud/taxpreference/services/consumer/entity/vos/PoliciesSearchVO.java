@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.consumer.entity.vos;
 
+import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeSimpleVO;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -22,25 +23,25 @@ public class PoliciesSearchVO {
     private String docCode;
 
     @ApiModelProperty("所属区域")
-    private SysCodeSearchVO area;
+    private SysCodeSimpleVO area;
 
     @ApiModelProperty("来源")
     private String docSource;
 
     @ApiModelProperty("所属税种")
-    private SysCodeSearchVO taxCategories;
+    private SysCodeSimpleVO taxCategories;
 
     @ApiModelProperty("纳税人资格认定类型")
-    private List<SysCodeSearchVO> taxpayerIdentifyTypes;
+    private List<SysCodeSimpleVO> taxpayerIdentifyTypes;
 
     @ApiModelProperty("适用企业类型名称")
-    private List<SysCodeSearchVO> enterpriseTypes;
+    private List<SysCodeSimpleVO> enterpriseTypes;
 
     @ApiModelProperty("适用行业名称")
-    private List<SysCodeSearchVO> industries;
+    private List<SysCodeSimpleVO> industries;
 
     @ApiModelProperty("有效性")
-    private SysCodeSearchVO validity;
+    private SysCodeSimpleVO validity;
 
     @ApiModelProperty("发布日期")
     private String releaseDate;
