@@ -180,7 +180,7 @@ public class UserServiceImpl implements UserService {
         // 管理员账号名称不能被修改
         if (UserConstants.ADMIN_USER_NAME.equalsIgnoreCase(userDO.getUserAccount())
                 && !UserConstants.ADMIN_USER_NAME.equalsIgnoreCase(producerUserVO.getUserAccount())) {
-            throw BizCode._4212.exception();
+            throw BizCode._4213.exception();
         }
 
         // 检查要修改的userAccount是否存在

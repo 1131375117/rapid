@@ -40,4 +40,4 @@ tax-preference:
     secret-key: "tax_preference"
   index:
     policies:
-      index: policies_index_2021-11-11
+      index: policies_index_2021-11-11_dev

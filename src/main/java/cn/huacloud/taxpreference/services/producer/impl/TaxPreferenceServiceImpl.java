@@ -16,6 +16,7 @@ import cn.huacloud.taxpreference.services.producer.TaxPreferenceService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.*;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.*;
 import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesStatusEnum;
+import cn.huacloud.taxpreference.services.producer.entity.enums.ValidityEnum;
 import cn.huacloud.taxpreference.services.producer.entity.vos.*;
 import cn.huacloud.taxpreference.services.producer.mapper.*;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -492,9 +493,9 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     // 根据税收优惠的id查询出税收优惠的列表
     TaxPreferenceDO taxPreferenceDO = new TaxPreferenceDO();
     // 判断废止状态--全文废止
-    if (PoliciesStatusEnum.FULL_TEXT_REPEAL
+    if (ValidityEnum.FULL_TEXT_REPEAL
         .getValue()
-        .equals(queryAbolishDTO.getPoliciesStatus())) {
+        .equals(queryAbolishDTO.getValidity())) {
       // 调用查询废止接口
       List<TaxPreferenceAbolishVO> taxPreferenceAbolish =
           getTaxPreferenceAbolish(queryAbolishDTO.getId());
@@ -507,8 +508,8 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
       taxPreferenceDO.setValidity(PreferenceValidation.INVALID);
       }
         // 判断废止状态--部分废止
-      }} else if (PoliciesStatusEnum.PARTIAL_REPEAL.getValue()
-          .equals(queryAbolishDTO.getPoliciesStatus())) {
+      }} else if (ValidityEnum.PARTIAL_VALID.getValue()
+          .equals(queryAbolishDTO.getValidity())) {
         List<Long> ids = queryAbolishDTO.getIds();
         // 遍历选中的id集合
         for (Long id : ids) {

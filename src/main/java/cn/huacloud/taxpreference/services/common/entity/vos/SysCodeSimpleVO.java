@@ -1,15 +1,15 @@
-package cn.huacloud.taxpreference.services.consumer.entity.vos;
+package cn.huacloud.taxpreference.services.common.entity.vos;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 /**
- * 系统码值ES视图
+ * 系统码值简单视图
  * @author wangkh
  */
 @Accessors(chain = true)
 @Data
-public class SysCodeSearchVO {
+public class SysCodeSimpleVO {
     /**
      * 码值名称
      */
