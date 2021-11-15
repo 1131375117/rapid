@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.producer.impl;
 
+import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.services.producer.PoliciesExplainService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesExplainDO;
@@ -199,7 +200,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 
   /** @return 返回 */
   @Override
-  public List<PoliciesTitleVO> fuzzyQuery() {
+  public List<PoliciesTitleVO> fuzzyQuery(KeywordPageQueryDTO keywordPageQueryDTO) {
     // 查询该政策解读是否被关联了政策法规
     List<PoliciesTitleVO> relatedPolicyList = policiesExplainMapper.getRelatedPolicy();
     log.info("查询该政策解读是否被关联了政策法规={}", relatedPolicyList);

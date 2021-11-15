@@ -12,10 +12,13 @@ import lombok.Data;
 @ApiModel
 public class PoliciesTitleVO {
 
+
     @ApiModelProperty("政策法规id")
+    private Long id;
+    @ApiModelProperty("政策解读中政策法规id")
     private Long policiesId;
     @ApiModelProperty("政策法规名称")
     private String title;
-    @ApiModelProperty()
+    @ApiModelProperty("是否关联true:关联,false:未关联")
     private Boolean relatedPolicy;
 }

@@ -139,6 +139,7 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
       //设置逻辑删除
       frequentlyAskedQuestionDO.setDeleted(false);
       frequentlyAskedQuestionDO.setId(null);
+      frequentlyAskedQuestionDO.setPoliciesIds(frequentlyAskedQuestionDTO.getPoliciesIds());
       log.info("新增热门问答对象={}", frequentlyAskedQuestionDO);
       frequentlyAskedQuestionMapper.insert(frequentlyAskedQuestionDO);
     }

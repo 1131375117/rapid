@@ -29,6 +29,7 @@ public class FrequentlyAskedQuestionDTO {
     @ApiModelProperty("政策Id集合")
     private String policiesIds;
 
+
     @NotEmpty(message = "问题不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
     @ApiModelProperty("问题")
     private String title;
