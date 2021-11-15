@@ -23,6 +23,10 @@ public class NeiMengGuTax implements Tax {
         Element fontZoom = parse.getElementById("sdecontent");
         return String.valueOf(fontZoom);
     }
-
+/*    public String parseQA(String html) {
+        Document parse = Jsoup.parse(html);
+        Element fontZoom = parse.getElementById("sdecontent");
+        return String.valueOf(fontZoom);
+    }*/
 
 }

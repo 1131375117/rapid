@@ -33,7 +33,7 @@ import java.util.List;
  * @create: 2021-11-10 14:09
  **/
 @Slf4j
-public class PolicyBackupTool extends BaseApplicationTest  {
+public class PolicyBackupTool extends BaseApplicationTest {
     @Autowired
     FrequentlyAskedQuestionMapper frequentlyAskedQuestionMapper;
     @Autowired
@@ -51,14 +51,15 @@ public class PolicyBackupTool extends BaseApplicationTest  {
         applicationContext.getBeansOfType(Tax.class).values().forEach(tax ->
                 sourceMap.put(tax.sourceType(), tax)
         );
-        List<Entity> policy_qa_datas = Db.use().findAll("popular_qa_datas");
-        List<Entity> policyList = Db.use().findAll("policy_datas");
+        //新增热门问答
+        List<Entity> policy_qa_datas = Db.use().findAll("popular_qa_data");
+        //新增政策和政策解读
+        List<Entity> policyList = Db.use().findAll("policy_data");
         insertQA(policy_qa_datas);
-        for (Entity policy : policyList) {
+        policyList.forEach(policy -> {
             PoliciesDO policiesDO = insertPolicies(policy);
             insertExplains(policy, policiesDO);
-        }
-
+        });
     }
 
     /**
@@ -67,11 +68,14 @@ public class PolicyBackupTool extends BaseApplicationTest  {
     private void insertExplains(Entity policy, PoliciesDO policiesDO) {
         PoliciesExplainDO policiesExplainDO = new PoliciesExplainDO();
         policiesExplainDO.setPoliciesId(policiesDO.getId());
-        policiesExplainDO.setTitle(policiesDO.getTitle());
-        policiesExplainDO.setContent(DelTagsUtil.getTextFromHtml(policy.getStr("related_interpretation_html")));
-        policiesExplainDO.setDocSource(policy.getStr("content_source"));
+        //相关解读-标题
+        policiesExplainDO.setTitle(policy.getStr("related_interpretation_title"));
+        //相关解读-源码
+        policiesExplainDO.setContent((policy.getStr("related_interpretation_html")));
+        //相关解读-来源
+        policiesExplainDO.setDocSource(policy.getStr("related_interpretation_source"));
         policiesExplainDO.setCreateTime(LocalDateTime.now());
-        policiesExplainDO.setReleaseDate(LocalDate.now());
+        policiesExplainDO.setReleaseDate(LocalDate.parse(policy.getStr("related_interpretation_date")));
         policiesExplainDO.setUpdateTime(LocalDateTime.now());
         policiesExplainDO.setDeleted(false);
         policiesExplainDO.setInputUserId(1L);
@@ -87,15 +91,29 @@ public class PolicyBackupTool extends BaseApplicationTest  {
         PoliciesDO policiesDO = new PoliciesDO();
         SysCodeVO areaVO = sysCodeService.getCodeVOByCodeName(SysCodeType.AREA, policy.getStr("region"));
         SysCodeVO taxClassName = sysCodeService.getCodeVOByCodeName(SysCodeType.AREA, policy.getStr("tax_class_name"));
-        policiesDO.setTitle(policy.getStr("title")).setDocSource(policy.getStr("content_source")).setAreaName(policy.getStr("region"))
+        policiesDO.setTitle(policy.getStr("title"))
+                .setDocSource(policy.getStr("content_source"))
+                .setAreaName(policy.getStr("region"))
                 .setAreaCode(areaVO == null ? "" : areaVO.getCodeValue())
                 .setTaxCategoriesName(policy.getStr("tax_class_name"))
-                .setTaxCategoriesCode(taxClassName == null ? "" : taxClassName.getCodeValue()).setTaxpayerIdentifyTypeCodes("").setTaxpayerIdentifyTypeNames("")
-                .setEnterpriseTypeCodes("").setEnterpriseTypeNames("").setIndustryCodes("").setIndustryNames("")
-                .setValidity(ValidityEnum.FULL_TEXT_VALID).setReleaseDate(LocalDate.now()).setDigest("").setLabels("").setPoliciesStatus(PoliciesStatusEnum.FULL_TEXT_REPEAL)
-                .setAbolishNote("").setInputUserId(1L).setCreateTime(LocalDateTime.now()).setUpdateTime(LocalDateTime.now()).setDeleted(false)
+                .setTaxCategoriesCode(taxClassName == null ? "" : taxClassName.getCodeValue())
+                .setTaxpayerIdentifyTypeCodes("")
+                .setTaxpayerIdentifyTypeNames("")
+                .setEnterpriseTypeCodes("")
+                .setEnterpriseTypeNames("")
+                .setIndustryCodes("")
+                .setIndustryNames("")
+                .setValidity(ValidityEnum.FULL_TEXT_VALID)
+                .setReleaseDate(LocalDate.parse(policy.getStr("publish_date")))
+                .setDigest("")
+                .setLabels("")
+                .setPoliciesStatus(PoliciesStatusEnum.valueOf((policy.getStr("content_is_valid"))))
+                .setAbolishNote("").setInputUserId(1L)
+                .setCreateTime(LocalDateTime.now())
+                .setUpdateTime(LocalDateTime.now())
+                .setDeleted(false)
                 .setContent(sourceMap.get(policy.getStr("site_name")).parseHtml(policy.getStr("html")))
-                .setDocCode("文号")
+                .setDocCode(policy.getStr("document_number"))
         ;
         policiesMapper.insert(policiesDO);
         return policiesDO;
@@ -105,18 +123,27 @@ public class PolicyBackupTool extends BaseApplicationTest  {
      * 新增QA
      */
     private void insertQA(List<Entity> policy_qa_datas) {
-        for (Entity policy_qa : policy_qa_datas) {
+        policy_qa_datas.forEach(policy_qa -> {
             FrequentlyAskedQuestionDO frequentlyAskedQuestionDO = new FrequentlyAskedQuestionDO();
-            frequentlyAskedQuestionDO.setTitle(policy_qa.getStr("popular_qa_title"));
-            frequentlyAskedQuestionDO.setContent(sourceMap.get(policy_qa.getStr("site_name")).parseQA(policy_qa.getStr("popular_qa_html")));
+            try {
+                List<Entity> find = Db.use().find(Entity.create("policy_popular_data").set("policy_id", policy_qa.getStr("id")));
+                if(find!=null&&find.size()>0){
+                    frequentlyAskedQuestionDO.setPoliciesIds(find.get(0).getStr("policy_id"));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            frequentlyAskedQuestionDO.setTitle(policy_qa.getStr("title"));
+            frequentlyAskedQuestionDO.setContent(sourceMap.get(policy_qa.getStr("site_name"))==null?"":sourceMap.get(policy_qa.getStr("site_name")).parseQA(policy_qa.getStr("html")));
             frequentlyAskedQuestionDO.setDocSource(policy_qa.getStr("content_source"));
-            frequentlyAskedQuestionDO.setReleaseDate(LocalDate.now());
+            frequentlyAskedQuestionDO.setReleaseDate(LocalDate.parse(policy_qa.getStr("publish_date")));
             frequentlyAskedQuestionDO.setCreateTime(LocalDateTime.now());
             frequentlyAskedQuestionDO.setUpdateTime(LocalDateTime.now());
             frequentlyAskedQuestionDO.setInputUserId(1L);
             frequentlyAskedQuestionDO.setDeleted(false);
             frequentlyAskedQuestionMapper.insert(frequentlyAskedQuestionDO);
-        }
+        });
     }
 
 }
