@@ -111,11 +111,7 @@ public class PoliciesServiceImpl implements PoliciesService {
     // 新增政策解读
     PoliciesExplainDTO policiesExplainDTO = new PoliciesExplainDTO();
     //判断当前政策解读对象不存在
-    if (policiesExplainDTOS.getTitle() != null
-        && policiesExplainDTOS.getPoliciesId() != null
-        && policiesExplainDTOS.getContent() != null
-        && policiesExplainDTOS.getDocSource() != null
-        && policiesExplainDTOS.getReleaseDate() != null) {
+    if (policiesExplainDTOS!=null) {
       BeanUtils.copyProperties(policiesCombinationDTO.getPoliciesExplainDTO(), policiesExplainDTO);
       policiesExplainDTO.setPoliciesId(policiesDO.getId());
       policiesExplainService.insertPoliciesExplain(policiesExplainDTO, userId);
@@ -163,7 +159,7 @@ public class PoliciesServiceImpl implements PoliciesService {
     // 设置用户id
     policiesDO.setInputUserId(userId);
     // 添加废止状态
-    policiesDO.setPoliciesStatus(PoliciesStatusEnum.FULL_TEXT_VALID);
+    policiesDO.setPoliciesStatus(PoliciesStatusEnum.PUBLISHED);
     // 添加发布时间
     policiesDO.setReleaseDate(LocalDate.now());
     // 添加创建时间
@@ -548,19 +544,19 @@ public class PoliciesServiceImpl implements PoliciesService {
       throw BizCode._4100.exception();
     }
     // 判断条件--全文废止
-    if (PoliciesStatusEnum.FULL_TEXT_REPEAL
+    if (ValidityEnum.FULL_TEXT_REPEAL
         .getValue()
-        .equals(queryAbolishDTO.getPoliciesStatus())) {
+        .equals(queryAbolishDTO.getValidity())) {
       // 设置政策法规的有效性
-      policiesDO.setPoliciesStatus(PoliciesStatusEnum.FULL_TEXT_REPEAL);
+//      policiesDO.setPoliciesStatus(PoliciesStatusEnum.FULL_TEXT_REPEAL);
       policiesDO.setValidity(ValidityEnum.FULL_TEXT_REPEAL);
       policiesDO.setAbolishNote(queryAbolishDTO.getAbolishNote());
       // 设置税收优惠的有效性
-    } else if (PoliciesStatusEnum.PARTIAL_REPEAL
+    } else if (ValidityEnum.PARTIAL_VALID
         .getValue()
-        .equals(queryAbolishDTO.getPoliciesStatus())) {
+        .equals(queryAbolishDTO.getValidity())) {
       // 判断条件--部分废止
-      policiesDO.setPoliciesStatus(PoliciesStatusEnum.PARTIAL_REPEAL);
+//      policiesDO.setPoliciesStatus(PoliciesStatusEnum.);
       // 设置政策法规的有效性
       policiesDO.setValidity(ValidityEnum.PARTIAL_VALID);
       policiesDO.setAbolishNote(queryAbolishDTO.getAbolishNote());

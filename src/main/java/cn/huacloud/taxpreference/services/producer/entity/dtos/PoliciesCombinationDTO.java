@@ -86,4 +86,7 @@ public class PoliciesCombinationDTO {
 
     @ApiModelProperty("用户id")
     private Long inputUserId;
+
+    @ApiModelProperty("附件ID集合")
+    private List<Long> attachmentIds;
 }
