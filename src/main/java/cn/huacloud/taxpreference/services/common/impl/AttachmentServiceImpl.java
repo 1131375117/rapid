@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -39,6 +40,7 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     private final AttachmentMapper attachmentMapper;
 
+    @Transactional
     @Override
     public AttachmentVO uploadAttachment(AttachmentType attachmentType, String attachmentName, String extension, InputStream inputStream, long size) throws Exception {
 
@@ -76,8 +78,9 @@ public class AttachmentServiceImpl implements AttachmentService {
         return attachmentVO;
     }
 
+    @Transactional
     @Override
-    public List<AttachmentVO> setAttachmentDocId(List<Long> attachmentIds, Long docId) {
+    public List<AttachmentVO> setAttachmentDocId(List<Long> attachmentIds, AttachmentType attachmentType, Long docId) {
         List<AttachmentDO> attachmentDOList = attachmentMapper.selectBatchIds(attachmentIds);
         // 参数校验，已经设置过docId的附件无法修改
         for (AttachmentDO attachmentDO : attachmentDOList) {
@@ -89,6 +92,7 @@ public class AttachmentServiceImpl implements AttachmentService {
         // 执行修改
         for (AttachmentDO attachmentDO : attachmentDOList) {
             attachmentDO.setDocId(docId);
+            attachmentDO.setAttachmentType(attachmentType);
             attachmentMapper.updateById(attachmentDO);
         }
         log.info("为附件设置docId成功, docId: {}, attachmentIds: {}", docId, attachmentDOList);

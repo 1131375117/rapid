@@ -16,7 +16,7 @@ public interface AttachmentService {
     /**
      * 附件上传接口
      *
-     * @param attachmentType
+     * @param attachmentType 附件类型
      * @param attachmentName 文件名称
      * @param extension 文件扩展名
      * @param inputStream 输入流
@@ -28,10 +28,11 @@ public interface AttachmentService {
     /**
      * 把指ID的附件归属到指定文档下
      * @param attachmentIds 附件ID集合
+     * @param attachmentType 附件类型
      * @param docId 文档ID集合
      * @return 文档视图对象
      */
-    List<AttachmentVO> setAttachmentDocId(List<Long> attachmentIds, Long docId);
+    List<AttachmentVO> setAttachmentDocId(List<Long> attachmentIds, AttachmentType attachmentType, Long docId);
 
     /**
      * 获取附件视图集合
