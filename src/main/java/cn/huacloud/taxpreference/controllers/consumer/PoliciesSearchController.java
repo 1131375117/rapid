@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class PoliciesSearchController {
 
-    private PoliciesSearchService policiesSearchService;
+    private final PoliciesSearchService policiesSearchService;
 
     // 政策简单列表
 

@@ -19,14 +19,12 @@ import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.elasticsearch.search.sort.SortBuilder;
 import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
@@ -126,7 +124,17 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
     R mapSearchHit(SearchHit searchHit) throws Exception;
 
     default String getHighlightString(SearchHit searchHit, String key) {
-        return searchHit.getHighlightFields().get(key).getFragments()[0].string();
+        Map<String, Object> sourceAsMap = searchHit.getSourceAsMap();
+        String sourceValue = (String) sourceAsMap.get(key);
+        Map<String, HighlightField> highlightFields = searchHit.getHighlightFields();
+        if (highlightFields == null) {
+            return sourceValue;
+        }
+        HighlightField highlightField = highlightFields.get(key);
+        if (highlightField == null) {
+            return sourceValue;
+        }
+        return highlightField.getFragments()[0].string();
     }
 
     List<FieldHandler> fieldHandlers = Arrays.asList(new FilterFieldHandler(), new RangeFiledHandler());
