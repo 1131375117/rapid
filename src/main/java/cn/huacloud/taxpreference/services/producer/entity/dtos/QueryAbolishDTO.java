@@ -18,7 +18,7 @@ public class QueryAbolishDTO {
     private Long id;
 
     @ApiModelProperty("废止状态")
-    private String policiesStatus;
+    private String validity;
 
     @ApiModelProperty("废止说明")
     private String abolishNote;

@@ -18,8 +18,10 @@ import cn.hutool.db.Entity;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
+import org.junit.platform.commons.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -47,6 +49,7 @@ public class PolicyBackupTool extends BaseApplicationTest {
     ApplicationContext applicationContext;
 
     @Test
+    @Transactional
     public void backup() throws SQLException {
         applicationContext.getBeansOfType(Tax.class).values().forEach(tax ->
                 sourceMap.put(tax.sourceType(), tax)
@@ -103,7 +106,7 @@ public class PolicyBackupTool extends BaseApplicationTest {
                 .setEnterpriseTypeNames("")
                 .setIndustryCodes("")
                 .setIndustryNames("")
-                .setValidity(ValidityEnum.FULL_TEXT_VALID)
+                .setValidity(ValidityEnum.valueOf(policy.getStr("content_is_valid")))
                 .setReleaseDate(LocalDate.parse(policy.getStr("publish_date")))
                 .setDigest("")
                 .setLabels("")
@@ -137,7 +140,7 @@ public class PolicyBackupTool extends BaseApplicationTest {
             frequentlyAskedQuestionDO.setTitle(policy_qa.getStr("title"));
             frequentlyAskedQuestionDO.setContent(sourceMap.get(policy_qa.getStr("site_name"))==null?"":sourceMap.get(policy_qa.getStr("site_name")).parseQA(policy_qa.getStr("html")));
             frequentlyAskedQuestionDO.setDocSource(policy_qa.getStr("content_source"));
-            frequentlyAskedQuestionDO.setReleaseDate(LocalDate.parse(policy_qa.getStr("publish_date")));
+            frequentlyAskedQuestionDO.setReleaseDate((StringUtils.isBlank(policy_qa.getStr("publish_date")) ?null:LocalDate.parse(policy_qa.getStr("publish_date"))));
             frequentlyAskedQuestionDO.setCreateTime(LocalDateTime.now());
             frequentlyAskedQuestionDO.setUpdateTime(LocalDateTime.now());
             frequentlyAskedQuestionDO.setInputUserId(1L);

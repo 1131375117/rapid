@@ -37,7 +37,6 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 
   private final PoliciesExplainMapper policiesExplainMapper;
 
-
   /**
    * 政策解读列表
    *
@@ -56,9 +55,9 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
         queryPoliciesExplainDTO.getKeyword());
     // 模糊查询--政策解读标题
     lambdaQueryWrapper.like(
-            StringUtils.isNotBlank(queryPoliciesExplainDTO.getTitle()),
-            PoliciesExplainDO::getTitle,
-            queryPoliciesExplainDTO.getTitle());
+        StringUtils.isNotBlank(queryPoliciesExplainDTO.getTitle()),
+        PoliciesExplainDO::getTitle,
+        queryPoliciesExplainDTO.getTitle());
     // 模糊查询--政策解读来源
     lambdaQueryWrapper.like(
         StringUtils.isNotBlank(queryPoliciesExplainDTO.getDocSource()),
@@ -67,11 +66,11 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
     // 条件查询--发布日期
     lambdaQueryWrapper
         .ge(
-           queryPoliciesExplainDTO.getStartTime()!=null,
+            queryPoliciesExplainDTO.getStartTime() != null,
             PoliciesExplainDO::getReleaseDate,
             queryPoliciesExplainDTO.getStartTime())
         .le(
-            queryPoliciesExplainDTO.getEndTime()!=null,
+            queryPoliciesExplainDTO.getEndTime() != null,
             PoliciesExplainDO::getReleaseDate,
             queryPoliciesExplainDTO.getEndTime());
     lambdaQueryWrapper.eq(PoliciesExplainDO::getDeleted, false);
@@ -80,7 +79,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
     if (PoliciesSortType.RELEASE_DATE.equals(queryPoliciesExplainDTO.getSortField())) {
       lambdaQueryWrapper
           .eq(
-              queryPoliciesExplainDTO.getReleaseDate()!=null,
+              queryPoliciesExplainDTO.getReleaseDate() != null,
               PoliciesExplainDO::getReleaseDate,
               queryPoliciesExplainDTO.getReleaseDate())
           .orderByDesc(PoliciesExplainDO::getReleaseDate);
@@ -89,16 +88,15 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
     if (PoliciesSortType.UPDATE_TIME.equals(queryPoliciesExplainDTO.getSortField())) {
       lambdaQueryWrapper
           .eq(
-             queryPoliciesExplainDTO.getUpdateTime()!=null,
+              queryPoliciesExplainDTO.getUpdateTime() != null,
               PoliciesExplainDO::getUpdateTime,
               queryPoliciesExplainDTO.getUpdateTime())
           .orderByDesc(PoliciesExplainDO::getUpdateTime);
     }
     // 分页
-      IPage<PoliciesExplainDO> policiesExplainDoPage =
+    IPage<PoliciesExplainDO> policiesExplainDoPage =
         policiesExplainMapper.selectPage(
-            new Page<>(
-                queryPoliciesExplainDTO.getPageNum(), queryPoliciesExplainDTO.getPageSize()),
+            new Page<>(queryPoliciesExplainDTO.getPageNum(), queryPoliciesExplainDTO.getPageSize()),
             lambdaQueryWrapper);
     // 数据映射
     List<PoliciesExplainDetailVO> records =
@@ -129,17 +127,17 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
     BeanUtils.copyProperties(policiesExplainDTO, policiesExplainDO);
     // 设置值
     policiesExplainDO.setPoliciesId(policiesExplainDTO.getPoliciesId());
-    //设置用户id
+    // 设置用户id
     policiesExplainDO.setInputUserId(userId);
-    //设置发布时间
+    // 设置发布时间
     policiesExplainDO.setReleaseDate(LocalDate.now());
-    //设置创建时间
+    // 设置创建时间
     policiesExplainDO.setCreateTime(LocalDateTime.now());
-    //设置更新时间
+    // 设置更新时间
     policiesExplainDO.setUpdateTime(LocalDateTime.now());
-    //设置逻辑删除
+    // 设置逻辑删除
     policiesExplainDO.setDeleted(false);
-    //设置政策解读状态
+    // 设置政策解读状态
     policiesExplainDO.setPoliciesExplainStatus(PoliciesExplainStatusEnum.PUBLISHED);
     log.info("新增政策解读对象={}", policiesExplainDO);
     policiesExplainMapper.insert(policiesExplainDO);
@@ -199,16 +197,12 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
     policiesExplainMapper.updateById(policiesExplainDO);
   }
 
-  /**
-   *
-   *
-   * @return 返回
-   */
+  /** @return 返回 */
   @Override
-  public List<PoliciesTitleVO> fuzzyQuery( ) {
+  public List<PoliciesTitleVO> fuzzyQuery() {
     // 查询该政策解读是否被关联了政策法规
-    List<PoliciesTitleVO> relatedPolicyList=policiesExplainMapper.getRelatedPolicy();
-    log.info("查询该政策解读是否被关联了政策法规={}",relatedPolicyList);
+    List<PoliciesTitleVO> relatedPolicyList = policiesExplainMapper.getRelatedPolicy();
+    log.info("查询该政策解读是否被关联了政策法规={}", relatedPolicyList);
     return relatedPolicyList;
   }
 
@@ -221,17 +215,18 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
   @Override
   public PoliciesExplainDTO getPoliciesByPoliciesId(Long policiesId) {
     LambdaQueryWrapper<PoliciesExplainDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-    //根据id和delete查询
+    // 根据id和delete查询
     lambdaQueryWrapper.eq(PoliciesExplainDO::getPoliciesId, policiesId);
-    lambdaQueryWrapper.eq(PoliciesExplainDO::getDeleted,false);
+    lambdaQueryWrapper.eq(PoliciesExplainDO::getDeleted, false);
     PoliciesExplainDO policiesExplainDO = policiesExplainMapper.selectOne(lambdaQueryWrapper);
-    
+
     PoliciesExplainDTO policiesExplainDTO = new PoliciesExplainDTO();
-    //判断是否为空
-    if(policiesExplainDO!=null){
-      BeanUtils.copyProperties(policiesExplainDO,policiesExplainDTO);
+    // 判断是否为空
+    if (policiesExplainDO == null) {
+      return null;
     }
-    log.info("根据政策法规id查询政策解读信息={}",policiesExplainDTO);
+    BeanUtils.copyProperties(policiesExplainDO, policiesExplainDTO);
+    log.info("根据政策法规id查询政策解读信息={}", policiesExplainDTO);
     return policiesExplainDTO;
   }
 }
