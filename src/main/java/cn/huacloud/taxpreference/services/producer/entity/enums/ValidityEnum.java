@@ -20,7 +20,11 @@ public enum ValidityEnum implements IEnum<String> {
             INVALID("失效"),
     FULL_TEXT_VALID("全文有效"),
     FULL_TEXT_REPEAL("全文废止"),
-    PARTIAL_VALID("部分有效");
+    PARTIAL_VALID("部分有效"),
+    CLAUSE_INVALIDITY("条款失效"),
+    FULL_TEXT_INVALIDATION("全文失效"),
+    PARTIAL_REPEAL("部分废止"),
+    UNKNOWN("未知");
 
     private final String name;
 
