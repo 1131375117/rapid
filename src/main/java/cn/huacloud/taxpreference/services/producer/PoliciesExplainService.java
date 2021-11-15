@@ -63,7 +63,7 @@ public interface PoliciesExplainService {
      *
      * @return
      */
-    List<PoliciesTitleVO> fuzzyQuery();
+    List<PoliciesTitleVO> fuzzyQuery(KeywordPageQueryDTO keywordPageQueryDTO);
 
 
     /**

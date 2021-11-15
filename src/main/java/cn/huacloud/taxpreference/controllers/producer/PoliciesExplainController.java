@@ -73,8 +73,8 @@ public class PoliciesExplainController {
     @SaCheckPermission("producer_relatedPolicies_query")
     @ApiOperation("关联政策查询")
     @PostMapping("/policies/relatedPolicies/query")
-    public ResultVO<List<PoliciesTitleVO>> fuzzyQuery() {
-        List<PoliciesTitleVO> policiesTitleVOList = policiesExplainService.fuzzyQuery();
+    public ResultVO<List<PoliciesTitleVO>> fuzzyQuery(@RequestBody KeywordPageQueryDTO keywordPageQueryDTO) {
+        List<PoliciesTitleVO> policiesTitleVOList = policiesExplainService.fuzzyQuery(keywordPageQueryDTO);
         return ResultVO.ok(policiesTitleVOList);
     }
 

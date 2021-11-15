@@ -329,6 +329,9 @@ public class PoliciesServiceImpl implements PoliciesService {
     policiesDO.setTaxpayerIdentifyTypeNames(taxpayerIdentifyTypeNames);
     policiesDO.setEnterpriseTypeNames(enterpriseTypeCodes);
     policiesDO.setIndustryNames(industryNames);
+    //设置区域
+    policiesDO.setAreaName(sysCodeService.getCodeNameByCodeValue(policiesCombinationDTO.getAreaCode()));
+    policiesDO.setAreaCode(policiesCombinationDTO.getAreaCode());
     //设置标签
     policiesDO.setLabels(StringUtils.join(policiesCombinationDTO.getLabels(), ","));
     //设置更新时间
@@ -552,7 +555,7 @@ public class PoliciesServiceImpl implements PoliciesService {
       policiesDO.setValidity(ValidityEnum.FULL_TEXT_REPEAL);
       policiesDO.setAbolishNote(queryAbolishDTO.getAbolishNote());
       // 设置税收优惠的有效性
-    } else if (ValidityEnum.PARTIAL_VALID
+    } else if (ValidityEnum.PARTIAL_REPEAL
         .getValue()
         .equals(queryAbolishDTO.getValidity())) {
       // 判断条件--部分废止

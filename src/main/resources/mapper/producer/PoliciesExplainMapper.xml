@@ -5,6 +5,7 @@
     <select id="getRelatedPolicy"
             resultType="cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesTitleVO">
         SELECT
+            p.id,
             pe.policies_id,
             p.title,
         IF
