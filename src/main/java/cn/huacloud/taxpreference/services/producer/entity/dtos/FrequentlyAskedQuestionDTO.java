@@ -44,5 +44,9 @@ public class FrequentlyAskedQuestionDTO {
     @NotEmpty(message = "发布日期不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
     @ApiModelProperty("发布日期")
     private LocalDate releaseDate;
+    @ApiModelProperty("用户id")
+    private Long inputUserId;
+
+
 
 }
