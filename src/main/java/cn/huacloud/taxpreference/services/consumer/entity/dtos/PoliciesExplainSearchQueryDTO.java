@@ -19,10 +19,7 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class PoliciesSearchQueryDTO extends AbstractHighlightPageQueryDTO {
-
-    @ApiModelProperty("文号")
-    private String docCode;
+public class PoliciesExplainSearchQueryDTO extends AbstractHighlightPageQueryDTO {
 
     @ApiModelProperty("所属税种")
     @FilterField("taxCategories.codeValue")
@@ -48,13 +45,9 @@ public class PoliciesSearchQueryDTO extends AbstractHighlightPageQueryDTO {
     @FilterField("enterpriseTypes.codeValue")
     private List<String> enterpriseTypesCodes;
 
-    @ApiModelProperty("有效性")
-    @FilterField("validity.codeValue")
-    public ValidityEnum validity;
-
     @Override
     public List<String> indexList() {
-        return Collections.singletonList("policies");
+        return Collections.singletonList("policies_explain");
     }
 
     @Override

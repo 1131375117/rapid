@@ -7,11 +7,11 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * 政策法规检索详情视图
+ * 政策法规检索列表视图
  * @author wangkh
  */
 @Data
-public class PoliciesSearchVO {
+public class PoliciesSearchListVO {
 
     @ApiModelProperty("主键ID")
     private Long id;

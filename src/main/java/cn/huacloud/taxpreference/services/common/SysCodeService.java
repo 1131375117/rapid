@@ -1,6 +1,7 @@
 package cn.huacloud.taxpreference.services.common;
 
 import cn.huacloud.taxpreference.common.enums.SysCodeType;
+import cn.huacloud.taxpreference.services.common.entity.dos.SysCodeDO;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeTreeVO;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeVO;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeSimpleVO;
@@ -63,4 +64,11 @@ public interface SysCodeService {
      * @return 码值视图
      */
     SysCodeSimpleVO getSimpleVOByCode(String codeValue);
+
+    /**
+     * 通过码值类型获取系统码值
+     * @param sysCodeType 系统码值类型
+     * @return 系统码值DO list
+     */
+    List<SysCodeDO> getSysCodeDOByCodeType(SysCodeType sysCodeType);
 }

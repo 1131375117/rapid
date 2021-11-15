@@ -2,9 +2,11 @@ package cn.huacloud.taxpreference.services.consumer;
 
 import cn.huacloud.taxpreference.common.annotations.FilterField;
 import cn.huacloud.taxpreference.common.annotations.RangeField;
+import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.dtos.RangeQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.AbstractHighlightPageQueryDTO;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.FAQSearchVO;
 import com.baomidou.mybatisplus.annotation.IEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,13 +16,17 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
+import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
+import org.elasticsearch.search.sort.SortOrder;
+import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Field;
@@ -68,10 +74,10 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
 
         // 封装数据记录
         SearchHits hits = response.getHits();
-        List<R> recodes = new ArrayList<>();
+        List<R> records = new ArrayList<>();
         for (SearchHit hit : hits.getHits()) {
             R result = mapSearchHit(hit);
-            recodes.add(result);
+            records.add(result);
         }
 
         // 返回分页对象
@@ -79,7 +85,7 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
                 .setTotal(hits.getTotalHits().value)
                 .setPageNum(pageQuery.getPageNum())
                 .setPageSize(pageQuery.getPageSize())
-                .setRecords(recodes);
+                .setRecords(records);
     }
 
     /**
@@ -96,7 +102,20 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
      * @param pageQuery 分页检索条件
      * @return 查询构造器
      */
-    QueryBuilder getQueryBuilder(T pageQuery);
+    default QueryBuilder getQueryBuilder(T pageQuery) {
+        BoolQueryBuilder queryBuilder = generatorDefaultQueryBuilder(pageQuery);
+
+        // 关键字查询
+        String keyword = pageQuery.getKeyword();
+        if (keyword != null) {
+            List<String> searchFields = pageQuery.searchFields();
+            for (String searchField : searchFields) {
+                queryBuilder.should(matchPhraseQuery(searchField, keyword));
+            }
+        }
+
+        return queryBuilder;
+    }
 
     /**
      * 获取高亮构造器
@@ -170,9 +189,39 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
         return boolQueryBuilder;
     }
 
+    /**
+     * 格式化Wildcard查询关键字
+     * @param value 关键字
+     * @return 格式化后的查询关键字
+     */
+    default String formatWildcardValue(String value) {
+        Assert.notNull(value, "Wildcard value could not be null.");
+        return "*" + value + "*";
+    }
+
+    default SearchResponse simplePageSearch(String index, QueryBuilder queryBuilder, PageQueryDTO pageQuery, FieldSortBuilder ... fieldSortBuilders) throws Exception {
+        // 构建查询条件
+        SearchSourceBuilder searchSourceBuilder = SearchSourceBuilder.searchSource()
+                .trackTotalHits(true)
+                .query(queryBuilder)
+                .from(pageQuery.from())
+                .size(pageQuery.getPageSize());
+
+        // 设置排序
+        for (FieldSortBuilder fieldSortBuilder : fieldSortBuilders) {
+            searchSourceBuilder.sort(fieldSortBuilder);
+        }
+
+        SearchRequest request = new SearchRequest(index);
+        request.source(searchSourceBuilder);
+
+        // 执行查询
+        return getRestHighLevelClient().search(request, RequestOptions.DEFAULT);
+    }
+
     @AllArgsConstructor
     @Data
-    static class FieldWrapper {
+    class FieldWrapper {
         private Field field;
         private Object value;
     }
