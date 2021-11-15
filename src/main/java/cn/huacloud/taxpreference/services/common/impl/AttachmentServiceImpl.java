@@ -24,6 +24,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -81,15 +82,25 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Transactional
     @Override
     public List<AttachmentVO> setAttachmentDocId(List<Long> attachmentIds, AttachmentType attachmentType, Long docId) {
-        List<AttachmentDO> attachmentDOList = attachmentMapper.selectBatchIds(attachmentIds);
-        // 参数校验，已经设置过docId的附件无法修改
-        for (AttachmentDO attachmentDO : attachmentDOList) {
-            if (attachmentDO.getDocId() != null) {
-                throw BizCode._4400.exception();
+
+        // 删除已经关联的
+        List<AttachmentVO> attachmentVOList = getAttachmentVOList(attachmentType, docId);
+        Set<Long> removeIds = attachmentVOList.stream().map(AttachmentVO::getId).collect(Collectors.toSet());
+
+        removeIds.removeAll(attachmentIds);
+
+        for (Long removeId : removeIds) {
+            AttachmentDO attachmentDO = attachmentMapper.selectById(removeId);
+            if (attachmentDO == null) {
+                continue;
             }
+            attachmentDO.setDocId(null);
+            attachmentMapper.updateById(attachmentDO);
         }
 
-        // 执行修改
+        List<AttachmentDO> attachmentDOList = attachmentMapper.selectBatchIds(attachmentIds);
+
+        // 执行数据关联
         for (AttachmentDO attachmentDO : attachmentDOList) {
             attachmentDO.setDocId(docId);
             attachmentDO.setAttachmentType(attachmentType);
