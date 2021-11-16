@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -81,11 +82,13 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     @Transactional
     @Override
-    public List<AttachmentVO> setAttachmentDocId(List<Long> attachmentIds, AttachmentType attachmentType, Long docId) {
-
+    public List<AttachmentVO> setAttachmentDocId(Long docId, AttachmentType attachmentType, String content) {
         // 删除已经关联的
         List<AttachmentVO> attachmentVOList = getAttachmentVOList(attachmentType, docId);
         Set<Long> removeIds = attachmentVOList.stream().map(AttachmentVO::getId).collect(Collectors.toSet());
+
+        // 从富文本中解析附件id
+        List<Long> attachmentIds = getAttachmentIdsByContent(docId, attachmentType, content);
 
         removeIds.removeAll(attachmentIds);
 
@@ -108,6 +111,18 @@ public class AttachmentServiceImpl implements AttachmentService {
         }
         log.info("为附件设置docId成功, docId: {}, attachmentIds: {}", docId, attachmentDOList);
         return copyDOToAttachmentVO(attachmentDOList);
+    }
+
+    /**
+     * 从富文本中解析附件ID
+     * @param docId 文档ID
+     * @param attachmentType 附件类型
+     * @param content 富文本文本内容
+     * @return 附件ID集合
+     */
+    public List<Long> getAttachmentIdsByContent(Long docId, AttachmentType attachmentType, String content) {
+        // TODO 从富文本中解析附件ID
+        return new ArrayList<>();
     }
 
     @Override

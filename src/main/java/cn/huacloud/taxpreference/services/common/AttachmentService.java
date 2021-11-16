@@ -27,12 +27,12 @@ public interface AttachmentService {
 
     /**
      * 把指ID的附件归属到指定文档下
-     * @param attachmentIds 附件ID集合
-     * @param attachmentType 附件类型
      * @param docId 文档ID集合
+     * @param attachmentType 附件类型
+     * @param content 富文本文本内容
      * @return 文档视图对象
      */
-    List<AttachmentVO> setAttachmentDocId(List<Long> attachmentIds, AttachmentType attachmentType, Long docId);
+    List<AttachmentVO> setAttachmentDocId(Long docId, AttachmentType attachmentType, String content);
 
     /**
      * 获取附件视图集合
