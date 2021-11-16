@@ -43,6 +43,4 @@ public class PoliciesExplainDTO {
     @ApiModelProperty("政策法规id")
     private Long policiesId;
 
-    @ApiModelProperty("附件ID集合")
-    private List<Long> attachmentIds;
 }

@@ -147,7 +147,8 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
     log.info("新增政策解读对象={}", policiesExplainDO);
     policiesExplainMapper.insert(policiesExplainDO);
     // 关联附件信息
-    attachmentService.setAttachmentDocId(policiesExplainDTO.getAttachmentIds(), AttachmentType.POLICIES, policiesExplainDO.getId());
+    attachmentService.setAttachmentDocId(
+        policiesExplainDO.getId(), AttachmentType.POLICIES, policiesExplainDTO.getContent());
   }
 
   /**
@@ -170,7 +171,8 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
       // 修改政策解读
       policiesExplainMapper.updateById(policiesExplainDO);
       // 关联附件信息
-      attachmentService.setAttachmentDocId(policiesExplainDTO.getAttachmentIds(), AttachmentType.POLICIES, policiesExplainDO.getId());
+      attachmentService.setAttachmentDocId(
+          policiesExplainDO.getId(), AttachmentType.POLICIES, policiesExplainDTO.getContent());
     }
   }
 

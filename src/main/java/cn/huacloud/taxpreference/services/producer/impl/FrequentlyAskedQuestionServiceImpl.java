@@ -58,9 +58,9 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
         FrequentlyAskedQuestionDO::getTitle,
         queryPoliciesExplainDTO.getTitle());
     lambdaQueryWrapper.like(
-            StringUtils.isNotBlank(queryPoliciesExplainDTO.getKeyword()),
-            FrequentlyAskedQuestionDO::getTitle,
-            queryPoliciesExplainDTO.getKeyword());
+        StringUtils.isNotBlank(queryPoliciesExplainDTO.getKeyword()),
+        FrequentlyAskedQuestionDO::getTitle,
+        queryPoliciesExplainDTO.getKeyword());
     // 模糊查询--政策解读来源
     lambdaQueryWrapper.like(
         StringUtils.isNotBlank(queryPoliciesExplainDTO.getDocSource()),
@@ -69,30 +69,29 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
     // 条件查询--发布日期
     lambdaQueryWrapper
         .ge(
-            queryPoliciesExplainDTO.getStartTime()!=null,
+            queryPoliciesExplainDTO.getStartTime() != null,
             FrequentlyAskedQuestionDO::getReleaseDate,
             queryPoliciesExplainDTO.getStartTime())
         .le(
-            queryPoliciesExplainDTO.getEndTime()!=null,
+            queryPoliciesExplainDTO.getEndTime() != null,
             FrequentlyAskedQuestionDO::getReleaseDate,
             queryPoliciesExplainDTO.getEndTime());
 
     lambdaQueryWrapper.eq(FrequentlyAskedQuestionDO::getDeleted, false);
     // 排序--发布时间
-    if (PoliciesSortType.RELEASE_DATE.equals(
-        queryPoliciesExplainDTO.getSortField())) {
+    if (PoliciesSortType.RELEASE_DATE.equals(queryPoliciesExplainDTO.getSortField())) {
       lambdaQueryWrapper
-          .eq(queryPoliciesExplainDTO.getReleaseDate()!=null,
+          .eq(
+              queryPoliciesExplainDTO.getReleaseDate() != null,
               FrequentlyAskedQuestionDO::getReleaseDate,
               queryPoliciesExplainDTO.getReleaseDate())
           .orderByDesc(FrequentlyAskedQuestionDO::getReleaseDate);
     }
     // 排序--更新时间
-    if (PoliciesSortType.UPDATE_TIME.equals(
-        queryPoliciesExplainDTO.getSortField())) {
+    if (PoliciesSortType.UPDATE_TIME.equals(queryPoliciesExplainDTO.getSortField())) {
       lambdaQueryWrapper
           .eq(
-              queryPoliciesExplainDTO.getUpdateTime()!=null,
+              queryPoliciesExplainDTO.getUpdateTime() != null,
               FrequentlyAskedQuestionDO::getUpdateTime,
               queryPoliciesExplainDTO.getUpdateTime())
           .orderByDesc(FrequentlyAskedQuestionDO::getUpdateTime);
@@ -100,18 +99,18 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
     // 分页
     IPage<FrequentlyAskedQuestionDO> frequentlyAskedQuestionDoPage =
         frequentlyAskedQuestionMapper.selectPage(
-            new Page<>(
-                queryPoliciesExplainDTO.getPageNum(), queryPoliciesExplainDTO.getPageSize()),
+            new Page<>(queryPoliciesExplainDTO.getPageNum(), queryPoliciesExplainDTO.getPageSize()),
             lambdaQueryWrapper);
     // 数据映射
     List<PoliciesExplainDetailVO> records =
-            frequentlyAskedQuestionDoPage.getRecords().stream()
+        frequentlyAskedQuestionDoPage.getRecords().stream()
             .map(
                 frequentlyAskedQuestionDO -> {
                   PoliciesExplainDetailVO policiesExplainDetailVO = new PoliciesExplainDetailVO();
                   // 属性拷贝
                   BeanUtils.copyProperties(frequentlyAskedQuestionDO, policiesExplainDetailVO);
-//                  policiesExplainDetailVO.setPoliciesIds(frequentlyAskedQuestionDO.getPoliciesIds());
+                  //
+                  // policiesExplainDetailVO.setPoliciesIds(frequentlyAskedQuestionDO.getPoliciesIds());
                   return policiesExplainDetailVO;
                 })
             .collect(Collectors.toList());
@@ -127,27 +126,29 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void insertFrequentlyAskedQuestion(
-      List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDtoS,Long userId) {
+      List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDtoS, Long userId) {
     log.info("新增热门问答dto={}", frequentlyAskedQuestionDtoS);
     for (FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO : frequentlyAskedQuestionDtoS) {
       FrequentlyAskedQuestionDO frequentlyAskedQuestionDO = new FrequentlyAskedQuestionDO();
       BeanUtils.copyProperties(frequentlyAskedQuestionDTO, frequentlyAskedQuestionDO);
-      //设置发布时间
+      // 设置发布时间
       frequentlyAskedQuestionDO.setReleaseDate(LocalDate.now());
-      //设置用户id
+      // 设置用户id
       frequentlyAskedQuestionDO.setInputUserId(userId);
-      //设置创建时间
+      // 设置创建时间
       frequentlyAskedQuestionDO.setCreateTime(LocalDateTime.now());
-      //设置更新时间
+      // 设置更新时间
       frequentlyAskedQuestionDO.setUpdateTime(LocalDateTime.now());
-      //设置逻辑删除
+      // 设置逻辑删除
       frequentlyAskedQuestionDO.setDeleted(false);
-      frequentlyAskedQuestionDO.setId(null);
       frequentlyAskedQuestionDO.setPoliciesIds(frequentlyAskedQuestionDTO.getPoliciesIds());
       log.info("新增热门问答对象={}", frequentlyAskedQuestionDO);
       frequentlyAskedQuestionMapper.insert(frequentlyAskedQuestionDO);
       // 关联附件信息
-      attachmentService.setAttachmentDocId(frequentlyAskedQuestionDTO.getAttachmentIds(), AttachmentType.POLICIES, frequentlyAskedQuestionDTO.getId());
+      attachmentService.setAttachmentDocId(
+          frequentlyAskedQuestionDO.getId(),
+          AttachmentType.POLICIES,
+          frequentlyAskedQuestionDTO.getContent());
     }
   }
 
@@ -158,7 +159,8 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
    */
   @Transactional(rollbackFor = Exception.class)
   @Override
-  public void updateFrequentlyAskedQuestion(List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDtoS) {
+  public void updateFrequentlyAskedQuestion(
+      List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDtoS) {
     for (FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO : frequentlyAskedQuestionDtoS) {
       // 查询热门问答
       FrequentlyAskedQuestionDO frequentlyAskedQuestionDO =
@@ -172,9 +174,13 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
         // 修改热门问答
         frequentlyAskedQuestionMapper.updateById(frequentlyAskedQuestionDO);
         // 关联附件信息
-        attachmentService.setAttachmentDocId(frequentlyAskedQuestionDTO.getAttachmentIds(), AttachmentType.POLICIES, frequentlyAskedQuestionDTO.getId());
+        attachmentService.setAttachmentDocId(
+                frequentlyAskedQuestionDTO.getId(),
+                AttachmentType.POLICIES,
+                frequentlyAskedQuestionDTO.getContent()
+                );
       }
-      }
+    }
   }
 
   /**
@@ -204,18 +210,18 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
   @Override
   public List<FrequentlyAskedQuestionDTO> getFrequentlyAskedQuestionByPoliciesId(Long policiesId) {
     LambdaQueryWrapper<FrequentlyAskedQuestionDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-    //转换
+    // 转换
     String policiesIds = String.valueOf(policiesId);
-    //根据id和delete查询
+    // 根据id和delete查询
     lambdaQueryWrapper.eq(FrequentlyAskedQuestionDO::getPoliciesIds, policiesIds);
     lambdaQueryWrapper.eq(FrequentlyAskedQuestionDO::getDeleted, false);
     List<FrequentlyAskedQuestionDO> frequentlyAskedQuestionDoS =
         frequentlyAskedQuestionMapper.selectList(lambdaQueryWrapper);
-    //判断是否为空
+    // 判断是否为空
     if (frequentlyAskedQuestionDoS != null) {
       List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionVoList = new ArrayList<>();
       for (FrequentlyAskedQuestionDO frequentlyAskedQuestionDO : frequentlyAskedQuestionDoS) {
-        //属性拷贝
+        // 属性拷贝
         FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO = new FrequentlyAskedQuestionDTO();
         BeanUtils.copyProperties(frequentlyAskedQuestionDO, frequentlyAskedQuestionDTO);
         frequentlyAskedQuestionVoList.add(frequentlyAskedQuestionDTO);
@@ -225,7 +231,6 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
     return null;
   }
 
-
   /**
    * 根据热门问答id查询详情
    *
@@ -234,11 +239,12 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
    */
   @Override
   public PoliciesExplainDetailVO getFrequentlyAskedQuestionById(Long id) {
-    //查询热门问答对象
-    FrequentlyAskedQuestionDO frequentlyAskedQuestionDO = frequentlyAskedQuestionMapper.selectById(id);
+    // 查询热门问答对象
+    FrequentlyAskedQuestionDO frequentlyAskedQuestionDO =
+        frequentlyAskedQuestionMapper.selectById(id);
     PoliciesExplainDetailVO policiesExplainDetailVO = new PoliciesExplainDetailVO();
-    //属性拷贝
-    BeanUtils.copyProperties(frequentlyAskedQuestionDO,policiesExplainDetailVO);
+    // 属性拷贝
+    BeanUtils.copyProperties(frequentlyAskedQuestionDO, policiesExplainDetailVO);
     return policiesExplainDetailVO;
   }
 }

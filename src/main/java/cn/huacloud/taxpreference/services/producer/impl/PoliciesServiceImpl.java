@@ -83,7 +83,7 @@ public class PoliciesServiceImpl implements PoliciesService {
   /** 获取排序字段 */
   private String getSort(QueryPoliciesDTO queryPoliciesDTO) {
     String sort = PoliciesSortType.RELEASE_DATE.getValue();
-    //判断是否为更新时间
+    // 判断是否为更新时间
     if (PoliciesSortType.UPDATE_TIME.equals(queryPoliciesDTO.getPoliciesSortType())) {
       sort = SortType.UPDATE_TIME.name();
     }
@@ -106,7 +106,7 @@ public class PoliciesServiceImpl implements PoliciesService {
     // 新增政策法规
     PoliciesDO policiesDO = new PoliciesDO();
     BeanUtils.copyProperties(policiesCombinationDTO, policiesDO);
-    //填充属性值
+    // 填充属性值
     fillProperties(policiesCombinationDTO, userId, policiesDO);
     policiesMapper.insert(policiesDO);
     // 新增后回显id--// TODO: 2021/11/15a
@@ -115,8 +115,8 @@ public class PoliciesServiceImpl implements PoliciesService {
 
     // 新增政策解读
     PoliciesExplainDTO policiesExplainDTO = new PoliciesExplainDTO();
-    //判断当前政策解读对象不存在
-    if (policiesExplainDTOS!=null) {
+    // 判断当前政策解读对象不存在
+    if (policiesExplainDTOS != null) {
       BeanUtils.copyProperties(policiesCombinationDTO.getPoliciesExplainDTO(), policiesExplainDTO);
       policiesExplainDTO.setPoliciesId(policiesDO.getId());
       policiesExplainService.insertPoliciesExplain(policiesExplainDTO, userId);
@@ -125,10 +125,10 @@ public class PoliciesServiceImpl implements PoliciesService {
     // 新增热点问答
     List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOList =
         policiesCombinationDTO.getFrequentlyAskedQuestionDTOList();
-    //判断该政策法规是否为空
+    // 判断该政策法规是否为空
     if (frequentlyAskedQuestionDTOList != null && frequentlyAskedQuestionDTOList.size() > 0) {
       for (FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO : frequentlyAskedQuestionDTOList) {
-        //设置政策法规id
+        // 设置政策法规id
         Long policiesId = policiesDO.getId();
         frequentlyAskedQuestionDTO.setPoliciesIds(String.valueOf(policiesId));
       }
@@ -137,11 +137,13 @@ public class PoliciesServiceImpl implements PoliciesService {
     }
 
     // 关联附件信息
-    attachmentService.setAttachmentDocId(policiesCombinationDTO.getAttachmentIds(), AttachmentType.POLICIES, policiesDO.getId());
+    attachmentService.setAttachmentDocId(
+        policiesDO.getId(), AttachmentType.POLICIES, policiesCombinationDTO.getContent());
   }
 
   /**
    * 填充属性值
+   *
    * @param policiesCombinationDTO 政策组合对象
    * @param userId 用户id
    * @param policiesDO 政策法规对象
@@ -184,8 +186,6 @@ public class PoliciesServiceImpl implements PoliciesService {
         sysCodeService.getCodeNameByCodeValue(policiesCombinationDTO.getTaxCategoriesCode()));
     // 设置标签
     policiesDO.setLabels(StringUtils.join(policiesCombinationDTO.getLabels(), ","));
-
-
 
     log.info("新增政策法规对象={}", policiesDO);
   }
@@ -255,11 +255,7 @@ public class PoliciesServiceImpl implements PoliciesService {
     List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDOList =
         frequentlyAskedQuestionService.getFrequentlyAskedQuestionByPoliciesId(policiesDO.getId());
     // 返回结果
-    PoliciesCombinationDTO policiesCombinationDTO = setPoliciesCombinationDTO(policiesDO, policiesExplainDTO, frequentlyAskedQuestionDOList);
-    //获取附件信息集合
-    List<AttachmentVO> attachmentVOList = attachmentService.getAttachmentVOList(AttachmentType.POLICIES, policiesCombinationDTO.getId());
-    policiesCombinationDTO.setAttachmentVOList(attachmentVOList);
-    return policiesCombinationDTO;
+    return setPoliciesCombinationDTO(policiesDO, policiesExplainDTO, frequentlyAskedQuestionDOList);
   }
 
   /**
@@ -283,14 +279,14 @@ public class PoliciesServiceImpl implements PoliciesService {
         Arrays.asList(policiesDO.getIndustryCodes().split(",")));
     policiesCombinationDTO.setTaxpayerIdentifyTypeCodes(
         Arrays.asList((policiesDO.getTaxpayerIdentifyTypeCodes()).split(",")));
-    //设置标签
+    // 设置标签
     policiesCombinationDTO.setLabels(Arrays.asList((policiesDO.getLabels()).split(",")));
-    //设置区域名称
+    // 设置区域名称
     policiesCombinationDTO.setAreaName(policiesDO.getAreaName());
     BeanUtils.copyProperties(policiesDO, policiesCombinationDTO);
-    //设置政策解读对象
+    // 设置政策解读对象
     policiesCombinationDTO.setPoliciesExplainDTO(policiesExplainDTO);
-    //设置热门问答对象
+    // 设置热门问答对象
     policiesCombinationDTO.setFrequentlyAskedQuestionDTOList(frequentlyAskedQuestionDOList);
     return policiesCombinationDTO;
   }
@@ -318,7 +314,8 @@ public class PoliciesServiceImpl implements PoliciesService {
     // 热门问答
     insertOrUpdateQA(policiesCombinationDTO);
     // 关联附件信息
-    attachmentService.setAttachmentDocId(policiesCombinationDTO.getAttachmentIds(), AttachmentType.POLICIES, policiesDO.getId());
+    attachmentService.setAttachmentDocId(
+        policiesDO.getId(), AttachmentType.POLICIES, policiesCombinationDTO.getContent());
   }
 
   /**
@@ -345,14 +342,15 @@ public class PoliciesServiceImpl implements PoliciesService {
     policiesDO.setTaxpayerIdentifyTypeNames(taxpayerIdentifyTypeNames);
     policiesDO.setEnterpriseTypeNames(enterpriseTypeCodes);
     policiesDO.setIndustryNames(industryNames);
-    //设置区域
-    policiesDO.setAreaName(sysCodeService.getCodeNameByCodeValue(policiesCombinationDTO.getAreaCode()));
+    // 设置区域
+    policiesDO.setAreaName(
+        sysCodeService.getCodeNameByCodeValue(policiesCombinationDTO.getAreaCode()));
     policiesDO.setAreaCode(policiesCombinationDTO.getAreaCode());
-    //设置标签
+    // 设置标签
     policiesDO.setLabels(StringUtils.join(policiesCombinationDTO.getLabels(), ","));
-    //设置更新时间
+    // 设置更新时间
     policiesDO.setUpdateTime(LocalDateTime.now());
-    //设置有效性
+    // 设置有效性
     policiesDO.setValidity(policiesCombinationDTO.getValidity());
     log.info("修改政策法规对象={}", policiesDO);
     policiesMapper.updateById(policiesDO);
@@ -367,12 +365,12 @@ public class PoliciesServiceImpl implements PoliciesService {
     PoliciesExplainDTO policiesExplainDTO = new PoliciesExplainDTO();
 
     if (policiesCombinationDTO.getPoliciesExplainDTO() != null) {
-      //获取政策解读id
+      // 获取政策解读id
       Long policiesExplainId = policiesCombinationDTO.getPoliciesExplainDTO().getId();
       BeanUtils.copyProperties(policiesCombinationDTO.getPoliciesExplainDTO(), policiesExplainDTO);
-      //设置政策解读中政策法规的id
+      // 设置政策解读中政策法规的id
       policiesCombinationDTO.getPoliciesExplainDTO().setPoliciesId(policiesCombinationDTO.getId());
-      //根据政策解读id判断是新增或修改
+      // 根据政策解读id判断是新增或修改
       if (policiesExplainId == null) {
         policiesExplainService.insertPoliciesExplain(
             policiesCombinationDTO.getPoliciesExplainDTO(),
@@ -522,11 +520,11 @@ public class PoliciesServiceImpl implements PoliciesService {
    * @param policiesDO 政策法规对象
    */
   private void deleteFrequentlyAskedQuestion(PoliciesDO policiesDO) {
-    //根据政策法规id查询热门问答
+    // 根据政策法规id查询热门问答
     List<FrequentlyAskedQuestionDO> frequentlyAskedQuestionIds =
         policiesMapper.selectFrequentlyAskedQuestionId(policiesDO.getId());
     log.info("热点问答id集合={}", frequentlyAskedQuestionIds);
-    //遍历删除政策法规关联关系
+    // 遍历删除政策法规关联关系
     for (FrequentlyAskedQuestionDO frequentlyAskedQuestionId : frequentlyAskedQuestionIds) {
       List<String> ids = Arrays.asList(frequentlyAskedQuestionId.getPoliciesIds().split(","));
       ArrayList<String> list = new ArrayList<>(ids);
@@ -563,24 +561,20 @@ public class PoliciesServiceImpl implements PoliciesService {
       throw BizCode._4100.exception();
     }
     // 判断条件--全文废止
-    if (ValidityEnum.FULL_TEXT_REPEAL
-        .getValue()
-        .equals(queryAbolishDTO.getValidity())) {
+    if (ValidityEnum.FULL_TEXT_REPEAL.getValue().equals(queryAbolishDTO.getValidity())) {
       // 设置政策法规的有效性
-//      policiesDO.setPoliciesStatus(PoliciesStatusEnum.FULL_TEXT_REPEAL);
+      //      policiesDO.setPoliciesStatus(PoliciesStatusEnum.FULL_TEXT_REPEAL);
       policiesDO.setValidity(ValidityEnum.FULL_TEXT_REPEAL);
       policiesDO.setAbolishNote(queryAbolishDTO.getAbolishNote());
       // 设置税收优惠的有效性
-    } else if (ValidityEnum.PARTIAL_REPEAL
-        .getValue()
-        .equals(queryAbolishDTO.getValidity())) {
+    } else if (ValidityEnum.PARTIAL_REPEAL.getValue().equals(queryAbolishDTO.getValidity())) {
       // 判断条件--部分废止
-//      policiesDO.setPoliciesStatus(PoliciesStatusEnum.);
+      //      policiesDO.setPoliciesStatus(PoliciesStatusEnum.);
       // 设置政策法规的有效性
       policiesDO.setValidity(ValidityEnum.PARTIAL_VALID);
       policiesDO.setAbolishNote(queryAbolishDTO.getAbolishNote());
     }
-    //更新税收优惠的状态
+    // 更新税收优惠的状态
     taxPreferenceService.updateStatus(queryAbolishDTO);
     log.info("废止政策法规对象={}", policiesDO);
     policiesMapper.updateById(policiesDO);
@@ -621,7 +615,7 @@ public class PoliciesServiceImpl implements PoliciesService {
         .eq(StringUtils.isNotBlank(titleOrDocCode), PoliciesDO::getDocCode, titleOrDocCode);
     List<PoliciesDO> policiesDOS = policiesMapper.selectList(lambdaQueryWrapper);
     // 判断是否重复
-    if (policiesDOS.size() > 1||policiesDOS.size() == 1) {
+    if (policiesDOS.size() > 1 || policiesDOS.size() == 1) {
       return true;
     }
     return false;
