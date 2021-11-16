@@ -14,7 +14,7 @@ import java.io.IOException;
 /**
  * @author wangkh
  */
-public interface ElasticsearchConsumer<T extends GetID<?>> {
+public interface ElasticsearchConsumer<T extends IDGetter<?>> {
 
     Logger getLog();
 
