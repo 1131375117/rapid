@@ -27,7 +27,7 @@
         <okhttp.version>4.10.0-RC1</okhttp.version>
         <hutool.version>5.7.15</hutool.version>
         <pinyin4j.version>2.5.0</pinyin4j.version>
-        <jsoup.version>1.11.3</jsoup.version>
+        <jsoup.version>1.14.3</jsoup.version>
     </properties>
 
     <dependencies>
@@ -66,11 +66,11 @@
             <artifactId>hutool-captcha</artifactId>
             <version>${hutool.version}</version>
         </dependency>
+        <!--hutool db-->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-db</artifactId>
             <version>${hutool.version}</version>
-
         </dependency>
         <!--okhttp-->
         <dependency>

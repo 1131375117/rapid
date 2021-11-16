@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static org.elasticsearch.index.query.QueryBuilders.matchPhraseQuery;
+
 /**
  * @author wangkh
  */
@@ -37,7 +39,21 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
     public QueryBuilder getQueryBuilder(TaxPreferenceSearchQueryDTO pageQuery) {
         BoolQueryBuilder queryBuilder = generatorDefaultQueryBuilder(pageQuery);
 
-        return null;
+        // 是否使用推荐
+        if (pageQuery.getUseRecommend()) {
+            // TODO 设置智能推荐的匹配过滤条件
+        }
+
+        // 关键字查询
+        String keyword = pageQuery.getKeyword();
+        if (keyword != null) {
+            List<String> searchFields = pageQuery.searchFields();
+            for (String searchField : searchFields) {
+                queryBuilder.should(matchPhraseQuery(searchField, keyword));
+            }
+        }
+
+        return queryBuilder;
     }
 
     @Override
@@ -48,6 +64,7 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
     @Override
     public TaxPreferenceSearchVO mapSearchHit(SearchHit searchHit) throws Exception {
         TaxPreferenceSearchVO taxPreferenceSearchVO = objectMapper.readValue(searchHit.getSourceAsString(), TaxPreferenceSearchVO.class);
-        return null;
+        taxPreferenceSearchVO.setTaxPreferenceName(getHighlightString(searchHit, "taxPreferenceName"));
+        return taxPreferenceSearchVO;
     }
 }
