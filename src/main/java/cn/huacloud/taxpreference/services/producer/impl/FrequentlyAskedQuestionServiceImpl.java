@@ -1,7 +1,9 @@
 package cn.huacloud.taxpreference.services.producer.impl;
 
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
+import cn.huacloud.taxpreference.common.enums.AttachmentType;
 import cn.huacloud.taxpreference.common.enums.BizCode;
+import cn.huacloud.taxpreference.services.common.AttachmentService;
 import cn.huacloud.taxpreference.services.producer.FrequentlyAskedQuestionService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.FrequentlyAskedQuestionDTO;
@@ -36,6 +38,8 @@ import java.util.stream.Collectors;
 public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuestionService {
 
   private final FrequentlyAskedQuestionMapper frequentlyAskedQuestionMapper;
+
+  private final AttachmentService attachmentService;
 
   /**
    * 热门问答列表查询
@@ -142,6 +146,8 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
       frequentlyAskedQuestionDO.setPoliciesIds(frequentlyAskedQuestionDTO.getPoliciesIds());
       log.info("新增热门问答对象={}", frequentlyAskedQuestionDO);
       frequentlyAskedQuestionMapper.insert(frequentlyAskedQuestionDO);
+      // 关联附件信息
+      attachmentService.setAttachmentDocId(frequentlyAskedQuestionDTO.getAttachmentIds(), AttachmentType.POLICIES, frequentlyAskedQuestionDTO.getId());
     }
   }
 
@@ -165,6 +171,8 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
         log.info("修改热门问答对象={}", frequentlyAskedQuestionDO);
         // 修改热门问答
         frequentlyAskedQuestionMapper.updateById(frequentlyAskedQuestionDO);
+        // 关联附件信息
+        attachmentService.setAttachmentDocId(frequentlyAskedQuestionDTO.getAttachmentIds(), AttachmentType.POLICIES, frequentlyAskedQuestionDTO.getId());
       }
       }
   }

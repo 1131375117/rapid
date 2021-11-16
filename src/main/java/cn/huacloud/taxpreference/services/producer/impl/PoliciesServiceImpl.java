@@ -1,9 +1,12 @@
 package cn.huacloud.taxpreference.services.producer.impl;
 
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
+import cn.huacloud.taxpreference.common.enums.AttachmentType;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.enums.taxpreference.SortType;
+import cn.huacloud.taxpreference.services.common.AttachmentService;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
+import cn.huacloud.taxpreference.services.common.entity.vos.AttachmentVO;
 import cn.huacloud.taxpreference.services.producer.FrequentlyAskedQuestionService;
 import cn.huacloud.taxpreference.services.producer.PoliciesExplainService;
 import cn.huacloud.taxpreference.services.producer.PoliciesService;
@@ -53,6 +56,8 @@ public class PoliciesServiceImpl implements PoliciesService {
   private final FrequentlyAskedQuestionMapper frequentlyAskedQuestionMapper;
 
   private final TaxPreferenceService taxPreferenceService;
+
+  private final AttachmentService attachmentService;
 
   /**
    * 政策列表查询
@@ -130,6 +135,9 @@ public class PoliciesServiceImpl implements PoliciesService {
       frequentlyAskedQuestionService.insertFrequentlyAskedQuestion(
           frequentlyAskedQuestionDTOList, userId);
     }
+
+    // 关联附件信息
+    attachmentService.setAttachmentDocId(policiesCombinationDTO.getAttachmentIds(), AttachmentType.POLICIES, policiesDO.getId());
   }
 
   /**
@@ -176,6 +184,8 @@ public class PoliciesServiceImpl implements PoliciesService {
         sysCodeService.getCodeNameByCodeValue(policiesCombinationDTO.getTaxCategoriesCode()));
     // 设置标签
     policiesDO.setLabels(StringUtils.join(policiesCombinationDTO.getLabels(), ","));
+
+
 
     log.info("新增政策法规对象={}", policiesDO);
   }
@@ -245,7 +255,11 @@ public class PoliciesServiceImpl implements PoliciesService {
     List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDOList =
         frequentlyAskedQuestionService.getFrequentlyAskedQuestionByPoliciesId(policiesDO.getId());
     // 返回结果
-    return setPoliciesCombinationDTO(policiesDO, policiesExplainDTO, frequentlyAskedQuestionDOList);
+    PoliciesCombinationDTO policiesCombinationDTO = setPoliciesCombinationDTO(policiesDO, policiesExplainDTO, frequentlyAskedQuestionDOList);
+    //获取附件信息集合
+    List<AttachmentVO> attachmentVOList = attachmentService.getAttachmentVOList(AttachmentType.POLICIES, policiesCombinationDTO.getId());
+    policiesCombinationDTO.setAttachmentVOList(attachmentVOList);
+    return policiesCombinationDTO;
   }
 
   /**
@@ -303,6 +317,8 @@ public class PoliciesServiceImpl implements PoliciesService {
     insertOrUpdateExplain(policiesCombinationDTO);
     // 热门问答
     insertOrUpdateQA(policiesCombinationDTO);
+    // 关联附件信息
+    attachmentService.setAttachmentDocId(policiesCombinationDTO.getAttachmentIds(), AttachmentType.POLICIES, policiesDO.getId());
   }
 
   /**

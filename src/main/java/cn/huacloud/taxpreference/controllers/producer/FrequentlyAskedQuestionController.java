@@ -62,15 +62,15 @@ public class FrequentlyAskedQuestionController {
     /**
      * 修改热门问答
      *
-     * @param frequentlyAskedQuestionDTOS
+     * @param frequentlyAskedQuestionDtoS
      * @return
      */
     @PermissionInfo(name = "热门问答修改", group = PermissionGroup.FREQUENTLY_ASKED_QUESTION)
     @SaCheckPermission("producer_frequentlyAskedQuestion_update")
     @ApiOperation("热门问答修改")
     @PutMapping(value = "/frequentlyAskedQuestion")
-    public ResultVO<Void> updateFrequentlyAskedQuestion(@Validated(ValidationGroup.Update.class)@RequestBody List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOS) {
-        frequentlyAskedQuestionService.updateFrequentlyAskedQuestion(frequentlyAskedQuestionDTOS);
+    public ResultVO<Void> updateFrequentlyAskedQuestion(@Validated(ValidationGroup.Update.class)@RequestBody List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDtoS) {
+        frequentlyAskedQuestionService.updateFrequentlyAskedQuestion(frequentlyAskedQuestionDtoS);
         return ResultVO.ok();
     }
 
