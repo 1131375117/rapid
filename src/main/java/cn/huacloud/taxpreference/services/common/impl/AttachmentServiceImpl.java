@@ -101,7 +101,7 @@ public class AttachmentServiceImpl implements AttachmentService {
             attachmentMapper.updateById(attachmentDO);
         }
 
-        List<AttachmentDO> attachmentDOList = attachmentMapper.selectBatchIds(attachmentIds);
+        List<AttachmentDO> attachmentDOList = attachmentIds.isEmpty() ? new ArrayList<>() : attachmentMapper.selectBatchIds(attachmentIds);
 
         // 执行数据关联
         for (AttachmentDO attachmentDO : attachmentDOList) {
@@ -115,9 +115,10 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     /**
      * 从富文本中解析附件ID
-     * @param docId 文档ID
+     *
+     * @param docId          文档ID
      * @param attachmentType 附件类型
-     * @param content 富文本文本内容
+     * @param content        富文本文本内容
      * @return 附件ID集合
      */
     public List<Long> getAttachmentIdsByContent(Long docId, AttachmentType attachmentType, String content) {
@@ -146,6 +147,7 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     /**
      * 拷贝属性到AttachmentVO
+     *
      * @param attachmentDOList DO集合
      * @return attachmentVOList
      */

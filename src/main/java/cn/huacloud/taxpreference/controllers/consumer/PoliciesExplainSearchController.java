@@ -33,7 +33,6 @@ public class PoliciesExplainSearchController {
         return ResultVO.ok(page);
     }
 
-
     @ApiOperation("政策解读检索")
     @PostMapping("/policiesExplain")
     public ResultVO<PageVO<PoliciesExplainSearchListVO>> pageSearch(@RequestBody PoliciesExplainSearchQueryDTO pageQuery) throws Exception {
@@ -48,12 +47,10 @@ public class PoliciesExplainSearchController {
         return ResultVO.ok(policiesExplainSearchSimpleVO);
     }
 
-
     @ApiOperation("政策解读详情")
     @PostMapping("/policiesExplain/{id}")
     public ResultVO<PoliciesExplainSearchVO> pageSearch(@PathVariable("id") String id) throws Exception {
         PoliciesExplainSearchVO pageVO = policiesExplainSearchService.getPoliciesExplainDetails(id);
         return ResultVO.ok(pageVO);
     }
-
 }

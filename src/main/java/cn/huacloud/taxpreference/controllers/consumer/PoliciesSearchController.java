@@ -32,7 +32,6 @@ public class PoliciesSearchController {
         return ResultVO.ok(page);
     }
 
-    // 最新地方政策
     @ApiOperation("最新地方政策")
     @GetMapping("/policies/latestLocal")
     public ResultVO<PageVO<PoliciesSearchSimpleVO>> latestLocalPolicies(@RequestAttribute PageQueryDTO pageQuery) throws Exception {
