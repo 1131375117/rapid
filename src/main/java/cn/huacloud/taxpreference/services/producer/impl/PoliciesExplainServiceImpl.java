@@ -2,6 +2,8 @@ package cn.huacloud.taxpreference.services.producer.impl;
 
 import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
+import cn.huacloud.taxpreference.common.enums.AttachmentType;
+import cn.huacloud.taxpreference.services.common.AttachmentService;
 import cn.huacloud.taxpreference.services.producer.PoliciesExplainService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesExplainDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesExplainDTO;
@@ -37,6 +39,8 @@ import java.util.stream.Collectors;
 public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 
   private final PoliciesExplainMapper policiesExplainMapper;
+
+  private final AttachmentService attachmentService;
 
   /**
    * 政策解读列表
@@ -142,6 +146,9 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
     policiesExplainDO.setPoliciesExplainStatus(PoliciesExplainStatusEnum.PUBLISHED);
     log.info("新增政策解读对象={}", policiesExplainDO);
     policiesExplainMapper.insert(policiesExplainDO);
+    // 关联附件信息
+    attachmentService.setAttachmentDocId(
+        policiesExplainDO.getId(), AttachmentType.POLICIES, policiesExplainDTO.getContent());
   }
 
   /**
@@ -163,6 +170,9 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
       log.info("修改政策解读对象={}", policiesExplainDO);
       // 修改政策解读
       policiesExplainMapper.updateById(policiesExplainDO);
+      // 关联附件信息
+      attachmentService.setAttachmentDocId(
+          policiesExplainDO.getId(), AttachmentType.POLICIES, policiesExplainDTO.getContent());
     }
   }
 

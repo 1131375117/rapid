@@ -9,6 +9,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 政策解读数据传输对象
@@ -41,4 +42,5 @@ public class PoliciesExplainDTO {
 
     @ApiModelProperty("政策法规id")
     private Long policiesId;
+
 }

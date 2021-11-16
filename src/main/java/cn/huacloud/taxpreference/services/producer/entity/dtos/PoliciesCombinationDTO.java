@@ -2,6 +2,7 @@ package cn.huacloud.taxpreference.services.producer.entity.dtos;
 
 
 import cn.huacloud.taxpreference.common.constants.ValidationGroup;
+import cn.huacloud.taxpreference.services.common.entity.vos.AttachmentVO;
 import cn.huacloud.taxpreference.services.producer.entity.enums.ValidityEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -89,4 +90,7 @@ public class PoliciesCombinationDTO {
 
     @ApiModelProperty("附件ID集合")
     private List<Long> attachmentIds;
+
+    @ApiModelProperty("附件视图集合")
+    List<AttachmentVO> attachmentVOList;
 }

@@ -13,6 +13,7 @@ import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 热点问答数据传输对象
@@ -47,7 +48,5 @@ public class FrequentlyAskedQuestionDTO {
     private LocalDate releaseDate;
     @ApiModelProperty("用户id")
     private Long inputUserId;
-
-
 
 }
