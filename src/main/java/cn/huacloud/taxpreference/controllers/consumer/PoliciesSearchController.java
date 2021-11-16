@@ -1,17 +1,17 @@
 package cn.huacloud.taxpreference.controllers.consumer;
 
+import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.consumer.PoliciesSearchService;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.PoliciesSearchQueryDTO;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesSearchListVO;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesSearchSimpleVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesSearchVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author wangkh
@@ -22,20 +22,37 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class PoliciesSearchController {
 
-    private PoliciesSearchService policiesSearchService;
+    private final PoliciesSearchService policiesSearchService;
 
-    // 政策简单列表
+    @ApiOperation("最新中央政策")
+    @GetMapping("/policies/latestCentral")
+    public ResultVO<PageVO<PoliciesSearchSimpleVO>> latestCentralPolicies(@RequestAttribute PageQueryDTO pageQuery) throws Exception {
+        pageQuery.paramReasonable();
+        PageVO<PoliciesSearchSimpleVO> page = policiesSearchService.latestCentralPolicies(pageQuery);
+        return ResultVO.ok(page);
+    }
 
     // 最新地方政策
+    @ApiOperation("最新地方政策")
+    @GetMapping("/policies/latestLocal")
+    public ResultVO<PageVO<PoliciesSearchSimpleVO>> latestLocalPolicies(@RequestAttribute PageQueryDTO pageQuery) throws Exception {
+        pageQuery.paramReasonable();
+        PageVO<PoliciesSearchSimpleVO> page = policiesSearchService.latestLocalPolicies(pageQuery);
+        return ResultVO.ok(page);
+    }
 
     @ApiOperation("政策法规搜索")
     @PostMapping("/policies")
-    public ResultVO<PageVO<PoliciesSearchVO>> pageSearch(@RequestBody PoliciesSearchQueryDTO pageQuery) throws Exception {
-        PageVO<PoliciesSearchVO> pageVO = policiesSearchService.pageSearch(pageQuery);
+    public ResultVO<PageVO<PoliciesSearchListVO>> pageSearch(@RequestBody PoliciesSearchQueryDTO pageQuery) throws Exception {
+        PageVO<PoliciesSearchListVO> pageVO = policiesSearchService.pageSearch(pageQuery);
         return ResultVO.ok(pageVO);
     }
 
-    // 政策法规详情
-
+    @ApiOperation("政策法规详情")
+    @PostMapping("/policies/{id}")
+    public ResultVO<PoliciesSearchVO> getPoliciesDetails(@PathVariable("id") String id) throws Exception {
+        PoliciesSearchVO policiesSearchVO = policiesSearchService.getPoliciesDetails(id);
+        return ResultVO.ok(policiesSearchVO);
+    }
 
 }

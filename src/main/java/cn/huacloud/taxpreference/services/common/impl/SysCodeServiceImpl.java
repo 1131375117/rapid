@@ -122,6 +122,14 @@ public class SysCodeServiceImpl implements SysCodeService {
                 .setCodeValue(sysCodeDO.getCodeValue());
     }
 
+    @Override
+    public List<SysCodeDO> getSysCodeDOByCodeType(SysCodeType sysCodeType) {
+        return getSysCodeCache().stream()
+                .filter(this::isSysCodeDOValid)
+                .sorted(Comparator.comparing(SysCodeDO::getSort))
+                .collect(Collectors.toList());
+    }
+
     Stream<SysCodeDO> getValidSortStreamByCodeValues(String codeValues) {
         Map<String, SysCodeDO> sysCodeMapCache = getSysCodeMapCache();
         return Arrays.stream(codeValues.split(","))

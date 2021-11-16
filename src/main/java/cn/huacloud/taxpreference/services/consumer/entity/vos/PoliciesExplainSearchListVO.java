@@ -7,20 +7,16 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * 政策法规检索详情视图
+ * 政策解读检索列表视图
  * @author wangkh
  */
 @Data
-public class PoliciesSearchVO {
-
+public class PoliciesExplainSearchListVO {
     @ApiModelProperty("主键ID")
     private Long id;
 
     @ApiModelProperty("标题")
     private String title;
-
-    @ApiModelProperty("文号")
-    private String docCode;
 
     @ApiModelProperty("所属区域")
     private SysCodeSimpleVO area;
@@ -40,18 +36,9 @@ public class PoliciesSearchVO {
     @ApiModelProperty("适用行业名称")
     private List<SysCodeSimpleVO> industries;
 
-    @ApiModelProperty("有效性")
-    private SysCodeSimpleVO validity;
-
     @ApiModelProperty("发布日期")
     private String releaseDate;
 
-    @ApiModelProperty("摘要")
-    private String digest;
-
     @ApiModelProperty("正文")
     private String content;
-
-    @ApiModelProperty("标签集合")
-    private List<String> labels;
 }

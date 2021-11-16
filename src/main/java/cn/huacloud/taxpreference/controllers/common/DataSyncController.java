@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * @author wangkh
  */
-@Api("数据同步前端控制器")
+@Api(tags = "数据同步前端控制器")
 @AllArgsConstructor
 @RestController
 public class DataSyncController {

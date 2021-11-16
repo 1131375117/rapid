@@ -5,6 +5,10 @@ import cn.huacloud.taxpreference.services.consumer.entity.ess.PoliciesES;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
 import cn.huacloud.taxpreference.services.producer.mapper.PoliciesMapper;
 import cn.huacloud.taxpreference.sync.es.trigger.EventTrigger;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * @author wangkh
@@ -58,6 +63,19 @@ public class PoliciesEventTrigger extends EventTrigger<Long, PoliciesES> {
         policiesES.setLabels(split2List(policiesDO.getLabels()));
 
         return policiesES;
+    }
+
+    @Override
+    protected IPage<Long> pageIdList(IPage<?> queryPage) {
+        LambdaQueryWrapper<PoliciesDO> queryWrapper = Wrappers.lambdaQuery(PoliciesDO.class)
+                .eq(PoliciesDO::getDeleted, false);
+        IPage<PoliciesDO> page = policiesMapper.selectPage((IPage<PoliciesDO>) queryPage, queryWrapper);
+        List<Long> ids = page.getRecords().stream()
+                .map(PoliciesDO::getId)
+                .collect(Collectors.toList());
+        Page<Long> idPage = new Page<>(queryPage.getCurrent(), queryPage.getSize(), queryPage.getTotal());
+        idPage.setRecords(ids);
+        return idPage;
     }
 
     private List<String> split2List(String value) {
