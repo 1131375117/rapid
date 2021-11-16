@@ -281,8 +281,7 @@ public class PoliciesServiceImpl implements PoliciesService {
         Arrays.asList((policiesDO.getTaxpayerIdentifyTypeCodes()).split(",")));
     // 设置标签
     policiesCombinationDTO.setLabels(Arrays.asList((policiesDO.getLabels()).split(",")));
-    // 设置区域名称
-    policiesCombinationDTO.setAreaName(policiesDO.getAreaName());
+
     BeanUtils.copyProperties(policiesDO, policiesCombinationDTO);
     // 设置政策解读对象
     policiesCombinationDTO.setPoliciesExplainDTO(policiesExplainDTO);
@@ -398,11 +397,11 @@ public class PoliciesServiceImpl implements PoliciesService {
         frequentlyAskedQuestionService.updateFrequentlyAskedQuestion(objects);
       } else {
         // 新增热点问答
-        List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOList =
-            policiesCombinationDTO.getFrequentlyAskedQuestionDTOList();
+        ArrayList<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOList = new ArrayList<>();
+        frequentlyAskedQuestionDTOList.add(frequentlyAskedQuestionDTO);
         frequentlyAskedQuestionDTO.setPoliciesIds(String.valueOf(policiesCombinationDTO.getId()));
         frequentlyAskedQuestionService.insertFrequentlyAskedQuestion(
-            frequentlyAskedQuestionDTOList, policiesCombinationDTO.getInputUserId());
+                frequentlyAskedQuestionDTOList, policiesCombinationDTO.getInputUserId());
       }
     }
   }
@@ -543,7 +542,9 @@ public class PoliciesServiceImpl implements PoliciesService {
     // 根据政策法规查询关联的政策解读id
     Long policiesExplainId = policiesMapper.selectExplainId(policiesDO.getId());
     // 根据id删除政策解读
-    policiesExplainService.deletePoliciesById(policiesExplainId);
+    if (policiesExplainId != null) {
+      policiesExplainService.deletePoliciesById(policiesExplainId);
+    }
   }
 
   /**
@@ -563,13 +564,10 @@ public class PoliciesServiceImpl implements PoliciesService {
     // 判断条件--全文废止
     if (ValidityEnum.FULL_TEXT_REPEAL.getValue().equals(queryAbolishDTO.getValidity())) {
       // 设置政策法规的有效性
-      //      policiesDO.setPoliciesStatus(PoliciesStatusEnum.FULL_TEXT_REPEAL);
       policiesDO.setValidity(ValidityEnum.FULL_TEXT_REPEAL);
       policiesDO.setAbolishNote(queryAbolishDTO.getAbolishNote());
-      // 设置税收优惠的有效性
-    } else if (ValidityEnum.PARTIAL_REPEAL.getValue().equals(queryAbolishDTO.getValidity())) {
       // 判断条件--部分废止
-      //      policiesDO.setPoliciesStatus(PoliciesStatusEnum.);
+    } else if (ValidityEnum.PARTIAL_REPEAL.getValue().equals(queryAbolishDTO.getValidity())) {
       // 设置政策法规的有效性
       policiesDO.setValidity(ValidityEnum.PARTIAL_VALID);
       policiesDO.setAbolishNote(queryAbolishDTO.getAbolishNote());
@@ -593,8 +591,8 @@ public class PoliciesServiceImpl implements PoliciesService {
         taxPreferenceService.getTaxPreferenceAbolish(id);
     // 设置返回结果值
     PoliciesAbolishVO policiesAbolishVO = new PoliciesAbolishVO();
-    // 设置政策法规状态
-    policiesAbolishVO.setPoliciesStatus(policiesDO.getPoliciesStatus());
+    // 设置政策法规状态--todo
+    policiesAbolishVO.setValidityEnum(policiesDO.getValidity());
     // 设置废止信息
     policiesAbolishVO.setAbolishNote(policiesDO.getAbolishNote());
     // 设置税收优惠名称
