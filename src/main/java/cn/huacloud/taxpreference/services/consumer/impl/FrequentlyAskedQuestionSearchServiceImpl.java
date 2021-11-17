@@ -37,15 +37,12 @@ public class FrequentlyAskedQuestionSearchServiceImpl implements FrequentlyAsked
 
     @Getter
     private final RestHighLevelClient restHighLevelClient;
-
+    @Getter
     private final ObjectMapper objectMapper;
 
     @Override
-    public FAQSearchVO mapSearchHit(SearchHit searchHit) throws Exception {
-        FAQSearchVO faqSearchVO = objectMapper.readValue(searchHit.getSourceAsString(), FAQSearchVO.class);
-        faqSearchVO.setTitle(getHighlightString(searchHit, "title"));
-        faqSearchVO.setContent(getHighlightString(searchHit, "content"));
-        return faqSearchVO;
+    public Class<FAQSearchVO> getResultClass() {
+        return FAQSearchVO.class;
     }
 
     @Override
@@ -84,7 +81,7 @@ public class FrequentlyAskedQuestionSearchServiceImpl implements FrequentlyAsked
     public PageVO<FAQSearchVO> policiesRelatedFAQ(String policiesId, PageQueryDTO pageQuery) throws Exception {
         // 执行查询
         SearchResponse response = simplePageSearch(getIndex(),
-                termsQuery("", Collections.singletonList(policiesId)),
+                termsQuery("policiesIds", Collections.singletonList(policiesId)),
                 pageQuery);
         // 数据映射
         SearchHits hits = response.getHits();

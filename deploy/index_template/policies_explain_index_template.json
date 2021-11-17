@@ -1,6 +1,6 @@
 {
   "index_patterns": [
-    "policies_index_*"
+    "policies_explain_index_*"
   ],
   "template": {
     "settings": {
@@ -8,7 +8,7 @@
       "number_of_replicas": 0
     },
     "aliases": {
-      "policies": {}
+      "policies_explain": {}
     },
     "mappings": {
       "_source": {
@@ -18,12 +18,12 @@
         "id": {
           "type": "long"
         },
+        "policiesId": {
+          "type": "long"
+        },
         "title": {
           "type": "text",
           "analyzer": "ik_max_word"
-        },
-        "docCode": {
-          "type": "keyword"
         },
         "area": {
           "properties": {
@@ -78,30 +78,13 @@
             }
           }
         },
-        "validity": {
-          "properties": {
-            "codeName": {
-              "type": "keyword"
-            },
-            "codeValue": {
-              "type": "keyword"
-            }
-          }
-        },
         "releaseDate": {
           "type": "date",
           "format": "yyyy-MM-dd"
         },
-        "digest": {
-          "type": "text",
-          "analyzer": "ik_max_word"
-        },
         "content": {
           "type": "text",
           "analyzer": "ik_max_word"
-        },
-        "labels": {
-          "type": "keyword"
         },
         "combinePlainContent": {
           "type": "text",

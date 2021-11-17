@@ -49,9 +49,12 @@ public class PoliciesSearchListVO {
     @ApiModelProperty("摘要")
     private String digest;
 
-    @ApiModelProperty("正文")
-    private String content;
+    /*@ApiModelProperty("正文")
+    private String content;*/
 
     @ApiModelProperty("标签集合")
     private List<String> labels;
+
+    @ApiModelProperty("无装饰的组合文本")
+    private String combinePlainContent;
 }

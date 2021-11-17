@@ -40,11 +40,14 @@ public class TaxPreferenceSearchVO {
     @ApiModelProperty("减免事项")
     private String taxPreferenceItem;
 
-    @ApiModelProperty("具体优惠内容摘要")
-    private String digest;
-
     @ApiModelProperty("有效性")
     private SysCodeSimpleVO validity;
+
+    @ApiModelProperty("政策")
+    private List<PoliciesDigestSerachVO> policies;
+
+    @ApiModelProperty("申报条件")
+    private List<SubmitConditionSearchVO> submitConditions;
 
     @ApiModelProperty("留存备查资料")
     private String keepQueryData;
@@ -60,4 +63,7 @@ public class TaxPreferenceSearchVO {
 
     @ApiModelProperty("标签管理")
     private List<String> labels;
+
+    @ApiModelProperty("无装饰的组合文本")
+    private String combinePlainContent;
 }

@@ -1,10 +1,13 @@
 package cn.huacloud.taxpreference.services.consumer.entity.ess;
 
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeSimpleVO;
-import cn.huacloud.taxpreference.sync.es.consumer.IDGetter;
+import cn.huacloud.taxpreference.services.consumer.entity.AbstractCombinePlainContent;
+import cn.huacloud.taxpreference.services.consumer.entity.CombineText;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -12,7 +15,7 @@ import java.util.List;
  * @author wangkh
  */
 @Data
-public class PoliciesExplainES implements IDGetter<Long> {
+public class PoliciesExplainES extends AbstractCombinePlainContent<Long> {
 
     /**
      * ID主键
@@ -58,4 +61,9 @@ public class PoliciesExplainES implements IDGetter<Long> {
      * 正文
      */
     private String content;
+
+    @Override
+    public List<CombineText> combineTextList() {
+        return Collections.singletonList(CombineText.ofHtml(content));
+    }
 }

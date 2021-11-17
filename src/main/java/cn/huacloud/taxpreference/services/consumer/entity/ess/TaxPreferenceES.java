@@ -1,23 +1,20 @@
 package cn.huacloud.taxpreference.services.consumer.entity.ess;
 
-import cn.huacloud.taxpreference.common.enums.taxpreference.PreferenceValidation;
-import cn.huacloud.taxpreference.common.enums.taxpreference.TaxPreferenceStatus;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeSimpleVO;
-import cn.huacloud.taxpreference.sync.es.consumer.IDGetter;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import cn.huacloud.taxpreference.services.consumer.entity.AbstractCombinePlainContent;
+import cn.huacloud.taxpreference.services.consumer.entity.CombineText;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesDigestSerachVO;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.SubmitConditionSearchVO;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author wangkh
  */
 @Data
-public class TaxPreferenceES implements IDGetter<Long> {
+public class TaxPreferenceES extends AbstractCombinePlainContent<Long> {
     /**
      * 主键ID
      */
@@ -64,14 +61,19 @@ public class TaxPreferenceES implements IDGetter<Long> {
     private String taxPreferenceItem;
 
     /**
-     * 具体优惠内容摘要
-     */
-    private String digest;
-
-    /**
      * 有效性
      */
     private SysCodeSimpleVO validity;
+
+    /**
+     * 政策
+     */
+    private List<PoliciesDigestSerachVO> policies;
+
+    /**
+     * 申报条件
+     */
+    private List<SubmitConditionSearchVO> submitConditions;
 
     /**
      * 留存备查资料
@@ -98,8 +100,18 @@ public class TaxPreferenceES implements IDGetter<Long> {
      */
     private List<String> labels;
 
-    @Data
-    public static class Policies {
 
+    @Override
+    public List<CombineText> combineTextList() {
+        List<CombineText> list = new ArrayList<>();
+        for (PoliciesDigestSerachVO policy : policies) {
+            list.add(CombineText.ofText(policy.getTitle()));
+            list.add(CombineText.ofText(policy.getDocCode()));
+            list.add(CombineText.ofText(policy.getDigest()));
+        }
+        list.add(CombineText.ofText(keepQueryData));
+        list.add(CombineText.ofText(submitTaxData));
+        list.add(CombineText.ofText(submitDescription));
+        return list;
     }
 }

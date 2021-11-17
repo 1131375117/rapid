@@ -26,4 +26,7 @@ public class FAQSearchVO {
 
     @ApiModelProperty("发布日期")
     private LocalDate releaseDate;
+
+    @ApiModelProperty("无装饰的组合文本")
+    private String combinePlainContent;
 }

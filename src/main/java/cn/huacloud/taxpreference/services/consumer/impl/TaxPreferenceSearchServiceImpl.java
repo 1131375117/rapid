@@ -26,7 +26,7 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
 
     @Getter
     private final RestHighLevelClient restHighLevelClient;
-
+    @Getter
     private final ObjectMapper objectMapper;
 
     @Override
@@ -62,9 +62,7 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
     }
 
     @Override
-    public TaxPreferenceSearchVO mapSearchHit(SearchHit searchHit) throws Exception {
-        TaxPreferenceSearchVO taxPreferenceSearchVO = objectMapper.readValue(searchHit.getSourceAsString(), TaxPreferenceSearchVO.class);
-        taxPreferenceSearchVO.setTaxPreferenceName(getHighlightString(searchHit, "taxPreferenceName"));
-        return taxPreferenceSearchVO;
+    public Class<TaxPreferenceSearchVO> getResultClass() {
+        return TaxPreferenceSearchVO.class;
     }
 }
