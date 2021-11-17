@@ -39,11 +39,11 @@ public class TaxPreferencePoliciesDTO {
     private LocalDate validityEndDate;
 
     /**
-     * 排序字段
+     * 具体优惠内容摘要
      */
-/*    @ApiModelProperty("排序字段")
-    @NotEmpty(message = "排序字段不能为空",groups = {ValidationGroup.Update.class,ValidationGroup.Create.class})
-    private Long sort;*/
+    @ApiModelProperty("具体优惠内容摘要")
+    @NotEmpty(message = "具体优惠内容摘要不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+    private String digest;
 
 
 

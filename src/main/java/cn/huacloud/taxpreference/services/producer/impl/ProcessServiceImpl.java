@@ -34,9 +34,8 @@ import java.util.Map;
 import static cn.huacloud.taxpreference.services.producer.impl.TaxPreferenceServiceImpl.TAX_PREFERENCE_ID;
 
 /**
- * @description: 流程接口impl
- * @author: fuhua
- * @create: 2021-10-25 09:45
+ * 流程接口impl
+ * @author fuhua
  **/
 @Slf4j
 @Service
