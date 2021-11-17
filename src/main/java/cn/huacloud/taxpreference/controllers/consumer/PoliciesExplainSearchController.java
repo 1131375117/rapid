@@ -14,6 +14,8 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author wangkh
  */
@@ -27,7 +29,7 @@ public class PoliciesExplainSearchController {
 
     @ApiOperation("最新政策解读")
     @GetMapping("/policiesExplain/latest")
-    public ResultVO<PageVO<PoliciesExplainSearchSimpleVO>> latestPoliciesExplain(@RequestAttribute PageQueryDTO pageQuery) throws Exception {
+    public ResultVO<PageVO<PoliciesExplainSearchSimpleVO>> latestPoliciesExplain(PageQueryDTO pageQuery) throws Exception {
         pageQuery.paramReasonable();
         PageVO<PoliciesExplainSearchSimpleVO> page = policiesExplainSearchService.latestPoliciesExplain(pageQuery);
         return ResultVO.ok(page);
@@ -42,9 +44,9 @@ public class PoliciesExplainSearchController {
 
     @ApiOperation("根据政策ID查询相关政策解读")
     @GetMapping("policiesExplain/policiesRelated/{policiesId}")
-    public ResultVO<PoliciesExplainSearchSimpleVO> policiesRelatedExplain(@PathVariable("policiesId") String policiesId) throws Exception {
-        PoliciesExplainSearchSimpleVO policiesExplainSearchSimpleVO = policiesExplainSearchService.policiesRelatedExplain(policiesId);
-        return ResultVO.ok(policiesExplainSearchSimpleVO);
+    public ResultVO<List<PoliciesExplainSearchSimpleVO>> policiesRelatedExplain(@PathVariable("policiesId") String policiesId) throws Exception {
+        List<PoliciesExplainSearchSimpleVO> list = policiesExplainSearchService.policiesRelatedExplain(policiesId);
+        return ResultVO.ok(list);
     }
 
     @ApiOperation("政策解读详情")

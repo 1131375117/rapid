@@ -3,6 +3,7 @@ package cn.huacloud.taxpreference.common.utils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 /**
  * 前端统一返回结果
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
  */
 @NoArgsConstructor
 @AllArgsConstructor
+@Accessors(chain = true)
 @Data
 public class ResultVO<T> {
 
