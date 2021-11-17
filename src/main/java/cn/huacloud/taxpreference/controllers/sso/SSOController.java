@@ -4,6 +4,7 @@ import cn.dev33.satoken.secure.SaSecureUtil;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
+import cn.huacloud.taxpreference.common.utils.SpringUtils;
 import cn.huacloud.taxpreference.common.utils.UserUtil;
 import cn.huacloud.taxpreference.services.user.UserService;
 import cn.huacloud.taxpreference.services.user.entity.dos.UserDO;
@@ -15,9 +16,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -49,13 +52,18 @@ public class SSOController {
                                        @RequestParam("password") String password,
                                        @RequestParam(name = "captchaId", defaultValue = "2c54df8c-5f8c-489b-bf3c-84bd14d1d669") String captchaId,
                                        @RequestParam(name = "captchaCode", defaultValue = "1234") String captchaCode) {
+        Environment environment = SpringUtils.getBean(Environment.class);
+        boolean isDev = Arrays.asList(environment.getActiveProfiles()).contains("dev");
+
         // 校验验证码
-        String captchaRedisKey = getCaptchaRedisKey(captchaId);
-        String serverCaptchaCode = stringRedisTemplate.opsForValue().get(captchaRedisKey);
-//        if (serverCaptchaCode == null || !serverCaptchaCode.equalsIgnoreCase(captchaCode)) {
-//            throw BizCode._4210.exception();
-//        }
-        stringRedisTemplate.delete(captchaRedisKey);
+        if (!isDev) {
+            String captchaRedisKey = getCaptchaRedisKey(captchaId);
+            String serverCaptchaCode = stringRedisTemplate.opsForValue().get(captchaRedisKey);
+            if (serverCaptchaCode == null || !serverCaptchaCode.equalsIgnoreCase(captchaCode)) {
+                throw BizCode._4210.exception();
+            }
+            stringRedisTemplate.delete(captchaRedisKey);
+        }
 
         // 根据用户名查找用户
         UserDO userDO = userService.getUserDOByUserAccount(userAccount);

@@ -85,11 +85,6 @@ public class TaxPreferenceVO {
     @ApiModelProperty("优惠事项名称")
     private String taxPreferenceName;
 
-    /**
-     * 具体优惠内容摘要
-     */
-    @ApiModelProperty("具体优惠内容摘要")
-    private String digest;
 
     /**
      * 留存备查资料

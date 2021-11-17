@@ -55,7 +55,7 @@ public class PoliciesExplainSearchServiceImpl implements PoliciesExplainSearchSe
         GetRequest request = new GetRequest(getIndex());
         request.id(id);
         GetResponse response = restHighLevelClient.get(request, RequestOptions.DEFAULT);
-        if (response.isExists()) {
+        if (!response.isExists()) {
             throw BizCode._4500.exception();
         }
 
@@ -90,12 +90,15 @@ public class PoliciesExplainSearchServiceImpl implements PoliciesExplainSearchSe
     }
 
     @Override
-    public PoliciesExplainSearchSimpleVO policiesRelatedExplain(String policiesId) throws Exception {
+    public List<PoliciesExplainSearchSimpleVO> policiesRelatedExplain(String policiesId) throws Exception {
+        String[] includesSource = {"id", "title"};
+
         SearchSourceBuilder searchSourceBuilder = SearchSourceBuilder.searchSource()
                 .trackTotalHits(true)
-                .query(matchAllQuery())
+                .query(matchQuery("policiesId", policiesId))
                 .from(0)
                 .size(1)
+                .fetchSource(includesSource, null)
                 .sort("releaseDate", SortOrder.DESC);
 
         SearchRequest request = new SearchRequest(getIndex());
@@ -105,16 +108,13 @@ public class PoliciesExplainSearchServiceImpl implements PoliciesExplainSearchSe
         SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
 
         // 数据映射
-        SearchHits hits = response.getHits();
-        long total = hits.getTotalHits().value;
-
-        // 没有找到对应解读
-        if (total < 1) {
-            return null;
+        List<PoliciesExplainSearchSimpleVO> list = new ArrayList<>();
+        for (SearchHit hit : response.getHits().getHits()) {
+            PoliciesExplainSearchSimpleVO simpleVO  = objectMapper.readValue(hit.getSourceAsString(), PoliciesExplainSearchSimpleVO.class);
+            list.add(simpleVO);
         }
 
-        SearchHit hit = hits.getHits()[0];
-        return objectMapper.readValue(hit.getSourceAsString(), PoliciesExplainSearchSimpleVO.class);
+        return list;
     }
 
     /**

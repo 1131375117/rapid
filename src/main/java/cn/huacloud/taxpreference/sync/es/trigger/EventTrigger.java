@@ -2,9 +2,15 @@ package cn.huacloud.taxpreference.sync.es.trigger;
 
 import cn.huacloud.taxpreference.common.enums.SysCodeGetter;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeSimpleVO;
+import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesExplainDO;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import reactor.core.publisher.Sinks;
+
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 事件触发器
@@ -39,20 +45,18 @@ public abstract class EventTrigger<T, R> {
 
     /**
      * 有效数据主键分页查询查询
-     * @param queryPage 分页查询条件
      * @return 数据主键
      */
-    protected abstract IPage<T> pageIdList(IPage<?> queryPage);
+    protected abstract IPage<T> pageIdList(int pageNum, int pageSize);
 
     /**
      * 同步所有数据
      */
-    public void syncAll() {
-        IPage<?> queryPage = new Page<>(1, PAGE_SIZE);
+    public long syncAll() {
 
         // 查询第一页
 
-        IPage<T> firstPage = pageIdList(queryPage);
+        IPage<T> firstPage = pageIdList(1, PAGE_SIZE);
 
         long total = firstPage.getTotal();
 
@@ -64,19 +68,27 @@ public abstract class EventTrigger<T, R> {
 
         // 分页执行后续数据保存
         for (int i = 2; i <= totalPage; i++) {
-            queryPage.setCurrent(i);
-            IPage<T> page = pageIdList(queryPage);
+            IPage<T> page = pageIdList(i, PAGE_SIZE);
             for (T id : page.getRecords()) {
                 saveEvent(id);
             }
         }
+        return total;
     }
-
 
     public SysCodeSimpleVO getEnumSysCode(SysCodeGetter sysCodeGetter) {
         if (sysCodeGetter == null) {
             return new SysCodeSimpleVO();
         }
         return sysCodeGetter.getSysCode();
+    }
+
+    public <E> Page<T> mapToIdPage(IPage<E> page, Function<E, T> mapper) {
+        List<T> records = page.getRecords().stream()
+                .map(mapper)
+                .collect(Collectors.toList());
+        Page<T> idPage = Page.of(page.getCurrent(), page.getSize(), page.getTotal());
+        idPage.setRecords(records);
+        return idPage;
     }
 }

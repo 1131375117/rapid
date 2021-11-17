@@ -4,9 +4,11 @@ import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.config.SysConfig;
 import cn.huacloud.taxpreference.sync.es.trigger.impl.PoliciesEventTrigger;
+import cn.huacloud.taxpreference.sync.es.trigger.impl.PoliciesExplainEventTrigger;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.slf4j.helpers.MessageFormatter;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,12 +24,22 @@ public class DataSyncController {
 
     private PoliciesEventTrigger policiesEventTrigger;
 
+    private PoliciesExplainEventTrigger policiesExplainEventTrigger;
+
     @ApiOperation("同步所有政策法规数据")
     @GetMapping("/sync/policies")
     public ResultVO<Void> syncAllPolicies(String password) {
         checkSysPassword(password);
-        policiesEventTrigger.syncAll();
-        return ResultVO.ok();
+        long total = policiesEventTrigger.syncAll();
+        return ResultVO.ok().setMsg(MessageFormatter.format("成功同步数据{}条", total).getMessage());
+    }
+
+    @ApiOperation("同步所有政策解读数据")
+    @GetMapping("/sync/policiesExplain")
+    public ResultVO<Void> syncAllPoliciesExplain(String password) {
+        checkSysPassword(password);
+        long total = policiesExplainEventTrigger.syncAll();
+        return ResultVO.ok().setMsg(MessageFormatter.format("成功同步数据{}条", total).getMessage());
     }
 
     /**

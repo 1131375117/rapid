@@ -67,14 +67,14 @@ public class PoliciesEventTrigger extends EventTrigger<Long, PoliciesES> {
     }
 
     @Override
-    protected IPage<Long> pageIdList(IPage<?> queryPage) {
+    protected IPage<Long> pageIdList(int pageNum, int pageSize) {
         LambdaQueryWrapper<PoliciesDO> queryWrapper = Wrappers.lambdaQuery(PoliciesDO.class)
                 .eq(PoliciesDO::getDeleted, false);
-        IPage<PoliciesDO> page = policiesMapper.selectPage((IPage<PoliciesDO>) queryPage, queryWrapper);
+        IPage<PoliciesDO> page = policiesMapper.selectPage(Page.of(pageNum, pageSize), queryWrapper);
         List<Long> ids = page.getRecords().stream()
                 .map(PoliciesDO::getId)
                 .collect(Collectors.toList());
-        Page<Long> idPage = new Page<>(queryPage.getCurrent(), queryPage.getSize(), queryPage.getTotal());
+        Page<Long> idPage = Page.of(page.getCurrent(), page.getSize(), page.getTotal());
         idPage.setRecords(ids);
         return idPage;
     }

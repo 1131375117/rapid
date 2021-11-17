@@ -7,6 +7,8 @@ import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesExplainSea
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesExplainSearchSimpleVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesExplainSearchVO;
 
+import java.util.List;
+
 /**
  * 政策解读检索服务
  * @author wangkh
@@ -32,5 +34,5 @@ public interface PoliciesExplainSearchService extends SearchService<PoliciesExpl
      * @param policiesId 政策法规ID
      * @return 政策解读简单视图
      */
-    PoliciesExplainSearchSimpleVO policiesRelatedExplain(String policiesId) throws Exception;
+    List<PoliciesExplainSearchSimpleVO> policiesRelatedExplain(String policiesId) throws Exception;
 }
