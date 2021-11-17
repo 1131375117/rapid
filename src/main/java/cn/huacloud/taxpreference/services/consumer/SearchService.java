@@ -6,10 +6,8 @@ import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.dtos.RangeQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.AbstractHighlightPageQueryDTO;
-import cn.huacloud.taxpreference.services.consumer.entity.vos.FAQSearchVO;
 import com.baomidou.mybatisplus.annotation.IEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jdk.internal.util.xml.PropertiesDefaultHandler;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.elasticsearch.action.search.SearchRequest;
@@ -18,7 +16,6 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
@@ -27,19 +24,11 @@ import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
-import org.elasticsearch.search.sort.SortOrder;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.PropertyAccessorUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
-import java.beans.BeanInfo;
-import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -136,8 +125,8 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
     default HighlightBuilder getHighlightBuilder(T pageQuery) {
         HighlightBuilder highlightBuilder = new HighlightBuilder();
 
-        highlightBuilder.preTags();
-        highlightBuilder.postTags();
+        highlightBuilder.preTags("<span style=\"color:#006EFF;\">");
+        highlightBuilder.postTags("</span>");
         List<String> searchFields = pageQuery.searchFields();
         if (CollectionUtils.isEmpty(searchFields)) {
             return null;
