@@ -1,6 +1,6 @@
 package cn.huacloud.taxpreference.services.consumer.entity.ess;
 
-import cn.huacloud.taxpreference.sync.es.consumer.GetID;
+import cn.huacloud.taxpreference.sync.es.consumer.IDGetter;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -10,7 +10,7 @@ import java.util.List;
  * @author wangkh
  */
 @Data
-public class FrequentlyAskedQuestionES implements GetID<Long> {
+public class FrequentlyAskedQuestionES implements IDGetter<Long> {
     /**
      * 主键ID
      */

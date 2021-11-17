@@ -509,12 +509,15 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
       }} else if (ValidityEnum.PARTIAL_REPEAL.getValue()
           .equals(queryAbolishDTO.getValidity())) {
         List<Long> ids = queryAbolishDTO.getIds();
+
+      if (ids!=null&&ids.size() > 0) {
         // 遍历选中的id集合
         for (Long id : ids) {
           // 根据id查询税收优惠对象
           taxPreferenceDO = taxPreferenceMapper.selectById(id);
           // 设置税收优惠状态--失效
           taxPreferenceDO.setValidity(PreferenceValidation.INVALID);
+        }
         }
       }
 

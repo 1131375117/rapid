@@ -37,8 +37,8 @@ public class PoliciesCombinationDTO {
     @NotEmpty(message = "所属区域码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
     private String areaCode;
 
-    @ApiModelProperty("所属区域名称")
-    private String areaName;
+//    @ApiModelProperty("所属区域名称")
+//    private String areaName;
 
     @ApiModelProperty("来源")
     @NotEmpty(message = "来源不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
@@ -88,9 +88,4 @@ public class PoliciesCombinationDTO {
     @ApiModelProperty("用户id")
     private Long inputUserId;
 
-    @ApiModelProperty("附件ID集合")
-    private List<Long> attachmentIds;
-
-    @ApiModelProperty("附件视图集合")
-    List<AttachmentVO> attachmentVOList;
 }
