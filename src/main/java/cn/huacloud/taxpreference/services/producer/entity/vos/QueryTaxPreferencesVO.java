@@ -1,6 +1,7 @@
 package cn.huacloud.taxpreference.services.producer.entity.vos;
 
 import cn.huacloud.taxpreference.common.enums.taxpreference.PreferenceValidation;
+import cn.huacloud.taxpreference.common.enums.taxpreference.ReleaseMatter;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -64,5 +65,8 @@ public class QueryTaxPreferencesVO {
 
     @ApiModelProperty("创建时间")
     private LocalDateTime createTime;
+
+    @ApiModelProperty("发布状态:RELEASED-已发布;UNRELEASED-未发布")
+    private ReleaseMatter taxPreferenceStatus;
 
 }

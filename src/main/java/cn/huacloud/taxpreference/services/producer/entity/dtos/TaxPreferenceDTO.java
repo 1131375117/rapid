@@ -5,6 +5,7 @@ import cn.huacloud.taxpreference.common.enums.taxpreference.PreferenceValidation
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -126,7 +127,7 @@ public class TaxPreferenceDTO {
 
     @ApiModelProperty("政策法规关联信息")
     @NotEmpty(message = "政策法规关联信息不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
-    private List<TaxPreferencePoliciesDTO> taxPreferencePoliciesDTOList;
+    private List<@Valid TaxPreferencePoliciesDTO> taxPreferencePoliciesDTOList;
     /**
      * 申报信息
      */

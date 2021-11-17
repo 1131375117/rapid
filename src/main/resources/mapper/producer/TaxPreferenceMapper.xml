@@ -29,7 +29,8 @@
         as taxpayerTypeName,
         p.tax_categories_name as taxCategoriesName,p.enterprise_type_names as enterpriseTypeNames,
         p.validity,p.create_time as createTime,p.taxpayer_credit_ratings as taxpayerCreditRatings,
-        p.taxpayer_register_type_name as taxpayerRegisterTypeName
+        p.taxpayer_register_type_name as taxpayerRegisterTypeName,
+        p.tax_preference_status as taxPreferenceStatus
         from t_tax_preference p
         <where>
             and p.deleted=0
