@@ -3,6 +3,7 @@ package cn.huacloud.taxpreference.services.backup;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
 
 /**
@@ -21,8 +22,18 @@ public class HeBeiTax implements Tax {
     public String parseHtml(String html) {
         Document parse = Jsoup.parse(html);
         Element fontZoom = parse.getElementById("zoom");
+        if(fontZoom==null){
+            return "";
+        }
         return String.valueOf(fontZoom);
     }
-
+    public String parseQA(String html) {
+        Document parse = Jsoup.parse(html);
+        Elements contentbox = parse.getElementsByClass("\\\"zoom\\\"");
+        if(contentbox==null){
+            return "";
+        }
+        return String.valueOf(contentbox);
+    }
 
 }

@@ -84,12 +84,6 @@ public class TaxPreferenceDTO {
     @NotEmpty(message = "优惠事项名称不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
     private String taxPreferenceName;
 
-    /**
-     * 具体优惠内容摘要
-     */
-    @ApiModelProperty("具体优惠内容摘要")
-    @NotEmpty(message = "具体优惠内容摘要不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
-    private String digest;
 
     /**
      * 留存备查资料
@@ -114,7 +108,7 @@ public class TaxPreferenceDTO {
     /**
      * 减免事项
      */
-    @ApiModelProperty("减免事项,多个按照逗号隔开")
+    @ApiModelProperty("减免事项")
     @NotEmpty(message = "减免事项", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
     private String taxPreferenceItem;
 

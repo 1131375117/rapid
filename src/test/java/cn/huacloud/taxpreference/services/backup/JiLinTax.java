@@ -6,25 +6,24 @@ import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Component;
 
 /**
- * @description: 陕西税务局正文获取
+ * @description:
  * @author: fuhua
- * @create: 2021-11-11 10:31
+ * @create: 2021-11-15 17:44
  **/
 @Component
-public class ShanXiTax implements Tax {
+public class JiLinTax implements Tax{
     @Override
     public String sourceType() {
-        return "国家税务总局山西省税务局";
+        return "国家税务总局吉林省税务局";
     }
 
     @Override
     public String parseHtml(String html) {
         Document parse = Jsoup.parse(html);
-        Element fontZoom = parse.getElementById("zoom");
-        if(fontZoom==null){
+        Element zoom = parse.getElementById("zoom");
+        if(zoom==null){
             return "";
         }
-        return String.valueOf(fontZoom);
+        return String.valueOf(zoom);
     }
-
 }

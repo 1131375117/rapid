@@ -7,14 +7,14 @@
         insert into t_tax_preference (tax_categories_name, tax_categories_code, taxpayer_register_type_name,
                                       taxpayer_register_type_code, taxpayer_type_name, taxpayer_type_code,
                                       industry_names, industry_codes, enterprise_type_names, enterprise_type_codes,
-                                      taxpayer_credit_ratings, tax_preference_name, digest, keep_query_data,
+                                      taxpayer_credit_ratings, tax_preference_name, keep_query_data,
                                       submit_tax_data, submit_time_limit, submit_description, create_time, update_time,
                                       deleted)
         values (#{taxCategoriesName}, #{taxCategoriesCode}, #{taxpayerRegisterTypeName},
                 #{taxpayerRegisterTypeCode}, #{taxpayerTypeName}, #{taxpayerTypeCode},
                 #{industryNames}, #{industryCodes}, #{enterpriseTypeNames},
                 #{enterpriseTypeCodes}, #{taxpayerCreditRatings}, #{taxPreferenceName},
-                #{digest}, #{keepQueryData}, #{submitTaxData},
+                #{keepQueryData}, #{submitTaxData},
                 #{submitTimeLimit}, #{submitDescription}, #{createTime},
                 #{updateTime}, #{deleted})
     </insert>

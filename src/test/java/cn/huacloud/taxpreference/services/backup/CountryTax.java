@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * @create: 2021-11-11 10:31
  **/
 @Component
-public  class CountryTax implements Tax {
+public class CountryTax implements Tax {
     @Override
     public String sourceType() {
         return "国家税务总局";
@@ -22,13 +22,24 @@ public  class CountryTax implements Tax {
     public String parseHtml(String html) {
         Document parse = Jsoup.parse(html);
         Element fontZoom = parse.getElementById("fontzoom");
-        Elements elements = fontZoom.select("[class=jiuc]");
-        if(elements!=null){
-            elements.remove();
+        if (fontZoom != null) {
+            Elements elements = fontZoom.select("[class=jiuc]");
+            if (elements != null) {
+                elements.remove();
+            }
+        } else {
+            return "";
         }
-
         return String.valueOf(fontZoom);
     }
 
+    public String parseQA(String html) {
+        Document parse = Jsoup.parse(html);
+        Element contentbox = parse.getElementById("\\\"fontzoom\\\"");
+        if (contentbox == null) {
+            return "";
+        }
+        return String.valueOf(contentbox);
+    }
 
 }

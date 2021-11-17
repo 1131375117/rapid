@@ -15,7 +15,6 @@ import cn.huacloud.taxpreference.services.producer.ProcessService;
 import cn.huacloud.taxpreference.services.producer.TaxPreferenceService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.*;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.*;
-import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesStatusEnum;
 import cn.huacloud.taxpreference.services.producer.entity.enums.ValidityEnum;
 import cn.huacloud.taxpreference.services.producer.entity.vos.*;
 import cn.huacloud.taxpreference.services.producer.mapper.*;
@@ -35,9 +34,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 /**
- * @description: 优惠政策服务实现类
- * @author: fuhua
- * @create: 2021-10-21 10:36
+ * 优惠政策服务实现类
+ * @author fuhua
  */
 @Slf4j
 @RequiredArgsConstructor
