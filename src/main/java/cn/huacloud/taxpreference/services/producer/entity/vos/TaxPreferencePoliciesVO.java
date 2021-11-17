@@ -44,6 +44,9 @@ public class TaxPreferencePoliciesVO {
      */
     @ApiModelProperty("排序字段")
     private Long sort;
-
-
+    /**
+     * 具体优惠内容摘要
+     */
+    @ApiModelProperty("具体优惠内容摘要")
+    private String digest;
 }

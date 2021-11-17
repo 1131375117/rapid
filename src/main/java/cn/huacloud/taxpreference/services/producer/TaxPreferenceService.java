@@ -5,11 +5,11 @@ import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryAbolishDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryTaxPreferencesDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.TaxPreferenceDTO;
-import cn.huacloud.taxpreference.services.producer.entity.dtos.TaxPreferenceIdsDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.QueryTaxPreferencesVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceAbolishVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceCountVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceVO;
+import cn.huacloud.taxpreference.services.user.entity.vos.LoginUserVO;
 
 import java.util.List;
 
@@ -24,17 +24,19 @@ public interface TaxPreferenceService {
      * 新增税收优惠接口
      *
      * @param taxPreferenceDTO
+     * @param currentUser
      * @return resultVO
      */
-    ResultVO<Void> insertTaxPreference(TaxPreferenceDTO taxPreferenceDTO);
+    ResultVO<Void> insertTaxPreference(TaxPreferenceDTO taxPreferenceDTO, LoginUserVO currentUser);
 
     /**
      * 修改税收优惠接口
      *
      * @param taxPreferenceDTO
+     * @param currentUser
      * @return resultVO
      */
-    ResultVO<Void> updateTaxPreference(TaxPreferenceDTO taxPreferenceDTO);
+    ResultVO<Void> updateTaxPreference(TaxPreferenceDTO taxPreferenceDTO, LoginUserVO currentUser);
 
     /**
      * 修改税收优惠查询基本信息接口

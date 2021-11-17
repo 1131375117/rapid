@@ -47,8 +47,7 @@ public class TaxPreferenceController {
     @ApiOperation("税收优惠新增接口")
     @PostMapping("taxPreference")
     public ResultVO<Void> insertTaxPreference(@Validated(ValidationGroup.Create.class) @RequestBody TaxPreferenceDTO taxPreferenceDTO) {
-        taxPreferenceDTO.setInputUserId(UserUtil.getCurrentUser().getId());
-        return taxPreferenceService.insertTaxPreference(taxPreferenceDTO);
+        return taxPreferenceService.insertTaxPreference(taxPreferenceDTO,UserUtil.getCurrentUser());
     }
 
     @PermissionInfo(name = "税收优惠修改接口", group = PermissionGroup.TAX_PREFERENCE)
@@ -56,7 +55,7 @@ public class TaxPreferenceController {
     @ApiOperation("税收优惠修改接口")
     @PutMapping("taxPreference")
     public ResultVO<Void> updateTaxPreference(@Validated(ValidationGroup.Update.class) @RequestBody TaxPreferenceDTO taxPreferenceDTO) {
-        return taxPreferenceService.updateTaxPreference(taxPreferenceDTO);
+        return taxPreferenceService.updateTaxPreference(taxPreferenceDTO,UserUtil.getCurrentUser());
     }
 
     /**

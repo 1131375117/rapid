@@ -2,6 +2,7 @@ package cn.huacloud.taxpreference.services.producer.entity.dtos;
 
 import cn.huacloud.taxpreference.common.constants.ValidationGroup;
 import cn.huacloud.taxpreference.common.enums.taxpreference.PreferenceValidation;
+import cn.huacloud.taxpreference.common.enums.taxpreference.TaxStatus;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -135,5 +136,6 @@ public class TaxPreferenceDTO {
     @NotEmpty(message = "申报信息不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
     private List<SubmitConditionDTO> submitConditionDTOList;
 
-
+    @ApiModelProperty("SAVE-保存或者SUBMIT提交")
+    private TaxStatus status;
 }
