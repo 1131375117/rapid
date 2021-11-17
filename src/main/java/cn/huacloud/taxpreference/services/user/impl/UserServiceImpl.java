@@ -305,7 +305,7 @@ public class UserServiceImpl implements UserService {
         // 检查是否为管理员用户
         adminUserCheck(userDO.getUserAccount());
 
-        List<String> roleCodeList = Arrays.asList(userDO.getRoleCodes().split(","));
+        Set<String> roleCodeList = new HashSet<>(Arrays.asList(userDO.getRoleCodes().split(",")));
         // 移除角色
         roleCodeList.remove(roleCode);
         String roleCodesStr = String.join(",", roleCodeList);
