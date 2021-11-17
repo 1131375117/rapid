@@ -76,7 +76,7 @@ public interface PoliciesService {
      * 查询废止信息
      *
      * @param id 政策法规id
-     * @return
+     * @return 返回
      */
      PoliciesAbolishVO getAbolish(Long id);
 

@@ -341,6 +341,10 @@ public class PoliciesServiceImpl implements PoliciesService {
     policiesDO.setTaxpayerIdentifyTypeNames(taxpayerIdentifyTypeNames);
     policiesDO.setEnterpriseTypeNames(enterpriseTypeCodes);
     policiesDO.setIndustryNames(industryNames);
+    //设置所属税种
+    policiesDO.setTaxCategoriesCode(policiesCombinationDTO.getTaxCategoriesCode());
+    policiesDO.setTaxCategoriesName(
+        sysCodeService.getCodeNameByCodeValue(policiesCombinationDTO.getTaxCategoriesCode()));
     // 设置区域
     policiesDO.setAreaName(
         sysCodeService.getCodeNameByCodeValue(policiesCombinationDTO.getAreaCode()));
@@ -386,6 +390,16 @@ public class PoliciesServiceImpl implements PoliciesService {
    * @param policiesCombinationDTO 政策组合对象
    */
   private void insertOrUpdateQA(PoliciesCombinationDTO policiesCombinationDTO) {
+    //根据政策法规id查询热门问答集合
+    List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionByPoliciesIdList
+            = frequentlyAskedQuestionService.getFrequentlyAskedQuestionByPoliciesId(policiesCombinationDTO.getId());
+    //差集
+    frequentlyAskedQuestionByPoliciesIdList.removeAll(policiesCombinationDTO.getFrequentlyAskedQuestionDTOList());
+    //删除
+    for (FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO :
+        frequentlyAskedQuestionByPoliciesIdList) {
+      frequentlyAskedQuestionService.deleteFrequentlyAskedQuestion(frequentlyAskedQuestionDTO.getId());
+    }
     for (FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO :
         policiesCombinationDTO.getFrequentlyAskedQuestionDTOList()) {
       if (frequentlyAskedQuestionDTO.getId() != null && frequentlyAskedQuestionDTO.getId() != 0) {
@@ -554,13 +568,17 @@ public class PoliciesServiceImpl implements PoliciesService {
    */
   @Override
   public void abolish(QueryAbolishDTO queryAbolishDTO) {
+    //参数校验
+    if(queryAbolishDTO==null||queryAbolishDTO.getAbolishNote()==null){
+      throw BizCode._4308.exception();
+    }
     // 查询政策法规
     Long id = queryAbolishDTO.getId();
     PoliciesDO policiesDO = policiesMapper.selectById(id);
     // 参数校验
     if (policiesDO == null) {
       throw BizCode._4100.exception();
-    }
+    }   
     // 判断条件--全文废止
     if (ValidityEnum.FULL_TEXT_REPEAL.getValue().equals(queryAbolishDTO.getValidity())) {
       // 设置政策法规的有效性

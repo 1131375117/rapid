@@ -22,8 +22,6 @@ import java.util.regex.Pattern;
 public class SampleTest {
 
 
-
-
     @Test
     public void htmlTest() {
         LocalDate now = LocalDate.now();

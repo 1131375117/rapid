@@ -53,9 +53,9 @@ public class SSOController {
         // 校验验证码
         String captchaRedisKey = getCaptchaRedisKey(captchaId);
         String serverCaptchaCode = stringRedisTemplate.opsForValue().get(captchaRedisKey);
-        if (serverCaptchaCode == null || !serverCaptchaCode.equalsIgnoreCase(captchaCode)) {
-            throw BizCode._4210.exception();
-        }
+//        if (serverCaptchaCode == null || !serverCaptchaCode.equalsIgnoreCase(captchaCode)) {
+//            throw BizCode._4210.exception();
+//        }
         stringRedisTemplate.delete(captchaRedisKey);
 
         // 根据用户名查找用户
