@@ -41,4 +41,7 @@ public class PoliciesExplainSearchListVO {
 
     @ApiModelProperty("正文")
     private String content;
+
+    @ApiModelProperty("无装饰的组合文本")
+    private String combinePlainContent;
 }

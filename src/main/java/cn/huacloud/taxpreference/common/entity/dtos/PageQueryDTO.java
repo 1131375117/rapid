@@ -5,12 +5,15 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 分页查询对象
  * @author wangkh
  */
-@Data
+@Getter
+@Setter
 @ApiModel
 public class PageQueryDTO {
 

@@ -1,6 +1,6 @@
 {
   "index_patterns": [
-    "policies_index*"
+    "policies_index_*"
   ],
   "template": {
     "settings": {
@@ -8,7 +8,7 @@
       "number_of_replicas": 0
     },
     "aliases": {
-      "policies_dev": {}
+      "policies": {}
     },
     "mappings": {
       "_source": {
@@ -102,12 +102,16 @@
         },
         "labels": {
           "type": "keyword"
+        },
+        "combinePlainContent": {
+          "type": "text",
+          "analyzer": "ik_max_word"
         }
       }
     }
   },
   "priority": 500,
   "_meta": {
-    "description": "政策法规索引模板，更新时间2021年11月15日"
+    "description": "政策法规索引模板，更新时间2021年11月17日"
   }
 }

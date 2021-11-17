@@ -7,6 +7,7 @@ import cn.huacloud.taxpreference.services.producer.mapper.PoliciesMapper;
 import cn.huacloud.taxpreference.sync.es.trigger.EventTrigger;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
@@ -79,7 +80,7 @@ public class PoliciesEventTrigger extends EventTrigger<Long, PoliciesES> {
     }
 
     private List<String> split2List(String value) {
-        if (value == null) {
+        if (StringUtils.isBlank(value)) {
             return new ArrayList<>();
         }
         return Arrays.asList(value.split(","));

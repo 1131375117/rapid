@@ -27,7 +27,7 @@ public class FAQSearchQueryDTO extends AbstractHighlightPageQueryDTO {
 
     @Override
     public List<String> searchFields() {
-        return Arrays.asList("title", "content");
+        return Arrays.asList("title", "combinePlainContent");
     }
 
 }

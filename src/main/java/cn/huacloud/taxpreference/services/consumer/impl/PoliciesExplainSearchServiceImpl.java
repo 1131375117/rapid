@@ -42,17 +42,12 @@ public class PoliciesExplainSearchServiceImpl implements PoliciesExplainSearchSe
 
     @Getter
     private final RestHighLevelClient restHighLevelClient;
-
+    @Getter
     private final ObjectMapper objectMapper;
 
     @Override
-    public PoliciesExplainSearchListVO mapSearchHit(SearchHit searchHit) throws Exception {
-        PoliciesExplainSearchListVO policiesExplainSearchListVO = objectMapper.readValue(searchHit.getSourceAsString(), PoliciesExplainSearchListVO.class);
-        // 设置高亮字段
-        policiesExplainSearchListVO.setTitle(getHighlightString(searchHit, "title"));
-        policiesExplainSearchListVO.setContent(getHighlightString(searchHit, "content"));
-
-        return policiesExplainSearchListVO;
+    public Class<PoliciesExplainSearchListVO> getResultClass() {
+        return PoliciesExplainSearchListVO.class;
     }
 
     @Override

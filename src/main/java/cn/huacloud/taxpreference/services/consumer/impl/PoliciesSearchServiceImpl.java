@@ -9,6 +9,7 @@ import cn.huacloud.taxpreference.services.common.entity.dos.SysCodeDO;
 import cn.huacloud.taxpreference.services.consumer.PoliciesSearchService;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.PoliciesSearchQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.ess.PoliciesES;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesExplainSearchListVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesSearchListVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesSearchSimpleVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesSearchVO;
@@ -48,7 +49,7 @@ public class PoliciesSearchServiceImpl implements PoliciesSearchService {
 
     @Getter
     private final RestHighLevelClient restHighLevelClient;
-
+    @Getter
     private final ObjectMapper objectMapper;
 
     private final SysCodeService sysCodeService;
@@ -76,13 +77,8 @@ public class PoliciesSearchServiceImpl implements PoliciesSearchService {
     }
 
     @Override
-    public PoliciesSearchListVO mapSearchHit(SearchHit searchHit) throws Exception {
-        PoliciesSearchListVO policiesSearchListVO = objectMapper.readValue(searchHit.getSourceAsString(), PoliciesSearchListVO.class);
-        // 设置高亮字段
-        policiesSearchListVO.setTitle(getHighlightString(searchHit, "title"));
-        policiesSearchListVO.setContent(getHighlightString(searchHit, "content"));
-
-        return policiesSearchListVO;
+    public Class<PoliciesSearchListVO> getResultClass() {
+        return PoliciesSearchListVO.class;
     }
 
     @Override

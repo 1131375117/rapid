@@ -14,6 +14,7 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 税收优惠分页检索对象
@@ -57,34 +58,20 @@ public class TaxPreferenceSearchQueryDTO extends AbstractHighlightPageQueryDTO {
 
     @Override
     public List<String> searchFields() {
-        return Arrays.asList("taxPreferenceName", "");
+        return Arrays.asList("taxPreferenceName", "combinePlainContent");
+    }
+
+    @Override
+    public Set<String> notFragmentHighlightFields() {
+        return Collections.singleton("taxPreferenceName");
     }
 
     @Override
     public void paramReasonable() {
         super.paramReasonable();
-
         if (useRecommend == null) {
             // 默认不使用推荐
             useRecommend = false;
-        }
-        try {
-            for (Field field : this.getClass().getDeclaredFields()) {
-                field.setAccessible(true);
-                Object value = field.get(this);
-                // 空字符串处理
-                if (value instanceof String) {
-                    String str = (String) value;
-                    if (StringUtils.isBlank(str)) {
-                        field.set(this, null);
-                    } else {
-                        // 去除前后空格
-                        field.set(this, str.trim());
-                    }
-                }
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
     }
 }

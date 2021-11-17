@@ -1,6 +1,8 @@
 package cn.huacloud.taxpreference.sample;
 
 import cn.dev33.satoken.secure.SaSecureUtil;
+import cn.huacloud.taxpreference.services.consumer.entity.dtos.PoliciesSearchQueryDTO;
+import cn.huacloud.taxpreference.services.consumer.entity.dtos.TaxPreferenceSearchQueryDTO;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.pinyin4j.PinyinHelper;
@@ -21,8 +23,14 @@ import java.util.regex.Pattern;
 @Slf4j
 public class SampleTest {
 
-
-
+    @Test
+    public void testSuper() {
+        PoliciesSearchQueryDTO queryDTO = new PoliciesSearchQueryDTO();
+        queryDTO.setAreaCode("");
+        queryDTO.setDocCode("");
+        queryDTO.paramReasonable();
+        log.info("{}", queryDTO);
+    }
 
     @Test
     public void htmlTest() {

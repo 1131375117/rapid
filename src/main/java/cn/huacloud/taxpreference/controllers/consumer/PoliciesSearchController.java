@@ -26,7 +26,7 @@ public class PoliciesSearchController {
 
     @ApiOperation("最新中央政策")
     @GetMapping("/policies/latestCentral")
-    public ResultVO<PageVO<PoliciesSearchSimpleVO>> latestCentralPolicies(@RequestAttribute PageQueryDTO pageQuery) throws Exception {
+    public ResultVO<PageVO<PoliciesSearchSimpleVO>> latestCentralPolicies(PageQueryDTO pageQuery) throws Exception {
         pageQuery.paramReasonable();
         PageVO<PoliciesSearchSimpleVO> page = policiesSearchService.latestCentralPolicies(pageQuery);
         return ResultVO.ok(page);
@@ -34,7 +34,7 @@ public class PoliciesSearchController {
 
     @ApiOperation("最新地方政策")
     @GetMapping("/policies/latestLocal")
-    public ResultVO<PageVO<PoliciesSearchSimpleVO>> latestLocalPolicies(@RequestAttribute PageQueryDTO pageQuery) throws Exception {
+    public ResultVO<PageVO<PoliciesSearchSimpleVO>> latestLocalPolicies(PageQueryDTO pageQuery) throws Exception {
         pageQuery.paramReasonable();
         PageVO<PoliciesSearchSimpleVO> page = policiesSearchService.latestLocalPolicies(pageQuery);
         return ResultVO.ok(page);
