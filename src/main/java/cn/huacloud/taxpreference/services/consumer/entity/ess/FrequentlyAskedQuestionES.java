@@ -5,7 +5,6 @@ import cn.huacloud.taxpreference.services.consumer.entity.CombineText;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,14 +29,14 @@ public class FrequentlyAskedQuestionES extends AbstractCombinePlainContent<Long>
     private String title;
 
     /**
-     * 回答
-     */
-    private String content;
-
-    /**
      * 来源
      */
     private String docSource;
+
+    /**
+     * 回答
+     */
+    private String content;
 
     /**
      * 发布日期

@@ -1,0 +1,50 @@
+{
+  "index_patterns": [
+    "frequently_asked_question_index_*"
+  ],
+  "template": {
+    "settings": {
+      "number_of_shards": 1,
+      "number_of_replicas": 0
+    },
+    "aliases": {
+      "frequently_asked_question": {}
+    },
+    "mappings": {
+      "_source": {
+        "enabled": true
+      },
+      "properties": {
+        "id": {
+          "type": "long"
+        },
+        "policiesIds": {
+          "type": "long"
+        },
+        "title": {
+          "type": "text",
+          "analyzer": "ik_max_word"
+        },
+        "docSource": {
+          "type": "keyword"
+        },
+        "content": {
+          "type": "text",
+          "analyzer": "ik_max_word"
+        },
+        "releaseDate": {
+          "type": "date",
+          "format": "yyyy-MM-dd"
+        },
+        "combinePlainContent": {
+          "type": "text",
+          "analyzer": "ik_max_word"
+        }
+      }
+    }
+  },
+  "priority": 500,
+  "_meta": {
+    "description": "热点问答索引模板，更新时间2021年11月17日"
+  }
+}

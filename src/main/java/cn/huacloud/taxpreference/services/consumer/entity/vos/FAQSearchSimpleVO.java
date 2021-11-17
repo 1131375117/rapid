@@ -1,12 +1,14 @@
 package cn.huacloud.taxpreference.services.consumer.entity.vos;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.time.LocalDate;
 
 /**
  * @author wangkh
  */
+@Data
 public class FAQSearchSimpleVO {
     @ApiModelProperty("主键ID")
     private Long id;

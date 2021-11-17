@@ -96,9 +96,9 @@ public class PoliciesExplainSearchServiceImpl implements PoliciesExplainSearchSe
         SearchSourceBuilder searchSourceBuilder = SearchSourceBuilder.searchSource()
                 .trackTotalHits(true)
                 .query(matchQuery("policiesId", policiesId))
+                .fetchSource(includesSource, null)
                 .from(0)
                 .size(1)
-                .fetchSource(includesSource, null)
                 .sort("releaseDate", SortOrder.DESC);
 
         SearchRequest request = new SearchRequest(getIndex());

@@ -4,10 +4,13 @@ import cn.huacloud.taxpreference.common.enums.SysCodeGetter;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeSimpleVO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesExplainDO;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import reactor.core.publisher.Sinks;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -90,5 +93,12 @@ public abstract class EventTrigger<T, R> {
         Page<T> idPage = Page.of(page.getCurrent(), page.getSize(), page.getTotal());
         idPage.setRecords(records);
         return idPage;
+    }
+
+    public List<String> split2List(String value) {
+        if (StringUtils.isBlank(value)) {
+            return new ArrayList<>();
+        }
+        return Arrays.asList(value.split(","));
     }
 }
