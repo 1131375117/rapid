@@ -2,9 +2,11 @@ package cn.huacloud.taxpreference.services.producer.entity.dtos;
 
 import cn.huacloud.taxpreference.common.constants.ValidationGroup;
 import cn.huacloud.taxpreference.common.enums.taxpreference.PreferenceValidation;
+import cn.huacloud.taxpreference.common.enums.taxpreference.TaxStatus;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -84,12 +86,6 @@ public class TaxPreferenceDTO {
     @NotEmpty(message = "优惠事项名称不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
     private String taxPreferenceName;
 
-    /**
-     * 具体优惠内容摘要
-     */
-    @ApiModelProperty("具体优惠内容摘要")
-    @NotEmpty(message = "具体优惠内容摘要不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
-    private String digest;
 
     /**
      * 留存备查资料
@@ -114,7 +110,7 @@ public class TaxPreferenceDTO {
     /**
      * 减免事项
      */
-    @ApiModelProperty("减免事项,多个按照逗号隔开")
+    @ApiModelProperty("减免事项")
     @NotEmpty(message = "减免事项", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
     private String taxPreferenceItem;
 
@@ -132,7 +128,7 @@ public class TaxPreferenceDTO {
 
     @ApiModelProperty("政策法规关联信息")
     @NotEmpty(message = "政策法规关联信息不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
-    private List<TaxPreferencePoliciesDTO> taxPreferencePoliciesDTOList;
+    private List<@Valid TaxPreferencePoliciesDTO> taxPreferencePoliciesDTOList;
     /**
      * 申报信息
      */
@@ -140,5 +136,6 @@ public class TaxPreferenceDTO {
     @NotEmpty(message = "申报信息不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
     private List<SubmitConditionDTO> submitConditionDTOList;
 
-
+    @ApiModelProperty("SAVE-保存或者SUBMIT提交")
+    private TaxStatus status;
 }

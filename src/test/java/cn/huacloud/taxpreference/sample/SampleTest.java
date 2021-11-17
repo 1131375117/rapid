@@ -21,6 +21,14 @@ import java.util.regex.Pattern;
 @Slf4j
 public class SampleTest {
 
+    @Test
+    public void testSuper() {
+        PoliciesSearchQueryDTO queryDTO = new PoliciesSearchQueryDTO();
+        queryDTO.setAreaCode("");
+        queryDTO.setDocCode("");
+        queryDTO.paramReasonable();
+        log.info("{}", queryDTO);
+    }
 
     @Test
     public void htmlTest() {

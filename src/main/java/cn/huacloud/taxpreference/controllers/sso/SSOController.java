@@ -42,7 +42,6 @@ public class SSOController {
      *
      * @param userAccount 用户名称
      * @param password    用户密码
-     * @return
      */
     @ApiOperation("用户登录接口")
     @PostMapping("/sso/login")
@@ -98,8 +97,6 @@ public class SSOController {
 
     /**
      * 登出
-     *
-     * @return
      */
     @ApiOperation("登出")
     @PostMapping("/sso/logout")

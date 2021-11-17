@@ -3,7 +3,7 @@ package cn.huacloud.taxpreference.sync.es.consumer;
 /**
  * @author wangkh
  */
-public interface GetID<T> {
+public interface IDGetter<T> {
 
     /**
      * 获取主键ID

@@ -3,12 +3,9 @@ package cn.huacloud.taxpreference.services.producer.entity.dos;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.time.LocalDate;
-import java.util.Date;
 
 /**
  * @description: 税收优惠政策法规关联表实体
@@ -38,13 +35,11 @@ public class TaxPreferencePoliciesDO {
     /**
      * 有效期起
      */
-    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate validityBeginDate;
 
     /**
      * 有效期至
      */
-    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate validityEndDate;
 
     /**
@@ -52,5 +47,9 @@ public class TaxPreferencePoliciesDO {
      */
     private Long sort;
 
+    /**
+     * 具体优惠内容摘要
+     */
+    private String digest;
 
 }

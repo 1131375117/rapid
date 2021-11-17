@@ -13,7 +13,10 @@ public interface Tax {
 
     default String parseQA(String html) {
         Document parse = Jsoup.parse(html);
-        Element fontZoom = parse.getElementById("zoom");
+        Element fontZoom = parse.getElementById("\\\"zoom\\\"");
+        if(fontZoom==null){
+            return "";
+        }
         return String.valueOf(fontZoom);
     }
 }

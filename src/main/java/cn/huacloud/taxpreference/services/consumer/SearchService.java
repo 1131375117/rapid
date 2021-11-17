@@ -6,8 +6,8 @@ import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.dtos.RangeQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.AbstractHighlightPageQueryDTO;
-import cn.huacloud.taxpreference.services.consumer.entity.vos.FAQSearchVO;
 import com.baomidou.mybatisplus.annotation.IEnum;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.elasticsearch.action.search.SearchRequest;
@@ -16,7 +16,6 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
@@ -25,10 +24,10 @@ import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
-import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -76,7 +75,7 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
         SearchHits hits = response.getHits();
         List<R> records = new ArrayList<>();
         for (SearchHit hit : hits.getHits()) {
-            R result = mapSearchHit(hit);
+            R result = mapSearchHit(hit, pageQuery.searchFields());
             records.add(result);
         }
 
@@ -126,21 +125,47 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
     default HighlightBuilder getHighlightBuilder(T pageQuery) {
         HighlightBuilder highlightBuilder = new HighlightBuilder();
 
-        highlightBuilder.preTags();
-        highlightBuilder.postTags();
+        highlightBuilder.preTags("<span style=\"color:#006EFF;\">");
+        highlightBuilder.postTags("</span>");
         List<String> searchFields = pageQuery.searchFields();
         if (CollectionUtils.isEmpty(searchFields)) {
             return null;
         }
+        // 不需要截取的高亮字段，例如 title name之类的字段
+        Set<String> notFragmentHighlightFields = pageQuery.notFragmentHighlightFields();
         for (String highlightField : searchFields) {
-            highlightBuilder.field(highlightField, -1, 0);
+            // 判断不需要截取的高亮字段
+            if (notFragmentHighlightFields.contains(highlightField)) {
+                highlightBuilder.field(highlightField, -1, 0);
+            } else {
+                highlightBuilder.field(highlightField);
+            }
         }
         return highlightBuilder;
     }
 
     RestHighLevelClient getRestHighLevelClient();
 
-    R mapSearchHit(SearchHit searchHit) throws Exception;
+    /**
+     * 映射搜索结果
+     * @param searchHit 搜索结果
+     */
+    default R mapSearchHit(SearchHit searchHit, List<String> searchFields) throws Exception {
+        R result = getObjectMapper().readValue(searchHit.getSourceAsString(), getResultClass());
+        for (String searchField : searchFields) {
+            PropertyDescriptor pd = new PropertyDescriptor(searchField, getResultClass());
+            pd.getWriteMethod().invoke(result, getHighlightString(searchHit, searchField));
+        }
+        return result;
+    }
+
+    /**
+     * 获取检索返回结果类型
+     * @return 返回结果类型
+     */
+    Class<R> getResultClass();
+
+    ObjectMapper getObjectMapper();
 
     default String getHighlightString(SearchHit searchHit, String key) {
         Map<String, Object> sourceAsMap = searchHit.getSourceAsMap();

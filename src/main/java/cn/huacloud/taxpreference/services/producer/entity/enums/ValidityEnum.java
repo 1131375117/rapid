@@ -5,6 +5,9 @@ import cn.huacloud.taxpreference.common.enums.SysCodeGetter;
 import com.baomidou.mybatisplus.annotation.IEnum;
 import lombok.Getter;
 
+import java.util.EnumSet;
+import java.util.HashMap;
+
 /**
  * 有效性状态
  *
@@ -26,6 +29,7 @@ public enum ValidityEnum implements IEnum<String>, SysCodeGetter {
     CLAUSE_INVALIDITY("条款失效"),
     FULL_TEXT_INVALIDATION("全文失效"),
     PARTIAL_REPEAL("部分废止"),
+    CLAUSE_REPEAL("条款废止"),
     UNKNOWN("未知");
 
     @Getter
@@ -38,5 +42,19 @@ public enum ValidityEnum implements IEnum<String>, SysCodeGetter {
     @Override
     public String getValue() {
         return this.name();
+    }
+
+    public static HashMap<String,String> ValidMap(){
+        HashMap<String, String> validMap = new HashMap<>();
+        for (ValidityEnum validityEnum : EnumSet.allOf(ValidityEnum.class)) {
+            validMap.put(validityEnum.name,validityEnum.getValue());
+        }
+        return  validMap;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(ValidMap());
+
+
     }
 }

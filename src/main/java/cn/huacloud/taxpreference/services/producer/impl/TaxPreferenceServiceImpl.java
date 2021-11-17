@@ -7,6 +7,7 @@ import cn.huacloud.taxpreference.common.enums.SysCodeType;
 import cn.huacloud.taxpreference.common.enums.taxpreference.PreferenceValidation;
 import cn.huacloud.taxpreference.common.enums.taxpreference.SortType;
 import cn.huacloud.taxpreference.common.enums.taxpreference.TaxPreferenceStatus;
+import cn.huacloud.taxpreference.common.enums.taxpreference.TaxStatus;
 import cn.huacloud.taxpreference.common.exception.TaxPreferenceException;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
@@ -15,10 +16,10 @@ import cn.huacloud.taxpreference.services.producer.ProcessService;
 import cn.huacloud.taxpreference.services.producer.TaxPreferenceService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.*;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.*;
-import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesStatusEnum;
 import cn.huacloud.taxpreference.services.producer.entity.enums.ValidityEnum;
 import cn.huacloud.taxpreference.services.producer.entity.vos.*;
 import cn.huacloud.taxpreference.services.producer.mapper.*;
+import cn.huacloud.taxpreference.services.user.entity.vos.LoginUserVO;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -35,9 +36,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 /**
- * @description: 优惠政策服务实现类
- * @author: fuhua
- * @create: 2021-10-21 10:36
+ * 优惠政策服务实现类
+ * @author fuhua
  */
 @Slf4j
 @RequiredArgsConstructor
@@ -55,8 +55,9 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
 
   @Override
   @Transactional(rollbackFor = Exception.class)
-  public ResultVO<Void> insertTaxPreference(TaxPreferenceDTO taxPreferenceDTO) {
+  public ResultVO<Void> insertTaxPreference(TaxPreferenceDTO taxPreferenceDTO, LoginUserVO currentUser) {
     log.info("新增政策法规dto={}", taxPreferenceDTO);
+    taxPreferenceDTO.setInputUserId(currentUser.getId());
     // 检查优惠事项名称是否存在
     judgeExists(taxPreferenceDTO);
     // 检测纳税人类型和标签管理
@@ -66,7 +67,8 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     taxPreferenceDO.setCreateTime(LocalDateTime.now());
     log.info("税收优惠新增对象:{}", taxPreferenceDO);
     taxPreferenceMapper.insert(taxPreferenceDO);
-
+    //判断是否需要提交发布申请
+    isRequireReleased(taxPreferenceDTO, currentUser, taxPreferenceDO);
     // 新增-税收优惠政策法规关联表t_tax_preference_ policies
     insertTaxPreferencePoliciesDO(taxPreferenceDTO, taxPreferenceDO);
 
@@ -74,10 +76,18 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     insertSubmitConditionDOs(taxPreferenceDTO, taxPreferenceDO);
     return ResultVO.ok();
   }
+/**
+ * 是否需要发布
+ * */
+  private void isRequireReleased(TaxPreferenceDTO taxPreferenceDTO, LoginUserVO currentUser, TaxPreferenceDO taxPreferenceDO) {
+    if(TaxStatus.SUBMIT.equals(taxPreferenceDTO.getStatus())){
+      processService.insertProcessService(new Long[]{(taxPreferenceDO.getId())}, currentUser);
+    }
+  }
 
   @Override
   @Transactional(rollbackFor = Exception.class)
-  public ResultVO<Void> updateTaxPreference(TaxPreferenceDTO taxPreferenceDTO) {
+  public ResultVO<Void> updateTaxPreference(TaxPreferenceDTO taxPreferenceDTO, LoginUserVO currentUser) {
     // 判断是否已经发布
     judgeRelease(taxPreferenceDTO.getId());
     // 判断是否在审批中
@@ -89,6 +99,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     // 修改-税收优惠表t_tax_preference
     TaxPreferenceDO taxPreferenceDO = getTaxPreferenceDO(taxPreferenceDTO);
     taxPreferenceMapper.updateById(taxPreferenceDO);
+    isRequireReleased(taxPreferenceDTO,currentUser,taxPreferenceDO);
 
     // 修改政策法规
     updateTaxPreferencePolicy(taxPreferenceDTO, taxPreferenceDO);
