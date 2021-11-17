@@ -273,15 +273,28 @@ public class PoliciesServiceImpl implements PoliciesService {
       List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDOList) {
     PoliciesCombinationDTO policiesCombinationDTO = new PoliciesCombinationDTO();
     // 设置纳税人、使用企业、适用行业名称值
-    policiesCombinationDTO.setEnterpriseTypeCodes(
-        Arrays.asList(policiesDO.getEnterpriseTypeCodes().split(",")));
-    policiesCombinationDTO.setIndustryCodes(
-        Arrays.asList(policiesDO.getIndustryCodes().split(",")));
-    policiesCombinationDTO.setTaxpayerIdentifyTypeCodes(
-        Arrays.asList((policiesDO.getTaxpayerIdentifyTypeCodes()).split(",")));
+    if(StringUtils.isNotEmpty(policiesDO.getEnterpriseTypeCodes())){
+      policiesCombinationDTO.setEnterpriseTypeCodes(
+              Arrays.asList(policiesDO.getEnterpriseTypeCodes().split(",")));
+    }else {
+      policiesCombinationDTO.setEnterpriseTypeCodes(new ArrayList<>());
+    }
+    if(StringUtils.isNotEmpty(policiesDO.getIndustryCodes())){
+      policiesCombinationDTO.setIndustryCodes(
+              Arrays.asList(policiesDO.getIndustryCodes().split(",")));
+    }else {
+      policiesCombinationDTO.setIndustryCodes(new ArrayList<>());
+    }
+    if(StringUtils.isNotEmpty(policiesDO.getTaxpayerIdentifyTypeCodes())){
+      policiesCombinationDTO.setTaxpayerIdentifyTypeCodes(
+              Arrays.asList((policiesDO.getTaxpayerIdentifyTypeCodes()).split(",")));
+    }else{
+      policiesCombinationDTO.setTaxpayerIdentifyTypeCodes(new ArrayList<>());
+    }
     // 设置标签
-    policiesCombinationDTO.setLabels(Arrays.asList((policiesDO.getLabels()).split(",")));
-
+    if(StringUtils.isNotEmpty(policiesDO.getLabels())){
+      policiesCombinationDTO.setLabels(Arrays.asList(policiesDO.getLabels().split(",")));
+    }
     BeanUtils.copyProperties(policiesDO, policiesCombinationDTO);
     // 设置政策解读对象
     policiesCombinationDTO.setPoliciesExplainDTO(policiesExplainDTO);

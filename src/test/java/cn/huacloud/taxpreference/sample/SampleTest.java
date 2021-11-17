@@ -1,6 +1,7 @@
 package cn.huacloud.taxpreference.sample;
 
 import cn.dev33.satoken.secure.SaSecureUtil;
+import cn.huacloud.taxpreference.services.consumer.entity.dtos.PoliciesSearchQueryDTO;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.pinyin4j.PinyinHelper;
