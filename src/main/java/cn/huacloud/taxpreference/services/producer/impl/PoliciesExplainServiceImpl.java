@@ -53,17 +53,24 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
       QueryPoliciesExplainDTO queryPoliciesExplainDTO) {
     log.info("政策解读列表查询条件dto", queryPoliciesExplainDTO);
     LambdaQueryWrapper<PoliciesExplainDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-    // 模糊查询--政策解读标题
-    lambdaQueryWrapper.like(
-        StringUtils.isNotBlank(queryPoliciesExplainDTO.getKeyword()),
-        PoliciesExplainDO::getTitle,
-        queryPoliciesExplainDTO.getKeyword());
-    // 模糊查询--政策解读标题
+    // 关键字查询--政策解读标题
+    lambdaQueryWrapper
+        .like(
+            StringUtils.isNotBlank(queryPoliciesExplainDTO.getKeyword()),
+            PoliciesExplainDO::getTitle,
+            queryPoliciesExplainDTO.getKeyword())
+        .or()
+        // 关键字查询--政策解读来源
+        .like(
+            StringUtils.isNotBlank(queryPoliciesExplainDTO.getKeyword()),
+            PoliciesExplainDO::getDocSource,
+            queryPoliciesExplainDTO.getKeyword());
+    // 条件模糊查询--政策解读标题
     lambdaQueryWrapper.like(
         StringUtils.isNotBlank(queryPoliciesExplainDTO.getTitle()),
         PoliciesExplainDO::getTitle,
         queryPoliciesExplainDTO.getTitle());
-    // 模糊查询--政策解读来源
+    // 条件模糊查询--政策解读来源
     lambdaQueryWrapper.like(
         StringUtils.isNotBlank(queryPoliciesExplainDTO.getDocSource()),
         PoliciesExplainDO::getDocSource,
