@@ -49,7 +49,7 @@ public class FrequentlyAskedQuestionController {
   /**
    * 新增热门问答
    *
-   * @param frequentlyAskedQuestionDTOS
+   * @param frequentlyAskedQuestionDTO
    * @return
    */
   @PermissionInfo(name = "热门问答新增", group = PermissionGroup.FREQUENTLY_ASKED_QUESTION)
@@ -57,17 +57,17 @@ public class FrequentlyAskedQuestionController {
   @ApiOperation("热门问答新增")
   @PostMapping(value = "/frequentlyAskedQuestion")
   public ResultVO<Void> insertFrequentlyAskedQuestion(
-      @Validated(ValidationGroup.Create.class) @ApiParam("热门问答集合") @RequestBody
-          List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOS) {
+      @Validated(ValidationGroup.Create.class) @RequestBody
+     FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO) {
     frequentlyAskedQuestionService.insertFrequentlyAskedQuestion(
-        frequentlyAskedQuestionDTOS, UserUtil.getCurrentUser().getId());
+        frequentlyAskedQuestionDTO, UserUtil.getCurrentUser().getId());
     return ResultVO.ok();
   }
 
   /**
    * 修改热门问答
    *
-   * @param frequentlyAskedQuestionDtoS
+   * @param frequentlyAskedQuestionDto
    * @return
    */
   @PermissionInfo(name = "热门问答修改", group = PermissionGroup.FREQUENTLY_ASKED_QUESTION)
@@ -76,8 +76,8 @@ public class FrequentlyAskedQuestionController {
   @PutMapping(value = "/frequentlyAskedQuestion")
   public ResultVO<Void> updateFrequentlyAskedQuestion(
       @Validated(ValidationGroup.Update.class) @RequestBody
-          List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDtoS) {
-    frequentlyAskedQuestionService.updateFrequentlyAskedQuestion(frequentlyAskedQuestionDtoS);
+          FrequentlyAskedQuestionDTO frequentlyAskedQuestionDto) {
+    frequentlyAskedQuestionService.updateFrequentlyAskedQuestion(frequentlyAskedQuestionDto);
     return ResultVO.ok();
   }
 

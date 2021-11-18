@@ -130,9 +130,9 @@ public class PoliciesServiceImpl implements PoliciesService {
         // 设置政策法规id
         Long policiesId = policiesDO.getId();
         frequentlyAskedQuestionDTO.setPoliciesIds(String.valueOf(policiesId));
+        frequentlyAskedQuestionService.insertFrequentlyAskedQuestion(
+                frequentlyAskedQuestionDTO, userId);
       }
-      frequentlyAskedQuestionService.insertFrequentlyAskedQuestion(
-          frequentlyAskedQuestionDTOList, userId);
     }
 
     // 关联附件信息
@@ -418,18 +418,14 @@ public class PoliciesServiceImpl implements PoliciesService {
         policiesCombinationDTO.getFrequentlyAskedQuestionDTOList()) {
       if (frequentlyAskedQuestionDTO.getId() != null && frequentlyAskedQuestionDTO.getId() != 0) {
         // 修改热门问答
-        ArrayList<FrequentlyAskedQuestionDTO> objects = new ArrayList<>();
-        objects.add(frequentlyAskedQuestionDTO);
         frequentlyAskedQuestionDTO.setPoliciesIds(String.valueOf(policiesCombinationDTO.getId()));
         frequentlyAskedQuestionDTO.setInputUserId(policiesCombinationDTO.getInputUserId());
-        frequentlyAskedQuestionService.updateFrequentlyAskedQuestion(objects);
+        frequentlyAskedQuestionService.updateFrequentlyAskedQuestion(frequentlyAskedQuestionDTO);
       } else {
         // 新增热点问答
-        ArrayList<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOList = new ArrayList<>();
-        frequentlyAskedQuestionDTOList.add(frequentlyAskedQuestionDTO);
         frequentlyAskedQuestionDTO.setPoliciesIds(String.valueOf(policiesCombinationDTO.getId()));
         frequentlyAskedQuestionService.insertFrequentlyAskedQuestion(
-                frequentlyAskedQuestionDTOList, policiesCombinationDTO.getInputUserId());
+                frequentlyAskedQuestionDTO, policiesCombinationDTO.getInputUserId());
       }
     }
   }

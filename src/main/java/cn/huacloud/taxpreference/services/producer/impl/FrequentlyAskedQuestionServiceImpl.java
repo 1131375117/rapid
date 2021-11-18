@@ -127,16 +127,15 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
   /**
    * 新增热门问答
    *
-   * @param frequentlyAskedQuestionDtoS 热门问答对象
+   * @param frequentlyAskedQuestionDto 热门问答对象
    */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void insertFrequentlyAskedQuestion(
-      List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDtoS, Long userId) {
-    log.info("新增热门问答dto={}", frequentlyAskedQuestionDtoS);
-    for (FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO : frequentlyAskedQuestionDtoS) {
+      FrequentlyAskedQuestionDTO frequentlyAskedQuestionDto, Long userId) {
+    log.info("新增热门问答dto={}", frequentlyAskedQuestionDto);
       FrequentlyAskedQuestionDO frequentlyAskedQuestionDO = new FrequentlyAskedQuestionDO();
-      BeanUtils.copyProperties(frequentlyAskedQuestionDTO, frequentlyAskedQuestionDO);
+      BeanUtils.copyProperties(frequentlyAskedQuestionDto, frequentlyAskedQuestionDO);
       // 设置发布时间
       frequentlyAskedQuestionDO.setReleaseDate(LocalDate.now());
       // 设置用户id
@@ -147,7 +146,7 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
       frequentlyAskedQuestionDO.setUpdateTime(LocalDateTime.now());
       // 设置逻辑删除
       frequentlyAskedQuestionDO.setDeleted(false);
-      frequentlyAskedQuestionDO.setPoliciesIds(frequentlyAskedQuestionDTO.getPoliciesIds());
+      frequentlyAskedQuestionDO.setPoliciesIds(frequentlyAskedQuestionDto.getPoliciesIds());
       frequentlyAskedQuestionDO.setId(null);
       log.info("新增热门问答对象={}", frequentlyAskedQuestionDO);
       frequentlyAskedQuestionMapper.insert(frequentlyAskedQuestionDO);
@@ -155,39 +154,38 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
       attachmentService.setAttachmentDocId(
           frequentlyAskedQuestionDO.getId(),
           AttachmentType.POLICIES,
-          frequentlyAskedQuestionDTO.getContent());
+              frequentlyAskedQuestionDto.getContent());
     }
-  }
+
 
   /**
    * 修改热门问答
    *
-   * @param frequentlyAskedQuestionDtoS 热门问答对象
+   * @param frequentlyAskedQuestionDto 热门问答对象
    */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void updateFrequentlyAskedQuestion(
-      List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDtoS) {
-    for (FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO : frequentlyAskedQuestionDtoS) {
+      FrequentlyAskedQuestionDTO frequentlyAskedQuestionDto) {
       // 查询热门问答
       FrequentlyAskedQuestionDO frequentlyAskedQuestionDO =
-          frequentlyAskedQuestionMapper.selectById(frequentlyAskedQuestionDTO.getId());
+          frequentlyAskedQuestionMapper.selectById(frequentlyAskedQuestionDto.getId());
       // 参数校验
       if (frequentlyAskedQuestionDO != null) {
         frequentlyAskedQuestionDO.setUpdateTime(LocalDateTime.now());
         // 属性拷贝
-        BeanUtils.copyProperties(frequentlyAskedQuestionDTO, frequentlyAskedQuestionDO);
+        BeanUtils.copyProperties(frequentlyAskedQuestionDto, frequentlyAskedQuestionDO);
         log.info("修改热门问答对象={}", frequentlyAskedQuestionDO);
         // 修改热门问答
         frequentlyAskedQuestionMapper.updateById(frequentlyAskedQuestionDO);
         // 关联附件信息
         attachmentService.setAttachmentDocId(
-            frequentlyAskedQuestionDTO.getId(),
+                frequentlyAskedQuestionDto.getId(),
             AttachmentType.POLICIES,
-            frequentlyAskedQuestionDTO.getContent());
+                frequentlyAskedQuestionDto.getContent());
       }
     }
-  }
+
 
   /**
    * 删除热门问答

@@ -117,7 +117,7 @@ public class PoliciesController {
   @SaCheckPermission("producer_policies_abolish")
   @ApiOperation("政策法规废止")
   @PutMapping(value = "/policies/abolish")
-  public ResultVO<Void> abolish(@RequestBody QueryAbolishDTO queryAbolishDTO) {
+  public ResultVO<Void> abolish(@Validated @RequestBody QueryAbolishDTO queryAbolishDTO) {
     policiesService.abolish(queryAbolishDTO);
     return ResultVO.ok();
   }
