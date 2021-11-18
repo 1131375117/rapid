@@ -10,15 +10,28 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.core.TermVectorsRequest;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.search.aggregations.Aggregation;
+import org.elasticsearch.search.aggregations.AggregationBuilder;
+import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.Aggregations;
+import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringRareTerms;
+import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
+import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.QueryBuilders.matchPhraseQuery;
+import static org.elasticsearch.index.query.QueryBuilders.wildcardQuery;
 
 /**
  * @author wangkh
@@ -33,9 +46,27 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
     private final ObjectMapper objectMapper;
 
     @Override
-    public List<HotLabelVO> hotLabels(Integer size) {
-
-        return null;
+    public List<HotLabelVO> hotLabels(Integer size) throws Exception {
+        // term aggregation
+        TermsAggregationBuilder aggregationBuilder = AggregationBuilders.terms("hot_label")
+                .field("labels")
+                .size(size);
+        // source builder
+        SearchSourceBuilder searchSourceBuilder = SearchSourceBuilder.searchSource()
+                .aggregation(aggregationBuilder)
+                .size(0);
+        // search request
+        SearchRequest searchRequest = new SearchRequest(getIndex())
+                .source(searchSourceBuilder);
+        // do search
+        SearchResponse response = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+        // data mapping
+        Aggregations aggregations = response.getAggregations();
+        ParsedStringTerms hotLabelTerms = aggregations.get("hot_label");
+        return hotLabelTerms.getBuckets().stream()
+                .map(bucket -> new HotLabelVO().setLabelName(bucket.getKeyAsString())
+                        .setHotScore(bucket.getDocCount()))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -54,6 +85,12 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
             for (String searchField : searchFields) {
                 queryBuilder.should(matchPhraseQuery(searchField, keyword));
             }
+        }
+
+        // 标签过滤
+        String label = pageQuery.getLabel();
+        if (label != null) {
+            queryBuilder.must(wildcardQuery("labels", formatWildcardValue(label)));
         }
 
         return queryBuilder;

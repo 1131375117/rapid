@@ -52,6 +52,9 @@ public class TaxPreferenceSearchQueryDTO extends AbstractHighlightPageQueryDTO {
     @FilterField("taxpayerCreditRatings")
     private List<String> taxpayerCreditRatings;
 
+    @ApiModelProperty("标签")
+    private String label;
+
     @Override
     public String index(ElasticsearchIndexConfig config) {
         return config.getTaxPreference().getAlias();
