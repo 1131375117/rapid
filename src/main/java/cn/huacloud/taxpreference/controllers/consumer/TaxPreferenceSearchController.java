@@ -42,7 +42,7 @@ public class TaxPreferenceSearchController {
 
     @ApiOperation("热门标签列表")
     @GetMapping("/taxPreference/hotLabels")
-    public ResultVO<List<HotLabelVO>> hotLabels(@RequestParam("size") Integer size) {
+    public ResultVO<List<HotLabelVO>> hotLabels(@RequestParam(value = "size", defaultValue = "30") Integer size) throws Exception {
         List<HotLabelVO> hotLabels = taxPreferenceSearchService.hotLabels(size);
         return ResultVO.ok(hotLabels);
     }

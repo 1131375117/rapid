@@ -16,7 +16,7 @@ public interface TaxPreferenceSearchService extends SearchService<TaxPreferenceS
      * @param size 数据大小
      * @return 热门标签
      */
-    List<HotLabelVO> hotLabels(Integer size);
+    List<HotLabelVO> hotLabels(Integer size) throws Exception;
 
     /**
      * 税收优惠详情
