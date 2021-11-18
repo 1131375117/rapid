@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -80,6 +81,7 @@ public class PoliciesCombinationDTO {
     private List<String> labels;
 
     @ApiModelProperty("热点问答集合")
+    @Valid
     private List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOList;
 
     @ApiModelProperty("政策法规对象")
