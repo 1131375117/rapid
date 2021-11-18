@@ -44,7 +44,7 @@ public class TaxPreferenceSearchVO {
     private SysCodeSimpleVO validity;
 
     @ApiModelProperty("政策")
-    private List<PoliciesDigestSerachVO> policies;
+    private List<PoliciesDigestSearchVO> policies;
 
     @ApiModelProperty("申报条件")
     private List<SubmitConditionSearchVO> submitConditions;

@@ -41,7 +41,13 @@ tax-preference:
   index:
     policies:
       index: policies_index_2021-11-11_dev
+      alias: policies_dev
     policies-explain:
       index: policies_explain_index_2021-11-17_dev
+      alias: policies_explain_dev
     frequently-asked-question:
       index: frequently_asked_question_index_2021-11-17_dev
+      alias: frequently_asked_question_dev
+    tax-preference:
+      index: tax-preference_index_2021-11-18_dev
+      alias: tax-preference_dev

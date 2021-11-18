@@ -3,6 +3,7 @@ package cn.huacloud.taxpreference.services.consumer.entity.dtos;
 import cn.huacloud.taxpreference.common.annotations.FilterField;
 import cn.huacloud.taxpreference.common.annotations.RangeField;
 import cn.huacloud.taxpreference.common.entity.dtos.LocalDateRangeQueryDTO;
+import cn.huacloud.taxpreference.config.ElasticsearchIndexConfig;
 import cn.huacloud.taxpreference.services.producer.entity.enums.ValidityEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -53,8 +54,8 @@ public class PoliciesSearchQueryDTO extends AbstractHighlightPageQueryDTO {
     public ValidityEnum validity;
 
     @Override
-    public List<String> indexList() {
-        return Collections.singletonList("policies");
+    public String index(ElasticsearchIndexConfig config) {
+        return config.getPolicies().getAlias();
     }
 
     @Override

@@ -147,6 +147,6 @@ public class PoliciesSearchServiceImpl implements PoliciesSearchService {
      */
     private String getIndex() {
         PoliciesSearchQueryDTO queryDTO = new PoliciesSearchQueryDTO();
-        return queryDTO.indices()[0];
+        return queryDTO.index();
     }
 }

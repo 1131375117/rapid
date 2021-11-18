@@ -124,6 +124,6 @@ public class PoliciesExplainSearchServiceImpl implements PoliciesExplainSearchSe
      */
     private String getIndex() {
         PoliciesExplainSearchQueryDTO queryDTO = new PoliciesExplainSearchQueryDTO();
-        return queryDTO.indices()[0];
+        return queryDTO.index();
     }
 }

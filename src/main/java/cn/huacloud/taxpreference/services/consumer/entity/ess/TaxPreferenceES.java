@@ -3,7 +3,7 @@ package cn.huacloud.taxpreference.services.consumer.entity.ess;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeSimpleVO;
 import cn.huacloud.taxpreference.services.consumer.entity.AbstractCombinePlainContent;
 import cn.huacloud.taxpreference.services.consumer.entity.CombineText;
-import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesDigestSerachVO;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesDigestSearchVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.SubmitConditionSearchVO;
 import lombok.Data;
 
@@ -19,6 +19,16 @@ public class TaxPreferenceES extends AbstractCombinePlainContent<Long> {
      * 主键ID
      */
     private Long id;
+
+    /**
+     * 和 taxPreferenceName 相同多索引检索冗余字段
+     */
+    private String title;
+
+    /**
+     * 优惠事项名称
+     */
+    private String taxPreferenceName;
 
     /**
      * 所属税种
@@ -51,11 +61,6 @@ public class TaxPreferenceES extends AbstractCombinePlainContent<Long> {
     private List<String> taxpayerCreditRatings;
 
     /**
-     * 优惠事项名称
-     */
-    private String taxPreferenceName;
-
-    /**
      * 减免事项
      */
     private String taxPreferenceItem;
@@ -68,7 +73,7 @@ public class TaxPreferenceES extends AbstractCombinePlainContent<Long> {
     /**
      * 政策
      */
-    private List<PoliciesDigestSerachVO> policies;
+    private List<PoliciesDigestSearchVO> policies;
 
     /**
      * 申报条件
@@ -104,7 +109,7 @@ public class TaxPreferenceES extends AbstractCombinePlainContent<Long> {
     @Override
     public List<CombineText> combineTextList() {
         List<CombineText> list = new ArrayList<>();
-        for (PoliciesDigestSerachVO policy : policies) {
+        for (PoliciesDigestSearchVO policy : policies) {
             list.add(CombineText.ofText(policy.getTitle()));
             list.add(CombineText.ofText(policy.getDocCode()));
             list.add(CombineText.ofText(policy.getDigest()));

@@ -65,4 +65,9 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
     public Class<TaxPreferenceSearchVO> getResultClass() {
         return TaxPreferenceSearchVO.class;
     }
+
+    private String getIndex() {
+        TaxPreferenceSearchQueryDTO queryDTO = new TaxPreferenceSearchQueryDTO();
+        return queryDTO.index();
+    }
 }

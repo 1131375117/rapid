@@ -3,6 +3,7 @@ package cn.huacloud.taxpreference.services.consumer.entity.dtos;
 import cn.huacloud.taxpreference.common.annotations.FilterField;
 import cn.huacloud.taxpreference.common.annotations.RangeField;
 import cn.huacloud.taxpreference.common.entity.dtos.LocalDateRangeQueryDTO;
+import cn.huacloud.taxpreference.config.ElasticsearchIndexConfig;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,9 +21,10 @@ import java.util.List;
 @Setter
 public class FAQSearchQueryDTO extends AbstractHighlightPageQueryDTO {
 
+
     @Override
-    public List<String> indexList() {
-        return Collections.singletonList("frequently_asked_question");
+    public String index(ElasticsearchIndexConfig config) {
+        return config.getFrequentlyAskedQuestion().getAlias();
     }
 
     @Override

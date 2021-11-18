@@ -106,6 +106,6 @@ public class FrequentlyAskedQuestionSearchServiceImpl implements FrequentlyAsked
      */
     private String getIndex() {
         FAQSearchQueryDTO queryDTO = new FAQSearchQueryDTO();
-        return queryDTO.indices()[0];
+        return queryDTO.index();
     }
 }

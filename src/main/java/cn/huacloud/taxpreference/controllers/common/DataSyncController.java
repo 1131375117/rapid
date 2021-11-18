@@ -6,9 +6,11 @@ import cn.huacloud.taxpreference.config.SysConfig;
 import cn.huacloud.taxpreference.sync.es.trigger.impl.FAQEventTrigger;
 import cn.huacloud.taxpreference.sync.es.trigger.impl.PoliciesEventTrigger;
 import cn.huacloud.taxpreference.sync.es.trigger.impl.PoliciesExplainEventTrigger;
+import cn.huacloud.taxpreference.sync.es.trigger.impl.TaxPreferenceEventTrigger;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.helpers.MessageFormatter;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,17 +19,19 @@ import org.springframework.web.bind.annotation.RestController;
  * @author wangkh
  */
 @Api(tags = "数据同步前端控制器")
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RestController
 public class DataSyncController {
 
-    private SysConfig sysConfig;
+    private final SysConfig sysConfig;
 
-    private PoliciesEventTrigger policiesEventTrigger;
+    private final PoliciesEventTrigger policiesEventTrigger;
 
-    private PoliciesExplainEventTrigger policiesExplainEventTrigger;
+    private final PoliciesExplainEventTrigger policiesExplainEventTrigger;
 
-    private FAQEventTrigger faqEventTrigger;
+    private final FAQEventTrigger faqEventTrigger;
+
+    private final TaxPreferenceEventTrigger taxPreferenceEventTrigger;
 
     @ApiOperation("同步所有政策法规数据")
     @GetMapping("/sync/policies")
@@ -50,6 +54,14 @@ public class DataSyncController {
     public ResultVO<Void> syncAllFAQ(String password) {
         checkSysPassword(password);
         long total = faqEventTrigger.syncAll();
+        return ResultVO.ok().setMsg(MessageFormatter.format("成功同步数据{}条", total).getMessage());
+    }
+
+    @ApiOperation("同步所有税收优惠数据")
+    @GetMapping("/sync/faq")
+    public ResultVO<Void> syncAllTaxPreference(String password) {
+        checkSysPassword(password);
+        long total = taxPreferenceEventTrigger.syncAll();
         return ResultVO.ok().setMsg(MessageFormatter.format("成功同步数据{}条", total).getMessage());
     }
 

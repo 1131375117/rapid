@@ -10,7 +10,7 @@ import java.time.LocalDate;
  * @author wangkh
  */
 @Data
-public class PoliciesDigestSerachVO {
+public class PoliciesDigestSearchVO {
     /**
      * 标题
      */

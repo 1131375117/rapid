@@ -69,7 +69,7 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
             searchSourceBuilder.sort(sortBuilder);
         }
         // 创建查询请求
-        SearchRequest searchRequest = new SearchRequest(pageQuery.indices());
+        SearchRequest searchRequest = new SearchRequest(pageQuery.index());
         searchRequest.source(searchSourceBuilder);
         // 执行查询
         SearchResponse response = getRestHighLevelClient().search(searchRequest, RequestOptions.DEFAULT);

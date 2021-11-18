@@ -1,0 +1,154 @@
+{
+  "index_patterns": [
+    "tax_preference_index_*"
+  ],
+  "template": {
+    "settings": {
+      "number_of_shards": 1,
+      "number_of_replicas": 0
+    },
+    "aliases": {
+      "tax_preference": {}
+    },
+    "mappings": {
+      "_source": {
+        "enabled": true
+      },
+      "properties": {
+        "id": {
+          "type": "long"
+        },
+        "title": {
+          "type": "text",
+          "analyzer": "ik_max_word"
+        },
+        "taxCategories": {
+          "properties": {
+            "codeName": {
+              "type": "keyword"
+            },
+            "codeValue": {
+              "type": "keyword"
+            }
+          }
+        },
+        "taxpayerRegisterType": {
+          "properties": {
+            "codeName": {
+              "type": "keyword"
+            },
+            "codeValue": {
+              "type": "keyword"
+            }
+          }
+        },
+        "taxpayerType": {
+          "properties": {
+            "codeName": {
+              "type": "keyword"
+            },
+            "codeValue": {
+              "type": "keyword"
+            }
+          }
+        },
+        "industries": {
+          "properties": {
+            "codeName": {
+              "type": "keyword"
+            },
+            "codeValue": {
+              "type": "keyword"
+            }
+          }
+        },
+        "enterpriseTypes": {
+          "properties": {
+            "codeName": {
+              "type": "keyword"
+            },
+            "codeValue": {
+              "type": "keyword"
+            }
+          }
+        },
+        "taxpayerCreditRatings": {
+          "type": "keyword"
+        },
+        "taxPreferenceItem": {
+          "type": "keyword"
+        },
+        "validity": {
+          "properties": {
+            "codeName": {
+              "type": "keyword"
+            },
+            "codeValue": {
+              "type": "keyword"
+            }
+          }
+        },
+        "policies": {
+          "properties": {
+            "title": {
+              "type": "text",
+              "analyzer": "ik_max_word"
+            },
+            "docCode": {
+              "type": "keyword"
+            },
+            "validityBeginDate": {
+              "type": "date",
+              "format": "yyyy-MM-dd"
+            },
+            "validityEndDate": {
+              "type": "date",
+              "format": "yyyy-MM-dd"
+            },
+            "digest": {
+              "type": "text",
+              "analyzer": "ik_max_word"
+            }
+          }
+        },
+        "submitConditions": {
+          "properties": {
+            "conditionName": {
+              "type": "keyword"
+            },
+            "requirement": {
+              "type": "keyword"
+            }
+          }
+        },
+        "keepQueryData": {
+          "type": "text",
+          "analyzer": "ik_max_word"
+        },
+        "submitTaxData": {
+          "type": "text",
+          "analyzer": "ik_max_word"
+        },
+        "submitTimeLimit": {
+          "type": "text",
+          "analyzer": "ik_max_word"
+        },
+        "submitDescription": {
+          "type": "text",
+          "analyzer": "ik_max_word"
+        },
+        "labels": {
+          "type": "keyword"
+        },
+        "combinePlainContent": {
+          "type": "text",
+          "analyzer": "ik_max_word"
+        }
+      }
+    }
+  },
+  "priority": 500,
+  "_meta": {
+    "description": "税收优惠索引模板，更新时间2021年11月18日"
+  }
+}
