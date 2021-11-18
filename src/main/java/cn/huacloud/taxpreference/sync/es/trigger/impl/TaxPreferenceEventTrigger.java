@@ -2,11 +2,12 @@ package cn.huacloud.taxpreference.sync.es.trigger.impl;
 
 import cn.huacloud.taxpreference.services.common.SysCodeService;
 import cn.huacloud.taxpreference.services.consumer.entity.ess.TaxPreferenceES;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesDigestSearchVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.SubmitConditionSearchVO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferenceDO;
-import cn.huacloud.taxpreference.services.producer.mapper.PoliciesMapper;
 import cn.huacloud.taxpreference.services.producer.mapper.SubmitConditionMapper;
 import cn.huacloud.taxpreference.services.producer.mapper.TaxPreferenceMapper;
+import cn.huacloud.taxpreference.services.producer.mapper.TaxPreferencePoliciesMapper;
 import cn.huacloud.taxpreference.sync.es.trigger.EventTrigger;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -33,7 +34,7 @@ public class TaxPreferenceEventTrigger extends EventTrigger<Long, TaxPreferenceE
 
     private final SubmitConditionMapper submitConditionMapper;
 
-    private final PoliciesMapper policiesMapper;
+    private final TaxPreferencePoliciesMapper taxPreferencePoliciesMapper;
 
     private final SysCodeService sysCodeService;
 
@@ -69,8 +70,8 @@ public class TaxPreferenceEventTrigger extends EventTrigger<Long, TaxPreferenceE
         taxPreferenceES.setLabels(split2List(taxPreferenceDO.getLabels()));
 
         // 设置政策
-        taxPreferenceES.setPolicies(null);
-
+        List<PoliciesDigestSearchVO> policiesDigestSearchVOList = taxPreferencePoliciesMapper.getPoliciesDigestSearchVOList(taxPreferenceDO.getId());
+        taxPreferenceES.setPolicies(policiesDigestSearchVOList);
 
         // 设置申报条件
         List<SubmitConditionSearchVO> submitConditions = submitConditionMapper.getSubmitConditions(taxPreferenceDO.getId()).stream()

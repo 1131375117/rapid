@@ -1,6 +1,7 @@
 package cn.huacloud.taxpreference.services.producer.mapper;
 
 import cn.huacloud.taxpreference.services.consumer.entity.ess.PoliciesES;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesDigestSearchVO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesDTO;
@@ -56,4 +57,6 @@ public interface PoliciesMapper extends BaseMapper<PoliciesDO> {
         BeanUtils.copyProperties(policiesDO, policiesES);
         return policiesES;
     }
+
+
 }
