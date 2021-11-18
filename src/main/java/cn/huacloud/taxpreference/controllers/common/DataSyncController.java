@@ -3,6 +3,7 @@ package cn.huacloud.taxpreference.controllers.common;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.config.SysConfig;
+import cn.huacloud.taxpreference.sync.es.trigger.impl.FAQEventTrigger;
 import cn.huacloud.taxpreference.sync.es.trigger.impl.PoliciesEventTrigger;
 import cn.huacloud.taxpreference.sync.es.trigger.impl.PoliciesExplainEventTrigger;
 import io.swagger.annotations.Api;
@@ -26,6 +27,8 @@ public class DataSyncController {
 
     private PoliciesExplainEventTrigger policiesExplainEventTrigger;
 
+    private FAQEventTrigger faqEventTrigger;
+
     @ApiOperation("同步所有政策法规数据")
     @GetMapping("/sync/policies")
     public ResultVO<Void> syncAllPolicies(String password) {
@@ -39,6 +42,14 @@ public class DataSyncController {
     public ResultVO<Void> syncAllPoliciesExplain(String password) {
         checkSysPassword(password);
         long total = policiesExplainEventTrigger.syncAll();
+        return ResultVO.ok().setMsg(MessageFormatter.format("成功同步数据{}条", total).getMessage());
+    }
+
+    @ApiOperation("同步所有热点问答数据")
+    @GetMapping("/sync/faq")
+    public ResultVO<Void> syncAllFAQ(String password) {
+        checkSysPassword(password);
+        long total = faqEventTrigger.syncAll();
         return ResultVO.ok().setMsg(MessageFormatter.format("成功同步数据{}条", total).getMessage());
     }
 

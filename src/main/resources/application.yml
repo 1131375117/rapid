@@ -14,7 +14,22 @@ spring:
 
 # swagger
 swagger:
-  base-package: cn.huacloud.taxpreference.controllers
+  docket:
+    common:
+      title: "公共服务接口"
+      basePackage: cn.huacloud.taxpreference.controllers.common
+    consumer:
+      title: "前台接口"
+      basePackage: cn.huacloud.taxpreference.controllers.consumer
+    producer:
+      title: "后台接口"
+      basePackage: cn.huacloud.taxpreference.controllers.producer
+    sso:
+      title: "用户登录"
+      basePackage: cn.huacloud.taxpreference.controllers.sso
+    user:
+      title: "用户管理"
+      basePackage: cn.huacloud.taxpreference.controllers.user
 
 # mybatis plus
 mybatis-plus:
@@ -32,5 +47,6 @@ sa-token:
   token-style: uuid
   is-log: true
 
-
-
+logging:
+  level:
+    org.elasticsearch.client.RestClient: error

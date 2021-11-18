@@ -1,7 +1,7 @@
 spring:
   cloud:
     function:
-      definition: "savePoliciesSuppler;deletePoliciesSuppler;savePolicies;deletePolicies;savePoliciesExplainSuppler;deletePoliciesExplainSuppler;savePoliciesExplain;deletePoliciesExplain"
+      definition: "savePoliciesSuppler;deletePoliciesSuppler;savePolicies;deletePolicies;savePoliciesExplainSuppler;deletePoliciesExplainSuppler;savePoliciesExplain;deletePoliciesExplain;saveFAQSuppler;deleteFAQSuppler;saveFAQ;deleteFAQ"
     stream:
       bindings:
         # policies save
@@ -28,3 +28,15 @@ spring:
         deletePoliciesExplain-in-0:
           destination: deletePoliciesExplainExchange
           group: deletePoliciesExplainQueue
+        # FAQ save
+        saveFAQSuppler-out-0:
+          destination: saveFAQExchange
+        saveFAQ-in-0:
+          destination: saveFAQExchange
+          group: saveFAQQueue
+        # FAQ delete
+        deleteFAQSuppler-out-0:
+          destination: deleteFAQExchange
+        deleteFAQ-in-0:
+          destination: deleteFAQExchange
+          group: deleteFAQQueue

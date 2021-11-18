@@ -6,6 +6,7 @@ import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.dtos.RangeQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.AbstractHighlightPageQueryDTO;
+import cn.huacloud.taxpreference.services.consumer.entity.dtos.FAQSearchQueryDTO;
 import com.baomidou.mybatisplus.annotation.IEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
@@ -58,9 +59,11 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
         SearchSourceBuilder searchSourceBuilder = SearchSourceBuilder.searchSource()
                 .trackTotalHits(true)
                 .query(queryBuilder)
+                .fetchSource(null, getExcludeSource())
                 .highlighter(highlightBuilder)
                 .from(pageQuery.from())
                 .size(pageQuery.getPageSize());
+
         // 添加排序字段
         for (SortBuilder<?> sortBuilder : pageQuery.sortBuilders()) {
             searchSourceBuilder.sort(sortBuilder);
@@ -117,6 +120,15 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
     }
 
     /**
+     * 获取排除不获取的字段
+     *
+     * @return 排除不获取的字段
+     */
+    default String[] getExcludeSource() {
+        return new String[]{"content"};
+    }
+
+    /**
      * 获取高亮构造器
      *
      * @param pageQuery 分页检索条件
@@ -148,6 +160,7 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
 
     /**
      * 映射搜索结果
+     *
      * @param searchHit 搜索结果
      */
     default R mapSearchHit(SearchHit searchHit, List<String> searchFields) throws Exception {
@@ -161,6 +174,7 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
 
     /**
      * 获取检索返回结果类型
+     *
      * @return 返回结果类型
      */
     Class<R> getResultClass();
@@ -186,6 +200,7 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
     /**
      * 通过PageQuery的字段注解，自动生成BoolQueryBuilder
      * 目前支持过滤字段和范围字段
+     *
      * @param pageQuery
      * @return
      */
@@ -216,6 +231,7 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
 
     /**
      * 格式化Wildcard查询关键字
+     *
      * @param value 关键字
      * @return 格式化后的查询关键字
      */
@@ -224,7 +240,9 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
         return "*" + value + "*";
     }
 
-    default SearchResponse simplePageSearch(String index, QueryBuilder queryBuilder, PageQueryDTO pageQuery, FieldSortBuilder ... fieldSortBuilders) throws Exception {
+    default SearchResponse simplePageSearch(String index, QueryBuilder queryBuilder, PageQueryDTO pageQuery, FieldSortBuilder... fieldSortBuilders) throws Exception {
+        // 参数合理化
+        pageQuery.paramReasonable();
         // 构建查询条件
         SearchSourceBuilder searchSourceBuilder = SearchSourceBuilder.searchSource()
                 .trackTotalHits(true)

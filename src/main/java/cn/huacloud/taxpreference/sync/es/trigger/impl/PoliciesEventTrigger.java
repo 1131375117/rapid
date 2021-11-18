@@ -71,18 +71,6 @@ public class PoliciesEventTrigger extends EventTrigger<Long, PoliciesES> {
         LambdaQueryWrapper<PoliciesDO> queryWrapper = Wrappers.lambdaQuery(PoliciesDO.class)
                 .eq(PoliciesDO::getDeleted, false);
         IPage<PoliciesDO> page = policiesMapper.selectPage(Page.of(pageNum, pageSize), queryWrapper);
-        List<Long> ids = page.getRecords().stream()
-                .map(PoliciesDO::getId)
-                .collect(Collectors.toList());
-        Page<Long> idPage = Page.of(page.getCurrent(), page.getSize(), page.getTotal());
-        idPage.setRecords(ids);
-        return idPage;
-    }
-
-    private List<String> split2List(String value) {
-        if (StringUtils.isBlank(value)) {
-            return new ArrayList<>();
-        }
-        return Arrays.asList(value.split(","));
+        return mapToIdPage(page, PoliciesDO::getId);
     }
 }

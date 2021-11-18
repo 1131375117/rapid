@@ -25,7 +25,7 @@ public class FrequentlyAskedQuestionSearchController {
 
     @ApiOperation("热门问答简单列表")
     @GetMapping("/faq/hot")
-    public ResultVO<PageVO<FAQSearchSimpleVO>> hotFAQList(@RequestAttribute PageQueryDTO pageQuery) throws Exception {
+    public ResultVO<PageVO<FAQSearchSimpleVO>> hotFAQList(PageQueryDTO pageQuery) throws Exception {
         PageVO<FAQSearchSimpleVO> pageVO = frequentlyAskedQuestionSearchService.hotFAQList(pageQuery);
         return ResultVO.ok(pageVO);
     }
@@ -46,7 +46,7 @@ public class FrequentlyAskedQuestionSearchController {
 
     @ApiOperation("根据政策ID查询相关热点问答")
     @GetMapping("/faq/policiesRelated/{policiesId}")
-    public ResultVO<PageVO<FAQSearchVO>> policiesRelatedFAQ(@PathVariable("policiesId") String policiesId, @RequestAttribute PageQueryDTO pageQuery) throws Exception {
+    public ResultVO<PageVO<FAQSearchVO>> policiesRelatedFAQ(@PathVariable("policiesId") String policiesId, PageQueryDTO pageQuery) throws Exception {
         PageVO<FAQSearchVO> pageVO = frequentlyAskedQuestionSearchService.policiesRelatedFAQ(policiesId, pageQuery);
         return ResultVO.ok(pageVO);
     }
