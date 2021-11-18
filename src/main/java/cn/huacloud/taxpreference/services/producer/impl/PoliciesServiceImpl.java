@@ -272,24 +272,26 @@ public class PoliciesServiceImpl implements PoliciesService {
       PoliciesExplainDTO policiesExplainDTO,
       List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDOList) {
     PoliciesCombinationDTO policiesCombinationDTO = new PoliciesCombinationDTO();
+    List<String> strings = new ArrayList<>();
+    strings.add("");
     // 设置纳税人、使用企业、适用行业名称值
     if(StringUtils.isNotEmpty(policiesDO.getEnterpriseTypeCodes())){
       policiesCombinationDTO.setEnterpriseTypeCodes(
               Arrays.asList(policiesDO.getEnterpriseTypeCodes().split(",")));
     }else {
-      policiesCombinationDTO.setEnterpriseTypeCodes(new ArrayList<>());
+      policiesCombinationDTO.setEnterpriseTypeCodes(strings);
     }
     if(StringUtils.isNotEmpty(policiesDO.getIndustryCodes())){
       policiesCombinationDTO.setIndustryCodes(
               Arrays.asList(policiesDO.getIndustryCodes().split(",")));
     }else {
-      policiesCombinationDTO.setIndustryCodes(new ArrayList<>());
+      policiesCombinationDTO.setIndustryCodes(strings);
     }
     if(StringUtils.isNotEmpty(policiesDO.getTaxpayerIdentifyTypeCodes())){
       policiesCombinationDTO.setTaxpayerIdentifyTypeCodes(
               Arrays.asList((policiesDO.getTaxpayerIdentifyTypeCodes()).split(",")));
     }else{
-      policiesCombinationDTO.setTaxpayerIdentifyTypeCodes(new ArrayList<>());
+      policiesCombinationDTO.setTaxpayerIdentifyTypeCodes(strings);
     }
     // 设置标签
     if(StringUtils.isNotEmpty(policiesDO.getLabels())){

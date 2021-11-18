@@ -52,15 +52,21 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
       QueryPoliciesExplainDTO queryPoliciesExplainDTO) {
     log.info("热门问答查询列表条件dto={}", queryPoliciesExplainDTO);
     LambdaQueryWrapper<FrequentlyAskedQuestionDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+    lambdaQueryWrapper
+        .like(
+            StringUtils.isNotBlank(queryPoliciesExplainDTO.getKeyword()),
+            FrequentlyAskedQuestionDO::getTitle,
+            queryPoliciesExplainDTO.getKeyword())
+        .or()
+        .like(
+            StringUtils.isNotBlank(queryPoliciesExplainDTO.getKeyword()),
+            FrequentlyAskedQuestionDO::getDocSource,
+            queryPoliciesExplainDTO.getKeyword());
     // 模糊查询--政策解读标题
     lambdaQueryWrapper.like(
         StringUtils.isNotBlank(queryPoliciesExplainDTO.getTitle()),
         FrequentlyAskedQuestionDO::getTitle,
         queryPoliciesExplainDTO.getTitle());
-    lambdaQueryWrapper.like(
-        StringUtils.isNotBlank(queryPoliciesExplainDTO.getKeyword()),
-        FrequentlyAskedQuestionDO::getTitle,
-        queryPoliciesExplainDTO.getKeyword());
     // 模糊查询--政策解读来源
     lambdaQueryWrapper.like(
         StringUtils.isNotBlank(queryPoliciesExplainDTO.getDocSource()),
@@ -176,10 +182,9 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
         frequentlyAskedQuestionMapper.updateById(frequentlyAskedQuestionDO);
         // 关联附件信息
         attachmentService.setAttachmentDocId(
-                frequentlyAskedQuestionDTO.getId(),
-                AttachmentType.POLICIES,
-                frequentlyAskedQuestionDTO.getContent()
-                );
+            frequentlyAskedQuestionDTO.getId(),
+            AttachmentType.POLICIES,
+            frequentlyAskedQuestionDTO.getContent());
       }
     }
   }
