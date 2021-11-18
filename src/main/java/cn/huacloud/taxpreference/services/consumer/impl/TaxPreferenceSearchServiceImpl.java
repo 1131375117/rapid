@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.consumer.impl;
 
+import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.services.consumer.TaxPreferenceSearchService;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.TaxPreferenceSearchQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.HotLabelVO;
@@ -7,10 +8,12 @@ import cn.huacloud.taxpreference.services.consumer.entity.vos.TaxPreferenceSearc
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.elasticsearch.action.get.GetRequest;
+import org.elasticsearch.action.get.GetResponse;
+import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.search.SearchHit;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -57,8 +60,15 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
     }
 
     @Override
-    public TaxPreferenceSearchVO getTaxPreferenceDetails(Long id) {
-        return null;
+    public TaxPreferenceSearchVO getTaxPreferenceDetails(Long id) throws Exception {
+        GetRequest request = new GetRequest(getIndex());
+        request.id(id.toString());
+        GetResponse response = restHighLevelClient.get(request, RequestOptions.DEFAULT);
+        if (!response.isExists()) {
+            throw BizCode._4500.exception();
+        }
+        TaxPreferenceSearchVO taxPreferenceSearchVO = objectMapper.readValue(response.getSourceAsString(), TaxPreferenceSearchVO.class);
+        return taxPreferenceSearchVO;
     }
 
     @Override

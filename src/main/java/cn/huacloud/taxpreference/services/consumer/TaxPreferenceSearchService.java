@@ -23,5 +23,5 @@ public interface TaxPreferenceSearchService extends SearchService<TaxPreferenceS
      * @param id 税收优惠ID
      * @return 税收优惠详情
      */
-    TaxPreferenceSearchVO getTaxPreferenceDetails(Long id);
+    TaxPreferenceSearchVO getTaxPreferenceDetails(Long id) throws Exception;
 }

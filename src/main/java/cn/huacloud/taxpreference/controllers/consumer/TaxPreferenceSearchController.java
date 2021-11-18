@@ -35,7 +35,7 @@ public class TaxPreferenceSearchController {
 
     @ApiOperation("税收优惠详情")
     @GetMapping("/taxPreference/{id}")
-    public ResultVO<TaxPreferenceSearchVO> getTaxPreferenceDetails(@PathVariable("id") Long id) {
+    public ResultVO<TaxPreferenceSearchVO> getTaxPreferenceDetails(@PathVariable("id") Long id) throws Exception {
         TaxPreferenceSearchVO taxPreferenceSearchVO = taxPreferenceSearchService.getTaxPreferenceDetails(id);
         return ResultVO.ok(taxPreferenceSearchVO);
     }
