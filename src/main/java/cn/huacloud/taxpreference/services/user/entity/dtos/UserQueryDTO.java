@@ -18,6 +18,8 @@ public class UserQueryDTO extends KeywordPageQueryDTO {
     private String usernameKeyword;
     @ApiModelProperty("角色码值")
     private String roleCode;
+    @ApiModelProperty("排除的角色码值")
+    private String excludeRoleCode;
 
     @Override
     public void paramReasonable() {
@@ -26,5 +28,6 @@ public class UserQueryDTO extends KeywordPageQueryDTO {
         userAccountKeyword = StringUtils.isNoneBlank(userAccountKeyword) ? usernameKeyword.trim() : null;
         usernameKeyword = StringUtils.isNoneBlank(usernameKeyword) ? usernameKeyword.trim() : null;
         roleCode = StringUtils.isNoneBlank(roleCode) ? roleCode.trim() : null;
+        excludeRoleCode = StringUtils.isNoneBlank(excludeRoleCode) ? excludeRoleCode.trim() : null;
     }
 }

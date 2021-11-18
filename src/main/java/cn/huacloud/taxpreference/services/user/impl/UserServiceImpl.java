@@ -92,6 +92,7 @@ public class UserServiceImpl implements UserService {
         String userAccountKeyword = userQueryDTO.getUserAccountKeyword();
         String usernameKeyword = userQueryDTO.getUsernameKeyword();
         String roleCode = userQueryDTO.getRoleCode();
+        String excludeRoleCode = userQueryDTO.getExcludeRoleCode();
         // 构建查询条件
         LambdaQueryWrapper<UserDO> queryWrapper = Wrappers.lambdaQuery(UserDO.class)
                 .eq(UserDO::getUserType, UserType.PRODUCER_USER)
@@ -99,7 +100,8 @@ public class UserServiceImpl implements UserService {
                 .and(keyword != null, i -> i.like(UserDO::getUserAccount, keyword).or().like(UserDO::getUsername, keyword))
                 .like(userAccountKeyword != null, UserDO::getUserAccount, userAccountKeyword)
                 .like(usernameKeyword != null, UserDO::getUsername, usernameKeyword)
-                .apply(roleCode != null, "FIND_IN_SET ('" + roleCode + "', role_codes)");
+                .apply(roleCode != null, "FIND_IN_SET ('" + roleCode + "', role_codes)")
+                .apply(excludeRoleCode != null, "NOT FIND_IN_SET ('" + excludeRoleCode + "', role_codes)");
         // 执行查询
         IPage<UserDO> iPage = userMapper.selectPage(userQueryDTO.createQueryPage(), queryWrapper);
 

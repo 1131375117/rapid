@@ -58,7 +58,7 @@ public class DataSyncController {
     }
 
     @ApiOperation("同步所有税收优惠数据")
-    @GetMapping("/sync/faq")
+    @GetMapping("/sync/taxPreference")
     public ResultVO<Void> syncAllTaxPreference(String password) {
         checkSysPassword(password);
         long total = taxPreferenceEventTrigger.syncAll();
