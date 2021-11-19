@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.sync.es.trigger.impl;
 
+import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
 import cn.huacloud.taxpreference.services.consumer.entity.ess.TaxPreferenceES;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesDigestSearchVO;
@@ -14,7 +15,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
@@ -24,6 +24,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
+ * 税收优惠ES数据事件触发器
  * @author wangkh
  */
 @RequiredArgsConstructor
@@ -56,8 +57,7 @@ public class TaxPreferenceEventTrigger extends EventTrigger<Long, TaxPreferenceE
         }
 
         // 属性拷贝
-        TaxPreferenceES taxPreferenceES = new TaxPreferenceES();
-        BeanUtils.copyProperties(taxPreferenceDO, taxPreferenceES);
+        TaxPreferenceES taxPreferenceES = CustomBeanUtil.copyProperties(taxPreferenceDO, TaxPreferenceES.class);
 
         // 类型转换属性设置
         taxPreferenceES.setTitle(taxPreferenceDO.getTaxPreferenceName());
@@ -75,11 +75,8 @@ public class TaxPreferenceEventTrigger extends EventTrigger<Long, TaxPreferenceE
 
         // 设置申报条件
         List<SubmitConditionSearchVO> submitConditions = submitConditionMapper.getSubmitConditions(taxPreferenceDO.getId()).stream()
-                .map(submitConditionDO -> {
-                    SubmitConditionSearchVO vo = new SubmitConditionSearchVO();
-                    BeanUtils.copyProperties(submitConditionDO, vo);
-                    return vo;
-                }).collect(Collectors.toList());
+                .map(submitConditionDO -> CustomBeanUtil.copyProperties(submitConditionDO, SubmitConditionSearchVO.class))
+                .collect(Collectors.toList());
         taxPreferenceES.setSubmitConditions(submitConditions);
 
         return taxPreferenceES;

@@ -4,6 +4,7 @@ import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.enums.SysCodeType;
+import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
 import cn.huacloud.taxpreference.services.common.entity.dos.SysCodeDO;
 import cn.huacloud.taxpreference.services.consumer.PoliciesSearchService;
@@ -90,10 +91,8 @@ public class PoliciesSearchServiceImpl implements PoliciesSearchService {
             throw BizCode._4500.exception();
         }
 
-        PoliciesSearchVO policiesSearchVO = new PoliciesSearchVO();
         PoliciesES policiesES = objectMapper.readValue(response.getSourceAsString(), PoliciesES.class);
-        BeanUtils.copyProperties(policiesES, policiesSearchVO);
-        return policiesSearchVO;
+        return CustomBeanUtil.copyProperties(policiesES, PoliciesSearchVO.class);
     }
 
     @Override

@@ -41,3 +41,13 @@ tax-preference:
   index:
     policies:
       index: policies_index_2021-11-11_test
+      alias: policies_test
+    policies-explain:
+      index: policies_explain_index_2021-11-17_test
+      alias: policies_explain_test
+    frequently-asked-question:
+      index: frequently_asked_question_index_2021-11-17_test
+      alias: frequently_asked_question_test
+    tax-preference:
+      index: tax_preference_index_2021-11-18_test
+      alias: tax_preference_test

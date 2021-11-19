@@ -27,8 +27,8 @@ public class ProducerUserVO {
     @ApiModelProperty("用户账户")
     private String userAccount;
 
-    @NotEmpty(message = "用户密码不能为空", groups = {ValidationGroup.Create.class, ValidationGroup.Update.class})
-    @Pattern(regexp = "(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[^a-zA-Z0-9]).{8,30}", message = "密码中必须包含大小字母、数字、特称字符，至少8个字符，最多30个字符", groups = {ValidationGroup.Create.class, ValidationGroup.Update.class})
+    @NotEmpty(message = "用户密码不能为空", groups = {ValidationGroup.Create.class})
+    @Pattern(regexp = "(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[^a-zA-Z0-9]).{8,30}", message = "密码中必须包含大小字母、数字、特称字符，至少8个字符，最多30个字符", groups = {ValidationGroup.Create.class, ValidationGroup.Manual.class})
     @ApiModelProperty("用户密码")
     private String password;
 

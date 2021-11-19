@@ -2,11 +2,9 @@ package cn.huacloud.taxpreference.sync.es.trigger;
 
 import cn.huacloud.taxpreference.common.enums.SysCodeGetter;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeSimpleVO;
-import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesExplainDO;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import reactor.core.publisher.Sinks;
 
 import java.util.ArrayList;
@@ -28,6 +26,11 @@ public abstract class EventTrigger<T, R> {
 
     protected Sinks.Many<T> deleteMany = Sinks.many().unicast().onBackpressureBuffer();
 
+    /**
+     * 触发保存事件
+     * 这里的保存概念包括新增和修改
+     * @param id 主键ID
+     */
     public void saveEvent(T id) {
         R entity = getEntityById(id);
         if (entity != null) {
@@ -35,6 +38,10 @@ public abstract class EventTrigger<T, R> {
         }
     }
 
+    /**
+     * 触发删除事件
+     * @param id 主键ID
+     */
     public void deleteEvent(T id) {
         deleteMany.tryEmitNext(id);
     }

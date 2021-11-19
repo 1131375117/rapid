@@ -1,6 +1,6 @@
 package cn.huacloud.taxpreference.sync.es.consumer;
 
-import cn.huacloud.taxpreference.common.utils.SpringUtils;
+import cn.huacloud.taxpreference.common.utils.SpringUtil;
 import cn.huacloud.taxpreference.services.consumer.entity.AbstractCombinePlainContent;
 import cn.huacloud.taxpreference.services.consumer.entity.CombineText;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,11 +26,11 @@ public interface ElasticsearchConsumer<T extends AbstractCombinePlainContent<?>>
     String getIndex();
 
     default RestHighLevelClient getRestHighLevelClient() {
-        return SpringUtils.getBean(RestHighLevelClient.class);
+        return SpringUtil.getBean(RestHighLevelClient.class);
     }
 
     default ObjectMapper getObjectMapper() {
-        return SpringUtils.getBean(ObjectMapper.class);
+        return SpringUtil.getBean(ObjectMapper.class);
     }
 
     default void save(T source) {

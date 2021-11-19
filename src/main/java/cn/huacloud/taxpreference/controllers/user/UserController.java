@@ -7,6 +7,7 @@ import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.enums.PermissionGroup;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
+import cn.huacloud.taxpreference.common.utils.ValidationUtil;
 import cn.huacloud.taxpreference.services.user.UserService;
 import cn.huacloud.taxpreference.services.user.entity.dtos.UserQueryDTO;
 import cn.huacloud.taxpreference.services.user.entity.dtos.UserRoleAddDTO;
@@ -15,7 +16,9 @@ import cn.huacloud.taxpreference.services.user.entity.vos.UserListVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -71,7 +74,12 @@ public class UserController {
     @SaCheckPermission("producer_user_update")
     @ApiOperation("修改后台用户")
     @PutMapping("/producer/user")
-    public ResultVO<ProducerUserVO> updateProducerUser(@Validated(ValidationGroup.Update.class) @RequestBody ProducerUserVO producerUserVO) {
+    public ResultVO<ProducerUserVO> updateProducerUser(@Validated(ValidationGroup.Update.class) @RequestBody ProducerUserVO producerUserVO) throws MethodArgumentNotValidException {
+        if (StringUtils.isNotBlank(producerUserVO.getPassword())) {
+            ValidationUtil.validate(producerUserVO, ValidationGroup.Manual.class);
+        } else {
+            producerUserVO.setPassword(null);
+        }
         userService.updateProducerUser(producerUserVO);
         return ResultVO.ok(producerUserVO);
     }
@@ -141,6 +149,7 @@ public class UserController {
         boolean exist = userService.isUserAccountExist(userAccount);
         return ResultVO.ok(exist);
     }
+
     @PermissionInfo(name = "批量为用户添加角色", group = PermissionGroup.USER_MANAGE)
     @SaCheckPermission("producer_user_add_role")
     @ApiOperation("批量为用户添加角色")

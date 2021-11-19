@@ -36,7 +36,6 @@ public class TaxPreferencePoliciesDTO {
      * 有效期至-政策法规
      */
     @ApiModelProperty("有效期至")
-    //@NotNull(message = "有效期不能为空",groups = {ValidationGroup.Update.class,ValidationGroup.Create.class})
     private LocalDate validityEndDate;
 
     /**

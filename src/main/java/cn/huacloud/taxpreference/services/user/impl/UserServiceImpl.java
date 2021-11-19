@@ -6,6 +6,7 @@ import cn.huacloud.taxpreference.common.constants.UserConstants;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.enums.UserType;
+import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
 import cn.huacloud.taxpreference.common.utils.UserUtil;
 import cn.huacloud.taxpreference.services.user.RoleService;
 import cn.huacloud.taxpreference.services.user.UserService;
@@ -191,10 +192,12 @@ public class UserServiceImpl implements UserService {
             throw BizCode._4212.exception();
         }
 
-        BeanUtils.copyProperties(producerUserVO, userDO);
+        CustomBeanUtil.copyProperties(producerUserVO, userDO);
 
-        // password md5
-        userDO.setPassword(SaSecureUtil.md5(producerUserVO.getPassword()));
+        if (producerUserVO.getPassword() != null) {
+            // password md5
+            userDO.setPassword(SaSecureUtil.md5(producerUserVO.getPassword()));
+        }
 
         // execute save
         userMapper.updateById(userDO);
