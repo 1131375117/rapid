@@ -42,7 +42,7 @@ public class QueryPoliciesDTO extends KeywordPageQueryDTO {
     private List<String> industryCodes;
 
     @ApiModelProperty("所属区域码值")
-    private String areaCode;
+    private List<String> areaCode;
 
     @ApiModelProperty("有效性")
     private String validity;
