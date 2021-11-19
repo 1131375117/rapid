@@ -113,7 +113,7 @@ public class TaxPreferenceVO {
     /**
      * 减免事项
      */
-    @ApiModelProperty("减免事项,多个按照逗号隔开")
+    @ApiModelProperty("减免事项")
     private String taxPreferenceItem;
 
     /**

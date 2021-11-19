@@ -137,5 +137,6 @@ public class TaxPreferenceDTO {
     private List<SubmitConditionDTO> submitConditionDTOList;
 
     @ApiModelProperty("SAVE-保存或者SUBMIT提交")
-    private TaxStatus status;
+    private  TaxStatus status;
+
 }

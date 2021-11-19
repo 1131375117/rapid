@@ -20,6 +20,7 @@ import cn.huacloud.taxpreference.services.producer.entity.enums.ValidityEnum;
 import cn.huacloud.taxpreference.services.producer.entity.vos.*;
 import cn.huacloud.taxpreference.services.producer.mapper.*;
 import cn.huacloud.taxpreference.services.user.entity.vos.LoginUserVO;
+import cn.huacloud.taxpreference.sync.es.trigger.impl.TaxPreferenceEventTrigger;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -51,6 +52,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
   private final ProcessService processService;
   private final PoliciesMapper policiesMapper;
   private final SysCodeService sysCodeService;
+  private final TaxPreferenceEventTrigger taxPreferenceEventTrigger;
   static final String TAX_PREFERENCE_ID = "tax_preference_id";
 
   @Override
@@ -74,6 +76,8 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
 
     // 新增-申报条件表 t_submit_condition
     insertSubmitConditionDOs(taxPreferenceDTO, taxPreferenceDO);
+    //同步到es
+    taxPreferenceEventTrigger.saveEvent(taxPreferenceDO.getId());
     return ResultVO.ok();
   }
 /**
@@ -106,6 +110,8 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
 
     // 修改-申报条件表 t_submit_condition
     updateSubmitConditionByTaxPreferenceId(taxPreferenceDTO);
+    //同步到es
+    taxPreferenceEventTrigger.saveEvent(taxPreferenceDTO.getId());
     return ResultVO.ok();
   }
 
@@ -171,8 +177,11 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
       submitConditionMapper.deleteByMap(keyMap);
       // 删除政策法规t_tax_preference_policies
       taxPreferencePoliciesMapper.deleteByMap(keyMap);
+      //同步到es
+      taxPreferenceEventTrigger.deleteEvent(id);
       log.info("id为{}的税收优惠删除成功！", id);
     }
+
     return ResultVO.ok(null);
   }
 
@@ -186,6 +195,8 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     revokeTaxPreference(id);
     // 撤回之后删除process数据
     deleteProcess(id);
+    //同步到es
+    taxPreferenceEventTrigger.deleteEvent(id);
     log.info("id为{}的税收优惠撤回成功！", id);
     return ResultVO.ok();
   }
@@ -194,7 +205,6 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
   private void checkReleaseStatus(Long id) {
     TaxPreferenceDO taxPreferenceDO = getTaxPreferenceDO(id);
     if (TaxPreferenceStatus.UNRELEASED
-        .getValue()
         .equals(taxPreferenceDO.getTaxPreferenceStatus())) {
       throw BizCode._4310.exception();
     }

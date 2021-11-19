@@ -49,4 +49,5 @@ public class TaxPreferencePoliciesVO {
      */
     @ApiModelProperty("具体优惠内容摘要")
     private String digest;
+
 }
