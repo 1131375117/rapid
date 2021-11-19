@@ -32,7 +32,7 @@ public interface PoliciesService {
      * @param policiesCombinationDTO 政策法规参数集合
      * @param userId              录入人用户ID
      */
-     void insertPolicies(PoliciesCombinationDTO policiesCombinationDTO, Long userId);
+     void savePolicies(PoliciesCombinationDTO policiesCombinationDTO, Long userId);
 
 
     /**

@@ -95,7 +95,8 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
               queryPoliciesExplainDTO.getReleaseDate() != null,
               PoliciesExplainDO::getReleaseDate,
               queryPoliciesExplainDTO.getReleaseDate())
-          .orderByDesc(PoliciesExplainDO::getReleaseDate);
+          .orderByDesc(PoliciesExplainDO::getReleaseDate)
+          .orderByDesc(PoliciesExplainDO::getUpdateTime);
     }
     // 排序--更新时间
     if (PoliciesSortType.UPDATE_TIME.equals(queryPoliciesExplainDTO.getSortField())) {
@@ -135,11 +136,11 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
   @Override
   public void insertPoliciesExplain(PoliciesExplainDTO policiesExplainDTO, Long userId) {
     log.info("新增政策解读dto={}", policiesExplainDTO);
-    //校验当前政策法规id有没有其他政策解读关联
+    // 校验当前政策法规id有没有其他政策解读关联
     LambdaQueryWrapper<PoliciesExplainDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
     lambdaQueryWrapper.eq(PoliciesExplainDO::getPoliciesId, policiesExplainDTO.getPoliciesId());
     PoliciesExplainDO policiesExplainDo = policiesExplainMapper.selectOne(lambdaQueryWrapper);
-    if (policiesExplainDo!= null) {
+    if (policiesExplainDo != null) {
       throw BizCode._4308.exception();
     }
     PoliciesExplainDO policiesExplainDO = new PoliciesExplainDO();

@@ -91,7 +91,8 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
               queryPoliciesExplainDTO.getReleaseDate() != null,
               FrequentlyAskedQuestionDO::getReleaseDate,
               queryPoliciesExplainDTO.getReleaseDate())
-          .orderByDesc(FrequentlyAskedQuestionDO::getReleaseDate);
+          .orderByDesc(FrequentlyAskedQuestionDO::getReleaseDate)
+          .orderByDesc(FrequentlyAskedQuestionDO::getUpdateTime);
     }
     // 排序--更新时间
     if (PoliciesSortType.UPDATE_TIME.equals(queryPoliciesExplainDTO.getSortField())) {
@@ -134,29 +135,28 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
   public void insertFrequentlyAskedQuestion(
       FrequentlyAskedQuestionDTO frequentlyAskedQuestionDto, Long userId) {
     log.info("新增热门问答dto={}", frequentlyAskedQuestionDto);
-      FrequentlyAskedQuestionDO frequentlyAskedQuestionDO = new FrequentlyAskedQuestionDO();
-      BeanUtils.copyProperties(frequentlyAskedQuestionDto, frequentlyAskedQuestionDO);
-      // 设置发布时间
-      frequentlyAskedQuestionDO.setReleaseDate(LocalDate.now());
-      // 设置用户id
-      frequentlyAskedQuestionDO.setInputUserId(userId);
-      // 设置创建时间
-      frequentlyAskedQuestionDO.setCreateTime(LocalDateTime.now());
-      // 设置更新时间
-      frequentlyAskedQuestionDO.setUpdateTime(LocalDateTime.now());
-      // 设置逻辑删除
-      frequentlyAskedQuestionDO.setDeleted(false);
-      frequentlyAskedQuestionDO.setPoliciesIds(frequentlyAskedQuestionDto.getPoliciesIds());
-      frequentlyAskedQuestionDO.setId(null);
-      log.info("新增热门问答对象={}", frequentlyAskedQuestionDO);
-      frequentlyAskedQuestionMapper.insert(frequentlyAskedQuestionDO);
-      // 关联附件信息
-      attachmentService.setAttachmentDocId(
-          frequentlyAskedQuestionDO.getId(),
-          AttachmentType.POLICIES,
-              frequentlyAskedQuestionDto.getContent());
-    }
-
+    FrequentlyAskedQuestionDO frequentlyAskedQuestionDO = new FrequentlyAskedQuestionDO();
+    BeanUtils.copyProperties(frequentlyAskedQuestionDto, frequentlyAskedQuestionDO);
+    // 设置发布时间
+    frequentlyAskedQuestionDO.setReleaseDate(LocalDate.now());
+    // 设置用户id
+    frequentlyAskedQuestionDO.setInputUserId(userId);
+    // 设置创建时间
+    frequentlyAskedQuestionDO.setCreateTime(LocalDateTime.now());
+    // 设置更新时间
+    frequentlyAskedQuestionDO.setUpdateTime(LocalDateTime.now());
+    // 设置逻辑删除
+    frequentlyAskedQuestionDO.setDeleted(false);
+    frequentlyAskedQuestionDO.setPoliciesIds(frequentlyAskedQuestionDto.getPoliciesIds());
+    frequentlyAskedQuestionDO.setId(null);
+    log.info("新增热门问答对象={}", frequentlyAskedQuestionDO);
+    frequentlyAskedQuestionMapper.insert(frequentlyAskedQuestionDO);
+    // 关联附件信息
+    attachmentService.setAttachmentDocId(
+        frequentlyAskedQuestionDO.getId(),
+        AttachmentType.POLICIES,
+        frequentlyAskedQuestionDto.getContent());
+  }
 
   /**
    * 修改热门问答
@@ -165,27 +165,25 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
    */
   @Transactional(rollbackFor = Exception.class)
   @Override
-  public void updateFrequentlyAskedQuestion(
-      FrequentlyAskedQuestionDTO frequentlyAskedQuestionDto) {
-      // 查询热门问答
-      FrequentlyAskedQuestionDO frequentlyAskedQuestionDO =
-          frequentlyAskedQuestionMapper.selectById(frequentlyAskedQuestionDto.getId());
-      // 参数校验
-      if (frequentlyAskedQuestionDO != null) {
-        frequentlyAskedQuestionDO.setUpdateTime(LocalDateTime.now());
-        // 属性拷贝
-        BeanUtils.copyProperties(frequentlyAskedQuestionDto, frequentlyAskedQuestionDO);
-        log.info("修改热门问答对象={}", frequentlyAskedQuestionDO);
-        // 修改热门问答
-        frequentlyAskedQuestionMapper.updateById(frequentlyAskedQuestionDO);
-        // 关联附件信息
-        attachmentService.setAttachmentDocId(
-                frequentlyAskedQuestionDto.getId(),
-            AttachmentType.POLICIES,
-                frequentlyAskedQuestionDto.getContent());
-      }
+  public void updateFrequentlyAskedQuestion(FrequentlyAskedQuestionDTO frequentlyAskedQuestionDto) {
+    // 查询热门问答
+    FrequentlyAskedQuestionDO frequentlyAskedQuestionDO =
+        frequentlyAskedQuestionMapper.selectById(frequentlyAskedQuestionDto.getId());
+    // 参数校验
+    if (frequentlyAskedQuestionDO != null) {
+      frequentlyAskedQuestionDO.setUpdateTime(LocalDateTime.now());
+      // 属性拷贝
+      BeanUtils.copyProperties(frequentlyAskedQuestionDto, frequentlyAskedQuestionDO);
+      log.info("修改热门问答对象={}", frequentlyAskedQuestionDO);
+      // 修改热门问答
+      frequentlyAskedQuestionMapper.updateById(frequentlyAskedQuestionDO);
+      // 关联附件信息
+      attachmentService.setAttachmentDocId(
+          frequentlyAskedQuestionDto.getId(),
+          AttachmentType.POLICIES,
+          frequentlyAskedQuestionDto.getContent());
     }
-
+  }
 
   /**
    * 删除热门问答
