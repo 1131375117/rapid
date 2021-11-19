@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.sync.es.trigger.impl;
 
+import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
 import cn.huacloud.taxpreference.services.consumer.entity.ess.PoliciesExplainES;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
@@ -55,8 +56,7 @@ public class PoliciesExplainEventTrigger extends EventTrigger<Long, PoliciesExpl
         }
 
         // 属性拷贝
-        PoliciesExplainES policiesExplainES = new PoliciesExplainES();
-        BeanUtils.copyProperties(policiesExplainDO, policiesExplainES);
+        PoliciesExplainES policiesExplainES = CustomBeanUtil.copyProperties(policiesExplainDO, PoliciesExplainES.class);
 
         // 类型转换属性设置
         policiesExplainES.setTaxCategories(sysCodeService.getSimpleVOByCode(policiesDO.getTaxCategoriesCode()));

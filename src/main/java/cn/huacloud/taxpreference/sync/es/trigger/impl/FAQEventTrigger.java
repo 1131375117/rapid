@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.sync.es.trigger.impl;
 
+import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
 import cn.huacloud.taxpreference.services.consumer.entity.ess.FrequentlyAskedQuestionES;
 import cn.huacloud.taxpreference.services.consumer.entity.ess.PoliciesES;
@@ -52,8 +53,7 @@ public class FAQEventTrigger extends EventTrigger<Long, FrequentlyAskedQuestionE
         }
 
         // 属性拷贝
-        FrequentlyAskedQuestionES faqES = new FrequentlyAskedQuestionES();
-        BeanUtils.copyProperties(faqDO, faqES);
+        FrequentlyAskedQuestionES faqES = CustomBeanUtil.copyProperties(faqDO, FrequentlyAskedQuestionES.class);
 
         // 属性转换
         faqES.setPoliciesIds(split2List(faqDO.getPoliciesIds()));
