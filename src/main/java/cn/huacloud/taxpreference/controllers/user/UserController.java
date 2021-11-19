@@ -149,6 +149,7 @@ public class UserController {
         boolean exist = userService.isUserAccountExist(userAccount);
         return ResultVO.ok(exist);
     }
+
     @PermissionInfo(name = "批量为用户添加角色", group = PermissionGroup.USER_MANAGE)
     @SaCheckPermission("producer_user_add_role")
     @ApiOperation("批量为用户添加角色")
