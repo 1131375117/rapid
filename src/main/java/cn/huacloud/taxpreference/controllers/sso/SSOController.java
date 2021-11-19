@@ -4,7 +4,7 @@ import cn.dev33.satoken.secure.SaSecureUtil;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
-import cn.huacloud.taxpreference.common.utils.SpringUtils;
+import cn.huacloud.taxpreference.common.utils.SpringUtil;
 import cn.huacloud.taxpreference.common.utils.UserUtil;
 import cn.huacloud.taxpreference.services.user.UserService;
 import cn.huacloud.taxpreference.services.user.entity.dos.UserDO;
@@ -52,7 +52,7 @@ public class SSOController {
                                        @RequestParam("password") String password,
                                        @RequestParam(name = "captchaId", defaultValue = "2c54df8c-5f8c-489b-bf3c-84bd14d1d669") String captchaId,
                                        @RequestParam(name = "captchaCode", defaultValue = "1234") String captchaCode) {
-        Environment environment = SpringUtils.getBean(Environment.class);
+        Environment environment = SpringUtil.getBean(Environment.class);
         boolean isDev = Arrays.asList(environment.getActiveProfiles()).contains("dev");
 
         // 校验验证码

@@ -25,6 +25,7 @@ import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
+import org.springframework.beans.BeanUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
@@ -166,8 +167,9 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
     default R mapSearchHit(SearchHit searchHit, List<String> searchFields) throws Exception {
         R result = getObjectMapper().readValue(searchHit.getSourceAsString(), getResultClass());
         for (String searchField : searchFields) {
-            PropertyDescriptor pd = new PropertyDescriptor(searchField, getResultClass());
-            pd.getWriteMethod().invoke(result, getHighlightString(searchHit, searchField));
+            PropertyDescriptor propertyDescriptor = BeanUtils.getPropertyDescriptor(getResultClass(), searchField);
+            assert propertyDescriptor != null;
+            propertyDescriptor.getWriteMethod().invoke(result, getHighlightString(searchHit, searchField));
         }
         return result;
     }

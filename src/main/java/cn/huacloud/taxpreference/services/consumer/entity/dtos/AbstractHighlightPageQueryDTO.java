@@ -1,9 +1,8 @@
 package cn.huacloud.taxpreference.services.consumer.entity.dtos;
 
 import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
-import cn.huacloud.taxpreference.common.utils.SpringUtils;
+import cn.huacloud.taxpreference.common.utils.SpringUtil;
 import cn.huacloud.taxpreference.config.ElasticsearchIndexConfig;
-import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.search.sort.SortBuilder;
 
@@ -20,7 +19,7 @@ public abstract class AbstractHighlightPageQueryDTO extends KeywordPageQueryDTO 
      * @return 搜索索引范围
      */
     public String index() {
-        ElasticsearchIndexConfig elasticsearchIndexConfig = SpringUtils.getBean(ElasticsearchIndexConfig.class);
+        ElasticsearchIndexConfig elasticsearchIndexConfig = SpringUtil.getBean(ElasticsearchIndexConfig.class);
         return index(elasticsearchIndexConfig);
     }
 
