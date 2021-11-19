@@ -98,7 +98,7 @@ public class PoliciesServiceImpl implements PoliciesService {
    */
   @Transactional(rollbackFor = Exception.class)
   @Override
-  public void insertPolicies(PoliciesCombinationDTO policiesCombinationDTO, Long userId) {
+  public void savePolicies(PoliciesCombinationDTO policiesCombinationDTO, Long userId) {
     log.info("新增政策法规组合dto={}", policiesCombinationDTO);
     // 校验标题和文号是否存在
     judgeExists(policiesCombinationDTO);
@@ -110,13 +110,13 @@ public class PoliciesServiceImpl implements PoliciesService {
     policiesMapper.insert(policiesDO);
     // 新增后回显id--// TODO: 2021/11/15a
     policiesCombinationDTO.setId(policiesDO.getId());
-    PoliciesExplainDTO policiesExplainDTOS = policiesCombinationDTO.getPoliciesExplainDTO();
+    PoliciesExplainDTO policiesExplainDtoS = policiesCombinationDTO.getPoliciesExplainDTO();
 
     // 新增政策解读
     PoliciesExplainDTO policiesExplainDTO = new PoliciesExplainDTO();
     // 判断当前政策解读对象不存在
-    if (policiesExplainDTOS != null) {
-      BeanUtils.copyProperties(policiesExplainDTOS, policiesExplainDTO);
+    if (policiesExplainDtoS != null) {
+      BeanUtils.copyProperties(policiesExplainDtoS, policiesExplainDTO);
       policiesExplainDTO.setPoliciesId(policiesDO.getId());
       policiesExplainService.insertPoliciesExplain(policiesExplainDTO, userId);
     }
@@ -131,7 +131,7 @@ public class PoliciesServiceImpl implements PoliciesService {
         Long policiesId = policiesDO.getId();
         frequentlyAskedQuestionDTO.setPoliciesIds(String.valueOf(policiesId));
         frequentlyAskedQuestionService.insertFrequentlyAskedQuestion(
-                frequentlyAskedQuestionDTO, userId);
+            frequentlyAskedQuestionDTO, userId);
       }
     }
 
@@ -196,7 +196,7 @@ public class PoliciesServiceImpl implements PoliciesService {
    * @return 返回结果
    */
   private Boolean judgeExists(PoliciesCombinationDTO policiesCombinationDTO) {
-    log.info("judgeExists:policiesCombinationDTO={}", policiesCombinationDTO);
+    log.info("政策法规组合dto={}", policiesCombinationDTO);
     // 查询标题或文号
     LambdaQueryWrapper<PoliciesDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
     lambdaQueryWrapper
@@ -274,26 +274,26 @@ public class PoliciesServiceImpl implements PoliciesService {
     List<String> strings = new ArrayList<>();
     strings.add("");
     // 设置纳税人、使用企业、适用行业名称值
-    if(StringUtils.isNotEmpty(policiesDO.getEnterpriseTypeCodes())){
+    if (StringUtils.isNotEmpty(policiesDO.getEnterpriseTypeCodes())) {
       policiesCombinationDTO.setEnterpriseTypeCodes(
-              Arrays.asList(policiesDO.getEnterpriseTypeCodes().split(",")));
-    }else {
+          Arrays.asList(policiesDO.getEnterpriseTypeCodes().split(",")));
+    } else {
       policiesCombinationDTO.setEnterpriseTypeCodes(strings);
     }
-    if(StringUtils.isNotEmpty(policiesDO.getIndustryCodes())){
+    if (StringUtils.isNotEmpty(policiesDO.getIndustryCodes())) {
       policiesCombinationDTO.setIndustryCodes(
-              Arrays.asList(policiesDO.getIndustryCodes().split(",")));
-    }else {
+          Arrays.asList(policiesDO.getIndustryCodes().split(",")));
+    } else {
       policiesCombinationDTO.setIndustryCodes(strings);
     }
-    if(StringUtils.isNotEmpty(policiesDO.getTaxpayerIdentifyTypeCodes())){
+    if (StringUtils.isNotEmpty(policiesDO.getTaxpayerIdentifyTypeCodes())) {
       policiesCombinationDTO.setTaxpayerIdentifyTypeCodes(
-              Arrays.asList((policiesDO.getTaxpayerIdentifyTypeCodes()).split(",")));
-    }else{
+          Arrays.asList((policiesDO.getTaxpayerIdentifyTypeCodes()).split(",")));
+    } else {
       policiesCombinationDTO.setTaxpayerIdentifyTypeCodes(strings);
     }
     // 设置标签
-    if(StringUtils.isNotEmpty(policiesDO.getLabels())){
+    if (StringUtils.isNotEmpty(policiesDO.getLabels())) {
       policiesCombinationDTO.setLabels(Arrays.asList(policiesDO.getLabels().split(",")));
     }
     BeanUtils.copyProperties(policiesDO, policiesCombinationDTO);
@@ -355,7 +355,7 @@ public class PoliciesServiceImpl implements PoliciesService {
     policiesDO.setTaxpayerIdentifyTypeNames(taxpayerIdentifyTypeNames);
     policiesDO.setEnterpriseTypeNames(enterpriseTypeCodes);
     policiesDO.setIndustryNames(industryNames);
-    //设置所属税种
+    // 设置所属税种
     policiesDO.setTaxCategoriesCode(policiesCombinationDTO.getTaxCategoriesCode());
     policiesDO.setTaxCategoriesName(
         sysCodeService.getCodeNameByCodeValue(policiesCombinationDTO.getTaxCategoriesCode()));
@@ -404,15 +404,18 @@ public class PoliciesServiceImpl implements PoliciesService {
    * @param policiesCombinationDTO 政策组合对象
    */
   private void insertOrUpdateQA(PoliciesCombinationDTO policiesCombinationDTO) {
-    //根据政策法规id查询热门问答集合
-    List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionByPoliciesIdList
-            = frequentlyAskedQuestionService.getFrequentlyAskedQuestionByPoliciesId(policiesCombinationDTO.getId());
-    //差集
-    frequentlyAskedQuestionByPoliciesIdList.removeAll(policiesCombinationDTO.getFrequentlyAskedQuestionDTOList());
-    //删除
+    // 根据政策法规id查询热门问答集合
+    List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionByPoliciesIdList =
+        frequentlyAskedQuestionService.getFrequentlyAskedQuestionByPoliciesId(
+            policiesCombinationDTO.getId());
+    // 差集
+    frequentlyAskedQuestionByPoliciesIdList.removeAll(
+        policiesCombinationDTO.getFrequentlyAskedQuestionDTOList());
+    // 删除
     for (FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO :
         frequentlyAskedQuestionByPoliciesIdList) {
-      frequentlyAskedQuestionService.deleteFrequentlyAskedQuestion(frequentlyAskedQuestionDTO.getId());
+      frequentlyAskedQuestionService.deleteFrequentlyAskedQuestion(
+          frequentlyAskedQuestionDTO.getId());
     }
     for (FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO :
         policiesCombinationDTO.getFrequentlyAskedQuestionDTOList()) {
@@ -425,7 +428,7 @@ public class PoliciesServiceImpl implements PoliciesService {
         // 新增热点问答
         frequentlyAskedQuestionDTO.setPoliciesIds(String.valueOf(policiesCombinationDTO.getId()));
         frequentlyAskedQuestionService.insertFrequentlyAskedQuestion(
-                frequentlyAskedQuestionDTO, policiesCombinationDTO.getInputUserId());
+            frequentlyAskedQuestionDTO, policiesCombinationDTO.getInputUserId());
       }
     }
   }
@@ -578,8 +581,8 @@ public class PoliciesServiceImpl implements PoliciesService {
    */
   @Override
   public void abolish(QueryAbolishDTO queryAbolishDTO) {
-    //参数校验
-    if(queryAbolishDTO==null||queryAbolishDTO.getAbolishNote()==null){
+    // 参数校验
+    if (queryAbolishDTO == null || queryAbolishDTO.getAbolishNote() == null) {
       throw BizCode._4308.exception();
     }
     // 查询政策法规
@@ -588,7 +591,7 @@ public class PoliciesServiceImpl implements PoliciesService {
     // 参数校验
     if (policiesDO == null) {
       throw BizCode._4100.exception();
-    }   
+    }
     // 判断条件--全文废止
     if (ValidityEnum.FULL_TEXT_REPEAL.getValue().equals(queryAbolishDTO.getValidity())) {
       // 设置政策法规的有效性
@@ -632,7 +635,7 @@ public class PoliciesServiceImpl implements PoliciesService {
 
   @Override
   public Boolean checkTitleAndDocCode(String titleOrDocCode) {
-    log.info("judgeExists:titleOrDocCode={}", titleOrDocCode);
+    log.info("标题或文号={}", titleOrDocCode);
     // 查询标题和文号
     LambdaQueryWrapper<PoliciesDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
     lambdaQueryWrapper
