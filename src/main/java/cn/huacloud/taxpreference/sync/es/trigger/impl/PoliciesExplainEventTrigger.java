@@ -13,7 +13,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
@@ -21,6 +20,7 @@ import reactor.core.publisher.Flux;
 import java.util.function.Supplier;
 
 /**
+ * 政策解读ES数据事件触发器
  * @author wangkh
  */
 @RequiredArgsConstructor
