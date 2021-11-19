@@ -20,17 +20,17 @@ public interface FrequentlyAskedQuestionService {
     /**
      * 新增热门问答
      *
-     * @param frequentlyAskedQuestionDTOS
+     * @param frequentlyAskedQuestionDtO
      *
      */
-    void insertFrequentlyAskedQuestion(List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOS,Long userId);
+    void insertFrequentlyAskedQuestion(FrequentlyAskedQuestionDTO frequentlyAskedQuestionDtO,Long userId);
 
     /**
      * 修改热门问答
      *
-     * @param frequentlyAskedQuestionDTOS
+     * @param frequentlyAskedQuestionDTO
      */
-    void updateFrequentlyAskedQuestion(List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOS);
+    void updateFrequentlyAskedQuestion(FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO);
 
     /**
      * 热门问答列表查询
