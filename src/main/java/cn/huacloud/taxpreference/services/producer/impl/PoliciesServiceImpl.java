@@ -116,7 +116,7 @@ public class PoliciesServiceImpl implements PoliciesService {
     PoliciesExplainDTO policiesExplainDTO = new PoliciesExplainDTO();
     // 判断当前政策解读对象不存在
     if (policiesExplainDTOS != null) {
-      BeanUtils.copyProperties(policiesCombinationDTO.getPoliciesExplainDTO(), policiesExplainDTO);
+      BeanUtils.copyProperties(policiesExplainDTOS, policiesExplainDTO);
       policiesExplainDTO.setPoliciesId(policiesDO.getId());
       policiesExplainService.insertPoliciesExplain(policiesExplainDTO, userId);
     }

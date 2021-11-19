@@ -62,8 +62,7 @@
             </if>
             and tp.deleted=0
         </where>
-        order by ${sort} DESC
-
+        order by ${sort} DESC,update_time DESC
     </select>
 
     <select id="selectExplainId" resultType="java.lang.Long">

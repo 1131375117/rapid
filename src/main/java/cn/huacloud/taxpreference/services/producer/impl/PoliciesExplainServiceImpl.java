@@ -138,8 +138,8 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
     //校验当前政策法规id有没有其他政策解读关联
     LambdaQueryWrapper<PoliciesExplainDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
     lambdaQueryWrapper.eq(PoliciesExplainDO::getPoliciesId, policiesExplainDTO.getPoliciesId());
-    PoliciesExplainDO policiesExplainDo1 = policiesExplainMapper.selectOne(lambdaQueryWrapper);
-    if (policiesExplainDo1.getPoliciesId() != null) {
+    PoliciesExplainDO policiesExplainDo = policiesExplainMapper.selectOne(lambdaQueryWrapper);
+    if (policiesExplainDo!= null) {
       throw BizCode._4308.exception();
     }
     PoliciesExplainDO policiesExplainDO = new PoliciesExplainDO();
