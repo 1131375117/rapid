@@ -1,6 +1,7 @@
 package cn.huacloud.taxpreference.services.producer;
 
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
+import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesCombinationDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryAbolishDTO;
@@ -82,5 +83,10 @@ public interface PoliciesService {
 	 */
 	PoliciesAbolishVO getAbolish(Long id);
 
+
 	Boolean checkTitleAndDocCode(String titleOrDocCode);
+
+
+	PoliciesDO getPolicies(Long id);
+
 }

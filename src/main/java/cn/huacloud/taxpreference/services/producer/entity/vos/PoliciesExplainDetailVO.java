@@ -6,9 +6,11 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.checkerframework.checker.units.qual.A;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 政策解读详情VO
@@ -63,5 +65,8 @@ public class PoliciesExplainDetailVO {
 
 	@ApiModelProperty("热门问答中政策id")
 	private String policiesIds;
+
+	@ApiModelProperty("政策法规标题")
+	private String policiesTitle;
 
 }

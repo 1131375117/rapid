@@ -6,6 +6,8 @@ import cn.huacloud.taxpreference.common.enums.AttachmentType;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.services.common.AttachmentService;
 import cn.huacloud.taxpreference.services.producer.PoliciesExplainService;
+import cn.huacloud.taxpreference.services.producer.PoliciesService;
+import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesExplainDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesExplainDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesExplainDTO;
@@ -21,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +45,13 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 	private final PoliciesExplainMapper policiesExplainMapper;
 
 	private final AttachmentService attachmentService;
+
+	private PoliciesService policiesService;
+
+	@Autowired
+	public void setPoliciesService(PoliciesService policiesService) {
+		this.policiesService = policiesService;
+	}
 
 	/**
 	 * 政策解读列表
@@ -203,6 +213,10 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 		// 根据政策解读id查询
 		PoliciesExplainDO policiesExplainDO = policiesExplainMapper.selectById(id);
 		PoliciesExplainDetailVO policiesExplainDetailVO = new PoliciesExplainDetailVO();
+		if(policiesExplainDO.getPoliciesId()!=null){
+			PoliciesDO policies = policiesService.getPolicies(policiesExplainDO.getPoliciesId());
+			policiesExplainDetailVO.setPoliciesTitle(policies.getTitle());
+		}
 		// 属性拷贝
 		BeanUtils.copyProperties(policiesExplainDO, policiesExplainDetailVO);
 		log.info("政策解读对象详情={}", policiesExplainDO);
@@ -248,8 +262,8 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 		lambdaQueryWrapper.eq(PoliciesExplainDO::getPoliciesId, policiesId);
 		lambdaQueryWrapper.eq(PoliciesExplainDO::getDeleted, false);
 		PoliciesExplainDO policiesExplainDO = policiesExplainMapper.selectOne(lambdaQueryWrapper);
-
 		PoliciesExplainDTO policiesExplainDTO = new PoliciesExplainDTO();
+
 		// 判断是否为空
 		if (policiesExplainDO == null) {
 			return null;

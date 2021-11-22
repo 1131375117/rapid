@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.producer.impl;
 
+import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.AttachmentType;
 import cn.huacloud.taxpreference.common.enums.BizCode;
@@ -28,6 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,9 +49,9 @@ public class PoliciesServiceImpl implements PoliciesService {
 
 	private final PoliciesMapper policiesMapper;
 
-	private final PoliciesExplainService policiesExplainService;
+	private PoliciesExplainService policiesExplainService;
 
-	private final FrequentlyAskedQuestionService frequentlyAskedQuestionService;
+	private  FrequentlyAskedQuestionService frequentlyAskedQuestionService;
 
 	private final SysCodeService sysCodeService;
 
@@ -58,6 +60,16 @@ public class PoliciesServiceImpl implements PoliciesService {
 	private final TaxPreferenceService taxPreferenceService;
 
 	private final AttachmentService attachmentService;
+
+	@Autowired
+	public void setFrequentlyAskedQuestionService(FrequentlyAskedQuestionService frequentlyAskedQuestionService) {
+		this.frequentlyAskedQuestionService = frequentlyAskedQuestionService;
+	}
+
+	@Autowired
+	public void setPoliciesExplainService(PoliciesExplainService policiesExplainService) {
+		this.policiesExplainService = policiesExplainService;
+	}
 
 	/**
 	 * 政策列表查询
@@ -653,5 +665,11 @@ public class PoliciesServiceImpl implements PoliciesService {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public PoliciesDO getPolicies(Long id) {
+		PoliciesDO policiesDO = policiesMapper.selectById(id);
+		return policiesDO;
 	}
 }
