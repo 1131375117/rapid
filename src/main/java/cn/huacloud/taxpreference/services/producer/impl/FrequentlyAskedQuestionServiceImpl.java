@@ -138,7 +138,7 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
     FrequentlyAskedQuestionDO frequentlyAskedQuestionDO = new FrequentlyAskedQuestionDO();
     BeanUtils.copyProperties(frequentlyAskedQuestionDto, frequentlyAskedQuestionDO);
     // 设置发布时间
-    frequentlyAskedQuestionDO.setReleaseDate(LocalDate.now());
+    frequentlyAskedQuestionDO.setReleaseDate(frequentlyAskedQuestionDto.getReleaseDate());
     // 设置用户id
     frequentlyAskedQuestionDO.setInputUserId(userId);
     // 设置创建时间

@@ -170,7 +170,7 @@ public class PoliciesServiceImpl implements PoliciesService {
     // 添加废止状态
     policiesDO.setPoliciesStatus(PoliciesStatusEnum.PUBLISHED);
     // 添加发布时间
-    policiesDO.setReleaseDate(LocalDate.now());
+    policiesDO.setReleaseDate(policiesCombinationDTO.getReleaseDate());
     // 添加创建时间
     policiesDO.setCreateTime(LocalDateTime.now());
     // 添加更新时间

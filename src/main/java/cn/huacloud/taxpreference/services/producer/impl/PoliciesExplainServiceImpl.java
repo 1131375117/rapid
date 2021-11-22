@@ -151,7 +151,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
     // 设置用户id
     policiesExplainDO.setInputUserId(userId);
     // 设置发布时间
-    policiesExplainDO.setReleaseDate(LocalDate.now());
+    policiesExplainDO.setReleaseDate(policiesExplainDTO.getReleaseDate());
     // 设置创建时间
     policiesExplainDO.setCreateTime(LocalDateTime.now());
     // 设置更新时间
