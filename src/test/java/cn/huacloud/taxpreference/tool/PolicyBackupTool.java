@@ -22,7 +22,6 @@ import org.junit.Test;
 import org.junit.platform.commons.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -32,7 +31,6 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- *
  * @author fuhua
  **/
 @Slf4j
@@ -50,7 +48,7 @@ public class PolicyBackupTool extends BaseApplicationTest {
     ApplicationContext applicationContext;
 
     @Test
-    @Transactional
+    // @Transactional
     public void backup() throws SQLException {
         applicationContext.getBeansOfType(Tax.class).values().forEach(tax ->
                 sourceMap.put(tax.sourceType(), tax)
@@ -59,13 +57,19 @@ public class PolicyBackupTool extends BaseApplicationTest {
         List<Entity> policyQAList = Db.use().findAll("popular_qa_data");
         //新增政策和政策解读
         List<Entity> policyList = Db.use().findAll("policy_data");
-        insertQA(policyQAList);
-        policyList.forEach(policy -> {
+         insertQA(policyQAList);
+
+        for (Entity policy : policyList) {
             PoliciesDO policiesDO = insertPolicies(policy);
             if (!explainIsNull(policy)) {
-                insertExplains(policy, policiesDO);
+                try {
+                    insertExplains(policy, policiesDO);
+                }catch (Exception e){
+                    log.error("新增一条policy数据失败:{}",policy);
+                    continue;
+                }
             }
-        });
+        }
     }
 
     /**
@@ -77,11 +81,11 @@ public class PolicyBackupTool extends BaseApplicationTest {
         //相关解读-标题
         policiesExplainDO.setTitle(policy.getStr("related_interpretation_title"));
         //相关解读-源码
-        policiesExplainDO.setContent((policy.getStr("related_interpretation_html")));
+        policiesExplainDO.setContent((policy.getStr("related_interpretation_content")));
         //相关解读-来源
         policiesExplainDO.setDocSource(policy.getStr("related_interpretation_source"));
         policiesExplainDO.setCreateTime(LocalDateTime.now());
-        policiesExplainDO.setReleaseDate(StringUtils.isBlank(policy.getStr("related_interpretation_date"))?null:LocalDate.parse(policy.getStr("related_interpretation_date"),DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        policiesExplainDO.setReleaseDate(StringUtils.isBlank(policy.getStr("related_interpretation_date")) ? null : LocalDate.parse(policy.getStr("related_interpretation_date"), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         policiesExplainDO.setUpdateTime(LocalDateTime.now());
         policiesExplainDO.setDeleted(false);
         policiesExplainDO.setInputUserId(1L);
@@ -105,8 +109,10 @@ public class PolicyBackupTool extends BaseApplicationTest {
         SysCodeVO areaVO = sysCodeService.getCodeVOByCodeName(SysCodeType.AREA, policy.getStr("region"));
         //获取税后种类
         SysCodeVO taxClassName = sysCodeService.getCodeVOByCodeName(SysCodeType.AREA, policy.getStr("tax_class_name"));
+        //获取有效性
+        String valid = ValidityEnum.ValidMap().get(("".equals(policy.getStr("content_is_valid")) || policy.getStr("content_is_valid") == null) ? "未知" : policy.getStr("content_is_valid"));
         //获取content
-        String content=sourceMap.get(policy.getStr("site_name")).parseHtml(policy.getStr("html"));
+        String content = policy.getStr("content");
         policiesDO.setTitle(policy.getStr("title"))
                 .setDocSource(policy.getStr("content_source"))
                 .setAreaName(policy.getStr("region"))
@@ -120,8 +126,12 @@ public class PolicyBackupTool extends BaseApplicationTest {
                 .setIndustryCodes("")
                 .setIndustryNames("")
                 .setValidity(
-                        ValidityEnum.valueOf(ValidityEnum.ValidMap().get(("".equals(policy.getStr("content_is_valid"))||policy.getStr("content_is_valid")==null)?"未知":policy.getStr("content_is_valid"))))
-                .setReleaseDate(StringUtils.isBlank(policy.getStr("publish_date"))?null:LocalDate.parse(policy.getStr("publish_date"), DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                        valid == null ? null:
+                                ValidityEnum.valueOf(
+                                        valid
+                                )
+                )
+                .setReleaseDate(StringUtils.isBlank(policy.getStr("publish_date")) ? LocalDate.now() : LocalDate.parse(policy.getStr("publish_date"), DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .setDigest("")
                 .setLabels("")
                 .setPoliciesStatus(PoliciesStatusEnum.REPTILE_SYNCHRONIZATION)
@@ -129,7 +139,7 @@ public class PolicyBackupTool extends BaseApplicationTest {
                 .setCreateTime(LocalDateTime.now())
                 .setUpdateTime(LocalDateTime.now())
                 .setDeleted(false)
-                .setContent(content==null?"":content)
+                .setContent(content == null ? "" : content)
                 .setDocCode(policy.getStr("document_number"))
         ;
         policiesMapper.insert(policiesDO);
@@ -142,18 +152,19 @@ public class PolicyBackupTool extends BaseApplicationTest {
     private void insertQA(List<Entity> policyQAList) {
         policyQAList.forEach(policy_qa -> {
             FrequentlyAskedQuestionDO frequentlyAskedQuestionDO = new FrequentlyAskedQuestionDO();
+            log.info("热门问答QA:{}", policy_qa.getInt("id"));
             try {
                 List<Entity> find = Db.use().find(Entity.create("policy_popular_data").set("popular_qa_id", policy_qa.getStr("id")));
-                if(find!=null&&find.size()>0){
+                if (find != null && find.size() > 0) {
                     frequentlyAskedQuestionDO.setPoliciesIds(find.get(0).getStr("policy_id"));
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
             frequentlyAskedQuestionDO.setTitle(policy_qa.getStr("title"));
-            frequentlyAskedQuestionDO.setContent(sourceMap.get(policy_qa.getStr("site_name")).parseQA(policy_qa.getStr("html")));
+            frequentlyAskedQuestionDO.setContent(policy_qa.getStr("content"));
             frequentlyAskedQuestionDO.setDocSource(policy_qa.getStr("content_source"));
-            frequentlyAskedQuestionDO.setReleaseDate((StringUtils.isBlank(policy_qa.getStr("publish_date")) ?null:LocalDate.parse(policy_qa.getStr("publish_date"),DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
+            frequentlyAskedQuestionDO.setReleaseDate((StringUtils.isBlank(policy_qa.getStr("publish_date")) ? null : LocalDate.parse(policy_qa.getStr("publish_date"), DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
             frequentlyAskedQuestionDO.setCreateTime(LocalDateTime.now());
             frequentlyAskedQuestionDO.setUpdateTime(LocalDateTime.now());
             frequentlyAskedQuestionDO.setInputUserId(1L);
