@@ -18,4 +18,11 @@ public interface ValidationGroup {
     interface Update {
 
     }
+
+    /**
+     * 手工校验
+     */
+    interface Manual {
+
+    }
 }

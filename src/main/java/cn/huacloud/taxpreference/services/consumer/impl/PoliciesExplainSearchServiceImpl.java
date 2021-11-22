@@ -3,6 +3,7 @@ package cn.huacloud.taxpreference.services.consumer.impl;
 import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.BizCode;
+import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
 import cn.huacloud.taxpreference.services.consumer.PoliciesExplainSearchService;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.PoliciesExplainSearchQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.ess.PoliciesExplainES;
@@ -59,10 +60,8 @@ public class PoliciesExplainSearchServiceImpl implements PoliciesExplainSearchSe
             throw BizCode._4500.exception();
         }
 
-        PoliciesExplainSearchVO policiesExplainSearchVO = new PoliciesExplainSearchVO();
         PoliciesExplainES policiesExplainES = objectMapper.readValue(response.getSourceAsString(), PoliciesExplainES.class);
-        BeanUtils.copyProperties(policiesExplainES, policiesExplainSearchVO);
-        return policiesExplainSearchVO;
+        return CustomBeanUtil.copyProperties(policiesExplainES, PoliciesExplainSearchVO.class);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.sync.es.trigger.impl;
 
+import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
 import cn.huacloud.taxpreference.services.consumer.entity.ess.PoliciesES;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
@@ -7,22 +8,17 @@ import cn.huacloud.taxpreference.services.producer.mapper.PoliciesMapper;
 import cn.huacloud.taxpreference.sync.es.trigger.EventTrigger;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 /**
+ * 政策法规ES数据事件触发器
  * @author wangkh
  */
 @RequiredArgsConstructor
@@ -51,8 +47,7 @@ public class PoliciesEventTrigger extends EventTrigger<Long, PoliciesES> {
         }
 
         // 属性拷贝
-        PoliciesES policiesES = new PoliciesES();
-        BeanUtils.copyProperties(policiesDO, policiesES);
+        PoliciesES policiesES = CustomBeanUtil.copyProperties(policiesDO, PoliciesES.class);
 
         // 类型转换属性设置
         policiesES.setArea(sysCodeService.getSimpleVOByCode(policiesDO.getAreaCode()));

@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.sync.es.trigger.impl;
 
+import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
 import cn.huacloud.taxpreference.services.consumer.entity.ess.PoliciesExplainES;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
@@ -12,7 +13,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
@@ -20,6 +20,7 @@ import reactor.core.publisher.Flux;
 import java.util.function.Supplier;
 
 /**
+ * 政策解读ES数据事件触发器
  * @author wangkh
  */
 @RequiredArgsConstructor
@@ -55,8 +56,7 @@ public class PoliciesExplainEventTrigger extends EventTrigger<Long, PoliciesExpl
         }
 
         // 属性拷贝
-        PoliciesExplainES policiesExplainES = new PoliciesExplainES();
-        BeanUtils.copyProperties(policiesExplainDO, policiesExplainES);
+        PoliciesExplainES policiesExplainES = CustomBeanUtil.copyProperties(policiesExplainDO, PoliciesExplainES.class);
 
         // 类型转换属性设置
         policiesExplainES.setTaxCategories(sysCodeService.getSimpleVOByCode(policiesDO.getTaxCategoriesCode()));
