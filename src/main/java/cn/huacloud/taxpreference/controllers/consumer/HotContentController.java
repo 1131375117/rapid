@@ -12,8 +12,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 /**
  * @author wangkh
  */
@@ -27,7 +25,7 @@ public class HotContentController {
 
     @ApiOperation("本周热点内容")
     @GetMapping("/hotContent/weekly")
-    public ResultVO<PageVO<HotContentVO>> weeklyHotContent(@RequestAttribute PageQueryDTO pageQuery) {
+    public ResultVO<PageVO<HotContentVO>> weeklyHotContent(PageQueryDTO pageQuery) {
         pageQuery.paramReasonable();
         PageVO<HotContentVO> pageVO = hotContentService.weeklyHotContent(pageQuery);
         return ResultVO.ok(pageVO);
