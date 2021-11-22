@@ -13,12 +13,12 @@ import java.util.List;
 @Data
 public class TaxPreferenceCountVO {
 
-    @ApiModelProperty("税收优惠id")
-    private Long taxPreferenceId;
+	@ApiModelProperty("税收优惠id")
+	private Long taxPreferenceId;
 
-    @ApiModelProperty("税收优惠数量")
-    private Long count;
+	@ApiModelProperty("税收优惠数量")
+	private Long count;
 
-    @ApiModelProperty("税收优惠名称")
-    private String taxPreferenceName;
+	@ApiModelProperty("税收优惠名称")
+	private String taxPreferenceName;
 }

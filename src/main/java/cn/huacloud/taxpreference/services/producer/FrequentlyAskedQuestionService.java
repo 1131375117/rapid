@@ -17,46 +17,48 @@ import java.util.List;
 public interface FrequentlyAskedQuestionService {
 
 
-    /**
-     * 新增热门问答
-     *
-     * @param frequentlyAskedQuestionDtO
-     *
-     */
-    void insertFrequentlyAskedQuestion(FrequentlyAskedQuestionDTO frequentlyAskedQuestionDtO,Long userId);
+	/**
+	 * 新增热门问答
+	 *
+	 * @param frequentlyAskedQuestionDtO
+	 */
+	void insertFrequentlyAskedQuestion(FrequentlyAskedQuestionDTO frequentlyAskedQuestionDtO, Long userId);
 
-    /**
-     * 修改热门问答
-     *
-     * @param frequentlyAskedQuestionDTO
-     */
-    void updateFrequentlyAskedQuestion(FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO);
+	/**
+	 * 修改热门问答
+	 *
+	 * @param frequentlyAskedQuestionDTO
+	 */
+	void updateFrequentlyAskedQuestion(FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO);
 
-    /**
-     * 热门问答列表查询
-     *
-     * @param queryPoliciesExplainDTO 查询条件
-     * @return
-     */
-    PageVO<PoliciesExplainDetailVO> getFrequentlyAskedQuestionList(QueryPoliciesExplainDTO queryPoliciesExplainDTO);
+	/**
+	 * 热门问答列表查询
+	 *
+	 * @param queryPoliciesExplainDTO 查询条件
+	 * @return
+	 */
+	PageVO<PoliciesExplainDetailVO> getFrequentlyAskedQuestionList(QueryPoliciesExplainDTO queryPoliciesExplainDTO);
 
-    /**
-     * 删除热门问答
-     * @param id
-     */
-    void deleteFrequentlyAskedQuestion(Long id);
+	/**
+	 * 删除热门问答
+	 *
+	 * @param id
+	 */
+	void deleteFrequentlyAskedQuestion(Long id);
 
-    /**
-     * 根据政策法规id查询热门问答信息
-     * @param policiesId
-     * @return
-     */
-    List<FrequentlyAskedQuestionDTO> getFrequentlyAskedQuestionByPoliciesId(Long policiesId);
+	/**
+	 * 根据政策法规id查询热门问答信息
+	 *
+	 * @param policiesId
+	 * @return
+	 */
+	List<FrequentlyAskedQuestionDTO> getFrequentlyAskedQuestionByPoliciesId(Long policiesId);
 
-    /**
-     * 根据热门问答id查询详情
-     * @param id
-     * @return
-     */
-    PoliciesExplainDetailVO getFrequentlyAskedQuestionById(Long id);
+	/**
+	 * 根据热门问答id查询详情
+	 *
+	 * @param id
+	 * @return
+	 */
+	PoliciesExplainDetailVO getFrequentlyAskedQuestionById(Long id);
 }

@@ -20,66 +20,66 @@ import java.util.List;
 @ApiModel
 public class PoliciesDTO {
 
-    @ApiModelProperty("政策法规主键id")
-    private Long id;
+	@ApiModelProperty("政策法规主键id")
+	private Long id;
 
-    @ApiModelProperty("标题")
+	@ApiModelProperty("标题")
 
-    private String title;
+	private String title;
 
-    @ApiModelProperty("文号")
-    @NotEmpty(message = "文号不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
-    private String docCode;
-
-
-    @ApiModelProperty("所属区域码值")
-    @NotEmpty(message = "所属区域码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
-    private String areaCode;
-
-    @ApiModelProperty("来源")
-    @NotEmpty(message = "来源不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
-    private String docSource;
+	@ApiModelProperty("文号")
+	@NotEmpty(message = "文号不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+	private String docCode;
 
 
-    @ApiModelProperty("所属税种码值")
-    @NotEmpty(message = "所属税种码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
-    private String taxCategoriesCode;
+	@ApiModelProperty("所属区域码值")
+	@NotEmpty(message = "所属区域码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+	private String areaCode;
+
+	@ApiModelProperty("来源")
+	@NotEmpty(message = "来源不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+	private String docSource;
 
 
-    @ApiModelProperty("纳税人资格认定类型码值")
-    @NotEmpty(message = "纳税人资格认定类型码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
-    private List<String> taxpayerIdentifyTypeCodes;
+	@ApiModelProperty("所属税种码值")
+	@NotEmpty(message = "所属税种码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+	private String taxCategoriesCode;
 
 
-    @ApiModelProperty("适用企业类型码值")
-    @NotEmpty(message = "适用企业类型码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
-    private List<String> enterpriseTypeCodes;
+	@ApiModelProperty("纳税人资格认定类型码值")
+	@NotEmpty(message = "纳税人资格认定类型码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+	private List<String> taxpayerIdentifyTypeCodes;
 
 
-    @ApiModelProperty("适用行业码值")
-    @NotEmpty(message = "适用行业码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
-    private List<String> industryCodes;
+	@ApiModelProperty("适用企业类型码值")
+	@NotEmpty(message = "适用企业类型码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+	private List<String> enterpriseTypeCodes;
 
-    @ApiModelProperty("有效性")
-    @NotEmpty(message = "有效性不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
-    private String validity;
 
-    @ApiModelProperty("发布日期")
-    @NotNull(message = "发布日期不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
-    private LocalDate releaseDate;
+	@ApiModelProperty("适用行业码值")
+	@NotEmpty(message = "适用行业码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+	private List<String> industryCodes;
 
-    @ApiModelProperty("摘要")
-    @NotEmpty(message = "摘要不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
-    private String digest;
+	@ApiModelProperty("有效性")
+	@NotEmpty(message = "有效性不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+	private String validity;
 
-    @ApiModelProperty("正文")
-    @NotEmpty(message = "正文不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
-    private String content;
+	@ApiModelProperty("发布日期")
+	@NotNull(message = "发布日期不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+	private LocalDate releaseDate;
 
-    @ApiModelProperty("标签管理")
-    private List<String> labels;
+	@ApiModelProperty("摘要")
+	@NotEmpty(message = "摘要不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+	private String digest;
 
-    @ApiModelProperty("废止说明")
-    private String abolishNote;
+	@ApiModelProperty("正文")
+	@NotEmpty(message = "正文不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+	private String content;
+
+	@ApiModelProperty("标签管理")
+	private List<String> labels;
+
+	@ApiModelProperty("废止说明")
+	private String abolishNote;
 
 }

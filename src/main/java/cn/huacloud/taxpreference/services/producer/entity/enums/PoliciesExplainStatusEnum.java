@@ -11,21 +11,21 @@ import com.baomidou.mybatisplus.annotation.IEnum;
  */
 public enum PoliciesExplainStatusEnum implements IEnum<String> {
 
-    /**
-     * REPTILE_SYNCHRONIZATION 爬虫同步
-     * PUBLISHED 已发布
-     */
-    REPTILE_SYNCHRONIZATION("爬虫同步"),
-    PUBLISHED("已发布");
+	/**
+	 * REPTILE_SYNCHRONIZATION 爬虫同步
+	 * PUBLISHED 已发布
+	 */
+	REPTILE_SYNCHRONIZATION("爬虫同步"),
+	PUBLISHED("已发布");
 
-    private final String name;
+	private final String name;
 
-    PoliciesExplainStatusEnum(String name) {
-        this.name = name;
-    }
+	PoliciesExplainStatusEnum(String name) {
+		this.name = name;
+	}
 
-    @Override
-    public String getValue() {
-        return this.name();
-    }
+	@Override
+	public String getValue() {
+		return this.name();
+	}
 }

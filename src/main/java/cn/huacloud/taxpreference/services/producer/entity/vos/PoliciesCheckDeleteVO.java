@@ -9,6 +9,7 @@ import java.util.List;
 
 /**
  * 校验删除的对象
+ *
  * @author wuxin
  */
 @Data
@@ -16,16 +17,16 @@ import java.util.List;
 @ApiModel
 public class PoliciesCheckDeleteVO {
 
-    @ApiModelProperty("校验删除的状态")
-    private CheckStatus checkStatus;
+	@ApiModelProperty("校验删除的状态")
+	private CheckStatus checkStatus;
 
-    @ApiModelProperty("校验删除后返回的数据")
-    List<TaxPreferenceCountVO> checkList;
+	@ApiModelProperty("校验删除后返回的数据")
+	List<TaxPreferenceCountVO> checkList;
 
-    public enum CheckStatus{
-        OK,
-        INFO,
-        CAN_NOT;
-    }
+	public enum CheckStatus {
+		OK,
+		INFO,
+		CAN_NOT;
+	}
 
 }

@@ -7,18 +7,18 @@ import com.baomidou.mybatisplus.annotation.IEnum;
  */
 
 public enum PoliciesSortType implements IEnum<String> {
-    //排序字段
-    RELEASE_DATE("release_date"),
-    UPDATE_TIME("update_time");
+	//排序字段
+	RELEASE_DATE("release_date"),
+	UPDATE_TIME("update_time");
 
-    private final String name;
+	private final String name;
 
-    PoliciesSortType(String name) {
-        this.name=name;
-    }
+	PoliciesSortType(String name) {
+		this.name = name;
+	}
 
-    @Override
-    public String getValue() {
-        return this.name();
-    }
+	@Override
+	public String getValue() {
+		return this.name();
+	}
 }

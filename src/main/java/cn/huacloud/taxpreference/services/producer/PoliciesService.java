@@ -18,67 +18,69 @@ import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesVO;
 public interface PoliciesService {
 
 
-    /**
-     * 政策列表查询
-     *
-     * @param queryPoliciesDTO 政策法规查询条件
-     * @return
-     */
-     PageVO<PoliciesVO> getPolicesList(QueryPoliciesDTO queryPoliciesDTO);
+	/**
+	 * 政策列表查询
+	 *
+	 * @param queryPoliciesDTO 政策法规查询条件
+	 * @return
+	 */
+	PageVO<PoliciesVO> getPolicesList(QueryPoliciesDTO queryPoliciesDTO);
 
-    /**
-     * 新增政策法规
-     *
-     * @param policiesCombinationDTO 政策法规参数集合
-     * @param userId              录入人用户ID
-     */
-     void savePolicies(PoliciesCombinationDTO policiesCombinationDTO, Long userId);
-
-
-    /**
-     * 根据政策法规id获取详细信息
-     *
-     * @param id 政策法规id
-     * @return
-     */
-    PoliciesCombinationDTO getPoliciesById(Long id);
+	/**
+	 * 新增政策法规
+	 *
+	 * @param policiesCombinationDTO 政策法规参数集合
+	 * @param userId                 录入人用户ID
+	 */
+	void savePolicies(PoliciesCombinationDTO policiesCombinationDTO, Long userId);
 
 
-    /**
-     * 修改政策法规
-     *
-     * @param policiesCombinationDTO 政策法规参数集合
-     */
-     void updatePolicies(PoliciesCombinationDTO policiesCombinationDTO);
-
-    /**
-     * 校验删除政策法规
-     * @param id 政策法规id
-     * @return
-     */
-    PoliciesCheckDeleteVO checkDeletePoliciesById(Long id);
-
-    /**
-     * 删除政策法规
-     * @param id
-     */
-    void confirmDeletePoliciesById(Long id);
-
-    /**
-     * 政策法规废止
-     *
-     * @param queryAbolishDTO 政策法规id
-     */
-     void abolish(QueryAbolishDTO queryAbolishDTO);
+	/**
+	 * 根据政策法规id获取详细信息
+	 *
+	 * @param id 政策法规id
+	 * @return
+	 */
+	PoliciesCombinationDTO getPoliciesById(Long id);
 
 
-    /**
-     * 查询废止信息
-     *
-     * @param id 政策法规id
-     * @return 返回
-     */
-     PoliciesAbolishVO getAbolish(Long id);
+	/**
+	 * 修改政策法规
+	 *
+	 * @param policiesCombinationDTO 政策法规参数集合
+	 */
+	void updatePolicies(PoliciesCombinationDTO policiesCombinationDTO);
 
-    Boolean checkTitleAndDocCode(String titleOrDocCode);
+	/**
+	 * 校验删除政策法规
+	 *
+	 * @param id 政策法规id
+	 * @return
+	 */
+	PoliciesCheckDeleteVO checkDeletePoliciesById(Long id);
+
+	/**
+	 * 删除政策法规
+	 *
+	 * @param id
+	 */
+	void confirmDeletePoliciesById(Long id);
+
+	/**
+	 * 政策法规废止
+	 *
+	 * @param queryAbolishDTO 政策法规id
+	 */
+	void abolish(QueryAbolishDTO queryAbolishDTO);
+
+
+	/**
+	 * 查询废止信息
+	 *
+	 * @param id 政策法规id
+	 * @return 返回
+	 */
+	PoliciesAbolishVO getAbolish(Long id);
+
+	Boolean checkTitleAndDocCode(String titleOrDocCode);
 }

@@ -22,129 +22,129 @@ import java.time.LocalDateTime;
 @Accessors(chain = true)
 public class PoliciesDO {
 
-    /**
-     * 主键ID
-     */
-    @TableId(type = IdType.AUTO)
-    private Long id;
+	/**
+	 * 主键ID
+	 */
+	@TableId(type = IdType.AUTO)
+	private Long id;
 
-    /**
-     * 标题
-     */
-    private String title;
+	/**
+	 * 标题
+	 */
+	private String title;
 
-    /**
-     * 文号
-     */
-    private String docCode;
+	/**
+	 * 文号
+	 */
+	private String docCode;
 
-    /**
-     * 所属区域名称
-     */
-    private String areaName;
+	/**
+	 * 所属区域名称
+	 */
+	private String areaName;
 
-    /**
-     * 所属区域码值
-     */
-    private String areaCode;
+	/**
+	 * 所属区域码值
+	 */
+	private String areaCode;
 
-    /**
-     * 来源
-     */
-    private String docSource;
+	/**
+	 * 来源
+	 */
+	private String docSource;
 
-    /**
-     * 所属税种名称
-     */
-    private String taxCategoriesName;
+	/**
+	 * 所属税种名称
+	 */
+	private String taxCategoriesName;
 
-    /**
-     * 所属税种码值
-     */
-    private String taxCategoriesCode;
+	/**
+	 * 所属税种码值
+	 */
+	private String taxCategoriesCode;
 
-    /**
-     * 纳税人资格认定类型名称
-     */
-    private String taxpayerIdentifyTypeNames;
+	/**
+	 * 纳税人资格认定类型名称
+	 */
+	private String taxpayerIdentifyTypeNames;
 
-    /**
-     * 纳税人资格认定类型码值
-     */
-    private String taxpayerIdentifyTypeCodes;
+	/**
+	 * 纳税人资格认定类型码值
+	 */
+	private String taxpayerIdentifyTypeCodes;
 
-    /**
-     * 适用企业类型名称
-     */
-    private String enterpriseTypeNames;
+	/**
+	 * 适用企业类型名称
+	 */
+	private String enterpriseTypeNames;
 
-    /**
-     * 适用企业类型码值
-     */
-    private String enterpriseTypeCodes;
+	/**
+	 * 适用企业类型码值
+	 */
+	private String enterpriseTypeCodes;
 
-    /**
-     * 适用行业名称
-     */
-    private String industryNames;
+	/**
+	 * 适用行业名称
+	 */
+	private String industryNames;
 
-    /**
-     * 适用行业码值
-     */
-    private String industryCodes;
+	/**
+	 * 适用行业码值
+	 */
+	private String industryCodes;
 
-    /**
-     * 有效性
-     */
-    private ValidityEnum validity;
+	/**
+	 * 有效性
+	 */
+	private ValidityEnum validity;
 
-    /**
-     * 发布日期
-     */
-    private LocalDate releaseDate;
+	/**
+	 * 发布日期
+	 */
+	private LocalDate releaseDate;
 
-    /**
-     * 摘要
-     */
-    private String digest;
+	/**
+	 * 摘要
+	 */
+	private String digest;
 
-    /**
-     * 正文
-     */
-    private String content;
+	/**
+	 * 正文
+	 */
+	private String content;
 
-    /**
-     * 标签集合
-     */
-    private String labels;
+	/**
+	 * 标签集合
+	 */
+	private String labels;
 
-    /**
-     * 政策法规状态
-     */
-    private PoliciesStatusEnum policiesStatus;
+	/**
+	 * 政策法规状态
+	 */
+	private PoliciesStatusEnum policiesStatus;
 
-    /**
-     * 废止说明
-     */
-    private String abolishNote;
+	/**
+	 * 废止说明
+	 */
+	private String abolishNote;
 
-    /**
-     * 录入人用户ID
-     */
-    private Long inputUserId;
+	/**
+	 * 录入人用户ID
+	 */
+	private Long inputUserId;
 
-    /**
-     * 创建时间
-     */
-    private LocalDateTime createTime;
+	/**
+	 * 创建时间
+	 */
+	private LocalDateTime createTime;
 
-    /**
-     * 更新时间
-     */
-    private LocalDateTime updateTime;
+	/**
+	 * 更新时间
+	 */
+	private LocalDateTime updateTime;
 
-    /**
-     * 逻辑删除
-     */
-    private Boolean deleted;
+	/**
+	 * 逻辑删除
+	 */
+	private Boolean deleted;
 }

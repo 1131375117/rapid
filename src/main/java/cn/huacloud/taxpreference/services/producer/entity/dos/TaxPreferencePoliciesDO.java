@@ -16,40 +16,40 @@ import java.time.LocalDate;
 @TableName("t_tax_preference_policies")
 public class TaxPreferencePoliciesDO {
 
-    /**
-     * 主键自增
-     */
-    @TableId(type = IdType.AUTO)
-    private Long id;
+	/**
+	 * 主键自增
+	 */
+	@TableId(type = IdType.AUTO)
+	private Long id;
 
-    /**
-     * 税收优惠ID
-     */
-    private Long taxPreferenceId;
+	/**
+	 * 税收优惠ID
+	 */
+	private Long taxPreferenceId;
 
-    /**
-     * 政策法规ID
-     */
-    private Long policiesId;
+	/**
+	 * 政策法规ID
+	 */
+	private Long policiesId;
 
-    /**
-     * 有效期起
-     */
-    private LocalDate validityBeginDate;
+	/**
+	 * 有效期起
+	 */
+	private LocalDate validityBeginDate;
 
-    /**
-     * 有效期至
-     */
-    private LocalDate validityEndDate;
+	/**
+	 * 有效期至
+	 */
+	private LocalDate validityEndDate;
 
-    /**
-     * 排序字段
-     */
-    private Long sort;
+	/**
+	 * 排序字段
+	 */
+	private Long sort;
 
-    /**
-     * 具体优惠内容摘要
-     */
-    private String digest;
+	/**
+	 * 具体优惠内容摘要
+	 */
+	private String digest;
 
 }

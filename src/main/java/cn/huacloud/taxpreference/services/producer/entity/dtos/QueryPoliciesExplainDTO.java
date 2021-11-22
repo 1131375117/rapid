@@ -19,31 +19,31 @@ import java.time.LocalDateTime;
 @ApiModel
 public class QueryPoliciesExplainDTO extends KeywordPageQueryDTO {
 
-    @ApiModelProperty("政策解读id")
-    private Long id;
-    @ApiModelProperty("政策法规id")
-    private Long policiesId;
+	@ApiModelProperty("政策解读id")
+	private Long id;
+	@ApiModelProperty("政策法规id")
+	private Long policiesId;
 
-    @ApiModelProperty("标题")
-    private String title;
+	@ApiModelProperty("标题")
+	private String title;
 
-    @ApiModelProperty("来源")
-    private String docSource;
+	@ApiModelProperty("来源")
+	private String docSource;
 
-    @ApiModelProperty("发布日期")
-    private LocalDate releaseDate;
+	@ApiModelProperty("发布日期")
+	private LocalDate releaseDate;
 
-    @ApiModelProperty("开始日期")
-    private LocalDate startTime;
+	@ApiModelProperty("开始日期")
+	private LocalDate startTime;
 
-    @ApiModelProperty("结束日期")
-    private LocalDate endTime;
+	@ApiModelProperty("结束日期")
+	private LocalDate endTime;
 
 
-    @ApiModelProperty("更新日期")
-    private LocalDateTime updateTime;
+	@ApiModelProperty("更新日期")
+	private LocalDateTime updateTime;
 
-    @ApiModelProperty(value = "排序",notes = "RELEASE_DATE:发布时间,UPDATE_TIME:更新时间")
-    private PoliciesSortType sortField;
+	@ApiModelProperty(value = "排序", notes = "RELEASE_DATE:发布时间,UPDATE_TIME:更新时间")
+	private PoliciesSortType sortField;
 
 }

@@ -17,34 +17,32 @@ import java.time.LocalDate;
 public class TaxPreferencePoliciesDTO {
 
 
+	/**
+	 * 政策法规ID-政策法规
+	 */
+	@ApiModelProperty("政策法规ID")
+	@NotNull(message = "政策法规ID不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+	private Long policiesId;
 
-    /**
-     * 政策法规ID-政策法规
-     */
-    @ApiModelProperty("政策法规ID")
-    @NotNull(message = "政策法规ID不能为空",groups = {ValidationGroup.Update.class,ValidationGroup.Create.class})
-    private Long policiesId;
+	/**
+	 * 有效期起-政策法规
+	 */
+	@ApiModelProperty("有效期起")
+	@NotNull(message = "有效期不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+	private LocalDate validityBeginDate;
 
-    /**
-     * 有效期起-政策法规
-     */
-    @ApiModelProperty("有效期起")
-    @NotNull(message = "有效期不能为空",groups = {ValidationGroup.Update.class,ValidationGroup.Create.class})
-    private LocalDate validityBeginDate;
+	/**
+	 * 有效期至-政策法规
+	 */
+	@ApiModelProperty("有效期至")
+	private LocalDate validityEndDate;
 
-    /**
-     * 有效期至-政策法规
-     */
-    @ApiModelProperty("有效期至")
-    private LocalDate validityEndDate;
-
-    /**
-     * 具体优惠内容摘要
-     */
-    @ApiModelProperty("具体优惠内容摘要")
-    @NotEmpty(message = "具体优惠内容摘要不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
-    private String digest;
-
+	/**
+	 * 具体优惠内容摘要
+	 */
+	@ApiModelProperty("具体优惠内容摘要")
+	@NotEmpty(message = "具体优惠内容摘要不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+	private String digest;
 
 
 }

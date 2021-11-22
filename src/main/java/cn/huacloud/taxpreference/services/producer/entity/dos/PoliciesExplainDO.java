@@ -19,60 +19,60 @@ import java.util.Date;
 @TableName("t_policies_explain")
 public class PoliciesExplainDO {
 
-    /**
-     * 主键ID
-     */
-    @TableId(type = IdType.AUTO)
-    private Long id;
+	/**
+	 * 主键ID
+	 */
+	@TableId(type = IdType.AUTO)
+	private Long id;
 
-    /**
-     * 政策Id
-     */
-    private Long policiesId;
+	/**
+	 * 政策Id
+	 */
+	private Long policiesId;
 
-    /**
-     * 标题
-     */
-    private String title;
+	/**
+	 * 标题
+	 */
+	private String title;
 
-    /**
-     * 来源
-     */
-    private String docSource;
+	/**
+	 * 来源
+	 */
+	private String docSource;
 
-    /**
-     * 发布日期
-     */
-    private LocalDate releaseDate;
+	/**
+	 * 发布日期
+	 */
+	private LocalDate releaseDate;
 
-    /**
-     * 正文
-     */
-    private String content;
+	/**
+	 * 正文
+	 */
+	private String content;
 
-    /**
-     * 录入人用户ID
-     */
-    private Long inputUserId;
+	/**
+	 * 录入人用户ID
+	 */
+	private Long inputUserId;
 
-    /**
-     * 创建时间
-     */
-    private LocalDateTime createTime;
+	/**
+	 * 创建时间
+	 */
+	private LocalDateTime createTime;
 
-    /**
-     * 更新时间
-     */
-    private LocalDateTime updateTime;
+	/**
+	 * 更新时间
+	 */
+	private LocalDateTime updateTime;
 
-    /**
-     * 逻辑删除
-     */
+	/**
+	 * 逻辑删除
+	 */
 
-    private Boolean deleted;
+	private Boolean deleted;
 
-    /**
-     * 政策解读状态
-     */
-    private PoliciesExplainStatusEnum policiesExplainStatus;
+	/**
+	 * 政策解读状态
+	 */
+	private PoliciesExplainStatusEnum policiesExplainStatus;
 }

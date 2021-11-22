@@ -17,15 +17,15 @@ import java.util.List;
  **/
 @Data
 public class TaxPreferenceIdsDTO {
-    /**
-     * id
-     */
-    @ApiModelProperty("id")
-    @NotNull(message = "id不能为空", groups = ValidationGroup.Update.class)
-    @Min(value = 1, message = "id必须为数字", groups = ValidationGroup.Update.class)
-    private Long id;
+	/**
+	 * id
+	 */
+	@ApiModelProperty("id")
+	@NotNull(message = "id不能为空", groups = ValidationGroup.Update.class)
+	@Min(value = 1, message = "id必须为数字", groups = ValidationGroup.Update.class)
+	private Long id;
 
-    @ApiModelProperty("税收优惠的集合")
-    private List<Long> ids;
+	@ApiModelProperty("税收优惠的集合")
+	private List<Long> ids;
 
 }

@@ -14,45 +14,46 @@ import java.util.List;
  * @author fuhua
  */
 public interface ProcessService {
-    /**
-     * 流程新增
-     *
-     * @param taxPreferenceIds
-     * @param currentUser
-     * @return resultVO
-     */
-    ResultVO<Void> insertProcessService(Long[] taxPreferenceIds, LoginUserVO currentUser);
+	/**
+	 * 流程新增
+	 *
+	 * @param taxPreferenceIds
+	 * @param currentUser
+	 * @return resultVO
+	 */
+	ResultVO<Void> insertProcessService(Long[] taxPreferenceIds, LoginUserVO currentUser);
 
-    /**
-     * 查询流程列表
-     *
-     * @param processListDTO
-     * @param userId
-     * @return ResultVO
-     */
-    ResultVO<PageVO<ProcessListVO>> queryProcessList(ProcessListDTO processListDTO, Long userId);
+	/**
+	 * 查询流程列表
+	 *
+	 * @param processListDTO
+	 * @param userId
+	 * @return ResultVO
+	 */
+	ResultVO<PageVO<ProcessListVO>> queryProcessList(ProcessListDTO processListDTO, Long userId);
 
-    /**
-     * 审核提交
-     *
-     * @param taxPreferenceId
-     * @param currentUser
-     * @return Void
-     */
-    ResultVO<Void> submitProcess(ProcessSubmitDTO taxPreferenceId, LoginUserVO currentUser);
+	/**
+	 * 审核提交
+	 *
+	 * @param taxPreferenceId
+	 * @param currentUser
+	 * @return Void
+	 */
+	ResultVO<Void> submitProcess(ProcessSubmitDTO taxPreferenceId, LoginUserVO currentUser);
 
-    /**
-     * 税收流程审批信息
-     *
-     * @param id
-     * @return
-     */
-    ResultVO<List<ProcessInfoVO>> queryProcessInfo(Long id);
+	/**
+	 * 税收流程审批信息
+	 *
+	 * @param id
+	 * @return
+	 */
+	ResultVO<List<ProcessInfoVO>> queryProcessInfo(Long id);
 
-    /**
-     * 校验是否在审批流程中
-     * @param id
-     */
-       void judgeProcessIng(Long id) ;
+	/**
+	 * 校验是否在审批流程中
+	 *
+	 * @param id
+	 */
+	void judgeProcessIng(Long id);
 
 }

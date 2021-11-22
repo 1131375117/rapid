@@ -16,54 +16,54 @@ import java.time.LocalDateTime;
 @Data
 @TableName("t_process")
 public class ProcessDO {
-    /**
-     * 主键自增
-     */
-    @TableId(type = IdType.AUTO)
-    private Long id;
+	/**
+	 * 主键自增
+	 */
+	@TableId(type = IdType.AUTO)
+	private Long id;
 
-    /**
-     * 税收优惠Id
-     */
-    private Long taxPreferenceId;
+	/**
+	 * 税收优惠Id
+	 */
+	private Long taxPreferenceId;
 
-    /**
-     * 创建人Id
-     */
-    private Long creatorId;
+	/**
+	 * 创建人Id
+	 */
+	private Long creatorId;
 
-    /**
-     * 创建人名称
-     */
-    private String creatorName;
+	/**
+	 * 创建人名称
+	 */
+	private String creatorName;
 
-    /**
-     * 创建时间
-     */
-    private LocalDateTime createTime;
-    /**
-     * 审批人ID
-     */
-    private Long approverId;
-    /**
-     * 审批人名
-     */
-    private String approverName;
-    /**
-     * 审批时间
-     */
-    private LocalDateTime approvalTime;
-    /**
-     * 流程状态
-     */
-    private ProcessStatus processStatus;
-    /**
-     * 是否为最新流程
-     */
-    private Boolean latestProcess;
+	/**
+	 * 创建时间
+	 */
+	private LocalDateTime createTime;
+	/**
+	 * 审批人ID
+	 */
+	private Long approverId;
+	/**
+	 * 审批人名
+	 */
+	private String approverName;
+	/**
+	 * 审批时间
+	 */
+	private LocalDateTime approvalTime;
+	/**
+	 * 流程状态
+	 */
+	private ProcessStatus processStatus;
+	/**
+	 * 是否为最新流程
+	 */
+	private Boolean latestProcess;
 
-    /**
-     * 流程备注信息
-     */
-    private String approvalNote;
+	/**
+	 * 流程备注信息
+	 */
+	private String approvalNote;
 }

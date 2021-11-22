@@ -15,12 +15,12 @@ import java.util.List;
 public class PoliciesAbolishVO {
 
 
-    @ApiModelProperty("废止状态")
-    private ValidityEnum validityEnum;
+	@ApiModelProperty("废止状态")
+	private ValidityEnum validityEnum;
 
-    @ApiModelProperty("废止说明")
-    private String abolishNote;
+	@ApiModelProperty("废止说明")
+	private String abolishNote;
 
-    @ApiModelProperty("税收优惠名称集合")
-    private List<TaxPreferenceAbolishVO> taxPreferenceVOS;
+	@ApiModelProperty("税收优惠名称集合")
+	private List<TaxPreferenceAbolishVO> taxPreferenceVOS;
 }

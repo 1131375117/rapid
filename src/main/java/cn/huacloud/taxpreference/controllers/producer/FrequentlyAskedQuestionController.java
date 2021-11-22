@@ -32,74 +32,74 @@ import java.util.List;
 @RestController
 public class FrequentlyAskedQuestionController {
 
-  private final FrequentlyAskedQuestionService frequentlyAskedQuestionService;
+	private final FrequentlyAskedQuestionService frequentlyAskedQuestionService;
 
-  @PermissionInfo(name = "热门问答分页列表", group = PermissionGroup.FREQUENTLY_ASKED_QUESTION)
-  @SaCheckPermission("producer_frequentlyAskedQuestion_query")
-  @ApiOperation("热门问答分页列表")
-  @PostMapping(value = "/getFrequentlyAskedQuestionList/query")
-  public ResultVO<PageVO<PoliciesExplainDetailVO>> getFrequentlyAskedQuestionList(
-      @RequestBody QueryPoliciesExplainDTO queryPoliciesExplainDTO) {
-    queryPoliciesExplainDTO.paramReasonable();
-    PageVO<PoliciesExplainDetailVO> frequentlyAskedQuestionPageVO =
-        frequentlyAskedQuestionService.getFrequentlyAskedQuestionList(queryPoliciesExplainDTO);
-    return ResultVO.ok(frequentlyAskedQuestionPageVO);
-  }
+	@PermissionInfo(name = "热门问答分页列表", group = PermissionGroup.FREQUENTLY_ASKED_QUESTION)
+	@SaCheckPermission("producer_frequentlyAskedQuestion_query")
+	@ApiOperation("热门问答分页列表")
+	@PostMapping(value = "/getFrequentlyAskedQuestionList/query")
+	public ResultVO<PageVO<PoliciesExplainDetailVO>> getFrequentlyAskedQuestionList(
+			@RequestBody QueryPoliciesExplainDTO queryPoliciesExplainDTO) {
+		queryPoliciesExplainDTO.paramReasonable();
+		PageVO<PoliciesExplainDetailVO> frequentlyAskedQuestionPageVO =
+				frequentlyAskedQuestionService.getFrequentlyAskedQuestionList(queryPoliciesExplainDTO);
+		return ResultVO.ok(frequentlyAskedQuestionPageVO);
+	}
 
-  /**
-   * 新增热门问答
-   *
-   * @param frequentlyAskedQuestionDTO
-   * @return
-   */
-  @PermissionInfo(name = "热门问答新增", group = PermissionGroup.FREQUENTLY_ASKED_QUESTION)
-  @SaCheckPermission("producer_frequentlyAskedQuestion_insert")
-  @ApiOperation("热门问答新增")
-  @PostMapping(value = "/frequentlyAskedQuestion")
-  public ResultVO<Void> insertFrequentlyAskedQuestion(
-      @Validated(ValidationGroup.Create.class) @RequestBody
-     FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO) {
-    frequentlyAskedQuestionService.insertFrequentlyAskedQuestion(
-        frequentlyAskedQuestionDTO, UserUtil.getCurrentUser().getId());
-    return ResultVO.ok();
-  }
+	/**
+	 * 新增热门问答
+	 *
+	 * @param frequentlyAskedQuestionDTO
+	 * @return
+	 */
+	@PermissionInfo(name = "热门问答新增", group = PermissionGroup.FREQUENTLY_ASKED_QUESTION)
+	@SaCheckPermission("producer_frequentlyAskedQuestion_insert")
+	@ApiOperation("热门问答新增")
+	@PostMapping(value = "/frequentlyAskedQuestion")
+	public ResultVO<Void> insertFrequentlyAskedQuestion(
+			@Validated(ValidationGroup.Create.class) @RequestBody
+					FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO) {
+		frequentlyAskedQuestionService.insertFrequentlyAskedQuestion(
+				frequentlyAskedQuestionDTO, UserUtil.getCurrentUser().getId());
+		return ResultVO.ok();
+	}
 
-  /**
-   * 修改热门问答
-   *
-   * @param frequentlyAskedQuestionDto
-   * @return
-   */
-  @PermissionInfo(name = "热门问答修改", group = PermissionGroup.FREQUENTLY_ASKED_QUESTION)
-  @SaCheckPermission("producer_frequentlyAskedQuestion_update")
-  @ApiOperation("热门问答修改")
-  @PutMapping(value = "/frequentlyAskedQuestion")
-  public ResultVO<Void> updateFrequentlyAskedQuestion(
-      @Validated(ValidationGroup.Update.class) @RequestBody
-          FrequentlyAskedQuestionDTO frequentlyAskedQuestionDto) {
-    frequentlyAskedQuestionService.updateFrequentlyAskedQuestion(frequentlyAskedQuestionDto);
-    return ResultVO.ok();
-  }
+	/**
+	 * 修改热门问答
+	 *
+	 * @param frequentlyAskedQuestionDto
+	 * @return
+	 */
+	@PermissionInfo(name = "热门问答修改", group = PermissionGroup.FREQUENTLY_ASKED_QUESTION)
+	@SaCheckPermission("producer_frequentlyAskedQuestion_update")
+	@ApiOperation("热门问答修改")
+	@PutMapping(value = "/frequentlyAskedQuestion")
+	public ResultVO<Void> updateFrequentlyAskedQuestion(
+			@Validated(ValidationGroup.Update.class) @RequestBody
+					FrequentlyAskedQuestionDTO frequentlyAskedQuestionDto) {
+		frequentlyAskedQuestionService.updateFrequentlyAskedQuestion(frequentlyAskedQuestionDto);
+		return ResultVO.ok();
+	}
 
-  @PermissionInfo(name = "热门问答详情", group = PermissionGroup.FREQUENTLY_ASKED_QUESTION)
-  @SaCheckPermission("producer_frequentlyAskedQuestion_detail")
-  @ApiOperation("热门问答详情")
-  @GetMapping(value = "/frequentlyAskedQuestion/{id}")
-  public ResultVO<PoliciesExplainDetailVO> getFrequentlyAskedQuestionById(
-      @Validated() @PathVariable("id") Long id) {
-    PoliciesExplainDetailVO frequentlyAskedQuestionDetail =
-        frequentlyAskedQuestionService.getFrequentlyAskedQuestionById(id);
-    return ResultVO.ok(frequentlyAskedQuestionDetail);
-  }
+	@PermissionInfo(name = "热门问答详情", group = PermissionGroup.FREQUENTLY_ASKED_QUESTION)
+	@SaCheckPermission("producer_frequentlyAskedQuestion_detail")
+	@ApiOperation("热门问答详情")
+	@GetMapping(value = "/frequentlyAskedQuestion/{id}")
+	public ResultVO<PoliciesExplainDetailVO> getFrequentlyAskedQuestionById(
+			@Validated() @PathVariable("id") Long id) {
+		PoliciesExplainDetailVO frequentlyAskedQuestionDetail =
+				frequentlyAskedQuestionService.getFrequentlyAskedQuestionById(id);
+		return ResultVO.ok(frequentlyAskedQuestionDetail);
+	}
 
-  @PermissionInfo(name = "热门问答删除", group = PermissionGroup.FREQUENTLY_ASKED_QUESTION)
-  @SaCheckPermission("producer_frequentlyAskedQuestion_delete")
-  @ApiOperation("热门问答删除")
-  @DeleteMapping(value = "/frequentlyAskedQuestion/{id}")
-  public ResultVO<Void> deleteFrequentlyAskedQuestion(
-      @Validated @NotEmpty(message = "id不能为空") @NotEmpty(message = "id不能为空") @PathVariable("id")
-          Long id) {
-    frequentlyAskedQuestionService.deleteFrequentlyAskedQuestion(id);
-    return ResultVO.ok();
-  }
+	@PermissionInfo(name = "热门问答删除", group = PermissionGroup.FREQUENTLY_ASKED_QUESTION)
+	@SaCheckPermission("producer_frequentlyAskedQuestion_delete")
+	@ApiOperation("热门问答删除")
+	@DeleteMapping(value = "/frequentlyAskedQuestion/{id}")
+	public ResultVO<Void> deleteFrequentlyAskedQuestion(
+			@Validated @NotEmpty(message = "id不能为空") @NotEmpty(message = "id不能为空") @PathVariable("id")
+					Long id) {
+		frequentlyAskedQuestionService.deleteFrequentlyAskedQuestion(id);
+		return ResultVO.ok();
+	}
 }

@@ -10,13 +10,13 @@ import com.baomidou.mybatisplus.annotation.IEnum;
  */
 
 public enum KeywordType implements IEnum<String> {
-    //政策法规标题
-    TITLE,
-    //政策法规文号
-    DOC_CODE;
+	//政策法规标题
+	TITLE,
+	//政策法规文号
+	DOC_CODE;
 
-    @Override
-    public String getValue() {
-        return this.name();
-    }
+	@Override
+	public String getValue() {
+		return this.name();
+	}
 }

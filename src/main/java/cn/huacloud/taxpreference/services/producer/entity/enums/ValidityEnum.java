@@ -15,46 +15,46 @@ import java.util.HashMap;
  */
 public enum ValidityEnum implements IEnum<String>, SysCodeGetter {
 
-    /**
-     * FULL_TEXT_VALID 全文有效
-     * FULL_TEXT_REPEAL 全文废止
-     * PARTIAL_REPEAL 部分废止
-     */
+	/**
+	 * FULL_TEXT_VALID 全文有效
+	 * FULL_TEXT_REPEAL 全文废止
+	 * PARTIAL_REPEAL 部分废止
+	 */
 
 
-    INVALID("失效"),
-    FULL_TEXT_VALID("全文有效"),
-    FULL_TEXT_REPEAL("全文废止"),
-    PARTIAL_VALID("部分有效"),
-    CLAUSE_INVALIDITY("条款失效"),
-    FULL_TEXT_INVALIDATION("全文失效"),
-    PARTIAL_REPEAL("部分废止"),
-    CLAUSE_REPEAL("条款废止"),
-    UNKNOWN("未知");
+	INVALID("失效"),
+	FULL_TEXT_VALID("全文有效"),
+	FULL_TEXT_REPEAL("全文废止"),
+	PARTIAL_VALID("部分有效"),
+	CLAUSE_INVALIDITY("条款失效"),
+	FULL_TEXT_INVALIDATION("全文失效"),
+	PARTIAL_REPEAL("部分废止"),
+	CLAUSE_REPEAL("条款废止"),
+	UNKNOWN("未知");
 
-    @Getter
-    private final String name;
+	@Getter
+	private final String name;
 
-    ValidityEnum(String name) {
-        this.name = name;
-    }
+	ValidityEnum(String name) {
+		this.name = name;
+	}
 
-    @Override
-    public String getValue() {
-        return this.name();
-    }
+	@Override
+	public String getValue() {
+		return this.name();
+	}
 
-    public static HashMap<String,String> ValidMap(){
-        HashMap<String, String> validMap = new HashMap<>();
-        for (ValidityEnum validityEnum : EnumSet.allOf(ValidityEnum.class)) {
-            validMap.put(validityEnum.name,validityEnum.getValue());
-        }
-        return  validMap;
-    }
+	public static HashMap<String, String> ValidMap() {
+		HashMap<String, String> validMap = new HashMap<>();
+		for (ValidityEnum validityEnum : EnumSet.allOf(ValidityEnum.class)) {
+			validMap.put(validityEnum.name, validityEnum.getValue());
+		}
+		return validMap;
+	}
 
-    public static void main(String[] args) {
-        System.out.println(ValidMap());
+	public static void main(String[] args) {
+		System.out.println(ValidMap());
 
 
-    }
+	}
 }
