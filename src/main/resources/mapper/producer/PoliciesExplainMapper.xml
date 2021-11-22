@@ -13,6 +13,8 @@
         FROM
             `t_policies_explain` pe
             RIGHT JOIN t_policies p ON pe.policies_id = p.id
+        WHERE
+	        p.deleted =0
         GROUP BY
             p.id
             LIMIT 0,50;

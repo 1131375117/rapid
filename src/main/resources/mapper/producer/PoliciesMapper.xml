@@ -29,10 +29,7 @@
                 and tp.tax_categories_code = #{queryPoliciesDTO.taxCategoriesCode}
             </if>
             <if test="queryPoliciesDTO.areaCode != null and queryPoliciesDTO.areaCode !='' ">
-<!--            <foreach collection="queryPoliciesDTO.areaCode" item="area" separator="," close=")" open="(">-->
                 and tp.area_code = #{queryPoliciesDTO.areaCode}
-<!--            </foreach>-->
-
             </if>
             <if test="queryPoliciesDTO.validity!=null and queryPoliciesDTO.validity!='' ">
                 and tp.validity=#{queryPoliciesDTO.validity}
