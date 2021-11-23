@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * @author wangkh
  */
-public interface ElasticsearchConsumer<T extends AbstractCombinePlainContent<?>> {
+public interface ElasticsearchConsumer<T extends IDGetter<?>> {
 
     Logger getLog();
 
@@ -60,10 +60,17 @@ public interface ElasticsearchConsumer<T extends AbstractCombinePlainContent<?>>
 
     /**
      * 设置组合文本
+     *
      * @param source ES数据实体
      */
     default void setCombinePlainText(T source) {
-        List<CombineText> combineTexts = source.combineTextList();
+        AbstractCombinePlainContent<?> combineTextSource;
+        if (source instanceof AbstractCombinePlainContent) {
+            combineTextSource = (AbstractCombinePlainContent<?>) source;
+        } else {
+            return;
+        }
+        List<CombineText> combineTexts = combineTextSource.combineTextList();
         if (CollectionUtils.isEmpty(combineTexts)) {
             return;
         }
@@ -81,7 +88,7 @@ public interface ElasticsearchConsumer<T extends AbstractCombinePlainContent<?>>
                 sb.append(combineText.getText());
             }
         }
-        source.setCombinePlainContent(sb.toString());
+        combineTextSource.setCombinePlainContent(sb.toString());
     }
 
     /**
