@@ -24,7 +24,7 @@ public interface FrequentlyAskedQuestionSearchService extends SearchService<FAQS
      * @param id 热门问答ID
      * @return 热门问答视图
      */
-    FAQSearchVO getFAQDetails(String id) throws Exception;
+    FAQSearchVO getFAQDetails(Long id) throws Exception;
 
     /**
      * 根据政策ID查询相关热点问答
@@ -32,5 +32,5 @@ public interface FrequentlyAskedQuestionSearchService extends SearchService<FAQS
      * @param pageQuery 分页参数
      * @return
      */
-    PageVO<FAQSearchVO> policiesRelatedFAQ(String policiesId, PageQueryDTO pageQuery) throws Exception;
+    PageVO<FAQSearchVO> policiesRelatedFAQ(Long policiesId, PageQueryDTO pageQuery) throws Exception;
 }

@@ -7,6 +7,7 @@ import cn.huacloud.taxpreference.services.consumer.FrequentlyAskedQuestionSearch
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.FAQSearchQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.FAQSearchSimpleVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.FAQSearchVO;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.PreviousNextVO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -67,18 +68,22 @@ public class FrequentlyAskedQuestionSearchServiceImpl implements FrequentlyAsked
     }
 
     @Override
-    public FAQSearchVO getFAQDetails(String id) throws Exception {
+    public FAQSearchVO getFAQDetails(Long id) throws Exception {
         GetRequest request = new GetRequest(getIndex());
-        request.id(id);
+        request.id(id.toString());
         GetResponse response = restHighLevelClient.get(request, RequestOptions.DEFAULT);
         if (!response.isExists()) {
             throw BizCode._4500.exception();
         }
-        return objectMapper.readValue(response.getSourceAsString(), FAQSearchVO.class);
+        FAQSearchVO faqSearchVO = objectMapper.readValue(response.getSourceAsString(), FAQSearchVO.class);
+        // 设置上一篇、下一篇
+        PreviousNextVO<Long> defaultPreviousNext = getDefaultPreviousNext(getIndex(), id);
+        faqSearchVO.setPreviousNext(defaultPreviousNext);
+        return faqSearchVO;
     }
 
     @Override
-    public PageVO<FAQSearchVO> policiesRelatedFAQ(String policiesId, PageQueryDTO pageQuery) throws Exception {
+    public PageVO<FAQSearchVO> policiesRelatedFAQ(Long policiesId, PageQueryDTO pageQuery) throws Exception {
         // 执行查询
         SearchResponse response = simplePageSearch(getIndex(),
                 termsQuery("policiesIds", Collections.singletonList(policiesId)),

@@ -10,16 +10,15 @@ import cn.huacloud.taxpreference.services.common.entity.dos.SysCodeDO;
 import cn.huacloud.taxpreference.services.consumer.PoliciesSearchService;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.PoliciesSearchQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.ess.PoliciesES;
-import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesExplainSearchListVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesSearchListVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesSearchSimpleVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesSearchVO;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.PreviousNextVO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
-import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -27,11 +26,8 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.elasticsearch.search.sort.SortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -83,16 +79,20 @@ public class PoliciesSearchServiceImpl implements PoliciesSearchService {
     }
 
     @Override
-    public PoliciesSearchVO getPoliciesDetails(String id) throws Exception {
+    public PoliciesSearchVO getPoliciesDetails(Long id) throws Exception {
         GetRequest request = new GetRequest(getIndex());
-        request.id(id);
+        request.id(id.toString());
         GetResponse response = restHighLevelClient.get(request, RequestOptions.DEFAULT);
         if (!response.isExists()) {
             throw BizCode._4500.exception();
         }
 
         PoliciesES policiesES = objectMapper.readValue(response.getSourceAsString(), PoliciesES.class);
-        return CustomBeanUtil.copyProperties(policiesES, PoliciesSearchVO.class);
+        PoliciesSearchVO policiesSearchVO = CustomBeanUtil.copyProperties(policiesES, PoliciesSearchVO.class);
+        // 设置上一篇、下一篇
+        PreviousNextVO<Long> defaultPreviousNext = getDefaultPreviousNext(getIndex(), id);
+        policiesSearchVO.setPreviousNext(defaultPreviousNext);
+        return policiesSearchVO;
     }
 
     @Override

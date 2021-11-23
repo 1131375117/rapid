@@ -70,4 +70,7 @@ public class TaxPreferenceSearchVO {
 
     @ApiModelProperty("无装饰的组合文本")
     private String combinePlainContent;
+
+    @ApiModelProperty("上一篇、下一篇")
+    PreviousNextVO<Long> previousNext;
 }

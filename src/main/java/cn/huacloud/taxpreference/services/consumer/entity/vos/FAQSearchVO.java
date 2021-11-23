@@ -4,7 +4,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.List;
 
 /**
  * @author wangkh
@@ -29,4 +28,7 @@ public class FAQSearchVO {
 
     @ApiModelProperty("无装饰的组合文本")
     private String combinePlainContent;
+
+    @ApiModelProperty("上一篇、下一篇")
+    PreviousNextVO<Long> previousNext;
 }

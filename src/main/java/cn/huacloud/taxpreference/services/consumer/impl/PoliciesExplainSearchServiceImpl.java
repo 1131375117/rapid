@@ -10,6 +10,7 @@ import cn.huacloud.taxpreference.services.consumer.entity.ess.PoliciesExplainES;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesExplainSearchListVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesExplainSearchSimpleVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesExplainSearchVO;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.PreviousNextVO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -19,20 +20,18 @@ import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.matchAllQuery;
+import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
 
 /**
  * @author wangkh
@@ -52,16 +51,20 @@ public class PoliciesExplainSearchServiceImpl implements PoliciesExplainSearchSe
     }
 
     @Override
-    public PoliciesExplainSearchVO getPoliciesExplainDetails(String id) throws Exception {
+    public PoliciesExplainSearchVO getPoliciesExplainDetails(Long id) throws Exception {
         GetRequest request = new GetRequest(getIndex());
-        request.id(id);
+        request.id(id.toString());
         GetResponse response = restHighLevelClient.get(request, RequestOptions.DEFAULT);
         if (!response.isExists()) {
             throw BizCode._4500.exception();
         }
 
         PoliciesExplainES policiesExplainES = objectMapper.readValue(response.getSourceAsString(), PoliciesExplainES.class);
-        return CustomBeanUtil.copyProperties(policiesExplainES, PoliciesExplainSearchVO.class);
+        PoliciesExplainSearchVO policiesExplainSearchVO = CustomBeanUtil.copyProperties(policiesExplainES, PoliciesExplainSearchVO.class);
+        // 设置上一篇、下一篇
+        PreviousNextVO<Long> defaultPreviousNext = getDefaultPreviousNext(getIndex(), id);
+        policiesExplainSearchVO.setPreviousNext(defaultPreviousNext);
+        return policiesExplainSearchVO;
     }
 
     @Override

@@ -39,14 +39,14 @@ public class FrequentlyAskedQuestionSearchController {
 
     @ApiOperation("热点问答详情")
     @GetMapping("/faq/{id}")
-    public ResultVO<FAQSearchVO> getFAQDetails(@PathVariable("id") String id) throws Exception {
+    public ResultVO<FAQSearchVO> getFAQDetails(@PathVariable("id") Long id) throws Exception {
         FAQSearchVO faqSearchVO = frequentlyAskedQuestionSearchService.getFAQDetails(id);
         return ResultVO.ok(faqSearchVO);
     }
 
     @ApiOperation("根据政策ID查询相关热点问答")
     @GetMapping("/faq/policiesRelated/{policiesId}")
-    public ResultVO<PageVO<FAQSearchVO>> policiesRelatedFAQ(@PathVariable("policiesId") String policiesId, PageQueryDTO pageQuery) throws Exception {
+    public ResultVO<PageVO<FAQSearchVO>> policiesRelatedFAQ(@PathVariable("policiesId") Long policiesId, PageQueryDTO pageQuery) throws Exception {
         PageVO<FAQSearchVO> pageVO = frequentlyAskedQuestionSearchService.policiesRelatedFAQ(policiesId, pageQuery);
         return ResultVO.ok(pageVO);
     }

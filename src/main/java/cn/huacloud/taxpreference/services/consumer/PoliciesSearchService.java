@@ -18,7 +18,7 @@ public interface PoliciesSearchService extends SearchService<PoliciesSearchQuery
      * @param id 政策法规ID
      * @return 政策详情
      */
-    PoliciesSearchVO getPoliciesDetails(String id) throws Exception;
+    PoliciesSearchVO getPoliciesDetails(Long id) throws Exception;
 
     /**
      * 最新中央政策

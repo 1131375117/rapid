@@ -8,7 +8,6 @@ import cn.huacloud.taxpreference.services.consumer.entity.dtos.PoliciesExplainSe
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesExplainSearchListVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesExplainSearchSimpleVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesExplainSearchVO;
-import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesSearchSimpleVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +50,7 @@ public class PoliciesExplainSearchController {
 
     @ApiOperation("政策解读详情")
     @PostMapping("/policiesExplain/{id}")
-    public ResultVO<PoliciesExplainSearchVO> pageSearch(@PathVariable("id") String id) throws Exception {
+    public ResultVO<PoliciesExplainSearchVO> pageSearch(@PathVariable("id") Long id) throws Exception {
         PoliciesExplainSearchVO pageVO = policiesExplainSearchService.getPoliciesExplainDetails(id);
         return ResultVO.ok(pageVO);
     }
