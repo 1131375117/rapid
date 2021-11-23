@@ -45,7 +45,7 @@ public class QueryPoliciesDTO extends KeywordPageQueryDTO {
 	private List<String> industryCodes;
 
 	@ApiModelProperty("所属区域码值")
-	private String areaCode;
+	private List<String> areaCode;
 
 	@ApiModelProperty("有效性")
 	private String validity;
@@ -74,6 +74,8 @@ public class QueryPoliciesDTO extends KeywordPageQueryDTO {
 		reasonableStringList(industryCodes, this::setIndustryCodes);
 		reasonableStringList(enterpriseTypeCodes, this::setEnterpriseTypeCodes);
 		reasonableStringList(taxpayerIdentifyTypeCodes, this::setTaxpayerIdentifyTypeCodes);
+		reasonableStringList(areaCode, this::setAreaCode);
+
 	}
 
 	public void reasonableStringList(List<String> target, Consumer<List<String>> consumer) {

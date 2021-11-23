@@ -28,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,9 +48,9 @@ public class PoliciesServiceImpl implements PoliciesService {
 
 	private final PoliciesMapper policiesMapper;
 
-	private final PoliciesExplainService policiesExplainService;
+	private PoliciesExplainService policiesExplainService;
 
-	private final FrequentlyAskedQuestionService frequentlyAskedQuestionService;
+	/*private  FrequentlyAskedQuestionService frequentlyAskedQuestionService;*/
 
 	private final SysCodeService sysCodeService;
 
@@ -58,6 +59,16 @@ public class PoliciesServiceImpl implements PoliciesService {
 	private final TaxPreferenceService taxPreferenceService;
 
 	private final AttachmentService attachmentService;
+
+/*	@Autowired
+	public void setFrequentlyAskedQuestionService(FrequentlyAskedQuestionService frequentlyAskedQuestionService) {
+		this.frequentlyAskedQuestionService = frequentlyAskedQuestionService;
+	}*/
+
+	@Autowired
+	public void setPoliciesExplainService(PoliciesExplainService policiesExplainService) {
+		this.policiesExplainService = policiesExplainService;
+	}
 
 	/**
 	 * 政策列表查询
@@ -124,7 +135,7 @@ public class PoliciesServiceImpl implements PoliciesService {
 			policiesExplainService.insertPoliciesExplain(policiesExplainDTO, userId);
 		}
 
-		// 新增热点问答
+		/*// 新增热点问答
 		List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOList =
 				policiesCombinationDTO.getFrequentlyAskedQuestionDTOList();
 		// 判断该政策法规是否为空
@@ -137,7 +148,7 @@ public class PoliciesServiceImpl implements PoliciesService {
 						frequentlyAskedQuestionDTO, userId);
 			}
 		}
-
+*/
 		// 关联附件信息
 		attachmentService.setAttachmentDocId(
 				policiesDO.getId(), AttachmentType.POLICIES, policiesCombinationDTO.getContent());
@@ -255,26 +266,24 @@ public class PoliciesServiceImpl implements PoliciesService {
 		// 根据政策法规id查询政策解读对象
 		PoliciesExplainDTO policiesExplainDTO =
 				policiesExplainService.getPoliciesByPoliciesId(policiesDO.getId());
-		// 根据政策法规id查询热门问答
+		/*// 根据政策法规id查询热门问答
 		List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDOList =
-				frequentlyAskedQuestionService.getFrequentlyAskedQuestionByPoliciesId(policiesDO.getId());
+				frequentlyAskedQuestionService.getFrequentlyAskedQuestionByPoliciesId(policiesDO.getId());*/
 		// 返回结果
-		return setPoliciesCombinationDTO(policiesDO, policiesExplainDTO, frequentlyAskedQuestionDOList);
+		return setPoliciesCombinationDTO(policiesDO, policiesExplainDTO/*, frequentlyAskedQuestionDOList*/);
 	}
 
 	/**
 	 * 设置政策组合对象属性值
 	 *
-	 * @param policiesDO                    政策法规对象
-	 * @param policiesExplainDTO            政策解读对象
-	 * @param frequentlyAskedQuestionDOList 热门问答
+	 * @param policiesDO         政策法规对象
+	 * @param policiesExplainDTO 政策解读对象
 	 * @return 返回
 	 */
 	@NotNull
 	private PoliciesCombinationDTO setPoliciesCombinationDTO(
 			PoliciesDO policiesDO,
-			PoliciesExplainDTO policiesExplainDTO,
-			List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDOList) {
+			PoliciesExplainDTO policiesExplainDTO) {
 		PoliciesCombinationDTO policiesCombinationDTO = new PoliciesCombinationDTO();
 		List<String> strings = new ArrayList<>();
 		strings.add("");
@@ -304,8 +313,8 @@ public class PoliciesServiceImpl implements PoliciesService {
 		BeanUtils.copyProperties(policiesDO, policiesCombinationDTO);
 		// 设置政策解读对象
 		policiesCombinationDTO.setPoliciesExplainDTO(policiesExplainDTO);
-		// 设置热门问答对象
-		policiesCombinationDTO.setFrequentlyAskedQuestionDTOList(frequentlyAskedQuestionDOList);
+		/*// 设置热门问答对象
+		policiesCombinationDTO.setFrequentlyAskedQuestionDTOList(frequentlyAskedQuestionDOList);*/
 		return policiesCombinationDTO;
 	}
 
@@ -329,8 +338,8 @@ public class PoliciesServiceImpl implements PoliciesService {
 		updatePolicies(policiesCombinationDTO, policiesDO);
 		// 修改政策解读
 		insertOrUpdateExplain(policiesCombinationDTO);
-		// 热门问答
-		insertOrUpdateQA(policiesCombinationDTO);
+/*		// 热门问答
+		insertOrUpdateQA(policiesCombinationDTO);*/
 		// 关联附件信息
 		attachmentService.setAttachmentDocId(
 				policiesDO.getId(), AttachmentType.POLICIES, policiesCombinationDTO.getContent());
@@ -407,7 +416,7 @@ public class PoliciesServiceImpl implements PoliciesService {
 	 * 新增或修改热门问答
 	 *
 	 * @param policiesCombinationDTO 政策组合对象
-	 */
+	 *//*
 	private void insertOrUpdateQA(PoliciesCombinationDTO policiesCombinationDTO) {
 		// 根据政策法规id查询热门问答集合
 		List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionByPoliciesIdList =
@@ -436,7 +445,7 @@ public class PoliciesServiceImpl implements PoliciesService {
 						frequentlyAskedQuestionDTO, policiesCombinationDTO.getInputUserId());
 			}
 		}
-	}
+	}*/
 
 	/**
 	 * 校验删除政策法规
@@ -518,8 +527,8 @@ public class PoliciesServiceImpl implements PoliciesService {
 				policiesMapper.updateById(policiesDO);
 				// 删除政策解读
 				deletePoliciesExplain(policiesDO);
-				// 删除热点问答
-				deleteFrequentlyAskedQuestion(policiesDO);
+				/*// 删除热点问答
+				deleteFrequentlyAskedQuestion(policiesDO);*/
 				taxPreferenceService.deleteTaxPreferencePolicies(policiesDO.getId());
 			}
 			if (count == 1) {
@@ -531,8 +540,8 @@ public class PoliciesServiceImpl implements PoliciesService {
 				policiesMapper.updateById(policiesDO);
 				// 删除政策解读
 				deletePoliciesExplain(policiesDO);
-				// 删除热点问答
-				deleteFrequentlyAskedQuestion(policiesDO);
+/*				// 删除热点问答
+				deleteFrequentlyAskedQuestion(policiesDO);*/
 			}
 		}
 		if (taxPreferenceCounts.isEmpty()) {
@@ -540,8 +549,8 @@ public class PoliciesServiceImpl implements PoliciesService {
 			policiesMapper.updateById(policiesDO);
 			// 删除政策解读
 			deletePoliciesExplain(policiesDO);
-			// 删除热点问答
-			deleteFrequentlyAskedQuestion(policiesDO);
+/*			// 删除热点问答
+			deleteFrequentlyAskedQuestion(policiesDO);*/
 		}
 	}
 
@@ -549,7 +558,7 @@ public class PoliciesServiceImpl implements PoliciesService {
 	 * 删除热门问答
 	 *
 	 * @param policiesDO 政策法规对象
-	 */
+	 *//*
 	private void deleteFrequentlyAskedQuestion(PoliciesDO policiesDO) {
 		// 根据政策法规id查询热门问答
 		List<FrequentlyAskedQuestionDO> frequentlyAskedQuestionIds =
@@ -564,6 +573,7 @@ public class PoliciesServiceImpl implements PoliciesService {
 			frequentlyAskedQuestionMapper.updateById(frequentlyAskedQuestionId);
 		}
 	}
+*/
 
 	/**
 	 * 删除政策解读
@@ -638,6 +648,7 @@ public class PoliciesServiceImpl implements PoliciesService {
 		return policiesAbolishVO;
 	}
 
+
 	@Override
 	public Boolean checkTitleAndDocCode(String titleOrDocCode) {
 		log.info("标题或文号={}", titleOrDocCode);
@@ -647,11 +658,16 @@ public class PoliciesServiceImpl implements PoliciesService {
 				.eq(StringUtils.isNotBlank(titleOrDocCode), PoliciesDO::getTitle, titleOrDocCode)
 				.or()
 				.eq(StringUtils.isNotBlank(titleOrDocCode), PoliciesDO::getDocCode, titleOrDocCode);
-		List<PoliciesDO> policiesDOS = policiesMapper.selectList(lambdaQueryWrapper);
+		List<PoliciesDO> policiesDoS = policiesMapper.selectList(lambdaQueryWrapper);
 		// 判断是否重复
-		if (policiesDOS.size() > 1 || policiesDOS.size() == 1) {
+		if (policiesDoS.size() != 0) {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public PoliciesDO getPolicies(Long id) {
+		return policiesMapper.selectById(id);
 	}
 }

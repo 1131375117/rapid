@@ -89,7 +89,6 @@ public class PoliciesExplainController {
 	public ResultVO<PoliciesExplainDetailVO> getPoliciesExplainById(@Validated @NotEmpty(message = "id不能为空") @PathVariable("id") Long id) {
 		PoliciesExplainDetailVO policiesExplainDetailVO = policiesExplainService.getPoliciesById(id);
 		return ResultVO.ok(policiesExplainDetailVO);
-
 	}
 
 	/**

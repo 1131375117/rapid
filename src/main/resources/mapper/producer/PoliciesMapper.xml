@@ -28,8 +28,10 @@
             <if test="queryPoliciesDTO.taxCategoriesCode != null and queryPoliciesDTO.taxCategoriesCode != '' ">
                 and tp.tax_categories_code = #{queryPoliciesDTO.taxCategoriesCode}
             </if>
-            <if test="queryPoliciesDTO.areaCode != null and queryPoliciesDTO.areaCode !='' ">
-                and tp.area_code = #{queryPoliciesDTO.areaCode}
+            <if test="queryPoliciesDTO.areaCode != null and queryPoliciesDTO.areaCode.size>0 ">
+                <foreach collection="queryPoliciesDTO.areaCode" item="area">
+                    and tp.area_code=#{area}
+                </foreach>
             </if>
             <if test="queryPoliciesDTO.validity!=null and queryPoliciesDTO.validity!='' ">
                 and tp.validity=#{queryPoliciesDTO.validity}
@@ -42,7 +44,7 @@
             </if>
             <if test="queryPoliciesDTO.keyword!=null and queryPoliciesDTO.keyword!=''">
                 and (tp.title like "%"#{queryPoliciesDTO.keyword}"%"
-                or  tp.doc_code like "%"#{queryPoliciesDTO.keyword}"%")
+                or tp.doc_code like "%"#{queryPoliciesDTO.keyword}"%")
             </if>
 
             <if test="queryPoliciesDTO.taxpayerIdentifyTypeCodes!=null and queryPoliciesDTO.taxpayerIdentifyTypeCodes.size>0 ">

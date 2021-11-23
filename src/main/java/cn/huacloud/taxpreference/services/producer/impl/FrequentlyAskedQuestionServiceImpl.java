@@ -5,7 +5,9 @@ import cn.huacloud.taxpreference.common.enums.AttachmentType;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.services.common.AttachmentService;
 import cn.huacloud.taxpreference.services.producer.FrequentlyAskedQuestionService;
+import cn.huacloud.taxpreference.services.producer.PoliciesService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO;
+import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.FrequentlyAskedQuestionDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesExplainDTO;
 import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesSortType;
@@ -18,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +43,13 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
 	private final FrequentlyAskedQuestionMapper frequentlyAskedQuestionMapper;
 
 	private final AttachmentService attachmentService;
+
+	private PoliciesService policiesService;
+
+	@Autowired
+	public void setPoliciesService(PoliciesService policiesService) {
+		this.policiesService = policiesService;
+	}
 
 	/**
 	 * 热门问答列表查询
@@ -245,6 +255,12 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
 		FrequentlyAskedQuestionDO frequentlyAskedQuestionDO =
 				frequentlyAskedQuestionMapper.selectById(id);
 		PoliciesExplainDetailVO policiesExplainDetailVO = new PoliciesExplainDetailVO();
+		String policiesIds = frequentlyAskedQuestionDO.getPoliciesIds();
+		if (policiesIds != null&& !"".equals(policiesIds)) {
+			Long aLong = Long.valueOf(policiesIds);
+			PoliciesDO policies = policiesService.getPolicies(aLong);
+			policiesExplainDetailVO.setPoliciesTitle(policies.getTitle());
+		}
 		// 属性拷贝
 		BeanUtils.copyProperties(frequentlyAskedQuestionDO, policiesExplainDetailVO);
 		return policiesExplainDetailVO;
