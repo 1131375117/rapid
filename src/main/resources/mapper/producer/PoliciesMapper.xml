@@ -44,7 +44,7 @@
             </if>
             <if test="queryPoliciesDTO.keyword!=null and queryPoliciesDTO.keyword!=''">
                 and (tp.title like "%"#{queryPoliciesDTO.keyword}"%"
-                or  tp.doc_code like "%"#{queryPoliciesDTO.keyword}"%")
+                or tp.doc_code like "%"#{queryPoliciesDTO.keyword}"%")
             </if>
 
             <if test="queryPoliciesDTO.taxpayerIdentifyTypeCodes!=null and queryPoliciesDTO.taxpayerIdentifyTypeCodes.size>0 ">

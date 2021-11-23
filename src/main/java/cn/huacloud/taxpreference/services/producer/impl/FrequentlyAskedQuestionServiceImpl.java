@@ -256,7 +256,7 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
 				frequentlyAskedQuestionMapper.selectById(id);
 		PoliciesExplainDetailVO policiesExplainDetailVO = new PoliciesExplainDetailVO();
 		String policiesIds = frequentlyAskedQuestionDO.getPoliciesIds();
-		if (policiesIds != null) {
+		if (policiesIds != null&& !"".equals(policiesIds)) {
 			Long aLong = Long.valueOf(policiesIds);
 			PoliciesDO policies = policiesService.getPolicies(aLong);
 			policiesExplainDetailVO.setPoliciesTitle(policies.getTitle());

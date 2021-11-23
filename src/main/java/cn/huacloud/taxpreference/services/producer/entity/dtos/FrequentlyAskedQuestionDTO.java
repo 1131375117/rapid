@@ -47,7 +47,7 @@ public class FrequentlyAskedQuestionDTO {
 	@ApiModelProperty("发布日期")
 	private LocalDate releaseDate;
 
-	@ApiModelProperty("用户id")
+	@ApiModelProperty(hidden = true,value = "用户id")
 	private Long inputUserId;
 
 }

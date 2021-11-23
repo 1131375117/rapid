@@ -77,15 +77,15 @@ public class PoliciesCombinationDTO {
 	@ApiModelProperty("标签管理")
 	private List<String> labels;
 
-	@ApiModelProperty("热点问答集合")
+	/*@ApiModelProperty("热点问答集合")
 	@Valid
-	private List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOList;
+	private List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOList;*/
 
-	@ApiModelProperty("政策法规对象")
+	@ApiModelProperty("政策解读对象")
 	@Valid
 	private PoliciesExplainDTO policiesExplainDTO;
 
-	@ApiModelProperty("用户id")
+	@ApiModelProperty(hidden = true,name = "用户id")
 	private Long inputUserId;
 
 }
