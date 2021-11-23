@@ -1,6 +1,6 @@
 package cn.huacloud.taxpreference.services.consumer.entity.vos;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -11,24 +11,36 @@ import java.time.LocalDate;
  */
 @Data
 public class PoliciesDigestSearchVO {
+
+    /**
+     * 政策ID
+     */
+    @ApiModelProperty("政策ID")
+    private Long id;
+
     /**
      * 标题
      */
+    @ApiModelProperty("标题")
     private String title;
     /**
      * 文号
      */
+    @ApiModelProperty("文号")
     private String docCode;
     /**
      * 有效期起
      */
+    @ApiModelProperty("有效期起")
     private LocalDate validityBeginDate;
     /**
      * 有效期至
      */
+    @ApiModelProperty("有效期至")
     private LocalDate validityEndDate;
     /**
      * 税收优惠摘要
      */
+    @ApiModelProperty("税收优惠摘要")
     private String digest;
 }

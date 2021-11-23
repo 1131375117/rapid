@@ -145,7 +145,21 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
 
     // 根据id查询税收优惠表t_tax_preference信息
     TaxPreferenceDO taxPreferenceDO = taxPreferenceMapper.selectById(id);
+    if(taxPreferenceDO==null){
+      throw BizCode._4309.exception();
+    }
     BeanUtils.copyProperties(taxPreferenceDO, taxPreferenceVO);
+    //设置行业类型和码值
+    taxPreferenceVO.setIndustryCodes(Arrays.asList(taxPreferenceDO.getIndustryCodes().split(",")));
+    taxPreferenceVO.setIndustryNames(Arrays.asList(taxPreferenceDO.getIndustryNames().split(",")));
+    //设置信用凭证
+    taxPreferenceVO.setTaxpayerCreditRatings(Arrays.asList(taxPreferenceDO.getTaxpayerCreditRatings().split(",")));
+    //设置企业类型和码值
+    taxPreferenceVO.setEnterpriseTypeCodes(Arrays.asList(taxPreferenceDO.getEnterpriseTypeCodes().split(",")));
+    taxPreferenceVO.setEnterpriseTypeNames(Arrays.asList(taxPreferenceDO.getEnterpriseTypeNames().split(",")));
+    //设置标签
+    taxPreferenceVO.setLabels(Arrays.asList(taxPreferenceDO.getLabels().split(",")));
+
 
     // 查询政策信息
     List<TaxPreferencePoliciesVO> taxPreferencePoliciesVOList =

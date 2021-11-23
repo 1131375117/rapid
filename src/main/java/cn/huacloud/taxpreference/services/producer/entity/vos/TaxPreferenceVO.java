@@ -12,6 +12,8 @@ import java.util.List;
  **/
 @Data
 public class TaxPreferenceVO {
+    @ApiModelProperty("税收优惠id")
+    private Long id;
 
     /**
      * 收入税种种类名称
@@ -53,31 +55,31 @@ public class TaxPreferenceVO {
      * 适用行业名称
      */
     @ApiModelProperty("适用行业名称")
-    private String industryNames;
+    private List<String> industryNames;
 
     /**
      * 适用行业码值
      */
     @ApiModelProperty("适用行业码值")
-    private String industryCodes;
+    private List<String> industryCodes;
 
     /**
      * 适用企业类型名称
      */
     @ApiModelProperty("适用企业类型名称")
-    private String enterpriseTypeNames;
+    private List<String> enterpriseTypeNames;
 
     /**
      * 适用企业类型码值
      */
     @ApiModelProperty("适用企业类型码值")
-    private String enterpriseTypeCodes;
+    private List<String> enterpriseTypeCodes;
 
     /**
      * 纳税信用等级
      */
     @ApiModelProperty("纳税信用等级")
-    private String taxpayerCreditRatings;
+    private List<String> taxpayerCreditRatings;
 
     /**
      * 优惠事项名称
@@ -108,7 +110,7 @@ public class TaxPreferenceVO {
      * 标签管理
      */
     @ApiModelProperty("标签管理")
-    private String labels;
+    private List<String> labels;
 
     /**
      * 减免事项
