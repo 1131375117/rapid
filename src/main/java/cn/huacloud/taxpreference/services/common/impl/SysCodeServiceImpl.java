@@ -130,6 +130,12 @@ public class SysCodeServiceImpl implements SysCodeService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public void cleanSysCodeCache() {
+        sysCodeCache.invalidateAll();
+        sysCodeMapCache.invalidateAll();
+    }
+
     Stream<SysCodeDO> getValidSortStreamByCodeValues(String codeValues) {
         Map<String, SysCodeDO> sysCodeMapCache = getSysCodeMapCache();
         return Arrays.stream(codeValues.split(","))

@@ -8,6 +8,13 @@ import com.baomidou.mybatisplus.annotation.IEnum;
  */
 public enum TaxpayerCreditRating implements IEnum<String> {
 
+    /**
+     * 不限
+     */
+    UNLIMITED,
+    /**
+     * 信用等级
+     */
     A, B, C, D, M;
 
     @Override

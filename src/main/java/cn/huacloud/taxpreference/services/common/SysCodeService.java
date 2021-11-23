@@ -2,9 +2,9 @@ package cn.huacloud.taxpreference.services.common;
 
 import cn.huacloud.taxpreference.common.enums.SysCodeType;
 import cn.huacloud.taxpreference.services.common.entity.dos.SysCodeDO;
+import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeSimpleVO;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeTreeVO;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeVO;
-import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeSimpleVO;
 
 import java.util.List;
 
@@ -71,4 +71,9 @@ public interface SysCodeService {
      * @return 系统码值DO list
      */
     List<SysCodeDO> getSysCodeDOByCodeType(SysCodeType sysCodeType);
+
+    /**
+     * 清除系统码值缓存
+     */
+    void cleanSysCodeCache();
 }
