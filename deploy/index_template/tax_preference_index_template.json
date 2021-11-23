@@ -22,6 +22,14 @@
           "type": "text",
           "analyzer": "ik_max_word"
         },
+        "taxPreferenceName": {
+          "type": "text",
+          "analyzer": "ik_max_word"
+        },
+        "releaseDate": {
+          "type": "date",
+          "format": "yyyy-MM-dd"
+        },
         "taxCategories": {
           "properties": {
             "codeName": {
@@ -90,6 +98,9 @@
         },
         "policies": {
           "properties": {
+            "id": {
+              "type": "long"
+            },
             "title": {
               "type": "text",
               "analyzer": "ik_max_word"
@@ -149,6 +160,6 @@
   },
   "priority": 500,
   "_meta": {
-    "description": "税收优惠索引模板，更新时间2021年11月18日"
+    "description": "税收优惠索引模板，更新时间2021年11月23日"
   }
 }

@@ -7,6 +7,7 @@ import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesDigestSear
 import cn.huacloud.taxpreference.services.consumer.entity.vos.SubmitConditionSearchVO;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +30,11 @@ public class TaxPreferenceES extends AbstractCombinePlainContent<Long> {
      * 优惠事项名称
      */
     private String taxPreferenceName;
+
+    /**
+     * 发文日期
+     */
+    private LocalDate releaseDate;
 
     /**
      * 所属税种

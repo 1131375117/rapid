@@ -8,7 +8,8 @@
         VALUES ( #{taxPreferenceId}, #{policiesId}, #{validityBeginDate}, #{validityEndDate}, #{sort},#{digest})
     </insert>
     <select id="getPoliciesDigestSearchVOList" resultType="cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesDigestSearchVO">
-        SELECT tp.title                 title,
+        SELECT tp.id                    id,
+               tp.title                 title,
                tp.doc_code              doc_code,
                ttpp.validity_begin_date validity_begin_date,
                ttpp.validity_end_date   validity_begin_date,
