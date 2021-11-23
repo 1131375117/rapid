@@ -3,15 +3,21 @@ package cn.huacloud.taxpreference.sample;
 import cn.dev33.satoken.secure.SaSecureUtil;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.PoliciesSearchQueryDTO;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
 import org.junit.Test;
+
 import java.lang.reflect.Method;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,6 +27,22 @@ import java.util.regex.Pattern;
  */
 @Slf4j
 public class SampleTest {
+
+    @Test
+    public void testGuavaCache() throws Exception {
+        Cache<Object, String> cache = CacheBuilder.newBuilder()
+                .expireAfterWrite(2, TimeUnit.HOURS)
+                .build();
+
+        String one = cache.get(this, () -> "ONE");
+        String tow = cache.get(this, () -> "TOW");
+        // cache.cleanUp();
+        cache.invalidateAll();
+        String three = cache.get(this, () -> "THREE");
+        log.info("one: {}", one);
+        log.info("tow: {}", tow);
+        log.info("three: {}", three);
+    }
 
     @Test
     public void testSuper() {

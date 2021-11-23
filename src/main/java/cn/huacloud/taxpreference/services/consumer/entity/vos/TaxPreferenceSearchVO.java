@@ -4,6 +4,7 @@ import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeSimpleVO;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -18,6 +19,9 @@ public class TaxPreferenceSearchVO {
 
     @ApiModelProperty("优惠事项名称")
     private String taxPreferenceName;
+
+    @ApiModelProperty("发文日期")
+    private LocalDate releaseDate;
 
     @ApiModelProperty("所属税种")
     private SysCodeSimpleVO taxCategories;

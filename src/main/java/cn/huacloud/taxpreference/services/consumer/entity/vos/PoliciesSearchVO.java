@@ -54,4 +54,7 @@ public class PoliciesSearchVO {
 
     @ApiModelProperty("标签集合")
     private List<String> labels;
+
+    @ApiModelProperty("废止说明")
+    private String abolishNote;
 }

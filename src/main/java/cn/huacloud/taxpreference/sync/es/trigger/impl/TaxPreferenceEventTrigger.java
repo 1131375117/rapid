@@ -5,7 +5,9 @@ import cn.huacloud.taxpreference.services.common.SysCodeService;
 import cn.huacloud.taxpreference.services.consumer.entity.ess.TaxPreferenceES;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesDigestSearchVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.SubmitConditionSearchVO;
+import cn.huacloud.taxpreference.services.producer.entity.dos.ProcessDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferenceDO;
+import cn.huacloud.taxpreference.services.producer.mapper.ProcessServiceMapper;
 import cn.huacloud.taxpreference.services.producer.mapper.SubmitConditionMapper;
 import cn.huacloud.taxpreference.services.producer.mapper.TaxPreferenceMapper;
 import cn.huacloud.taxpreference.services.producer.mapper.TaxPreferencePoliciesMapper;
@@ -36,6 +38,8 @@ public class TaxPreferenceEventTrigger extends EventTrigger<Long, TaxPreferenceE
     private final SubmitConditionMapper submitConditionMapper;
 
     private final TaxPreferencePoliciesMapper taxPreferencePoliciesMapper;
+
+    private final ProcessServiceMapper processServiceMapper;
 
     private final SysCodeService sysCodeService;
 
@@ -68,6 +72,12 @@ public class TaxPreferenceEventTrigger extends EventTrigger<Long, TaxPreferenceE
         taxPreferenceES.setEnterpriseTypes(sysCodeService.getSimpleVOListByCodeValues(taxPreferenceDO.getEnterpriseTypeCodes()));
         taxPreferenceES.setValidity(getEnumSysCode(taxPreferenceDO.getValidity()));
         taxPreferenceES.setLabels(split2List(taxPreferenceDO.getLabels()));
+
+        // 设置发布日期
+        ProcessDO latestProcess = processServiceMapper.getLatestProcess(id);
+        if (latestProcess != null && latestProcess.getApprovalTime() != null) {
+            taxPreferenceES.setReleaseDate(latestProcess.getApprovalTime().toLocalDate());
+        }
 
         // 设置政策
         List<PoliciesDigestSearchVO> policiesDigestSearchVOList = taxPreferencePoliciesMapper.getPoliciesDigestSearchVOList(taxPreferenceDO.getId());

@@ -73,6 +73,11 @@ public class PoliciesES extends AbstractCombinePlainContent<Long> {
      */
     private List<String> labels;
 
+    /**
+     * 废止说明
+     */
+    private String abolishNote;
+
     @Override
     public List<CombineText> combineTextList() {
         return Arrays.asList(CombineText.ofText(digest), CombineText.ofHtml(content));

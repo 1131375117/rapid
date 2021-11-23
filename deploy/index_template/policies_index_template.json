@@ -103,6 +103,10 @@
         "labels": {
           "type": "keyword"
         },
+        "abolishNote": {
+          "type": "text",
+          "analyzer": "ik_max_word"
+        },
         "combinePlainContent": {
           "type": "text",
           "analyzer": "ik_max_word"
@@ -112,6 +116,6 @@
   },
   "priority": 500,
   "_meta": {
-    "description": "政策法规索引模板，更新时间2021年11月17日"
+    "description": "政策法规索引模板，更新时间2021年11月23日"
   }
 }

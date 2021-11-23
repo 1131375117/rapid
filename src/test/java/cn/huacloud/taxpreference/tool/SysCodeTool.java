@@ -18,7 +18,6 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -34,7 +33,7 @@ import java.util.stream.Collectors;
  *
  * @author wangkh
  */
-@Ignore
+//@Ignore
 @Slf4j
 public class SysCodeTool extends BaseApplicationTest {
 
@@ -160,6 +159,18 @@ public class SysCodeTool extends BaseApplicationTest {
 
         Long currentPid = 0L;
         List<SysCodeDO> sysCodeDOList = new ArrayList<>();
+        // 添加不限码值
+        SysCodeDO unlimited = new SysCodeDO().setCodeName("不限")
+                .setCodeValue(SysCodeType.INDUSTRY.getValue() + "_" + "BX")
+                .setId(nextId)
+                .setPid(0L)
+                .setCodeType(SysCodeType.INDUSTRY)
+                .setCodeStatus(SysCodeStatus.VALID)
+                .setLeaf(true)
+                .setSort(nextId);
+        sysCodeDOList.add(unlimited);
+        nextId++;
+
         for (String line : list) {
             line = line.replaceAll("‥", " ");
             String[] split = line.split(" ");
@@ -223,7 +234,9 @@ public class SysCodeTool extends BaseApplicationTest {
                 sysCodeDO.setCodeName(StringUtils.substringAfter(codeName, "-"));
                 sysCodeDO.setExtendsField1("TAX_CATEGORIES_QYSDS");
                 sysCodeDO.setExtendsField2("企业所得税");
-            } else {
+            } else if (codeName.equals("不限")) {
+                // do nothing
+            } else  {
                 throw new RuntimeException("未知的税种类型");
             }
         }
