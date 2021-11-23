@@ -33,10 +33,11 @@
           "format": "yyyy-MM-dd"
         },
         "html_content": {
-          "type": "ik_max_word"
+          "type": "keyword"
         },
         "plain_content": {
-          "type": "keyword"
+          "type": "text",
+          "analyzer": "ik_max_word"
         },
         "extends_field1": {
           "type": "text",
@@ -55,14 +56,6 @@
               "type": "keyword"
             }
           }
-        },
-        "create_time": {
-          "type": "date",
-          "format": "yyyy-MM-dd HH:mm:ss"
-        },
-        "update_time": {
-          "type": "date",
-          "format": "yyyy-MM-dd HH:mm:ss"
         }
       }
     }
