@@ -51,3 +51,7 @@ tax-preference:
     tax-preference:
       index: tax_preference_index_2021-11-18_dev
       alias: tax_preference_dev
+    other-doc:
+      index: other_doc_index_2021-11-24_dev
+      alias: other_doc_dev
+

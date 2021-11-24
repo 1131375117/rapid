@@ -12,6 +12,7 @@ import cn.huacloud.taxpreference.services.consumer.entity.vos.HotContentVO;
 public interface HotContentService {
     /**
      * 本周热点内容
+     * 热点内容通过浏览次数、收藏次数来
      * @param pageQuery 分页查询对象
      * @return 本周热点内容
      */

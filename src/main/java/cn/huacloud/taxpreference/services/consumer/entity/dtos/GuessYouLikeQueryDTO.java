@@ -12,4 +12,6 @@ import lombok.Data;
 public class GuessYouLikeQueryDTO extends KeywordPageQueryDTO {
     @ApiModelProperty("用户ID")
     private Long userId;
+    @ApiModelProperty("")
+    private String docType;
 }

@@ -1,11 +1,8 @@
 package cn.huacloud.taxpreference.config;
 
-import cn.hutool.core.thread.FinalizableDelegatedExecutorService;
-import io.swagger.models.auth.In;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.elasticsearch.index.Index;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -24,6 +21,8 @@ public class ElasticsearchIndexConfig {
     private Index frequentlyAskedQuestion = new Index("frequently_asked_question_index", "frequently_asked_question");
 
     private Index taxPreference = new Index("tax_preference_index", "tax_preference");
+
+    private Index otherDoc = new Index("other_doc_index", "other_doc");
 
     @NoArgsConstructor
     @AllArgsConstructor

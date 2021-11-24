@@ -2,10 +2,7 @@ package cn.huacloud.taxpreference.controllers.common;
 
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.config.SysConfig;
-import cn.huacloud.taxpreference.sync.es.trigger.impl.FAQEventTrigger;
-import cn.huacloud.taxpreference.sync.es.trigger.impl.PoliciesEventTrigger;
-import cn.huacloud.taxpreference.sync.es.trigger.impl.PoliciesExplainEventTrigger;
-import cn.huacloud.taxpreference.sync.es.trigger.impl.TaxPreferenceEventTrigger;
+import cn.huacloud.taxpreference.sync.es.trigger.impl.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +29,8 @@ public class DataSyncController {
     private final FAQEventTrigger faqEventTrigger;
 
     private final TaxPreferenceEventTrigger taxPreferenceEventTrigger;
+
+    private final OtherDocEventTrigger otherDocEventTrigger;
 
     @ApiOperation("同步所有政策法规数据")
     @GetMapping("/sync/policies")
@@ -65,4 +64,11 @@ public class DataSyncController {
         return ResultVO.ok().setMsg(MessageFormatter.format("成功同步数据{}条", total).getMessage());
     }
 
+    @ApiOperation("同步所有案例数据")
+    @GetMapping("/sync/otherDoc")
+    public ResultVO<Void> syncAllOtherDoc(String password) {
+        sysConfig.checkSysPassword(password);
+        long total = otherDocEventTrigger.syncAll();
+        return ResultVO.ok().setMsg(MessageFormatter.format("成功同步数据{}条", total).getMessage());
+    }
 }
