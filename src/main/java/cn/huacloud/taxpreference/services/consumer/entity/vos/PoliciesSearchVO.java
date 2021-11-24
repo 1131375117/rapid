@@ -57,4 +57,7 @@ public class PoliciesSearchVO {
 
     @ApiModelProperty("废止说明")
     private String abolishNote;
+
+    @ApiModelProperty("上一篇、下一篇")
+    PreviousNextVO<Long> previousNext;
 }

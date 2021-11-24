@@ -4,6 +4,7 @@ import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.services.consumer.TaxPreferenceSearchService;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.TaxPreferenceSearchQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.HotLabelVO;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.PreviousNextVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.TaxPreferenceSearchVO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
@@ -14,14 +15,10 @@ import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.client.core.TermVectorsRequest;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.search.aggregations.Aggregation;
-import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
-import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringRareTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -105,6 +102,9 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
             throw BizCode._4500.exception();
         }
         TaxPreferenceSearchVO taxPreferenceSearchVO = objectMapper.readValue(response.getSourceAsString(), TaxPreferenceSearchVO.class);
+        // 设置上一篇、下一篇
+        PreviousNextVO<Long> defaultPreviousNext = getDefaultPreviousNext(getIndex(), id);
+        taxPreferenceSearchVO.setPreviousNext(defaultPreviousNext);
         return taxPreferenceSearchVO;
     }
 

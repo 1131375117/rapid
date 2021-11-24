@@ -49,7 +49,7 @@ public class PoliciesSearchController {
 
     @ApiOperation("政策法规详情")
     @PostMapping("/policies/{id}")
-    public ResultVO<PoliciesSearchVO> getPoliciesDetails(@PathVariable("id") String id) throws Exception {
+    public ResultVO<PoliciesSearchVO> getPoliciesDetails(@PathVariable("id") Long id) throws Exception {
         PoliciesSearchVO policiesSearchVO = policiesSearchService.getPoliciesDetails(id);
         return ResultVO.ok(policiesSearchVO);
     }

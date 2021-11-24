@@ -6,11 +6,13 @@ import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.dtos.RangeQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.AbstractHighlightPageQueryDTO;
-import cn.huacloud.taxpreference.services.consumer.entity.dtos.FAQSearchQueryDTO;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.PreviousNextVO;
 import com.baomidou.mybatisplus.annotation.IEnum;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.apache.lucene.search.TotalHits;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -25,6 +27,7 @@ import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
+import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -242,6 +245,14 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
         return "*" + value + "*";
     }
 
+    /**
+     * 简单分页搜索
+     * @param index 索引/别名
+     * @param queryBuilder 查询构建器
+     * @param pageQuery 分页参数
+     * @param fieldSortBuilders 排序构建器
+     * @return 查询响应
+     */
     default SearchResponse simplePageSearch(String index, QueryBuilder queryBuilder, PageQueryDTO pageQuery, FieldSortBuilder... fieldSortBuilders) throws Exception {
         // 参数合理化
         pageQuery.paramReasonable();
@@ -262,6 +273,60 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
 
         // 执行查询
         return getRestHighLevelClient().search(request, RequestOptions.DEFAULT);
+    }
+
+    /**
+     * 获取默认的上一篇和下一篇
+     * 索引数据必须要有 id 字段且为long类型
+     * @param index 索引名称
+     * @param id 主键ID
+     * @return 上一篇、下一篇视图
+     */
+    default PreviousNextVO<Long> getDefaultPreviousNext(String index, Long id) throws Exception {
+
+        PreviousNextVO<Long> previousNextVO = new PreviousNextVO<>();
+
+        String field = "id";
+
+        String[] includes = {"id", "title"};
+
+        // previous
+        SearchRequest previousRequest = new SearchRequest(index)
+                .source(SearchSourceBuilder.searchSource()
+                        .size(1)
+                        .fetchSource(includes, null)
+                        .query(rangeQuery(field).lt(id))
+                        .sort(field, SortOrder.DESC));
+
+        SearchResponse previousResponse = getRestHighLevelClient().search(previousRequest, RequestOptions.DEFAULT);
+
+        TotalHits previousTotalHits = previousResponse.getHits().getTotalHits();
+        if (previousTotalHits.value > 0) {
+            String sourceAsString = previousResponse.getHits().getHits()[0].getSourceAsString();
+            PreviousNextVO.Doc<Long> doc = getObjectMapper().readValue(sourceAsString, new TypeReference<PreviousNextVO.Doc<Long>>() {
+            });
+            previousNextVO.setPrevious(doc);
+        }
+
+        // next
+        SearchRequest nextRequest = new SearchRequest(index)
+                .source(SearchSourceBuilder.searchSource()
+                        .size(1)
+                        .fetchSource(includes, null)
+                        .query(rangeQuery(field).gt(id))
+                        .sort(field, SortOrder.ASC));
+
+        SearchResponse nextResponse = getRestHighLevelClient().search(nextRequest, RequestOptions.DEFAULT);
+
+        TotalHits nextTotalHits = nextResponse.getHits().getTotalHits();
+        if (nextTotalHits.value > 0) {
+            String sourceAsString = nextResponse.getHits().getHits()[0].getSourceAsString();
+            PreviousNextVO.Doc<Long> doc = getObjectMapper().readValue(sourceAsString, new TypeReference<PreviousNextVO.Doc<Long>>() {
+            });
+            previousNextVO.setNext(doc);
+        }
+
+        return previousNextVO;
     }
 
     @AllArgsConstructor

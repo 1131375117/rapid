@@ -41,4 +41,7 @@ public class PoliciesExplainSearchVO {
 
     @ApiModelProperty("正文")
     private String content;
+
+    @ApiModelProperty("上一篇、下一篇")
+    PreviousNextVO<Long> previousNext;
 }

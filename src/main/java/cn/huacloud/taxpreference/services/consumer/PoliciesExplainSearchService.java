@@ -20,7 +20,7 @@ public interface PoliciesExplainSearchService extends SearchService<PoliciesExpl
      * @param id 政策解读ID
      * @return 政策解读详情
      */
-    PoliciesExplainSearchVO getPoliciesExplainDetails(String id) throws Exception;
+    PoliciesExplainSearchVO getPoliciesExplainDetails(Long id) throws Exception;
 
     /**
      * 最新政策解读
