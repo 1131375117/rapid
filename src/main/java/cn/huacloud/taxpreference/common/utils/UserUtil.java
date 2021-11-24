@@ -42,4 +42,12 @@ public class UserUtil {
         }
         return currentUser.getUserAccount();
     }
+
+    /**
+     * 当前会话是否已经登录
+     * @return 是否已登录
+     */
+    public static boolean isLogin() {
+        return StpUtil.isLogin();
+    }
 }

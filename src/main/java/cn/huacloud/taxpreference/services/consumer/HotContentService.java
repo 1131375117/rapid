@@ -16,7 +16,7 @@ public interface HotContentService {
      * @param pageQuery 分页查询对象
      * @return 本周热点内容
      */
-    PageVO<HotContentVO> weeklyHotContent(PageQueryDTO pageQuery);
+    PageVO<HotContentVO> weeklyHotContent(PageQueryDTO pageQuery) throws Exception;
 
     /**
      * 猜你关注
