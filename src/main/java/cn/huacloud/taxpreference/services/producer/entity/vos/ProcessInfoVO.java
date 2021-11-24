@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.producer.entity.vos;
 
+import cn.huacloud.taxpreference.common.enums.process.ProcessStatus;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -19,7 +20,7 @@ public class ProcessInfoVO {
     @ApiModelProperty("审批人")
     private String approverName;
     @ApiModelProperty("审批结果")
-    private String processStatus;
+    private ProcessStatus processStatus;
     @ApiModelProperty("审批说明")
     private String approvalNote;
     @ApiModelProperty("审批时间")
