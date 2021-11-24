@@ -84,9 +84,19 @@ public interface PoliciesService {
 	PoliciesAbolishVO getAbolish(Long id);
 
 
+	/**
+	 * 校验标题和文号是否重复
+	 * @param titleOrDocCode 标题或文号
+	 * @return 返回 true 重复 false 不重复
+	 */
 	Boolean checkTitleAndDocCode(String titleOrDocCode);
 
 
+	/**
+	 * 根据政策法规id查询政策法规信息
+	 * @param id 政策法规id
+	 * @return 返回政策法规对象
+	 */
 	PoliciesDO getPolicies(Long id);
 
 }

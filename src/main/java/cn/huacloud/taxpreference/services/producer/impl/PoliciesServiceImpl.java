@@ -286,7 +286,7 @@ public class PoliciesServiceImpl implements PoliciesService {
 			PoliciesExplainDTO policiesExplainDTO) {
 		PoliciesCombinationDTO policiesCombinationDTO = new PoliciesCombinationDTO();
 		List<String> list = new ArrayList<>();
-//		strings.add("");
+		list.add("");
 		// 设置纳税人、使用企业、适用行业名称值
 		if (StringUtils.isNotEmpty(policiesDO.getEnterpriseTypeCodes())) {
 			policiesCombinationDTO.setEnterpriseTypeCodes(
@@ -660,10 +660,7 @@ public class PoliciesServiceImpl implements PoliciesService {
 				.eq(StringUtils.isNotBlank(titleOrDocCode), PoliciesDO::getDocCode, titleOrDocCode);
 		List<PoliciesDO> policiesDoS = policiesMapper.selectList(lambdaQueryWrapper);
 		// 判断是否重复
-		if (policiesDoS.size() != 0) {
-			return true;
-		}
-		return false;
+		return policiesDoS.size() != 0;
 	}
 
 	@Override
