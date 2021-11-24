@@ -22,24 +22,31 @@
           "type": "text",
           "analyzer": "ik_max_word"
         },
-        "doc_type": {
+        "docType": {
+          "properties": {
+            "codeName": {
+              "type": "keyword"
+            },
+            "codeValue": {
+              "type": "keyword"
+            }
+          }
+        },
+        "docSource": {
           "type": "keyword"
         },
-        "doc_source": {
-          "type": "keyword"
-        },
-        "release_date": {
+        "releaseDate": {
           "type": "date",
           "format": "yyyy-MM-dd"
         },
-        "html_content": {
+        "htmlContent": {
           "type": "keyword"
         },
-        "plain_content": {
+        "plainContent": {
           "type": "text",
           "analyzer": "ik_max_word"
         },
-        "extends_field1": {
+        "extendsField1": {
           "type": "text",
           "analyzer": "ik_max_word",
           "fields": {
@@ -48,7 +55,7 @@
             }
           }
         },
-        "extends_field2": {
+        "extendsField2": {
           "type": "text",
           "analyzer": "ik_max_word",
           "fields": {

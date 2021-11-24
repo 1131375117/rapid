@@ -1,7 +1,7 @@
 spring:
   cloud:
     function:
-      definition: "savePoliciesSuppler;deletePoliciesSuppler;savePolicies;deletePolicies;savePoliciesExplainSuppler;deletePoliciesExplainSuppler;savePoliciesExplain;deletePoliciesExplain;saveFAQSuppler;deleteFAQSuppler;saveFAQ;deleteFAQ;saveTaxPreferenceSuppler;deleteTaxPreferenceSuppler;saveTaxPreference;deleteTaxPreference;saveOtherDoc;deleteOtherDoc"
+      definition: "savePoliciesSuppler;deletePoliciesSuppler;savePolicies;deletePolicies;savePoliciesExplainSuppler;deletePoliciesExplainSuppler;savePoliciesExplain;deletePoliciesExplain;saveFAQSuppler;deleteFAQSuppler;saveFAQ;deleteFAQ;saveTaxPreferenceSuppler;deleteTaxPreferenceSuppler;saveTaxPreference;deleteTaxPreference;saveOtherDocSuppler;deleteOtherDocSuppler;saveOtherDoc;deleteOtherDoc"
     stream:
       bindings:
         # policies save

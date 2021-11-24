@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.consumer.entity.ess;
 
+import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeSimpleVO;
 import cn.huacloud.taxpreference.sync.es.consumer.IDGetter;
 import lombok.Data;
 
@@ -16,7 +17,7 @@ public class OtherDocES implements IDGetter<Object> {
     /**
      * 文档类型：CASE_ANALYSIS-案例分析
      */
-    private String docType;
+    private SysCodeSimpleVO docType;
     /**
      * 标题
      */
