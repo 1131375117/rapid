@@ -25,7 +25,7 @@ public class HotContentController {
 
     @ApiOperation("本周热点内容")
     @GetMapping("/hotContent/weekly")
-    public ResultVO<PageVO<HotContentVO>> weeklyHotContent(PageQueryDTO pageQuery) {
+    public ResultVO<PageVO<HotContentVO>> weeklyHotContent(PageQueryDTO pageQuery) throws Exception {
         pageQuery.paramReasonable();
         PageVO<HotContentVO> pageVO = hotContentService.weeklyHotContent(pageQuery);
         return ResultVO.ok(pageVO);
@@ -35,6 +35,9 @@ public class HotContentController {
     @PostMapping("/hotContent/guessYouLike")
     public ResultVO<PageVO<HotContentVO>> guessYouLike(@RequestBody GuessYouLikeQueryDTO pageQuery) {
         pageQuery.paramReasonable();
+        if (UserUtil.isLogin()) {
+            pageQuery.setUserId(UserUtil.getCurrentUserId());
+        }
         pageQuery.setUserId(UserUtil.getCurrentUserId());
         PageVO<HotContentVO> pageVO = hotContentService.guessYouLike(pageQuery);
         return ResultVO.ok(pageVO);
