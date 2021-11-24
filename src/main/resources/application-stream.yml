@@ -1,7 +1,7 @@
 spring:
   cloud:
     function:
-      definition: "savePoliciesSuppler;deletePoliciesSuppler;savePolicies;deletePolicies;savePoliciesExplainSuppler;deletePoliciesExplainSuppler;savePoliciesExplain;deletePoliciesExplain;saveFAQSuppler;deleteFAQSuppler;saveFAQ;deleteFAQ;saveTaxPreferenceSuppler;deleteTaxPreferenceSuppler;saveTaxPreference;deleteTaxPreference"
+      definition: "savePoliciesSuppler;deletePoliciesSuppler;savePolicies;deletePolicies;savePoliciesExplainSuppler;deletePoliciesExplainSuppler;savePoliciesExplain;deletePoliciesExplain;saveFAQSuppler;deleteFAQSuppler;saveFAQ;deleteFAQ;saveTaxPreferenceSuppler;deleteTaxPreferenceSuppler;saveTaxPreference;deleteTaxPreference;saveOtherDoc;deleteOtherDoc"
     stream:
       bindings:
         # policies save
@@ -52,3 +52,15 @@ spring:
         deleteTaxPreference-in-0:
           destination: deleteTaxPreferenceExchange
           group: deleteTaxPreferenceQueue
+        # other-doc save
+        saveOtherDocSuppler-out-0:
+          destination: saveOtherDocExchange
+        saveOtherDoc-in-0:
+          destination: saveOtherDocExchange
+          group: saveOtherDocQueue
+        # other-doc delete
+        deleteOtherDocSuppler-out-0:
+          destination: deleteOtherDocExchange
+        deleteOtherDoc-in-0:
+          destination: deleteOtherDocExchange
+          group: deleteOtherDocQueue
