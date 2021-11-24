@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 public class ProcessListVO {
     @ApiModelProperty("流程审批id")
     private String id;
+    @ApiModelProperty("税收优惠id")
+    private String taxPreferenceId;
     @ApiModelProperty("优惠事项名称")
     private String taxPreferenceName;
     @ApiModelProperty("所属税种")

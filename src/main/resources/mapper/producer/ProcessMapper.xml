@@ -12,6 +12,7 @@
         select p.id as id,
         t.tax_preference_name as taxPreferenceName,
         t.tax_categories_name as taxCategoriesName,
+        p.tax_preference_id as taxPreferenceId,
         p.process_status as processStatus,
         p.create_time as createTime,
         u.username as userName
