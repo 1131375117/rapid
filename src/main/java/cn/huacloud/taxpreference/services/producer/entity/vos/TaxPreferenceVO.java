@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.producer.entity.vos;
 
+import cn.huacloud.taxpreference.common.enums.taxpreference.PreferenceValidation;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -117,6 +118,10 @@ public class TaxPreferenceVO {
      */
     @ApiModelProperty("减免事项")
     private String taxPreferenceItem;
+    @ApiModelProperty("申报简要说明")
+    private String submitDescription;
+    @ApiModelProperty("有效性")
+    private PreferenceValidation validity;
 
     /**
      * 政策法规信息
