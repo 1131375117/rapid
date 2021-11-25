@@ -4,7 +4,6 @@ import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
 import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesSortType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.annotations.ApiOperation;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -38,7 +37,6 @@ public class QueryPoliciesExplainDTO extends KeywordPageQueryDTO {
 
 	@ApiModelProperty("结束日期")
 	private LocalDate endTime;
-
 
 	@ApiModelProperty("更新日期")
 	private LocalDateTime updateTime;

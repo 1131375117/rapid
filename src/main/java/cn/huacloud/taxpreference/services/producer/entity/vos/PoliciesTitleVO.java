@@ -15,7 +15,7 @@ public class PoliciesTitleVO {
 
 	@ApiModelProperty("政策法规id")
 	private Long id;
-	@ApiModelProperty("政策解读中政策法规id")
+	@ApiModelProperty(hidden = true,name = "政策解读中政策法规id")
 	private Long policiesId;
 	@ApiModelProperty("政策法规名称")
 	private String title;

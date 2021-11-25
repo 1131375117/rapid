@@ -27,7 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -62,7 +61,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 	@Override
 	public PageVO<PoliciesExplainDetailVO> getPoliciesExplainList(
 			QueryPoliciesExplainDTO queryPoliciesExplainDTO) {
-		log.info("政策解读列表查询条件dto", queryPoliciesExplainDTO);
+		log.info("政策解读列表查询条件dto={}", queryPoliciesExplainDTO);
 		LambdaQueryWrapper<PoliciesExplainDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
 		// 关键字查询--政策解读标题
 		lambdaQueryWrapper
@@ -124,16 +123,14 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 						lambdaQueryWrapper);
 		// 数据映射
 		List<PoliciesExplainDetailVO> records =
-				policiesExplainDoPage.getRecords().stream()
-						.map(
-								policiesExplainDO -> {
-									PoliciesExplainDetailVO policiesExplainDetailVO = new PoliciesExplainDetailVO();
-									// 属性拷贝
-									BeanUtils.copyProperties(policiesExplainDO, policiesExplainDetailVO);
-									return policiesExplainDetailVO;
-								})
+				policiesExplainDoPage.getRecords().stream().map(policiesExplainDO -> {
+					PoliciesExplainDetailVO policiesExplainDetailVO = new PoliciesExplainDetailVO();
+					// 属性拷贝
+					BeanUtils.copyProperties(policiesExplainDO, policiesExplainDetailVO);
+					return policiesExplainDetailVO;
+				})
 						.collect(Collectors.toList());
-		log.info("政策解读列表查询对象", policiesExplainDoPage);
+		log.info("政策解读列表查询对象={}", policiesExplainDoPage);
 		return PageVO.createPageVO(policiesExplainDoPage, records);
 	}
 
@@ -213,7 +210,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 		// 根据政策解读id查询
 		PoliciesExplainDO policiesExplainDO = policiesExplainMapper.selectById(id);
 		PoliciesExplainDetailVO policiesExplainDetailVO = new PoliciesExplainDetailVO();
-		if(policiesExplainDO.getPoliciesId()!=null){
+		if (policiesExplainDO.getPoliciesId() != null) {
 			PoliciesDO policies = policiesService.getPolicies(policiesExplainDO.getPoliciesId());
 			policiesExplainDetailVO.setPoliciesTitle(policies.getTitle());
 		}

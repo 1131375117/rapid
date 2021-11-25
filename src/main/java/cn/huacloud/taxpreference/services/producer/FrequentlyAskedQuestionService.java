@@ -20,14 +20,14 @@ public interface FrequentlyAskedQuestionService {
 	/**
 	 * 新增热门问答
 	 *
-	 * @param frequentlyAskedQuestionDtO
+	 * @param frequentlyAskedQuestionDtO 热门问答入参对象
 	 */
 	void insertFrequentlyAskedQuestion(FrequentlyAskedQuestionDTO frequentlyAskedQuestionDtO, Long userId);
 
 	/**
 	 * 修改热门问答
 	 *
-	 * @param frequentlyAskedQuestionDTO
+	 * @param frequentlyAskedQuestionDTO 热门问答入参对象
 	 */
 	void updateFrequentlyAskedQuestion(FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO);
 
@@ -35,30 +35,30 @@ public interface FrequentlyAskedQuestionService {
 	 * 热门问答列表查询
 	 *
 	 * @param queryPoliciesExplainDTO 查询条件
-	 * @return
+	 * @return 返回
 	 */
 	PageVO<PoliciesExplainDetailVO> getFrequentlyAskedQuestionList(QueryPoliciesExplainDTO queryPoliciesExplainDTO);
 
 	/**
 	 * 删除热门问答
 	 *
-	 * @param id
+	 * @param id 热门问答id
 	 */
 	void deleteFrequentlyAskedQuestion(Long id);
 
 	/**
 	 * 根据政策法规id查询热门问答信息
 	 *
-	 * @param policiesId
-	 * @return
+	 * @param policiesId 政策法规id
+	 * @return 返回
 	 */
 	List<FrequentlyAskedQuestionDTO> getFrequentlyAskedQuestionByPoliciesId(Long policiesId);
 
 	/**
 	 * 根据热门问答id查询详情
 	 *
-	 * @param id
-	 * @return
+	 * @param id 热门问答id
+	 * @return 返回
 	 */
 	PoliciesExplainDetailVO getFrequentlyAskedQuestionById(Long id);
 }
