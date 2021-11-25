@@ -3,7 +3,7 @@ package cn.huacloud.taxpreference.services.consumer.entity.dtos;
 import cn.huacloud.taxpreference.config.ElasticsearchIndexConfig;
 import lombok.Data;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -20,7 +20,7 @@ public class OtherDocDTO extends AbstractHighlightPageQueryDTO {
 
     @Override
     public List<String> searchFields() {
-        return Arrays.asList("title", "plainContent");
+        return Collections.singletonList("title");
     }
 
 }

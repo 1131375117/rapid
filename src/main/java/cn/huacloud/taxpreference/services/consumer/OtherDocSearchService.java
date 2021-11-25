@@ -8,4 +8,5 @@ import cn.huacloud.taxpreference.services.consumer.entity.vos.OtherDocVO;
  **/
 public interface OtherDocSearchService extends SearchService<OtherDocDTO,OtherDocVO>{
 
+    OtherDocVO getTaxOtherDocDetails(Long id) throws Exception;
 }

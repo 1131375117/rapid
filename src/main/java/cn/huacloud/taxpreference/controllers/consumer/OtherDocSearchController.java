@@ -8,10 +8,7 @@ import cn.huacloud.taxpreference.services.consumer.entity.vos.OtherDocVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 案例检索
@@ -31,5 +28,12 @@ public class OtherDocSearchController {
     public ResultVO<PageVO<OtherDocVO>> pageSearch(@RequestBody OtherDocDTO pageQuery) throws Exception {
         PageVO<OtherDocVO> pageVO = otherDocSearchService.pageSearch(pageQuery);
         return ResultVO.ok(pageVO);
+    }
+
+    @ApiOperation("案例分析检索详情")
+    @GetMapping("/otherDoc/{id}")
+    public ResultVO<OtherDocVO> pageSearch(@PathVariable("id") Long id) throws Exception {
+        OtherDocVO otherDocVO = otherDocSearchService.getTaxOtherDocDetails(id);
+        return ResultVO.ok(otherDocVO);
     }
 }
