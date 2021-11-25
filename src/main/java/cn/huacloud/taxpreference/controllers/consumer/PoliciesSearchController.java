@@ -40,7 +40,7 @@ public class PoliciesSearchController {
         return ResultVO.ok(page);
     }
 
-    @ApiOperation("政策法规搜索")
+    @ApiOperation(value = "政策法规搜索")
     @PostMapping("/policies")
     public ResultVO<PageVO<PoliciesSearchListVO>> pageSearch(@RequestBody PoliciesSearchQueryDTO pageQuery) throws Exception {
         PageVO<PoliciesSearchListVO> pageVO = policiesSearchService.pageSearch(pageQuery);

@@ -17,11 +17,16 @@ public class UserQueryDTO extends KeywordPageQueryDTO {
     private String roleCode;
     @ApiModelProperty("排除的角色码值")
     private String excludeRoleCode;
+    @ApiModelProperty("隐藏管理员")
+    private Boolean hiddenAdmin;
 
     @Override
     public void paramReasonable() {
         super.paramReasonable();
         // 空字符串设置为null，或者去掉前后空格
         stringParamNullOrTrim();
+        if (hiddenAdmin == null) {
+            hiddenAdmin = false;
+        }
     }
 }
