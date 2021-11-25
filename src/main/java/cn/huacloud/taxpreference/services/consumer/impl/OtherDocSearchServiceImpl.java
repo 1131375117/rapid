@@ -26,4 +26,8 @@ public class OtherDocSearchServiceImpl implements OtherDocSearchService {
         return OtherDocVO.class;
     }
 
+    @Override
+    public String[] getExcludeSource() {
+        return new String[]{"htmlContent", "plainContent"};
+    }
 }

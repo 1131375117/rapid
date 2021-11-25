@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IEnum;
 
 /**
  * 纳税人信用等级
+ *
  * @author wangkh
  */
 public enum TaxpayerCreditRating implements IEnum<String> {

@@ -208,7 +208,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     // 税收优惠撤回
     revokeTaxPreference(id);
     // 撤回之后删除process数据
-    deleteProcess(id);
+   // deleteProcess(id);
     //同步到es
     taxPreferenceEventTrigger.deleteEvent(id);
     log.info("id为{}的税收优惠撤回成功！", id);
