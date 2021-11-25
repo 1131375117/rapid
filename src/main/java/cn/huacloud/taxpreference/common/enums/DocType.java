@@ -53,7 +53,7 @@ public enum DocType implements IEnum<String>, SysCodeGetter {
      * @return 文档类型
      */
     public static DocType getDocTypeByIndex(String index) {
-        String indexPrefix = StringUtils.substringBeforeLast(index, "index");
+        String indexPrefix = StringUtils.substringBeforeLast(index, "_index");
         if (indexPrefixDocTypeMap == null) {
             indexPrefixDocTypeMap = new LinkedHashMap<>();
             for (DocType value : values()) {

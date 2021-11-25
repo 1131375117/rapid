@@ -7,7 +7,6 @@ import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.enums.UserType;
 import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
-import cn.huacloud.taxpreference.common.utils.UserUtil;
 import cn.huacloud.taxpreference.services.user.RoleService;
 import cn.huacloud.taxpreference.services.user.UserService;
 import cn.huacloud.taxpreference.services.user.entity.dos.ProducerUserDO;
@@ -94,10 +93,12 @@ public class UserServiceImpl implements UserService {
         String usernameKeyword = userQueryDTO.getUsernameKeyword();
         String roleCode = userQueryDTO.getRoleCode();
         String excludeRoleCode = userQueryDTO.getExcludeRoleCode();
+        Boolean hiddenAdmin = userQueryDTO.getHiddenAdmin();
         // 构建查询条件
         LambdaQueryWrapper<UserDO> queryWrapper = Wrappers.lambdaQuery(UserDO.class)
                 .eq(UserDO::getUserType, UserType.PRODUCER_USER)
                 .eq(UserDO::getDeleted, false)
+                .not(hiddenAdmin, w -> w.eq(UserDO::getUserAccount, UserConstants.ADMIN_USER_NAME))
                 .and(keyword != null, i -> i.like(UserDO::getUserAccount, keyword).or().like(UserDO::getUsername, keyword))
                 .like(userAccountKeyword != null, UserDO::getUserAccount, userAccountKeyword)
                 .like(usernameKeyword != null, UserDO::getUsername, usernameKeyword)
