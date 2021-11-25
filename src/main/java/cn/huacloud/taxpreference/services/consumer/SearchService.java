@@ -171,7 +171,9 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
         R result = getObjectMapper().readValue(searchHit.getSourceAsString(), getResultClass());
         for (String searchField : searchFields) {
             PropertyDescriptor propertyDescriptor = BeanUtils.getPropertyDescriptor(getResultClass(), searchField);
-            assert propertyDescriptor != null;
+            if (propertyDescriptor == null) {
+                continue;
+            }
             propertyDescriptor.getWriteMethod().invoke(result, getHighlightString(searchHit, searchField));
         }
         return result;

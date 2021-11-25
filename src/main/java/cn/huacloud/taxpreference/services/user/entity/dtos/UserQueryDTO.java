@@ -9,7 +9,7 @@ import lombok.Data;
  */
 @Data
 public class UserQueryDTO extends KeywordPageQueryDTO {
-    @ApiModelProperty("用户账户光健字")
+    @ApiModelProperty("用户账户关健字")
     private String userAccountKeyword;
     @ApiModelProperty("用户名称关键字")
     private String usernameKeyword;
