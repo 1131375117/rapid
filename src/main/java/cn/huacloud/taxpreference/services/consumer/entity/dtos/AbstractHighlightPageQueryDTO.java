@@ -47,7 +47,8 @@ public abstract class AbstractHighlightPageQueryDTO extends KeywordPageQueryDTO 
     }
 
     @Override
-    public void paramReasonable() {
+    public void
+    paramReasonable() {
         super.paramReasonable();
         try {
             for (Field field : this.getClass().getDeclaredFields()) {

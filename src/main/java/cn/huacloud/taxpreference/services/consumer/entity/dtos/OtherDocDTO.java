@@ -22,4 +22,5 @@ public class OtherDocDTO extends AbstractHighlightPageQueryDTO{
     public List<String> searchFields() {
         return Arrays.asList("title","plainContent");
     }
+
 }

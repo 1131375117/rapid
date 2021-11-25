@@ -41,7 +41,9 @@ public class OtherDocEventTrigger extends EventTrigger<Long, OtherDocES> {
     protected OtherDocES getEntityById(Long id) {
         OtherDocDO otherDocDO = otherDocMapper.selectById(id);
         // 属性拷贝
-        return CustomBeanUtil.copyProperties(otherDocDO, OtherDocES.class);
+        OtherDocES otherDocES = CustomBeanUtil.copyProperties(otherDocDO, OtherDocES.class);
+        otherDocES.setDocType(otherDocDO.getDocType().getSysCode());
+        return otherDocES;
     }
 
     @Override

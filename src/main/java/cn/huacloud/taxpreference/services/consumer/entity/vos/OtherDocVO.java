@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.consumer.entity.vos;
 
+import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeSimpleVO;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -17,7 +18,7 @@ public class OtherDocVO {
     /**
      * 文档类型：CASE_ANALYSIS-案例分析
      */
-    private String docType;
+    private SysCodeSimpleVO docType;
     /**
      * 标题
      */

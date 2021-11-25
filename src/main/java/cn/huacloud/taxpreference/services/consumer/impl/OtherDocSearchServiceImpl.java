@@ -1,14 +1,12 @@
 package cn.huacloud.taxpreference.services.consumer.impl;
 
-import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.services.consumer.OtherDocSearchService;
-import cn.huacloud.taxpreference.services.consumer.entity.dtos.OtherDocDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.OtherDocVO;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * 案例分析实现类
@@ -18,13 +16,14 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class OtherDocSearchServiceImpl implements OtherDocSearchService {
-
+    @Getter
     private final RestHighLevelClient restHighLevelClient;
+    @Getter
+    private final ObjectMapper objectMapper;
 
     @Override
-    public PageVO<OtherDocVO> pageSearch(OtherDocDTO pageQuery) {
-        List<String> searchFields = pageQuery.searchFields();
-
-        return null;
+    public Class<OtherDocVO> getResultClass() {
+        return OtherDocVO.class;
     }
+
 }
