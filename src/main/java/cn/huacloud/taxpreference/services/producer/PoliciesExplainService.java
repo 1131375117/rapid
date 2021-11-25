@@ -21,24 +21,23 @@ public interface PoliciesExplainService {
 	/**
 	 * 新增政策解读
 	 *
-	 * @param
-	 * @param policiesExplainDTO
-	 * @param userId
+	 * @param policiesExplainDTO 政策解读入参对象
+	 * @param userId 用户id
 	 */
 	void insertPoliciesExplain(PoliciesExplainDTO policiesExplainDTO, Long userId);
 
 	/**
 	 * 修改政策解读
 	 *
-	 * @param policiesExplainDTO
+	 * @param policiesExplainDTO 政策解读参数对象
 	 */
 	void updatePolicesExplain(PoliciesExplainDTO policiesExplainDTO);
 
 	/**
 	 * 根据id查询政策解读详情
 	 *
-	 * @param id
-	 * @return
+	 * @param id 政策解读id
+	 * @return 返回
 	 */
 	PoliciesExplainDetailVO getPoliciesById(Long id);
 
@@ -46,7 +45,7 @@ public interface PoliciesExplainService {
 	 * 政策解读列表
 	 *
 	 * @param queryPoliciesExplainDTO 政策解读条件查询
-	 * @return
+	 * @return 返回
 	 */
 	PageVO<PoliciesExplainDetailVO> getPoliciesExplainList(QueryPoliciesExplainDTO queryPoliciesExplainDTO);
 
@@ -61,7 +60,7 @@ public interface PoliciesExplainService {
 	/**
 	 * 关联政策模糊查询
 	 *
-	 * @return
+	 * @return 返回
 	 */
 	List<PoliciesTitleVO> fuzzyQuery(KeywordPageQueryDTO keywordPageQueryDTO);
 
@@ -70,7 +69,7 @@ public interface PoliciesExplainService {
 	 * 根据政策法规id查询政策解读信息
 	 *
 	 * @param policiesId 政策法规id
-	 * @return
+	 * @return 返回
 	 */
 	PoliciesExplainDTO getPoliciesByPoliciesId(Long policiesId);
 }

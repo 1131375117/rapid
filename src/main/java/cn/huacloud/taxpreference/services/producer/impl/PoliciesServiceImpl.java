@@ -6,11 +6,9 @@ import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.enums.taxpreference.SortType;
 import cn.huacloud.taxpreference.services.common.AttachmentService;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
-import cn.huacloud.taxpreference.services.producer.FrequentlyAskedQuestionService;
 import cn.huacloud.taxpreference.services.producer.PoliciesExplainService;
 import cn.huacloud.taxpreference.services.producer.PoliciesService;
 import cn.huacloud.taxpreference.services.producer.TaxPreferenceService;
-import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.*;
 import cn.huacloud.taxpreference.services.producer.entity.enums.CheckStatus;
@@ -32,7 +30,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -122,7 +119,7 @@ public class PoliciesServiceImpl implements PoliciesService {
 		// 填充属性值
 		fillProperties(policiesCombinationDTO, userId, policiesDO);
 		policiesMapper.insert(policiesDO);
-		// 新增后回显id--// TODO: 2021/11/15a
+		// 新增后回显id
 		policiesCombinationDTO.setId(policiesDO.getId());
 		PoliciesExplainDTO policiesExplainDtoS = policiesCombinationDTO.getPoliciesExplainDTO();
 
@@ -286,28 +283,28 @@ public class PoliciesServiceImpl implements PoliciesService {
 			PoliciesExplainDTO policiesExplainDTO) {
 		PoliciesCombinationDTO policiesCombinationDTO = new PoliciesCombinationDTO();
 		List<String> list = new ArrayList<>();
-		list.add("");
+//		list.add("");
 		// 设置纳税人、使用企业、适用行业名称值
-		if (StringUtils.isNotEmpty(policiesDO.getEnterpriseTypeCodes())) {
+		if (StringUtils.isNotBlank(policiesDO.getEnterpriseTypeCodes())) {
 			policiesCombinationDTO.setEnterpriseTypeCodes(
 					Arrays.asList(policiesDO.getEnterpriseTypeCodes().split(",")));
 		} else {
 			policiesCombinationDTO.setEnterpriseTypeCodes(list);
 		}
-		if (StringUtils.isNotEmpty(policiesDO.getIndustryCodes())) {
+		if (StringUtils.isNotBlank(policiesDO.getIndustryCodes())) {
 			policiesCombinationDTO.setIndustryCodes(
 					Arrays.asList(policiesDO.getIndustryCodes().split(",")));
 		} else {
 			policiesCombinationDTO.setIndustryCodes(list);
 		}
-		if (StringUtils.isNotEmpty(policiesDO.getTaxpayerIdentifyTypeCodes())) {
+		if (StringUtils.isNotBlank(policiesDO.getTaxpayerIdentifyTypeCodes())) {
 			policiesCombinationDTO.setTaxpayerIdentifyTypeCodes(
 					Arrays.asList((policiesDO.getTaxpayerIdentifyTypeCodes()).split(",")));
 		} else {
 			policiesCombinationDTO.setTaxpayerIdentifyTypeCodes(list);
 		}
 		// 设置标签
-		if (StringUtils.isNotEmpty(policiesDO.getLabels())) {
+		if (StringUtils.isNotBlank(policiesDO.getLabels())) {
 			policiesCombinationDTO.setLabels(Arrays.asList(policiesDO.getLabels().split(",")));
 		}
 		BeanUtils.copyProperties(policiesDO, policiesCombinationDTO);
@@ -637,7 +634,7 @@ public class PoliciesServiceImpl implements PoliciesService {
 				taxPreferenceService.getTaxPreferenceAbolish(id);
 		// 设置返回结果值
 		PoliciesAbolishVO policiesAbolishVO = new PoliciesAbolishVO();
-		// 设置政策法规状态--todo
+		// 设置政策法规状态
 		policiesAbolishVO.setValidityEnum(policiesDO.getValidity());
 		// 设置废止信息
 		policiesAbolishVO.setAbolishNote(policiesDO.getAbolishNote());
