@@ -35,7 +35,7 @@
                 and t.create_time &lt;= #{query.endTime}
             </if>
             <if test="query.userName!=null and query.userName!= ''">
-                and u.username = #{query.userName}
+                and u.username like "%"#{query.userName}"%"
             </if>
             <if test="!query.processStatus and query.processStatus!=null">
                 and p.process_status='NOT_APPROVED'
@@ -44,8 +44,7 @@
                 and p.process_status!='NOT_APPROVED'
             </if>
             and latest_process=1
-            and t.deleted = 0
-
+            and t.deleted = 0 order by p.create_time desc
         </where>
     </select>
     <select id="selectByTaxPreferenceId" resultType="java.lang.String">

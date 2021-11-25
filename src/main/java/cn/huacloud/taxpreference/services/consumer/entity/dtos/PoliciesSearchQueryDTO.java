@@ -8,11 +8,8 @@ import cn.huacloud.taxpreference.services.producer.entity.enums.ValidityEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
 
-import java.lang.reflect.Field;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -49,7 +46,7 @@ public class PoliciesSearchQueryDTO extends AbstractHighlightPageQueryDTO {
     @FilterField("enterpriseTypes.codeValue")
     private List<String> enterpriseTypesCodes;
 
-    @ApiModelProperty("有效性")
+    @ApiModelProperty(value = "有效性", notes = "INVALID:失效;FULL_TEXT_VALID:全文有效;FULL_TEXT_REPEAL:全文废止;PARTIAL_VALID:部分有效;CLAUSE_INVALIDITY:条款失效;FULL_TEXT_INVALIDATION:全文失效;PARTIAL_REPEAL:部分废止;CLAUSE_REPEAL:条款废止")
     @FilterField("validity.codeValue")
     public ValidityEnum validity;
 

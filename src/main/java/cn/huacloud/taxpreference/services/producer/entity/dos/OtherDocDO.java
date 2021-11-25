@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.producer.entity.dos;
 
+import cn.huacloud.taxpreference.common.enums.DocType;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -20,7 +21,7 @@ public class OtherDocDO {
     /**
      * 文档类型：CASE_ANALYSIS-案例分析
      */
-    private String docType;
+    private DocType docType;
     /**
      * 标题
      */

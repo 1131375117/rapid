@@ -158,7 +158,10 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     taxPreferenceVO.setEnterpriseTypeCodes(Arrays.asList(taxPreferenceDO.getEnterpriseTypeCodes().split(",")));
     taxPreferenceVO.setEnterpriseTypeNames(Arrays.asList(taxPreferenceDO.getEnterpriseTypeNames().split(",")));
     //设置标签
-    taxPreferenceVO.setLabels(Arrays.asList(taxPreferenceDO.getLabels().split(",")));
+    if(!StringUtils.isEmpty(taxPreferenceDO.getLabels())){
+      List<String> labels = Arrays.asList(taxPreferenceDO.getLabels().split(","));
+      taxPreferenceVO.setLabels(labels);
+    }
 
 
     // 查询政策信息
@@ -208,7 +211,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     // 税收优惠撤回
     revokeTaxPreference(id);
     // 撤回之后删除process数据
-    deleteProcess(id);
+   // deleteProcess(id);
     //同步到es
     taxPreferenceEventTrigger.deleteEvent(id);
     log.info("id为{}的税收优惠撤回成功！", id);

@@ -24,7 +24,7 @@ public class SysConfig {
      * @param password 系统密码
      */
     public void checkSysPassword(String password) {
-        if (this.password.equals(password)) {
+        if (!this.password.equals(password)) {
             throw BizCode._4402.exception();
         }
     }
