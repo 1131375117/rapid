@@ -18,6 +18,7 @@ import cn.huacloud.taxpreference.services.producer.entity.enums.ValidityEnum;
 import cn.huacloud.taxpreference.services.producer.entity.vos.*;
 import cn.huacloud.taxpreference.services.producer.mapper.FrequentlyAskedQuestionMapper;
 import cn.huacloud.taxpreference.services.producer.mapper.PoliciesMapper;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -591,6 +592,7 @@ public class PoliciesServiceImpl implements PoliciesService {
 	 *
 	 * @param queryAbolishDTO 政策法规废止参数
 	 */
+	@Transactional
 	@Override
 	public void abolish(QueryAbolishDTO queryAbolishDTO) {
 		// 参数校验
