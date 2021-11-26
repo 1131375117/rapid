@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.consumer.entity.dtos;
 
+import cn.huacloud.taxpreference.common.annotations.FilterField;
 import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.config.ElasticsearchIndexConfig;
 import io.swagger.annotations.ApiModelProperty;
@@ -17,6 +18,7 @@ import java.util.List;
 public class OtherDocQueryDTO extends AbstractHighlightPageQueryDTO {
 
     @ApiModelProperty(value = "文档类型", notes = "目前只能支持 CASE_ANALYSIS 案例分析")
+    @FilterField("docType.codeValue")
     private DocType docType;
 
     @Override

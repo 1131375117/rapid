@@ -12,13 +12,7 @@ import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-
-import static org.elasticsearch.index.query.QueryBuilders.matchPhraseQuery;
 
 /**
  * 案例分析实现类
@@ -41,25 +35,6 @@ public class OtherDocSearchServiceImpl implements OtherDocSearchService {
     @Override
     public String[] getExcludeSource() {
         return new String[]{"htmlContent", "plainContent"};
-    }
-
-    @Override
-    public QueryBuilder getQueryBuilder(OtherDocQueryDTO pageQuery) {
-        BoolQueryBuilder queryBuilder = generatorDefaultQueryBuilder(pageQuery);
-
-        // 关键字查询
-        String keyword = pageQuery.getKeyword();
-        if (keyword != null) {
-            List<String> searchFields = pageQuery.searchFields();
-            for (String searchField : searchFields) {
-                queryBuilder.should(matchPhraseQuery(searchField, keyword));
-            }
-        }
-
-        // 文档类型
-        queryBuilder.must(matchPhraseQuery("docType.codeValue", pageQuery.getDocType()));
-
-        return queryBuilder;
     }
 
     @Override
