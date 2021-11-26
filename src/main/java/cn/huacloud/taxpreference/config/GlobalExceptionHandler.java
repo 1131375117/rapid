@@ -8,11 +8,11 @@ import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.exception.TaxPreferenceException;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.Arrays;
 import java.util.stream.Collectors;
 
 /**
@@ -76,6 +76,17 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.joining(";"));
         log.info("参数校验失败：{}", message);
         return new ResultVO<>(BizCode._4100.code, message, null);
+    }
+
+    /**
+     * 消息转换异常，通常是前端入参错误，提示前端
+     * @param e 被捕获异常
+     * @return resultVO
+     */
+    @ExceptionHandler(HttpMessageConversionException.class)
+    public ResultVO<Void> handleHttpMessageConversionException(HttpMessageConversionException e) {
+        log.error("消息转换异常", e);
+        return BizCode._4100.getResultVO();
     }
 
     /**

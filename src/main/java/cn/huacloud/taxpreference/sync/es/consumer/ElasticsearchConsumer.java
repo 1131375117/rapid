@@ -79,13 +79,18 @@ public interface ElasticsearchConsumer<T extends IDGetter<?>> {
         for (CombineText combineText : combineTexts) {
             if (sb.length() > 0) {
                 // 换行
-                sb.append("\n");
+                sb.append(" ");
             }
+            String text = combineText.getText();
             if (combineText.getHtml()) {
-                String plainText = getPlainText(source, combineText.getText());
-                sb.append(plainText);
+                if (text != null) {
+                    String plainText = getPlainText(source, text);
+                    sb.append(plainText);
+                }
             } else {
-                sb.append(combineText.getText());
+                if (text != null) {
+                    sb.append(text);
+                }
             }
         }
         combineTextSource.setCombinePlainContent(sb.toString());
