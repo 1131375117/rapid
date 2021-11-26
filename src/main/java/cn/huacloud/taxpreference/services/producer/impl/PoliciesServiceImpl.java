@@ -10,7 +10,10 @@ import cn.huacloud.taxpreference.services.producer.PoliciesExplainService;
 import cn.huacloud.taxpreference.services.producer.PoliciesService;
 import cn.huacloud.taxpreference.services.producer.TaxPreferenceService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
-import cn.huacloud.taxpreference.services.producer.entity.dtos.*;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesCombinationDTO;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesExplainDTO;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryAbolishDTO;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesDTO;
 import cn.huacloud.taxpreference.services.producer.entity.enums.CheckStatus;
 import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesSortType;
 import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesStatusEnum;
@@ -18,7 +21,7 @@ import cn.huacloud.taxpreference.services.producer.entity.enums.ValidityEnum;
 import cn.huacloud.taxpreference.services.producer.entity.vos.*;
 import cn.huacloud.taxpreference.services.producer.mapper.FrequentlyAskedQuestionMapper;
 import cn.huacloud.taxpreference.services.producer.mapper.PoliciesMapper;
-import com.baomidou.mybatisplus.annotation.TableLogic;
+import cn.huacloud.taxpreference.sync.es.trigger.impl.PoliciesEventTrigger;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -57,6 +60,8 @@ public class PoliciesServiceImpl implements PoliciesService {
 	private final TaxPreferenceService taxPreferenceService;
 
 	private final AttachmentService attachmentService;
+
+	private final PoliciesEventTrigger policiesEventTrigger;
 
 /*	@Autowired
 	public void setFrequentlyAskedQuestionService(FrequentlyAskedQuestionService frequentlyAskedQuestionService) {
@@ -150,6 +155,9 @@ public class PoliciesServiceImpl implements PoliciesService {
 		// 关联附件信息
 		attachmentService.setAttachmentDocId(
 				policiesDO.getId(), AttachmentType.POLICIES, policiesCombinationDTO.getContent());
+
+		// 添加政策保存事件
+		policiesEventTrigger.saveEvent(policiesDO.getId());
 	}
 
 	/**
@@ -240,11 +248,11 @@ public class PoliciesServiceImpl implements PoliciesService {
 	@NotNull
 	private String convert2String(List<String> industryCodes) {
 		Set<String> keySet;
-		keySet = new HashSet<>();
+		keySet = new TreeSet<>();
 		industryCodes.forEach(
 				industryCode -> keySet.add(sysCodeService.getCodeNameByCodeValue(industryCode)));
 		log.info("keySet={}", keySet);
-		return org.apache.commons.lang3.StringUtils.join(keySet, ",");
+		return StringUtils.join(keySet, ",");
 	}
 
 	/**
@@ -341,6 +349,8 @@ public class PoliciesServiceImpl implements PoliciesService {
 		// 关联附件信息
 		attachmentService.setAttachmentDocId(
 				policiesDO.getId(), AttachmentType.POLICIES, policiesCombinationDTO.getContent());
+		// 添加政策保存事件
+		policiesEventTrigger.saveEvent(policiesDO.getId());
 	}
 
 	/**
@@ -550,6 +560,8 @@ public class PoliciesServiceImpl implements PoliciesService {
 /*			// 删除热点问答
 			deleteFrequentlyAskedQuestion(policiesDO);*/
 		}
+		// 触发事件
+		policiesEventTrigger.deleteEvent(policiesDO.getId());
 	}
 
 	/**
@@ -592,7 +604,6 @@ public class PoliciesServiceImpl implements PoliciesService {
 	 *
 	 * @param queryAbolishDTO 政策法规废止参数
 	 */
-	@Transactional
 	@Override
 	public void abolish(QueryAbolishDTO queryAbolishDTO) {
 		// 参数校验

@@ -8,7 +8,8 @@ import com.baomidou.mybatisplus.annotation.IEnum;
  */
 public enum AttachmentType implements IEnum<String> {
 
-    POLICIES("政策法规", "policies");
+    POLICIES("政策法规", "policies"),
+    POLICIES_EXPLAIN("政策解读", "policies");
 
     public final String name;
 

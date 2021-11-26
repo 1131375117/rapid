@@ -53,6 +53,8 @@ public class HotContentServiceImpl implements HotContentService {
 
     private final TaxPreferenceSearchService taxPreferenceSearchService;
 
+    private final OtherDocSearchService otherDocSearchService;
+
     private static final DocType[] ALL_DOC_TYPES = {DocType.POLICIES,
             DocType.POLICIES_EXPLAIN,
             DocType.FREQUENTLY_ASKED_QUESTION,
@@ -201,7 +203,13 @@ public class HotContentServiceImpl implements HotContentService {
 
         // 案例分析
         {
-
+            OtherDocQueryDTO queryDTO = new OtherDocQueryDTO();
+            queryDTO.setKeyword(pageQuery.getKeyword());
+            queryDTO.setDocType(DocType.CASE_ANALYSIS);
+            queryDTO.paramReasonable();
+            QueryBuilder queryBuilder = otherDocSearchService.getQueryBuilder(queryDTO);
+            SysCodeCountVO sysCodeCountVO = getDeclareDocTypeCount(DocType.CASE_ANALYSIS, queryBuilder);
+            sysCodeCountVOList.add(sysCodeCountVO);
         }
 
         return sysCodeCountVOList;
