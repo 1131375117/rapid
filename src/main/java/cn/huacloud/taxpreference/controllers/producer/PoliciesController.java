@@ -3,6 +3,7 @@ package cn.huacloud.taxpreference.controllers.producer;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.huacloud.taxpreference.common.annotations.PermissionInfo;
 import cn.huacloud.taxpreference.common.constants.ValidationGroup;
+import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.PermissionGroup;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
@@ -13,6 +14,7 @@ import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryAbolishDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesAbolishVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesCheckDeleteVO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesTitleVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -176,6 +178,20 @@ public class PoliciesController {
 			@Validated @RequestParam String titleOrDocCode) {
 		Boolean aBoolean = policiesService.checkTitleAndDocCode(titleOrDocCode);
 		return ResultVO.ok(aBoolean);
+	}
+
+
+	/**
+	 * 关联政策（模糊查询，政策法规）
+	 * @return
+	 */
+	@PermissionInfo(name = "关联政策查询", group = PermissionGroup.POLICIES_EXPLAIN)
+	@SaCheckPermission("producer_relatedPolicies_query")
+	@ApiOperation("关联政策查询")
+	@PostMapping("/policies/relatedPolicies/query")
+	public ResultVO<PageVO<PoliciesTitleVO>> fuzzyQuery(@RequestBody KeywordPageQueryDTO keywordPageQueryDTO) {
+		PageVO<PoliciesTitleVO> pageVO = policiesService.fuzzyQuery(keywordPageQueryDTO);
+		return ResultVO.ok(pageVO);
 	}
 
 }

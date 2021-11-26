@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.producer.impl;
 
+import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.AttachmentType;
 import cn.huacloud.taxpreference.common.enums.BizCode;
@@ -676,5 +677,16 @@ public class PoliciesServiceImpl implements PoliciesService {
 	@Override
 	public PoliciesDO getPolicies(Long id) {
 		return policiesMapper.selectById(id);
+	}
+
+
+	@Override
+	public PageVO<PoliciesTitleVO> fuzzyQuery(KeywordPageQueryDTO keywordPageQueryDTO) {
+		// 查询该政策解读是否被关联了政策法规
+		Page<PoliciesTitleVO> page = new Page<>(keywordPageQueryDTO.getPageNum(),keywordPageQueryDTO.getPageSize());
+		IPage<PoliciesTitleVO> relatedPolicyList = policiesMapper.getRelatedPolicy(page,keywordPageQueryDTO.getKeyword());
+		PageVO<PoliciesTitleVO> pageVO = PageVO.createPageVO(relatedPolicyList, relatedPolicyList.getRecords());
+		log.info("查询该政策解读是否被关联了政策法规={}", relatedPolicyList);
+		return pageVO;
 	}
 }

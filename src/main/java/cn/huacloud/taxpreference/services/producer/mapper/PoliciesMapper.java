@@ -4,6 +4,7 @@ import  cn.huacloud.taxpreference.services.consumer.entity.ess.PoliciesES;
 import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesDTO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesTitleVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesVO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -57,4 +58,12 @@ public interface PoliciesMapper extends BaseMapper<PoliciesDO> {
     }
 
 
+
+    /**
+     * 查询该政策解读是否被关联了政策法规
+     * @param page 文件
+     * @param keyword
+     * @return
+     */
+    IPage<PoliciesTitleVO> getRelatedPolicy(@Param("page") Page<PoliciesTitleVO> page, @Param("keyword") String keyword);
 }

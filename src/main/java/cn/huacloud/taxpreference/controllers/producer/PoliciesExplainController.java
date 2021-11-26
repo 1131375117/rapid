@@ -66,17 +66,7 @@ public class PoliciesExplainController {
 		return ResultVO.ok(policiesExplainDTO);
 	}
 
-	/**
-	 * 关联政策（模糊查询，政策法规）
-	 */
-	@PermissionInfo(name = "关联政策查询", group = PermissionGroup.POLICIES_EXPLAIN)
-	@SaCheckPermission("producer_relatedPolicies_query")
-	@ApiOperation("关联政策查询")
-	@PostMapping("/policies/relatedPolicies/query")
-	public ResultVO<List<PoliciesTitleVO>> fuzzyQuery(@RequestBody KeywordPageQueryDTO keywordPageQueryDTO) {
-		List<PoliciesTitleVO> policiesTitleVOList = policiesExplainService.fuzzyQuery(keywordPageQueryDTO);
-		return ResultVO.ok(policiesTitleVOList);
-	}
+
 
 	/**
 	 * 根据ID获取政策解读详情

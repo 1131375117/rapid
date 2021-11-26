@@ -2,21 +2,4 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.huacloud.taxpreference.services.producer.mapper.PoliciesExplainMapper">
 
-    <select id="getRelatedPolicy"
-            resultType="cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesTitleVO">
-        SELECT
-            p.id,
-            pe.policies_id,
-            p.title,
-        IF
-            ( pe.policies_id != NULL OR pe.policies_id != '', 1, 0 ) AS relatedPolicy
-        FROM
-            `t_policies_explain` pe
-            RIGHT JOIN t_policies p ON pe.policies_id = p.id
-        WHERE
-	        p.deleted =0
-        GROUP BY
-            p.id
-            LIMIT 0,50;
-    </select>
 </mapper>
