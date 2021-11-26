@@ -44,7 +44,6 @@ public class PoliciesController {
 	 * 政策列表查询接口
 	 *
 	 * @param queryPoliciesDTO 政策法规查询条件
-	 * @return
 	 */
 	@PermissionInfo(name = "政策法规分页列表", group = PermissionGroup.POLICIES)
 	@SaCheckPermission("producer_policies_query")
@@ -59,7 +58,6 @@ public class PoliciesController {
 	 * 新增政策法规接口
 	 *
 	 * @param policiesCombinationDTO 政策法规条件组合
-	 * @return
 	 */
 	@PermissionInfo(name = "政策法规新增", group = PermissionGroup.POLICIES)
 	@SaCheckPermission("producer_policies_insert")
@@ -77,7 +75,6 @@ public class PoliciesController {
 	 * 根据id获取政策法规详情
 	 *
 	 * @param id 政策法规id
-	 * @return
 	 */
 	@PermissionInfo(name = "政策法规详情", group = PermissionGroup.POLICIES)
 	@SaCheckPermission("producer_policies_detail")
@@ -93,7 +90,6 @@ public class PoliciesController {
 	 * 修改政策法规
 	 *
 	 * @param policiesCombinationDTO 政策法规条件组合
-	 * @return
 	 */
 	@PermissionInfo(name = "政策法规修改", group = PermissionGroup.POLICIES)
 	@SaCheckPermission("producer_policies_update")
@@ -111,7 +107,6 @@ public class PoliciesController {
 	 * 政策法规废止
 	 *
 	 * @param queryAbolishDTO 政策法规废止条件
-	 * @return
 	 */
 	@PermissionInfo(name = "政策法规废止", group = PermissionGroup.POLICIES)
 	@SaCheckPermission("producer_policies_abolish")
@@ -126,7 +121,6 @@ public class PoliciesController {
 	 * 查询废止信息
 	 *
 	 * @param id 政策法规id
-	 * @return
 	 */
 	@PermissionInfo(name = "政策法规废止信息查询", group = PermissionGroup.POLICIES)
 	@SaCheckPermission("producer_policies_abolish_detail")
@@ -142,7 +136,6 @@ public class PoliciesController {
 	 * 校验删除政策法规
 	 *
 	 * @param id 政策法规id
-	 * @return
 	 */
 	@PermissionInfo(name = "政策法规校验删除", group = PermissionGroup.POLICIES)
 	@SaCheckPermission("producer_policies_checkDelete")
@@ -158,7 +151,6 @@ public class PoliciesController {
 	 * 删除政策法规
 	 *
 	 * @param id 政策法规id
-	 * @return
 	 */
 	@PermissionInfo(name = "政策法规删除", group = PermissionGroup.POLICIES)
 	@SaCheckPermission("producer_policies_delete")
@@ -183,7 +175,6 @@ public class PoliciesController {
 
 	/**
 	 * 关联政策（模糊查询，政策法规）
-	 * @return
 	 */
 	@PermissionInfo(name = "关联政策查询", group = PermissionGroup.POLICIES_EXPLAIN)
 	@SaCheckPermission("producer_relatedPolicies_query")
