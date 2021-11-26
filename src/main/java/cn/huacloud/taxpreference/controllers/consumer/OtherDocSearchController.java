@@ -3,7 +3,7 @@ package cn.huacloud.taxpreference.controllers.consumer;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.consumer.OtherDocSearchService;
-import cn.huacloud.taxpreference.services.consumer.entity.dtos.OtherDocDTO;
+import cn.huacloud.taxpreference.services.consumer.entity.dtos.OtherDocQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.OtherDocVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,7 +25,7 @@ public class OtherDocSearchController {
 
     @ApiOperation("案例分析检索")
     @PostMapping("/otherDoc")
-    public ResultVO<PageVO<OtherDocVO>> pageSearch(@RequestBody OtherDocDTO pageQuery) throws Exception {
+    public ResultVO<PageVO<OtherDocVO>> pageSearch(@RequestBody OtherDocQueryDTO pageQuery) throws Exception {
         PageVO<OtherDocVO> pageVO = otherDocSearchService.pageSearch(pageQuery);
         return ResultVO.ok(pageVO);
     }

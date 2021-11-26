@@ -12,8 +12,8 @@
                tp.title                 title,
                tp.doc_code              doc_code,
                ttpp.validity_begin_date validity_begin_date,
-               ttpp.validity_end_date   validity_begin_date,
-               ttpp.digest              validity_begin_date
+               ttpp.validity_end_date   validity_end_date,
+               ttpp.digest              digest
         FROM t_tax_preference_policies ttpp
                  LEFT JOIN t_policies tp
                            ON ttpp.policies_id = tp.id

@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.sync.es.trigger.impl;
 
+import cn.huacloud.taxpreference.common.enums.taxpreference.TaxPreferenceStatus;
 import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
 import cn.huacloud.taxpreference.services.consumer.entity.ess.TaxPreferenceES;
@@ -95,6 +96,7 @@ public class TaxPreferenceEventTrigger extends EventTrigger<Long, TaxPreferenceE
     @Override
     protected IPage<Long> pageIdList(int pageNum, int pageSize) {
         LambdaQueryWrapper<TaxPreferenceDO> queryWrapper = Wrappers.lambdaQuery(TaxPreferenceDO.class)
+                .eq(TaxPreferenceDO::getTaxPreferenceStatus, TaxPreferenceStatus.RELEASED)
                 .eq(TaxPreferenceDO::getDeleted, false);
         IPage<TaxPreferenceDO> page = taxPreferenceMapper.selectPage(Page.of(pageNum, pageSize), queryWrapper);
         return mapToIdPage(page, TaxPreferenceDO::getId);

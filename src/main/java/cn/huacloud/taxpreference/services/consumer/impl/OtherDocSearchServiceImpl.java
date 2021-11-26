@@ -2,7 +2,7 @@ package cn.huacloud.taxpreference.services.consumer.impl;
 
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.services.consumer.OtherDocSearchService;
-import cn.huacloud.taxpreference.services.consumer.entity.dtos.OtherDocDTO;
+import cn.huacloud.taxpreference.services.consumer.entity.dtos.OtherDocQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.OtherDocVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PreviousNextVO;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,7 +12,13 @@ import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+import static org.elasticsearch.index.query.QueryBuilders.matchPhraseQuery;
 
 /**
  * 案例分析实现类
@@ -38,6 +44,25 @@ public class OtherDocSearchServiceImpl implements OtherDocSearchService {
     }
 
     @Override
+    public QueryBuilder getQueryBuilder(OtherDocQueryDTO pageQuery) {
+        BoolQueryBuilder queryBuilder = generatorDefaultQueryBuilder(pageQuery);
+
+        // 关键字查询
+        String keyword = pageQuery.getKeyword();
+        if (keyword != null) {
+            List<String> searchFields = pageQuery.searchFields();
+            for (String searchField : searchFields) {
+                queryBuilder.should(matchPhraseQuery(searchField, keyword));
+            }
+        }
+
+        // 文档类型
+        queryBuilder.must(matchPhraseQuery("docType.codeValue", pageQuery.getDocType()));
+
+        return queryBuilder;
+    }
+
+    @Override
     public OtherDocVO getTaxOtherDocDetails(Long id) throws Exception {
         GetRequest request = new GetRequest(getIndex());
         request.id(id.toString());
@@ -53,7 +78,7 @@ public class OtherDocSearchServiceImpl implements OtherDocSearchService {
     }
 
     private String getIndex() {
-        OtherDocDTO queryDTO = new OtherDocDTO();
+        OtherDocQueryDTO queryDTO = new OtherDocQueryDTO();
         return queryDTO.index();
     }
 }

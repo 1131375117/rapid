@@ -13,6 +13,7 @@ import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesExpl
 import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesSortType;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainDetailVO;
 import cn.huacloud.taxpreference.services.producer.mapper.FrequentlyAskedQuestionMapper;
+import cn.huacloud.taxpreference.sync.es.trigger.impl.FAQEventTrigger;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -44,6 +45,8 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
 	private final AttachmentService attachmentService;
 
 	private PoliciesService policiesService;
+
+	private final FAQEventTrigger faqEventTrigger;
 
 	@Autowired
 	public void setPoliciesService(PoliciesService policiesService) {
@@ -165,6 +168,8 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
 				frequentlyAskedQuestionDO.getId(),
 				AttachmentType.POLICIES,
 				frequentlyAskedQuestionDto.getContent());
+		// 触发事件
+		faqEventTrigger.saveEvent(frequentlyAskedQuestionDO.getId());
 	}
 
 	/**
@@ -191,6 +196,8 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
 					frequentlyAskedQuestionDto.getId(),
 					AttachmentType.POLICIES,
 					frequentlyAskedQuestionDto.getContent());
+			// 触发事件
+			faqEventTrigger.saveEvent(frequentlyAskedQuestionDO.getId());
 		}
 	}
 
@@ -210,6 +217,8 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
 		frequentlyAskedQuestionDO.setDeleted(true);
 		log.info("删除问答查询列表对象={}", frequentlyAskedQuestionDO);
 		frequentlyAskedQuestionMapper.updateById(frequentlyAskedQuestionDO);
+		// 触发事件
+		faqEventTrigger.deleteEvent(frequentlyAskedQuestionDO.getId());
 	}
 
 	/**
