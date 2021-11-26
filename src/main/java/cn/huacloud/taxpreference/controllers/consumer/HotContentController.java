@@ -29,7 +29,7 @@ public class HotContentController {
 
     @ApiOperation("高级搜索统计所有文档数")
     @PostMapping("/allDocCount")
-    public ResultVO<List<SysCodeCountVO>> allDocCount(KeywordPageQueryDTO pageQuery) throws Exception {
+    public ResultVO<List<SysCodeCountVO>> allDocCount(@RequestBody KeywordPageQueryDTO pageQuery) throws Exception {
         pageQuery.paramReasonable();
         List<SysCodeCountVO> sysCodeCountVOList = hotContentService.allDocCount(pageQuery);
         return ResultVO.ok(sysCodeCountVOList);
