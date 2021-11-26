@@ -116,7 +116,7 @@ public class TaxPreferenceES extends AbstractCombinePlainContent<Long> {
     public List<CombineText> combineTextList() {
         List<CombineText> list = new ArrayList<>();
         for (PoliciesDigestSearchVO policy : policies) {
-            list.add(CombineText.ofText(policy.getTitle()));
+            list.add(CombineText.ofText("《" + policy.getTitle() + "》"));
             list.add(CombineText.ofText(policy.getDocCode()));
             list.add(CombineText.ofText(policy.getDigest()));
         }
