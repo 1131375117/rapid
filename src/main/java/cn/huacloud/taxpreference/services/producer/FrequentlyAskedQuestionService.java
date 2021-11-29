@@ -4,6 +4,7 @@ import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.FrequentlyAskedQuestionDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesExplainDTO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.FrequentlyAskedQuestionDetailVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.FrequentlyAskedQuestionVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainDetailVO;
 
@@ -37,7 +38,7 @@ public interface FrequentlyAskedQuestionService {
 	 * @param queryPoliciesExplainDTO 查询条件
 	 * @return 返回
 	 */
-	PageVO<PoliciesExplainDetailVO> getFrequentlyAskedQuestionList(QueryPoliciesExplainDTO queryPoliciesExplainDTO);
+	PageVO<FrequentlyAskedQuestionVO> getFrequentlyAskedQuestionList(QueryPoliciesExplainDTO queryPoliciesExplainDTO);
 
 	/**
 	 * 删除热门问答
@@ -60,5 +61,5 @@ public interface FrequentlyAskedQuestionService {
 	 * @param id 热门问答id
 	 * @return 返回
 	 */
-	PoliciesExplainDetailVO getFrequentlyAskedQuestionById(Long id);
+	FrequentlyAskedQuestionDetailVO getFrequentlyAskedQuestionById(Long id);
 }

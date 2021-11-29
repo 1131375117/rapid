@@ -14,12 +14,10 @@ import java.time.LocalDate;
  */
 @Data
 @ApiModel
-public class PoliciesVO {
+public class PoliciesVO extends PoliciesCommonListVO{
 
     @ApiModelProperty("政策法规Id")
     private Long id;
-    @ApiModelProperty("标题")
-    private String title;
     @ApiModelProperty("文号")
     private String docCode;
     @ApiModelProperty("所属税种名称")
@@ -28,7 +26,5 @@ public class PoliciesVO {
     private String areaName;
     @ApiModelProperty("有效性")
     private String validity;
-    @ApiModelProperty("发布时间")
-    private LocalDate releaseDate;
 
 }

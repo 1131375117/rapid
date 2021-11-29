@@ -27,7 +27,6 @@ public class PoliciesCombinationDTO {
 	private Long id;
 
 	@ApiModelProperty("标题")
-
 	private String title;
 
 	@ApiModelProperty("文号")

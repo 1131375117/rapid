@@ -13,7 +13,10 @@ import cn.huacloud.taxpreference.services.producer.entity.dtos.FrequentlyAskedQu
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesExplainDTO;
 import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesSortType;
+import cn.huacloud.taxpreference.services.producer.entity.vos.FrequentlyAskedQuestionDetailVO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.FrequentlyAskedQuestionVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainDetailVO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesTitleVO;
 import cn.huacloud.taxpreference.services.producer.mapper.FrequentlyAskedQuestionMapper;
 import cn.huacloud.taxpreference.sync.es.trigger.impl.FAQEventTrigger;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -28,9 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * 热门问答服务实现类
@@ -62,12 +63,12 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
 	 * @return 返回
 	 */
 	@Override
-	public PageVO<PoliciesExplainDetailVO> getFrequentlyAskedQuestionList(
+	public PageVO<FrequentlyAskedQuestionVO> getFrequentlyAskedQuestionList(
 			QueryPoliciesExplainDTO queryPoliciesExplainDTO) {
 		log.info("热门问答查询列表条件dto={}", queryPoliciesExplainDTO);
 
 		String sort = getSort(queryPoliciesExplainDTO);
-		IPage<PoliciesExplainDetailVO> frequentlyAskedQuestionDoPage=frequentlyAskedQuestionMapper.selectPageList(queryPoliciesExplainDTO.createQueryPage(),sort,queryPoliciesExplainDTO);
+		IPage<FrequentlyAskedQuestionVO> frequentlyAskedQuestionDoPage=frequentlyAskedQuestionMapper.selectPageList(queryPoliciesExplainDTO.createQueryPage(),sort,queryPoliciesExplainDTO);
 		log.info("热门问答查询列表对象={}", frequentlyAskedQuestionDoPage);
 		return PageVO.createPageVO(frequentlyAskedQuestionDoPage,frequentlyAskedQuestionDoPage.getRecords());
 	}
@@ -208,25 +209,27 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
 	 * @return 返回
 	 */
 	@Override
-	public PoliciesExplainDetailVO getFrequentlyAskedQuestionById(Long id) {
+	public FrequentlyAskedQuestionDetailVO getFrequentlyAskedQuestionById(Long id) {
 		// 查询热门问答对象
 		FrequentlyAskedQuestionDO frequentlyAskedQuestionDO =
 				frequentlyAskedQuestionMapper.selectById(id);
-		PoliciesExplainDetailVO policiesExplainDetailVO = new PoliciesExplainDetailVO();
+		FrequentlyAskedQuestionDetailVO frequentlyAskedQuestionDetailVO = new FrequentlyAskedQuestionDetailVO();
 		String policiesIds = frequentlyAskedQuestionDO.getPoliciesIds();
 		if (policiesIds != null && !"".equals(policiesIds)) {
-			policiesExplainDetailVO.setPoliciesIds(Arrays.asList(frequentlyAskedQuestionDO.getPoliciesIds().split(",")));
+			frequentlyAskedQuestionDetailVO.setPoliciesIds(Arrays.asList(frequentlyAskedQuestionDO.getPoliciesIds().split(",")));
 			String[] policiesIdsList = frequentlyAskedQuestionDO.getPoliciesIds().split(",");
-			ArrayList<String> objects = new ArrayList<>();
+			List<PoliciesTitleVO> list = new ArrayList<>();
 			for (String policiesId : policiesIdsList) {
+				PoliciesTitleVO policiesTitleVO = new PoliciesTitleVO();
 				Long aLong = Long.valueOf(policiesId);
 				PoliciesDO policies = policiesService.getPolicies(aLong);
-				objects.add(policies.getTitle());
-				policiesExplainDetailVO.setPoliciesTitle(objects);
+				BeanUtils.copyProperties(policies,policiesTitleVO);
+				list.add(policiesTitleVO);
 			}
+			frequentlyAskedQuestionDetailVO.setPolicies(list);
 		}
 		// 属性拷贝
-		BeanUtils.copyProperties(frequentlyAskedQuestionDO, policiesExplainDetailVO);
-		return policiesExplainDetailVO;
+		BeanUtils.copyProperties(frequentlyAskedQuestionDO, frequentlyAskedQuestionDetailVO);
+		return frequentlyAskedQuestionDetailVO;
 	}
 }

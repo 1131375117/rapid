@@ -2,6 +2,7 @@ package cn.huacloud.taxpreference.services.producer.mapper;
 
 import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesExplainDTO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.FrequentlyAskedQuestionVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainDetailVO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -26,5 +27,5 @@ public interface FrequentlyAskedQuestionMapper extends BaseMapper<FrequentlyAske
 	 * @param queryPoliciesExplainDTO 返回视图对象
 	 * @return 返回值
 	 */
-	IPage<PoliciesExplainDetailVO> selectPageList(@Param("page") IPage<PoliciesExplainDetailVO> page, @Param("sort") String sort, @Param("queryPoliciesExplainDTO") QueryPoliciesExplainDTO queryPoliciesExplainDTO);
+	IPage<FrequentlyAskedQuestionVO> selectPageList(@Param("page") IPage<PoliciesExplainDetailVO> page, @Param("sort") String sort, @Param("queryPoliciesExplainDTO") QueryPoliciesExplainDTO queryPoliciesExplainDTO);
 }

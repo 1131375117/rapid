@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Data
 @ApiModel
-public class FrequentlyAskedQuestionVO {
+public class FrequentlyAskedQuestionVO extends PoliciesCommonListVO{
 	/**
 	 * 主键ID
 	 */
@@ -32,28 +32,10 @@ public class FrequentlyAskedQuestionVO {
 	private List<String> policiesIds;
 
 	/**
-	 * 问题
-	 */
-	@ApiModelProperty("问题")
-	private String title;
-
-	/**
 	 * 回答
 	 */
 	@ApiModelProperty("回答")
 	private String content;
-
-	/**
-	 * 来源
-	 */
-	@ApiModelProperty("来源")
-	private String docSource;
-
-	/**
-	 * 发布日期
-	 */
-	@ApiModelProperty("发布日期")
-	private LocalDate releaseDate;
 
 	/**
 	 * 创建时间

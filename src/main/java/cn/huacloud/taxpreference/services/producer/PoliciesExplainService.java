@@ -5,6 +5,7 @@ import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesExplainDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesExplainDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainDetailVO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainListVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesTitleVO;
 
 /**
@@ -43,7 +44,7 @@ public interface PoliciesExplainService {
 	 * @param queryPoliciesExplainDTO 政策解读条件查询
 	 * @return 返回
 	 */
-	PageVO<PoliciesExplainDetailVO> getPoliciesExplainList(QueryPoliciesExplainDTO queryPoliciesExplainDTO);
+	PageVO<PoliciesExplainListVO> getPoliciesExplainList(QueryPoliciesExplainDTO queryPoliciesExplainDTO);
 
 
 	/**

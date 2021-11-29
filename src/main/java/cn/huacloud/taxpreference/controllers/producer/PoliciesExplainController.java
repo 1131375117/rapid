@@ -12,6 +12,7 @@ import cn.huacloud.taxpreference.services.producer.PoliciesExplainService;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesExplainDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesExplainDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainDetailVO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainListVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesTitleVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -46,9 +47,9 @@ public class PoliciesExplainController {
 	@SaCheckPermission("producer_policiesExplain_query")
 	@ApiOperation("政策解读分页列表")
 	@PostMapping(value = "/policiesExplain/query")
-	public ResultVO<PageVO<PoliciesExplainDetailVO>> getPoliciesExplainList(@RequestBody QueryPoliciesExplainDTO queryPoliciesExplainDTO) {
+	public ResultVO<PageVO<PoliciesExplainListVO>> getPoliciesExplainList(@RequestBody QueryPoliciesExplainDTO queryPoliciesExplainDTO) {
 		queryPoliciesExplainDTO.paramReasonable();
-		PageVO<PoliciesExplainDetailVO> policiesExplainPageVO = policiesExplainService.getPoliciesExplainList(queryPoliciesExplainDTO);
+		PageVO<PoliciesExplainListVO> policiesExplainPageVO = policiesExplainService.getPoliciesExplainList(queryPoliciesExplainDTO);
 		return ResultVO.ok(policiesExplainPageVO);
 	}
 

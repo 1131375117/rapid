@@ -10,6 +10,8 @@ import cn.huacloud.taxpreference.common.utils.UserUtil;
 import cn.huacloud.taxpreference.services.producer.FrequentlyAskedQuestionService;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.FrequentlyAskedQuestionDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesExplainDTO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.FrequentlyAskedQuestionDetailVO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.FrequentlyAskedQuestionVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainDetailVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -38,10 +40,10 @@ public class FrequentlyAskedQuestionController {
 	@SaCheckPermission("producer_frequentlyAskedQuestion_query")
 	@ApiOperation("热门问答分页列表")
 	@PostMapping(value = "/getFrequentlyAskedQuestionList/query")
-	public ResultVO<PageVO<PoliciesExplainDetailVO>> getFrequentlyAskedQuestionList(
+	public ResultVO<PageVO<FrequentlyAskedQuestionVO>> getFrequentlyAskedQuestionList(
 			@RequestBody QueryPoliciesExplainDTO queryPoliciesExplainDTO) {
 		queryPoliciesExplainDTO.paramReasonable();
-		PageVO<PoliciesExplainDetailVO> frequentlyAskedQuestionPageVO =
+		PageVO<FrequentlyAskedQuestionVO> frequentlyAskedQuestionPageVO =
 				frequentlyAskedQuestionService.getFrequentlyAskedQuestionList(queryPoliciesExplainDTO);
 		return ResultVO.ok(frequentlyAskedQuestionPageVO);
 	}
@@ -85,9 +87,9 @@ public class FrequentlyAskedQuestionController {
 	@SaCheckPermission("producer_frequentlyAskedQuestion_detail")
 	@ApiOperation("热门问答详情")
 	@GetMapping(value = "/frequentlyAskedQuestion/{id}")
-	public ResultVO<PoliciesExplainDetailVO> getFrequentlyAskedQuestionById(
+	public ResultVO<FrequentlyAskedQuestionDetailVO> getFrequentlyAskedQuestionById(
 			@Validated() @PathVariable("id") Long id) {
-		PoliciesExplainDetailVO frequentlyAskedQuestionDetail =
+		FrequentlyAskedQuestionDetailVO frequentlyAskedQuestionDetail =
 				frequentlyAskedQuestionService.getFrequentlyAskedQuestionById(id);
 		return ResultVO.ok(frequentlyAskedQuestionDetail);
 	}

@@ -11,6 +11,7 @@ import org.checkerframework.checker.units.qual.A;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 政策解读详情VO
@@ -19,13 +20,9 @@ import java.util.List;
  */
 @Data
 @ApiModel
-public class PoliciesExplainDetailVO {
+public class PoliciesExplainDetailVO extends PoliciesCommonListVO{
 
-	/**
-	 * 主键Id
-	 */
-	@ApiModelProperty("主键Id")
-	private Long id;
+
 
 	/**
 	 * 政策Id
@@ -33,23 +30,6 @@ public class PoliciesExplainDetailVO {
 	@ApiModelProperty("政策解读中政策Id")
 	private Long policiesId;
 
-	/**
-	 * 标题
-	 */
-	@ApiModelProperty("标题")
-	private String title;
-
-	/**
-	 * 来源
-	 */
-	@ApiModelProperty("来源")
-	private String docSource;
-
-	/**
-	 * 发布日期
-	 */
-	@ApiModelProperty("发布日期")
-	private LocalDate releaseDate;
 
 	/**
 	 * 正文
@@ -63,10 +43,6 @@ public class PoliciesExplainDetailVO {
 	@ApiModelProperty(hidden = true,value = "录入人用户Id")
 	private Long inputUserId;
 
-	@ApiModelProperty("热门问答中政策id")
-	private List<String> policiesIds;
-
-	@ApiModelProperty("政策法规标题")
-	private List<String> policiesTitle;
-
+	@ApiModelProperty("政策法规对象")
+	private PoliciesTitleVO policies;
 }

@@ -14,6 +14,7 @@ import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesExpl
 import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesExplainStatusEnum;
 import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesSortType;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainDetailVO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainListVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesTitleVO;
 import cn.huacloud.taxpreference.services.producer.mapper.PoliciesExplainMapper;
 import cn.huacloud.taxpreference.sync.es.trigger.impl.PoliciesExplainEventTrigger;
@@ -30,7 +31,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -63,7 +66,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 	 * @return 返回
 	 */
 	@Override
-	public PageVO<PoliciesExplainDetailVO> getPoliciesExplainList(
+	public PageVO<PoliciesExplainListVO> getPoliciesExplainList(
 			QueryPoliciesExplainDTO queryPoliciesExplainDTO) {
 		log.info("政策解读列表查询条件dto={}", queryPoliciesExplainDTO);
 		String keyword = queryPoliciesExplainDTO.getKeyword();
@@ -110,12 +113,12 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 						new Page<>(queryPoliciesExplainDTO.getPageNum(), queryPoliciesExplainDTO.getPageSize()),
 						lambdaQueryWrapper);
 		// 数据映射
-		List<PoliciesExplainDetailVO> records =
+		List<PoliciesExplainListVO> records =
 				policiesExplainDoPage.getRecords().stream().map(policiesExplainDO -> {
-					PoliciesExplainDetailVO policiesExplainDetailVO = new PoliciesExplainDetailVO();
+					PoliciesExplainListVO policiesExplainListVO = new PoliciesExplainListVO();
 					// 属性拷贝
-					BeanUtils.copyProperties(policiesExplainDO, policiesExplainDetailVO);
-					return policiesExplainDetailVO;
+					BeanUtils.copyProperties(policiesExplainDO, policiesExplainListVO);
+					return policiesExplainListVO;
 				})
 						.collect(Collectors.toList());
 		log.info("政策解读列表查询对象={}", policiesExplainDoPage);
@@ -202,11 +205,11 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 		// 根据政策解读id查询
 		PoliciesExplainDO policiesExplainDO = policiesExplainMapper.selectById(id);
 		PoliciesExplainDetailVO policiesExplainDetailVO = new PoliciesExplainDetailVO();
-		List<String> objects = new ArrayList<>();
 		if (policiesExplainDO.getPoliciesId() != null) {
+			PoliciesTitleVO policiesTitleVO = new PoliciesTitleVO();
 			PoliciesDO policies = policiesService.getPolicies(policiesExplainDO.getPoliciesId());
-			objects.add(policies.getTitle());
-			policiesExplainDetailVO.setPoliciesTitle(objects);
+			BeanUtils.copyProperties(policies,policiesTitleVO);
+			policiesExplainDetailVO.setPolicies(policiesTitleVO);
 		}
 		// 属性拷贝
 		BeanUtils.copyProperties(policiesExplainDO, policiesExplainDetailVO);
