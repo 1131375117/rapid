@@ -4,6 +4,7 @@ import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeSimpleVO;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -37,7 +38,7 @@ public class PoliciesExplainSearchListVO {
     private List<SysCodeSimpleVO> industries;
 
     @ApiModelProperty("发布日期")
-    private String releaseDate;
+    private LocalDate releaseDate;
 
     @ApiModelProperty("正文")
     private String content;

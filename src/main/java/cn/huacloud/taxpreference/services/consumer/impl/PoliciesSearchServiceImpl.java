@@ -3,11 +3,8 @@ package cn.huacloud.taxpreference.services.consumer.impl;
 import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.BizCode;
-import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
-import cn.huacloud.taxpreference.services.common.SysCodeService;
 import cn.huacloud.taxpreference.services.consumer.PoliciesSearchService;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.PoliciesSearchQueryDTO;
-import cn.huacloud.taxpreference.services.consumer.entity.ess.PoliciesES;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesSearchListVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesSearchSimpleVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesSearchVO;
@@ -48,8 +45,6 @@ public class PoliciesSearchServiceImpl implements PoliciesSearchService {
     @Getter
     private final ObjectMapper objectMapper;
 
-    private final SysCodeService sysCodeService;
-
     @Override
     public QueryBuilder getQueryBuilder(PoliciesSearchQueryDTO pageQuery) {
         BoolQueryBuilder queryBuilder = generatorDefaultQueryBuilder(pageQuery);
@@ -86,8 +81,7 @@ public class PoliciesSearchServiceImpl implements PoliciesSearchService {
             throw BizCode._4500.exception();
         }
 
-        PoliciesES policiesES = objectMapper.readValue(response.getSourceAsString(), PoliciesES.class);
-        PoliciesSearchVO policiesSearchVO = CustomBeanUtil.copyProperties(policiesES, PoliciesSearchVO.class);
+        PoliciesSearchVO policiesSearchVO = objectMapper.readValue(response.getSourceAsString(), PoliciesSearchVO.class);
         // 设置上一篇、下一篇
         PreviousNextVO<Long> defaultPreviousNext = getDefaultPreviousNext(getIndex(), id);
         policiesSearchVO.setPreviousNext(defaultPreviousNext);

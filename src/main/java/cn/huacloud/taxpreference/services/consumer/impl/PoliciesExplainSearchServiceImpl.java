@@ -3,10 +3,8 @@ package cn.huacloud.taxpreference.services.consumer.impl;
 import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.BizCode;
-import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
 import cn.huacloud.taxpreference.services.consumer.PoliciesExplainSearchService;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.PoliciesExplainSearchQueryDTO;
-import cn.huacloud.taxpreference.services.consumer.entity.ess.PoliciesExplainES;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesExplainSearchListVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesExplainSearchSimpleVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesExplainSearchVO;
@@ -59,8 +57,7 @@ public class PoliciesExplainSearchServiceImpl implements PoliciesExplainSearchSe
             throw BizCode._4500.exception();
         }
 
-        PoliciesExplainES policiesExplainES = objectMapper.readValue(response.getSourceAsString(), PoliciesExplainES.class);
-        PoliciesExplainSearchVO policiesExplainSearchVO = CustomBeanUtil.copyProperties(policiesExplainES, PoliciesExplainSearchVO.class);
+        PoliciesExplainSearchVO policiesExplainSearchVO = objectMapper.readValue(response.getSourceAsString(), PoliciesExplainSearchVO.class);
         // 设置上一篇、下一篇
         PreviousNextVO<Long> defaultPreviousNext = getDefaultPreviousNext(getIndex(), id);
         policiesExplainSearchVO.setPreviousNext(defaultPreviousNext);

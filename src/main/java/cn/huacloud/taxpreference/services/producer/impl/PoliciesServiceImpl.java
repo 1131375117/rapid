@@ -633,6 +633,8 @@ public class PoliciesServiceImpl implements PoliciesService {
 		taxPreferenceService.updateStatus(queryAbolishDTO);
 		log.info("废止政策法规对象={}", policiesDO);
 		policiesMapper.updateById(policiesDO);
+		// 触发事件
+		policiesEventTrigger.saveEvent(policiesDO.getId());
 	}
 
 	/**
