@@ -8,6 +8,7 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 政策解读VO
@@ -20,8 +21,11 @@ public class QueryPoliciesExplainDTO extends KeywordPageQueryDTO {
 
 	@ApiModelProperty("政策解读id")
 	private Long id;
-	@ApiModelProperty("政策法规id")
+	@ApiModelProperty("政策解读关联政策id")
 	private Long policiesId;
+
+	@ApiModelProperty("热门问答关联政策id")
+	private List<String> policiesIds;
 
 	@ApiModelProperty("标题")
 	private String title;

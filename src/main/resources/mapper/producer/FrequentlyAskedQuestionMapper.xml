@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.huacloud.taxpreference.services.producer.mapper.FrequentlyAskedQuestionMapper">
+
+
+    <select id="selectPageList"
+            resultType="cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainDetailVO">
+        SELECT id,
+               policies_ids,
+               title,
+               content,
+               doc_source,
+               release_date
+        FROM t_frequently_asked_question
+        <where>
+            <if test="queryPoliciesExplainDTO.title!=null">
+                and title like "%"#{queryPoliciesExplainDTO.title}"%"
+            </if>
+            <if test="queryPoliciesExplainDTO.docSource!=null">
+                and doc_source like "%"#{queryPoliciesExplainDTO.docSource}"%"
+            </if>
+            <if test="queryPoliciesExplainDTO.keyword!=null and queryPoliciesExplainDTO.keyword!=''">
+                and title like "%"#{queryPoliciesExplainDTO.keyword}"%"
+            </if>
+            <if test="queryPoliciesExplainDTO.startTime!=null ">
+                and release_date >= #{queryPoliciesExplainDTO.startTime}
+            </if>
+            <if test="queryPoliciesExplainDTO.endTime!=null ">
+                and release_date &lt;= #{queryPoliciesExplainDTO.endTime}
+            </if>
+            <if test="queryPoliciesExplainDTO.policiesIds!=null and queryPoliciesExplainDTO.policiesIds.size>0 ">
+                <foreach collection="queryPoliciesExplainDTO.policiesIds" item="policiesId">
+                    and FIND_IN_SET(#{policiesId},policiesIds)
+                </foreach>
+            </if>
+            and deleted=0
+        </where>
+        order by ${sort} DESC,update_time DESC
+    </select>
+</mapper>
