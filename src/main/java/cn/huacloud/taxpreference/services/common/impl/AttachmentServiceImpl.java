@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -44,7 +45,7 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     private final AttachmentMapper attachmentMapper;
 
-    private static final String ATTACHMENT_ID_KEY = "attachment_id";
+    private static final String ATTACHMENT_ID_KEY = "hua_cloud_attachment_id";
 
 
     @Transactional
@@ -128,7 +129,15 @@ public class AttachmentServiceImpl implements AttachmentService {
         return Jsoup.parse(content).getElementsByAttribute(ATTACHMENT_ID_KEY).stream()
                 .map(element -> element.attributes().get(ATTACHMENT_ID_KEY))
                 .filter(StringUtils::isNotBlank)
-                .map(Long::parseLong)
+                .map(value -> {
+                    try {
+                        return Long.parseLong(value);
+                    } catch (NumberFormatException e) {
+                        log.error("附件ID转换异常：{}", value);
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 

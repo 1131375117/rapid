@@ -1,6 +1,8 @@
 package cn.huacloud.taxpreference.services.consumer.entity.vos;
 
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeSimpleVO;
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -40,6 +42,8 @@ public class OtherDocVO {
      * 富文本内容
      */
     @ApiModelProperty("富文本内容")
+    @JsonAlias("htmlContent")
+    @JsonProperty("content")
     private String htmlContent;
 
     @ApiModelProperty("上一篇、下一篇")
