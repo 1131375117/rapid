@@ -22,7 +22,11 @@ import java.util.Map;
 @ApiModel
 public class PoliciesExplainDetailVO extends PoliciesCommonListVO{
 
-
+	/**
+	 * 主键Id
+	 */
+	@ApiModelProperty("政策解读id")
+	private Long id;
 
 	/**
 	 * 政策Id
