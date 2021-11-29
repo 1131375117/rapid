@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.producer.impl;
 
+import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.AttachmentType;
 import cn.huacloud.taxpreference.common.enums.BizCode;
@@ -127,13 +128,13 @@ public class PoliciesServiceImpl implements PoliciesService {
 		policiesMapper.insert(policiesDO);
 		// 新增后回显id
 		policiesCombinationDTO.setId(policiesDO.getId());
-		PoliciesExplainDTO policiesExplainDTOS = policiesCombinationDTO.getPoliciesExplainDTO();
+		PoliciesExplainDTO policiesExplainDtoS = policiesCombinationDTO.getPoliciesExplainDTO();
 
 		// 新增政策解读
 		PoliciesExplainDTO policiesExplainDTO = new PoliciesExplainDTO();
 		// 判断当前政策解读对象不存在
-		if (policiesExplainDTOS != null) {
-			BeanUtils.copyProperties(policiesExplainDTOS, policiesExplainDTO);
+		if (policiesExplainDtoS != null) {
+			BeanUtils.copyProperties(policiesExplainDtoS, policiesExplainDTO);
 			policiesExplainDTO.setPoliciesId(policiesDO.getId());
 			policiesExplainService.insertPoliciesExplain(policiesExplainDTO, userId);
 		}
@@ -676,5 +677,16 @@ public class PoliciesServiceImpl implements PoliciesService {
 	@Override
 	public PoliciesDO getPolicies(Long id) {
 		return policiesMapper.selectById(id);
+	}
+
+
+	@Override
+	public PageVO<PoliciesTitleVO> fuzzyQuery(KeywordPageQueryDTO keywordPageQueryDTO) {
+		// 查询该政策解读是否被关联了政策法规
+		Page<PoliciesTitleVO> page = new Page<>(keywordPageQueryDTO.getPageNum(),keywordPageQueryDTO.getPageSize());
+		IPage<PoliciesTitleVO> relatedPolicyList = policiesMapper.getRelatedPolicy(page,keywordPageQueryDTO.getKeyword());
+		PageVO<PoliciesTitleVO> pageVO = PageVO.createPageVO(relatedPolicyList, relatedPolicyList.getRecords());
+		log.info("查询该政策解读是否被关联了政策法规={}", relatedPolicyList);
+		return pageVO;
 	}
 }

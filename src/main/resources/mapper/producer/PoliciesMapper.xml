@@ -85,5 +85,22 @@
         WHERE
             FIND_IN_SET(#{policies},tfaq.policies_ids)
     </select>
-
+    <select id="getRelatedPolicy"
+            resultType="cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesTitleVO">
+            SELECT
+            p.id,
+            pe.id AS policies_explain_id,
+            p.title,
+            p.doc_code,
+            IF(pe.id IS NOT NULL, 1, 0 ) AS related_policy
+        FROM t_policies p
+            LEFT JOIN `t_policies_explain` pe
+            ON pe.policies_id = p.id AND pe.deleted = 0
+        <where>
+        <if test="keyword !=null and keyword !=''">
+           and (p.title like "%"#{keyword}"%" or p.doc_code like "%"#{keyword}"%")
+        </if>
+        and p.deleted=0
+        </where>
+    </select>
 </mapper>

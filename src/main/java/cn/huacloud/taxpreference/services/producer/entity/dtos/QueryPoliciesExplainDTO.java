@@ -44,4 +44,9 @@ public class QueryPoliciesExplainDTO extends KeywordPageQueryDTO {
 	@ApiModelProperty(value = "排序", notes = "RELEASE_DATE:发布时间,UPDATE_TIME:更新时间")
 	private PoliciesSortType sortField;
 
+	@Override
+	public void paramReasonable() {
+		super.paramReasonable();
+		stringParamNullOrTrim();
+	}
 }
