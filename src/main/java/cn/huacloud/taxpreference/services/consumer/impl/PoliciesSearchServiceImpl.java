@@ -3,10 +3,8 @@ package cn.huacloud.taxpreference.services.consumer.impl;
 import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.BizCode;
-import cn.huacloud.taxpreference.common.enums.SysCodeType;
 import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
-import cn.huacloud.taxpreference.services.common.entity.dos.SysCodeDO;
 import cn.huacloud.taxpreference.services.consumer.PoliciesSearchService;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.PoliciesSearchQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.ess.PoliciesES;
@@ -29,11 +27,12 @@ import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
@@ -97,30 +96,33 @@ public class PoliciesSearchServiceImpl implements PoliciesSearchService {
 
     @Override
     public PageVO<PoliciesSearchSimpleVO> latestCentralPolicies(PageQueryDTO pageQuery) throws Exception {
-        return latestAreaPolicies(pageQuery, Collections.singletonList("AREA_ZY"));
+        return latestAreaPolicies(pageQuery, Collections.singletonList("AREA_ZY"), null);
     }
 
     @Override
     public PageVO<PoliciesSearchSimpleVO> latestLocalPolicies(PageQueryDTO pageQuery) throws Exception {
-        // 获取所有的地方码值
-        List<String> areaCodeValues = sysCodeService.getSysCodeDOByCodeType(SysCodeType.AREA)
-                .stream()
-                .filter(sysCodeDO -> {
-                    if (sysCodeDO.getCodeValue().equals("AREA_ZY")) {
-                        return false;
-                    }
-                    return sysCodeDO.getLeaf();
-                })
-                .map(SysCodeDO::getCodeValue)
-                .collect(Collectors.toList());
-        return latestAreaPolicies(pageQuery, areaCodeValues);
+        return latestAreaPolicies(pageQuery, null, Arrays.asList("AREA_ZY", "AREA_DF(GS-S)"));
     }
 
-    public PageVO<PoliciesSearchSimpleVO> latestAreaPolicies(PageQueryDTO pageQuery, List<String> areaCodeValues) throws Exception {
+    /**
+     * 最新的区域政策
+     * @param pageQuery 分页查询条件
+     * @param include 包含的区域码值
+     * @param exclude 排除的区域码值
+     */
+    public PageVO<PoliciesSearchSimpleVO> latestAreaPolicies(PageQueryDTO pageQuery, List<String> include, List<String> exclude) throws Exception {
+
+        BoolQueryBuilder boolQuery = boolQuery();
+        if (!CollectionUtils.isEmpty(include)) {
+            boolQuery.must(termsQuery("area.codeValue", include));
+        }
+        if (!CollectionUtils.isEmpty(exclude)) {
+            boolQuery.mustNot(termsQuery("area.codeValue", exclude));
+        }
 
         // 执行查询
         SearchResponse response = simplePageSearch(getIndex(),
-                termsQuery("area.codeValue", areaCodeValues),
+                boolQuery,
                 pageQuery,
                 SortBuilders.fieldSort("releaseDate").order(SortOrder.DESC));
 
