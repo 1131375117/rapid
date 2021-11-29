@@ -29,7 +29,7 @@ public class FrequentlyAskedQuestionDTO {
 	private Long id;
 
 	@ApiModelProperty("政策Id集合")
-	private String policiesIds;
+	private List<String> policiesIds;
 
 	@NotEmpty(message = "问题不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
 	@ApiModelProperty("问题")
@@ -47,7 +47,7 @@ public class FrequentlyAskedQuestionDTO {
 	@ApiModelProperty("发布日期")
 	private LocalDate releaseDate;
 
-	@ApiModelProperty(hidden = true,value = "用户id")
+	@ApiModelProperty(hidden = true, value = "用户id")
 	private Long inputUserId;
 
 }

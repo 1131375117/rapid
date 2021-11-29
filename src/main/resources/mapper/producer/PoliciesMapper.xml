@@ -46,7 +46,6 @@
                 and (tp.title like "%"#{queryPoliciesDTO.keyword}"%"
                 or tp.doc_code like "%"#{queryPoliciesDTO.keyword}"%")
             </if>
-
             <if test="queryPoliciesDTO.taxpayerIdentifyTypeCodes!=null and queryPoliciesDTO.taxpayerIdentifyTypeCodes.size>0 ">
                 <foreach collection="queryPoliciesDTO.taxpayerIdentifyTypeCodes" item="taxpayer">
                     and FIND_IN_SET(#{taxpayer},tp.taxpayer_identify_type_codes)
@@ -92,7 +91,7 @@
             pe.id AS policies_explain_id,
             p.title,
             p.doc_code,
-            IF(pe.id IS NOT NULL, 1, 0 ) AS related_policy
+            pe.id IS NOT NULL AS related_policy
         FROM t_policies p
             LEFT JOIN `t_policies_explain` pe
             ON pe.policies_id = p.id AND pe.deleted = 0

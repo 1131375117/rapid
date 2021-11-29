@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -201,9 +202,11 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 		// 根据政策解读id查询
 		PoliciesExplainDO policiesExplainDO = policiesExplainMapper.selectById(id);
 		PoliciesExplainDetailVO policiesExplainDetailVO = new PoliciesExplainDetailVO();
+		List<String> objects = new ArrayList<>();
 		if (policiesExplainDO.getPoliciesId() != null) {
 			PoliciesDO policies = policiesService.getPolicies(policiesExplainDO.getPoliciesId());
-			policiesExplainDetailVO.setPoliciesTitle(policies.getTitle());
+			objects.add(policies.getTitle());
+			policiesExplainDetailVO.setPoliciesTitle(objects);
 		}
 		// 属性拷贝
 		BeanUtils.copyProperties(policiesExplainDO, policiesExplainDetailVO);

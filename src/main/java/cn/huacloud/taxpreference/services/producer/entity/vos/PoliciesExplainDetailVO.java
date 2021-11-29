@@ -60,13 +60,13 @@ public class PoliciesExplainDetailVO {
 	/**
 	 * 录入人用户Id
 	 */
-	@ApiModelProperty("录入人用户Id")
+	@ApiModelProperty(hidden = true,value = "录入人用户Id")
 	private Long inputUserId;
 
 	@ApiModelProperty("热门问答中政策id")
-	private String policiesIds;
+	private List<String> policiesIds;
 
 	@ApiModelProperty("政策法规标题")
-	private String policiesTitle;
+	private List<String> policiesTitle;
 
 }

@@ -293,7 +293,6 @@ public class PoliciesServiceImpl implements PoliciesService {
 			PoliciesExplainDTO policiesExplainDTO) {
 		PoliciesCombinationDTO policiesCombinationDTO = new PoliciesCombinationDTO();
 		List<String> list = new ArrayList<>();
-//		list.add("");
 		// 设置纳税人、使用企业、适用行业名称值
 		if (StringUtils.isNotBlank(policiesDO.getEnterpriseTypeCodes())) {
 			policiesCombinationDTO.setEnterpriseTypeCodes(
