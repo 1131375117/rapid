@@ -35,7 +35,7 @@ public class HotContentController {
         return ResultVO.ok(sysCodeCountVOList);
     }
 
-    @ApiOperation("本周热点内容")
+    @ApiOperation(value = "本周热点内容", notes = "需要根据 hotContentType.codeValue 跳转不同的页面，POLICIES:政策法规;POLICIES_EXPLAIN:政策解读;FREQUENTLY_ASKED_QUESTION:热门问答;TAX_PREFERENCE:税收优惠;CASE_ANALYSIS:案例分析")
     @GetMapping("/hotContent/weekly")
     public ResultVO<PageVO<HotContentVO>> weeklyHotContent(PageQueryDTO pageQuery) throws Exception {
         pageQuery.paramReasonable();
