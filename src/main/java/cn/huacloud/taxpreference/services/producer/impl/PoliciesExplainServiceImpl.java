@@ -1,6 +1,5 @@
 package cn.huacloud.taxpreference.services.producer.impl;
 
-import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.AttachmentType;
 import cn.huacloud.taxpreference.common.enums.BizCode;
@@ -30,10 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -134,13 +130,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 	@Override
 	public void insertPoliciesExplain(PoliciesExplainDTO policiesExplainDTO, Long userId) {
 		log.info("新增政策解读dto={}", policiesExplainDTO);
-		// 校验当前政策法规id有没有其他政策解读关联
-		LambdaQueryWrapper<PoliciesExplainDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-		lambdaQueryWrapper.eq(PoliciesExplainDO::getPoliciesId, policiesExplainDTO.getPoliciesId());
-		PoliciesExplainDO policiesExplainDo = policiesExplainMapper.selectOne(lambdaQueryWrapper);
-		if (policiesExplainDo != null) {
-			throw BizCode._4308.exception();
-		}
+		checkAssociation(policiesExplainDTO);
 		PoliciesExplainDO policiesExplainDO = new PoliciesExplainDO();
 		// 属性拷贝
 		BeanUtils.copyProperties(policiesExplainDTO, policiesExplainDO);
@@ -168,6 +158,20 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 	}
 
 	/**
+	 * 校验当前政策法规id有没有其他政策解读关联
+	 * @param policiesExplainDTO
+	 */
+	private void checkAssociation(PoliciesExplainDTO policiesExplainDTO) {
+		// 校验当前政策法规id有没有其他政策解读关联
+		LambdaQueryWrapper<PoliciesExplainDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+		lambdaQueryWrapper.eq(PoliciesExplainDO::getPoliciesId, policiesExplainDTO.getPoliciesId());
+		PoliciesExplainDO policiesExplainDo = policiesExplainMapper.selectOne(lambdaQueryWrapper);
+		if (policiesExplainDo != null) {
+			throw BizCode._4308.exception();
+		}
+	}
+
+	/**
 	 * 修改政策解读
 	 *
 	 * @param policiesExplainDTO 政策解读对象
@@ -175,6 +179,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public void updatePolicesExplain(PoliciesExplainDTO policiesExplainDTO) {
+		checkAssociation(policiesExplainDTO);
 		// 查询政策解读
 		PoliciesExplainDO policiesExplainDO =
 				policiesExplainMapper.selectById(policiesExplainDTO.getId());
