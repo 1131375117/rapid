@@ -2,6 +2,7 @@ package cn.huacloud.taxpreference.sample;
 
 import cn.dev33.satoken.secure.SaSecureUtil;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.PoliciesSearchQueryDTO;
+import cn.hutool.core.lang.Snowflake;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -27,6 +28,13 @@ import java.util.regex.Pattern;
  */
 @Slf4j
 public class SampleTest {
+
+    @Test
+    public void snowFlake() {
+        Snowflake snowflake = new Snowflake();
+        long nextId = snowflake.nextId();
+        log.info("nextId: {}", nextId);
+    }
 
     @Test
     public void testGuavaCache() throws Exception {

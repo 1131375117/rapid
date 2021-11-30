@@ -363,7 +363,7 @@ public class UserServiceImpl implements UserService {
     /**
      * 检查是否为管理员用户
      *
-     * @param userAccount
+     * @param userAccount 用户账户
      */
     private void adminUserCheck(String userAccount) {
         if (UserConstants.ADMIN_USER_NAME.equalsIgnoreCase(userAccount)) {

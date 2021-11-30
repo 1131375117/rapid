@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.annotation.IEnum;
 public enum SysCodeStatus implements IEnum<String> {
 
     VALID("有效"),
+    HIDDEN("隐藏"),
     DISABLE("禁用");
 
     public final String name;
