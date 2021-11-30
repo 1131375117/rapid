@@ -15,6 +15,7 @@ import cn.huacloud.taxpreference.services.producer.entity.vos.ProcessListVO;
 import cn.huacloud.taxpreference.services.producer.mapper.ProcessServiceMapper;
 import cn.huacloud.taxpreference.services.producer.mapper.TaxPreferenceMapper;
 import cn.huacloud.taxpreference.services.user.entity.vos.LoginUserVO;
+import cn.huacloud.taxpreference.sync.es.trigger.impl.TaxPreferenceEventTrigger;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -42,9 +43,12 @@ import static cn.huacloud.taxpreference.services.producer.impl.TaxPreferenceServ
 @Service
 @RequiredArgsConstructor
 public class ProcessServiceImpl implements ProcessService {
+
 	private final ProcessServiceMapper processServiceMapper;
+
 	private final TaxPreferenceMapper taxPreferenceMapper;
 
+	private final TaxPreferenceEventTrigger taxPreferenceEventTrigger;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -87,6 +91,8 @@ public class ProcessServiceImpl implements ProcessService {
 		if (processDO != null) {
 			TaxPreferenceDO taxPreferenceDO = getTaxPreferenceDO(processDO);
 			taxPreferenceMapper.updateById(taxPreferenceDO);
+			// 事件触发
+			taxPreferenceEventTrigger.saveEvent(taxPreferenceDO.getId());
 		}
 		return ResultVO.ok();
 	}
