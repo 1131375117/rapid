@@ -47,15 +47,18 @@ public class PoliciesSearchServiceImpl implements PoliciesSearchService {
 
     @Override
     public QueryBuilder getQueryBuilder(PoliciesSearchQueryDTO pageQuery) {
+
         BoolQueryBuilder queryBuilder = generatorDefaultQueryBuilder(pageQuery);
 
         // 关键字查询
         String keyword = pageQuery.getKeyword();
         if (keyword != null) {
+            BoolQueryBuilder keywordQuery = boolQuery();
             List<String> searchFields = pageQuery.searchFields();
             for (String searchField : searchFields) {
-                queryBuilder.should(matchPhraseQuery(searchField, keyword));
+                keywordQuery.should(matchPhraseQuery(searchField, keyword));
             }
+            queryBuilder.must(keywordQuery);
         }
 
         // 文号查询
@@ -100,9 +103,10 @@ public class PoliciesSearchServiceImpl implements PoliciesSearchService {
 
     /**
      * 最新的区域政策
+     *
      * @param pageQuery 分页查询条件
-     * @param include 包含的区域码值
-     * @param exclude 排除的区域码值
+     * @param include   包含的区域码值
+     * @param exclude   排除的区域码值
      */
     public PageVO<PoliciesSearchSimpleVO> latestAreaPolicies(PageQueryDTO pageQuery, List<String> include, List<String> exclude) throws Exception {
 
@@ -138,6 +142,7 @@ public class PoliciesSearchServiceImpl implements PoliciesSearchService {
 
     /**
      * 获取ES索引名称（其实是别名）
+     *
      * @return ES索引名称
      */
     private String getIndex() {
