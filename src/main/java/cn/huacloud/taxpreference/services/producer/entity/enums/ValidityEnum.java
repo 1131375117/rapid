@@ -2,6 +2,7 @@ package cn.huacloud.taxpreference.services.producer.entity.enums;
 
 
 import cn.huacloud.taxpreference.common.enums.SysCodeGetter;
+import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeSimpleVO;
 import com.baomidou.mybatisplus.annotation.IEnum;
 import lombok.Getter;
 
@@ -52,9 +53,12 @@ public enum ValidityEnum implements IEnum<String>, SysCodeGetter {
 		return validMap;
 	}
 
-	public static void main(String[] args) {
-		System.out.println(ValidMap());
-
-
+	@Override
+	public SysCodeSimpleVO getSysCode() {
+		if (this == UNKNOWN) {
+			return new SysCodeSimpleVO();
+		}
+		return new SysCodeSimpleVO().setCodeName(getName())
+				.setCodeValue(name());
 	}
 }
