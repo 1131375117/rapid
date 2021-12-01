@@ -298,7 +298,7 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
                         .size(1)
                         .fetchSource(includes, null)
                         .query(rangeQuery(field).gt(id))
-                        .sort(field, SortOrder.DESC));
+                        .sort(field, SortOrder.ASC));
 
         SearchResponse previousResponse = getRestHighLevelClient().search(previousRequest, RequestOptions.DEFAULT);
 
@@ -316,7 +316,7 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
                         .size(1)
                         .fetchSource(includes, null)
                         .query(rangeQuery(field).lt(id))
-                        .sort(field, SortOrder.ASC));
+                        .sort(field, SortOrder.DESC));
 
         SearchResponse nextResponse = getRestHighLevelClient().search(nextRequest, RequestOptions.DEFAULT);
 
