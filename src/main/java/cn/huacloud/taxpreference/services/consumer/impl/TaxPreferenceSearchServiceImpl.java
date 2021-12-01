@@ -27,8 +27,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.elasticsearch.index.query.QueryBuilders.matchPhraseQuery;
-import static org.elasticsearch.index.query.QueryBuilders.wildcardQuery;
+import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * @author wangkh
@@ -68,20 +67,23 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
 
     @Override
     public QueryBuilder getQueryBuilder(TaxPreferenceSearchQueryDTO pageQuery) {
-        BoolQueryBuilder queryBuilder = generatorDefaultQueryBuilder(pageQuery);
 
         // 是否使用推荐
         if (pageQuery.getUseRecommend()) {
             // TODO 设置智能推荐的匹配过滤条件
         }
 
+        BoolQueryBuilder queryBuilder = generatorDefaultQueryBuilder(pageQuery);
+
         // 关键字查询
         String keyword = pageQuery.getKeyword();
         if (keyword != null) {
+            BoolQueryBuilder keywordQuery = boolQuery();
             List<String> searchFields = pageQuery.searchFields();
             for (String searchField : searchFields) {
-                queryBuilder.should(matchPhraseQuery(searchField, keyword));
+                keywordQuery.should(matchPhraseQuery(searchField, keyword));
             }
+            queryBuilder.must(keywordQuery);
         }
 
         // 标签过滤

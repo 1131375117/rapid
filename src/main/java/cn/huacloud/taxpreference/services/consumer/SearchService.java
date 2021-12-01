@@ -109,15 +109,18 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
      * @return 查询构造器
      */
     default QueryBuilder getQueryBuilder(T pageQuery) {
+
         BoolQueryBuilder queryBuilder = generatorDefaultQueryBuilder(pageQuery);
 
         // 关键字查询
         String keyword = pageQuery.getKeyword();
         if (keyword != null) {
+            BoolQueryBuilder keywordQuery = boolQuery();
             List<String> searchFields = pageQuery.searchFields();
             for (String searchField : searchFields) {
-                queryBuilder.should(matchPhraseQuery(searchField, keyword));
+                keywordQuery.should(matchPhraseQuery(searchField, keyword));
             }
+            queryBuilder.must(keywordQuery);
         }
 
         return queryBuilder;
@@ -249,9 +252,10 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
 
     /**
      * 简单分页搜索
-     * @param index 索引/别名
-     * @param queryBuilder 查询构建器
-     * @param pageQuery 分页参数
+     *
+     * @param index             索引/别名
+     * @param queryBuilder      查询构建器
+     * @param pageQuery         分页参数
      * @param fieldSortBuilders 排序构建器
      * @return 查询响应
      */
@@ -280,8 +284,9 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
     /**
      * 获取默认的上一篇和下一篇
      * 索引数据必须要有 id 字段且为long类型
+     *
      * @param index 索引名称
-     * @param id 主键ID
+     * @param id    主键ID
      * @return 上一篇、下一篇视图
      */
     default PreviousNextVO<Long> getDefaultPreviousNext(String index, Long id) throws Exception {
@@ -297,8 +302,8 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
                 .source(SearchSourceBuilder.searchSource()
                         .size(1)
                         .fetchSource(includes, null)
-                        .query(rangeQuery(field).lt(id))
-                        .sort(field, SortOrder.DESC));
+                        .query(rangeQuery(field).gt(id))
+                        .sort(field, SortOrder.ASC));
 
         SearchResponse previousResponse = getRestHighLevelClient().search(previousRequest, RequestOptions.DEFAULT);
 
@@ -315,8 +320,8 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
                 .source(SearchSourceBuilder.searchSource()
                         .size(1)
                         .fetchSource(includes, null)
-                        .query(rangeQuery(field).gt(id))
-                        .sort(field, SortOrder.ASC));
+                        .query(rangeQuery(field).lt(id))
+                        .sort(field, SortOrder.DESC));
 
         SearchResponse nextResponse = getRestHighLevelClient().search(nextRequest, RequestOptions.DEFAULT);
 

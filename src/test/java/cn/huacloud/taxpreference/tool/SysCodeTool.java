@@ -236,7 +236,12 @@ public class SysCodeTool extends BaseApplicationTest {
                 sysCodeDO.setExtendsField2("企业所得税");
             } else if (codeName.equals("不限")) {
                 // do nothing
-            } else  {
+            } else if (codeName.startsWith("个人所得税")) {
+                sysCodeDO.setCodeName(StringUtils.substringAfter(codeName, "-"));
+                sysCodeDO.setExtendsField1("TAX_CATEGORIES_GRSDS");
+                sysCodeDO.setExtendsField2("个人所得税");
+                sysCodeDO.setCodeStatus(SysCodeStatus.HIDDEN);
+            } else {
                 throw new RuntimeException("未知的税种类型");
             }
         }
