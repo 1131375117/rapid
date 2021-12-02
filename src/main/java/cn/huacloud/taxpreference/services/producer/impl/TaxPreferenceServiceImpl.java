@@ -11,6 +11,7 @@ import cn.huacloud.taxpreference.common.enums.taxpreference.TaxStatus;
 import cn.huacloud.taxpreference.common.exception.TaxPreferenceException;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
+import cn.huacloud.taxpreference.services.common.entity.dtos.SysCodeStringDTO;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeVO;
 import cn.huacloud.taxpreference.services.producer.ProcessService;
 import cn.huacloud.taxpreference.services.producer.TaxPreferenceService;
@@ -418,6 +419,8 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         taxPreferenceDO.setDeleted(false);
         taxPreferenceDO.setUpdateTime(LocalDateTime.now());
         taxPreferenceDO.setTaxPreferenceStatus(TaxPreferenceStatus.UNRELEASED);
+        SysCodeStringDTO industries = sysCodeService.getSysCodeStringDTO(taxPreferenceDTO.getIndustryCodes(), false);
+        SysCodeStringDTO enterprises = sysCodeService.getSysCodeStringDTO(taxPreferenceDTO.getEnterpriseTypeCodes(), false);
         // 收入税种种类名称
         taxPreferenceDO.setTaxCategoriesName(
                 sysCodeService.getCodeNameByCodeValue(taxPreferenceDTO.getTaxCategoriesCode()));
@@ -428,21 +431,18 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         taxPreferenceDO.setTaxpayerTypeName(
                 sysCodeService.getCodeNameByCodeValue(taxPreferenceDTO.getTaxpayerTypeCode()));
         // 行业code
-        taxPreferenceDO.setIndustryCodes(StringUtils.join(taxPreferenceDTO.getIndustryCodes(), ","));
+        taxPreferenceDO.setIndustryCodes(industries.getCodes());
         // 适用企业类型
-        taxPreferenceDO.setEnterpriseTypeCodes(
-                StringUtils.join(taxPreferenceDTO.getEnterpriseTypeCodes(), ","));
+        taxPreferenceDO.setEnterpriseTypeCodes(enterprises.getCodes());
         // 信用等级
         taxPreferenceDO.setTaxpayerCreditRatings(
                 StringUtils.join(taxPreferenceDTO.getTaxpayerCreditRatings(), ","));
         // 设置标签
         taxPreferenceDO.setLabels(StringUtils.join(taxPreferenceDTO.getLabels(), ","));
         // 行业名称
-        String industryNames = convert2String(taxPreferenceDTO.getIndustryCodes());
-        taxPreferenceDO.setIndustryNames(industryNames);
+        taxPreferenceDO.setIndustryNames(industries.getNames());
         // 适用企业类型
-        String enterpriseTypeNames = convert2String(taxPreferenceDTO.getEnterpriseTypeCodes());
-        taxPreferenceDO.setEnterpriseTypeNames(enterpriseTypeNames);
+        taxPreferenceDO.setEnterpriseTypeNames(enterprises.getNames());
         log.info("taxPreferenceDO={}", taxPreferenceDO);
         return taxPreferenceDO;
     }
