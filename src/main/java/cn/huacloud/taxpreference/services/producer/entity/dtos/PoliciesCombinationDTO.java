@@ -3,7 +3,9 @@ package cn.huacloud.taxpreference.services.producer.entity.dtos;
 
 import cn.huacloud.taxpreference.common.constants.ValidationGroup;
 import cn.huacloud.taxpreference.services.common.entity.vos.AttachmentVO;
+import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeVO;
 import cn.huacloud.taxpreference.services.producer.entity.enums.ValidityEnum;
+import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceCountVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -86,5 +88,8 @@ public class PoliciesCombinationDTO {
 
 	@ApiModelProperty(hidden = true,name = "用户id")
 	private Long inputUserId;
+
+	@ApiModelProperty("关联的税收优惠列表")
+	List<TaxPreferenceCountVO> taxPreferenceCountVOS;
 
 }
