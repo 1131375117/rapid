@@ -4,15 +4,11 @@ import cn.huacloud.taxpreference.common.annotations.FilterField;
 import cn.huacloud.taxpreference.common.annotations.RangeField;
 import cn.huacloud.taxpreference.common.entity.dtos.LocalDateRangeQueryDTO;
 import cn.huacloud.taxpreference.config.ElasticsearchIndexConfig;
-import cn.huacloud.taxpreference.services.producer.entity.enums.ValidityEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
 
-import java.lang.reflect.Field;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -31,11 +27,11 @@ public class PoliciesExplainSearchQueryDTO extends AbstractHighlightPageQueryDTO
     private LocalDateRangeQueryDTO releaseDate;
 
     @ApiModelProperty("所属区域码值")
-    @FilterField("area.codeValue")
+    @FilterField(value = "area.codeValue", withChildren = true)
     private String areaCode;
 
     @ApiModelProperty("适用行业码值")
-    @FilterField("industries.codeValue")
+    @FilterField(value = "industries.codeValue", withChildren = true)
     private List<String> industryCodes;
 
     @ApiModelProperty("纳税人资格认定类型码值")

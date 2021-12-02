@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
  *
  * @author fuhua
  **/
-@Api(tags = "案例分析")
+@Api(tags = "案例分析检索")
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/search")
 @RestController

@@ -5,6 +5,8 @@ import cn.huacloud.taxpreference.common.annotations.RangeField;
 import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.dtos.RangeQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
+import cn.huacloud.taxpreference.common.utils.SpringUtil;
+import cn.huacloud.taxpreference.services.common.SysCodeService;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.AbstractHighlightPageQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PreviousNextVO;
 import com.baomidou.mybatisplus.annotation.IEnum;
@@ -376,7 +378,16 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
                 if (collection.isEmpty()) {
                     return;
                 }
-                boolQueryBuilder.must(termsQuery(name, collection));
+                if (annotation.withChildren()) {
+                    SysCodeService sysCodeService = SpringUtil.getBean(SysCodeService.class);
+                    List<String> withChildrenCodes = sysCodeService.withChildrenCodes(collection);
+                    if (withChildrenCodes.isEmpty()) {
+                        return;
+                    }
+                    boolQueryBuilder.must(termsQuery(name, withChildrenCodes));
+                } else {
+                    boolQueryBuilder.must(termsQuery(name, collection));
+                }
             } else if (value instanceof IEnum) {
                 // IEnum枚举
                 IEnum<?> iEnum = (IEnum<?>) value;
