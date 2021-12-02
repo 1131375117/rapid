@@ -2,10 +2,12 @@ package cn.huacloud.taxpreference.services.common;
 
 import cn.huacloud.taxpreference.common.enums.SysCodeType;
 import cn.huacloud.taxpreference.services.common.entity.dos.SysCodeDO;
+import cn.huacloud.taxpreference.services.common.entity.dtos.SysCodeStringDTO;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeSimpleVO;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeTreeVO;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeVO;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -36,11 +38,13 @@ public interface SysCodeService {
     List<SysCodeVO> getListByCodeValues(String codeValues);
 
     /**
-     * 码值拼接字符串获取名字拼接字符串
-     * @param codeValues 多个系统码值，以","分割
-     * @return 名字拼接字符串
+     * 根据系统码值集合，获取 codes 和 names
+     * 默认取传入码值的第一个类型，其他类型将会忽略
+     * @param codes 系统码值集合
+     * @param withChildren 是否加入子节点
+     * @return 系统码值字符串传输对象
      */
-    String getStringNamesByCodeValues(String codeValues);
+    SysCodeStringDTO getSysCodeStringDTO(Collection<String> codes, boolean withChildren);
 
     /**
      * 根据类型和名称获取码值对象视图
