@@ -4,7 +4,6 @@ import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
 import cn.huacloud.taxpreference.services.consumer.entity.ess.PoliciesES;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
-import cn.huacloud.taxpreference.services.producer.entity.enums.ValidityEnum;
 import cn.huacloud.taxpreference.services.producer.mapper.PoliciesMapper;
 import cn.huacloud.taxpreference.sync.es.trigger.EventTrigger;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -56,10 +55,7 @@ public class PoliciesEventTrigger extends EventTrigger<Long, PoliciesES> {
         policiesES.setTaxpayerIdentifyTypes(sysCodeService.getSimpleVOListByCodeValues(policiesDO.getTaxpayerIdentifyTypeCodes()));
         policiesES.setEnterpriseTypes(sysCodeService.getSimpleVOListByCodeValues(policiesDO.getEnterpriseTypeCodes()));
         policiesES.setIndustries(sysCodeService.getSimpleVOListByCodeValues(policiesDO.getIndustryCodes()));
-        // 枚举状态等于未知不设置值
-        if (policiesDO.getValidity() != ValidityEnum.UNKNOWN) {
-            policiesES.setValidity(getEnumSysCode(policiesDO.getValidity()));
-        }
+        policiesES.setValidity(getEnumSysCode(policiesDO.getValidity()));
         policiesES.setLabels(split2List(policiesDO.getLabels()));
 
         return policiesES;
