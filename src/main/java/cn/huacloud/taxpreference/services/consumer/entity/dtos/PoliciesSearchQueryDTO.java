@@ -31,11 +31,11 @@ public class PoliciesSearchQueryDTO extends AbstractHighlightPageQueryDTO {
     private LocalDateRangeQueryDTO releaseDate;
 
     @ApiModelProperty("所属区域码值")
-    @FilterField("area.codeValue")
+    @FilterField(value = "area.codeValue", withChildren = true)
     private String areaCode;
 
     @ApiModelProperty("适用行业码值")
-    @FilterField("industries.codeValue")
+    @FilterField(value = "industries.codeValue", withChildren = true)
     private List<String> industryCodes;
 
     @ApiModelProperty("纳税人资格认定类型码值")

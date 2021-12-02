@@ -19,4 +19,10 @@ public @interface FilterField {
      * @return ES字段名称
      */
     String value();
+
+    /**
+     * 是否包含叶子节点
+     * @return
+     */
+    boolean withChildren() default false;
 }

@@ -80,4 +80,11 @@ public interface SysCodeService {
      * 清除系统码值缓存
      */
     void cleanSysCodeCache();
+
+    /**
+     * 获取码值本身和其叶子节点
+     * @param target 目标码值
+     * @return 码值集合包含叶子节点
+     */
+    List<String> withChildrenCodes(Collection<?> target);
 }

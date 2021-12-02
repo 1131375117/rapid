@@ -58,6 +58,13 @@ public class SysCodeServiceImpl implements SysCodeService {
             .expireAfterWrite(2, TimeUnit.HOURS)
             .build();
 
+    /**
+     * PID -> List<SysCodeDO>
+     */
+    private final Cache<Object, Map<Long, List<SysCodeDO>>> sysCodePidMapCache = CacheBuilder.newBuilder()
+            .expireAfterWrite(2, TimeUnit.HOURS)
+            .build();
+
     @Override
     public List<SysCodeTreeVO> getSysCodeTreeVO(final SysCodeType sysCodeType) {
         List<SysCodeDO> sysCodeDOList = getSysCodeTypeMapCache().get(sysCodeType);
@@ -163,6 +170,9 @@ public class SysCodeServiceImpl implements SysCodeService {
      * 设置子节点到 targetSet中
      */
     private void setChildren(SysCodeDO sysCodeDO, Set<SysCodeDO> targetSet, Map<Long, List<SysCodeDO>> pidMap) {
+        if (sysCodeDO == null) {
+            return;
+        }
         targetSet.add(sysCodeDO);
         List<SysCodeDO> sysCodeDOList = pidMap.get(sysCodeDO.getId());
         if (sysCodeDOList == null) {
@@ -222,6 +232,22 @@ public class SysCodeServiceImpl implements SysCodeService {
         sysCodeCache.invalidateAll();
         sysCodeMapCache.invalidateAll();
         sysCodeTypeMapCache.invalidateAll();
+        sysCodePidMapCache.invalidateAll();
+    }
+
+    @Override
+    public List<String> withChildrenCodes(Collection<?> target) {
+        Map<String, SysCodeDO> sysCodeMapCache = getSysCodeMapCache();
+        List<SysCodeDO> targetCodes = target.stream()
+                .map(sysCodeMapCache::get)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        Map<Long, List<SysCodeDO>> sysCodePidMapCache = getSysCodePidMapCache();
+        Set<SysCodeDO> targetSet = new HashSet<>();
+        for (SysCodeDO targetCode : targetCodes) {
+            setChildren(targetCode, targetSet, sysCodePidMapCache);
+        }
+        return targetSet.stream().map(SysCodeDO::getCodeValue).collect(Collectors.toList());
     }
 
     Stream<SysCodeDO> getValidSortStreamByCodeValues(String codeValues) {
@@ -263,6 +289,19 @@ public class SysCodeServiceImpl implements SysCodeService {
             return sysCodeMapCache.get(this, () ->
                     getSysCodeCache().stream().collect(Collectors.toMap(SysCodeDO::getCodeValue, value -> value))
             );
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 从缓存中获取所有的系统码值TypeMap
+     *
+     * @return key：码值类型；value：sysCodeDO
+     */
+    private Map<Long, List<SysCodeDO>> getSysCodePidMapCache() {
+        try {
+            return sysCodePidMapCache.get(this, () -> getSysCodeCache().stream().collect(Collectors.groupingBy(SysCodeDO::getPid)));
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
         }
