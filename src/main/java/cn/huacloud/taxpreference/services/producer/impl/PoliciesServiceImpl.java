@@ -7,6 +7,7 @@ import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.enums.taxpreference.SortType;
 import cn.huacloud.taxpreference.services.common.AttachmentService;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
+import cn.huacloud.taxpreference.services.common.entity.dtos.SysCodeStringDTO;
 import cn.huacloud.taxpreference.services.producer.PoliciesExplainService;
 import cn.huacloud.taxpreference.services.producer.PoliciesService;
 import cn.huacloud.taxpreference.services.producer.TaxPreferenceService;
@@ -170,22 +171,17 @@ public class PoliciesServiceImpl implements PoliciesService {
 	 */
 	private void fillProperties(
 			PoliciesCombinationDTO policiesCombinationDTO, Long userId, PoliciesDO policiesDO) {
+		SysCodeStringDTO taxpayerIdentifyTypeDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getTaxpayerIdentifyTypeCodes(), false);
+		SysCodeStringDTO enterpriseTypeDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getEnterpriseTypeCodes(), false);
+		SysCodeStringDTO industryDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getIndustryCodes(), false);
 		// 设置纳税人、使用企业、适用行业码值
-		policiesDO.setTaxpayerIdentifyTypeCodes(
-				StringUtils.join(policiesCombinationDTO.getTaxpayerIdentifyTypeCodes(), ","));
-		policiesDO.setEnterpriseTypeCodes(
-				StringUtils.join(policiesCombinationDTO.getEnterpriseTypeCodes(), ","));
-		policiesDO.setIndustryCodes(StringUtils.join(policiesCombinationDTO.getIndustryCodes(), ","));
-		// 进行切分
-		String taxpayerIdentifyTypeNames =
-				convert2String(policiesCombinationDTO.getTaxpayerIdentifyTypeCodes());
-		String enterpriseTypeCodes = convert2String(policiesCombinationDTO.getEnterpriseTypeCodes());
-		String industryNames = convert2String(policiesCombinationDTO.getIndustryCodes());
-
+		policiesDO.setTaxpayerIdentifyTypeCodes(taxpayerIdentifyTypeDTO.getCodes());
+		policiesDO.setEnterpriseTypeCodes(enterpriseTypeDTO.getCodes());
+		policiesDO.setIndustryCodes(industryDTO.getCodes());
 		// 设置纳税人、使用企业、适用行业名称值
-		policiesDO.setTaxpayerIdentifyTypeNames(taxpayerIdentifyTypeNames);
-		policiesDO.setEnterpriseTypeNames(enterpriseTypeCodes);
-		policiesDO.setIndustryNames(industryNames);
+		policiesDO.setTaxpayerIdentifyTypeNames(taxpayerIdentifyTypeDTO.getNames());
+		policiesDO.setEnterpriseTypeNames(enterpriseTypeDTO.getNames());
+		policiesDO.setIndustryNames(industryDTO.getNames());
 		// 设置用户id
 		policiesDO.setInputUserId(userId);
 		// 添加废止状态
@@ -199,11 +195,9 @@ public class PoliciesServiceImpl implements PoliciesService {
 		// 设置删除
 		policiesDO.setDeleted(false);
 		// 设置所属区域名称
-		policiesDO.setAreaName(
-				sysCodeService.getCodeNameByCodeValue(policiesCombinationDTO.getAreaCode()));
+		policiesDO.setAreaName(sysCodeService.getCodeNameByCodeValue(policiesCombinationDTO.getAreaCode()));
 		// 设置所属税种名称
-		policiesDO.setTaxCategoriesName(
-				sysCodeService.getCodeNameByCodeValue(policiesCombinationDTO.getTaxCategoriesCode()));
+		policiesDO.setTaxCategoriesName(sysCodeService.getCodeNameByCodeValue(policiesCombinationDTO.getTaxCategoriesCode()));
 		// 设置标签
 		policiesDO.setLabels(StringUtils.join(policiesCombinationDTO.getLabels(), ","));
 
@@ -243,18 +237,18 @@ public class PoliciesServiceImpl implements PoliciesService {
 		return false;
 	}
 
-	/**
-	 * 拼接转换
-	 */
-	@NotNull
-	private String convert2String(List<String> industryCodes) {
-		Set<String> keySet;
-		keySet = new TreeSet<>();
-		industryCodes.forEach(
-				industryCode -> keySet.add(sysCodeService.getCodeNameByCodeValue(industryCode)));
-		log.info("keySet={}", keySet);
-		return StringUtils.join(keySet, ",");
-	}
+//	/**
+//	 * 拼接转换
+//	 */
+//	@NotNull
+//	private String convert2String(List<String> industryCodes) {
+//		Set<String> keySet;
+//		keySet = new TreeSet<>();
+//		industryCodes.forEach(
+//				industryCode -> keySet.add(sysCodeService.getCodeNameByCodeValue(industryCode)));
+//		log.info("keySet={}", keySet);
+//		return StringUtils.join(keySet, ",");
+//	}
 
 	/**
 	 * 根据政策法规id获取详细信息
@@ -318,6 +312,8 @@ public class PoliciesServiceImpl implements PoliciesService {
 		if (StringUtils.isNotBlank(policiesDO.getLabels())) {
 			policiesCombinationDTO.setLabels(Arrays.asList(policiesDO.getLabels().split(",")));
 		}
+		//设置废止说明
+		policiesCombinationDTO.setAbolishNote(policiesDO.getAbolishNote());
 		BeanUtils.copyProperties(policiesDO, policiesCombinationDTO);
 		// 设置政策解读对象
 		policiesCombinationDTO.setPoliciesExplainDTO(policiesExplainDTO);
@@ -344,6 +340,7 @@ public class PoliciesServiceImpl implements PoliciesService {
 		if (policiesDO == null) {
 			throw BizCode._4100.exception();
 		}
+
 		// 修改政策法规
 		updatePolicies(policiesCombinationDTO, policiesDO);
 		// 修改政策解读
@@ -366,28 +363,22 @@ public class PoliciesServiceImpl implements PoliciesService {
 	private void updatePolicies(
 			PoliciesCombinationDTO policiesCombinationDTO, PoliciesDO policiesDO) {
 		BeanUtils.copyProperties(policiesCombinationDTO, policiesDO);
+		SysCodeStringDTO taxpayerIdentifyTypeDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getTaxpayerIdentifyTypeCodes(), false);
+		SysCodeStringDTO enterpriseTypeDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getEnterpriseTypeCodes(), false);
+		SysCodeStringDTO industryDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getIndustryCodes(), false);
 		// 设置纳税人、使用企业、适用行业码值
-		policiesDO.setTaxpayerIdentifyTypeCodes(
-				StringUtils.join(policiesCombinationDTO.getTaxpayerIdentifyTypeCodes(), ","));
-		policiesDO.setEnterpriseTypeCodes(
-				StringUtils.join(policiesCombinationDTO.getEnterpriseTypeCodes(), ","));
-		policiesDO.setIndustryCodes(StringUtils.join(policiesCombinationDTO.getIndustryCodes(), ","));
-		// 进行切分
-		String taxpayerIdentifyTypeNames =
-				convert2String(policiesCombinationDTO.getTaxpayerIdentifyTypeCodes());
-		String enterpriseTypeCodes = convert2String(policiesCombinationDTO.getEnterpriseTypeCodes());
-		String industryNames = convert2String(policiesCombinationDTO.getIndustryCodes());
+		policiesDO.setTaxpayerIdentifyTypeCodes(taxpayerIdentifyTypeDTO.getCodes());
+		policiesDO.setEnterpriseTypeCodes(enterpriseTypeDTO.getCodes());
+		policiesDO.setIndustryCodes(industryDTO.getCodes());
 		// 设置纳税人、使用企业、适用行业名称值
-		policiesDO.setTaxpayerIdentifyTypeNames(taxpayerIdentifyTypeNames);
-		policiesDO.setEnterpriseTypeNames(enterpriseTypeCodes);
-		policiesDO.setIndustryNames(industryNames);
+		policiesDO.setTaxpayerIdentifyTypeNames(taxpayerIdentifyTypeDTO.getNames());
+		policiesDO.setEnterpriseTypeNames(enterpriseTypeDTO.getNames());
+		policiesDO.setIndustryNames(industryDTO.getNames());
 		// 设置所属税种
 		policiesDO.setTaxCategoriesCode(policiesCombinationDTO.getTaxCategoriesCode());
-		policiesDO.setTaxCategoriesName(
-				sysCodeService.getCodeNameByCodeValue(policiesCombinationDTO.getTaxCategoriesCode()));
+		policiesDO.setTaxCategoriesName(sysCodeService.getCodeNameByCodeValue(policiesCombinationDTO.getTaxCategoriesCode()));
 		// 设置区域
-		policiesDO.setAreaName(
-				sysCodeService.getCodeNameByCodeValue(policiesCombinationDTO.getAreaCode()));
+		policiesDO.setAreaName(sysCodeService.getCodeNameByCodeValue(policiesCombinationDTO.getAreaCode()));
 		policiesDO.setAreaCode(policiesCombinationDTO.getAreaCode());
 		// 设置标签
 		policiesDO.setLabels(StringUtils.join(policiesCombinationDTO.getLabels(), ","));
