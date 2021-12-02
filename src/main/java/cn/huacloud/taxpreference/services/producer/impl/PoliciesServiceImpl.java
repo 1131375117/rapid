@@ -273,12 +273,16 @@ public class PoliciesServiceImpl implements PoliciesService {
 		// 根据政策法规id查询政策解读对象
 		PoliciesExplainDTO policiesExplainDTO =
 				policiesExplainService.getPoliciesByPoliciesId(policiesDO.getId());
+		// 根据政策法规id在关联表中查询所有税收优惠的信息
+		List<TaxPreferenceCountVO> taxPreferenceCountVOS =
+				taxPreferenceService.getTaxPreferenceId(policiesDO.getId());
 		/*// 根据政策法规id查询热门问答
 		List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDOList =
 				frequentlyAskedQuestionService.getFrequentlyAskedQuestionByPoliciesId(policiesDO.getId());*/
 		// 返回结果
-		return setPoliciesCombinationDTO(policiesDO, policiesExplainDTO/*, frequentlyAskedQuestionDOList*/);
+		return setPoliciesCombinationDTO(policiesDO, policiesExplainDTO/*, frequentlyAskedQuestionDOList*/, taxPreferenceCountVOS);
 	}
+
 
 	/**
 	 * 设置政策组合对象属性值
@@ -288,9 +292,7 @@ public class PoliciesServiceImpl implements PoliciesService {
 	 * @return 返回
 	 */
 	@NotNull
-	private PoliciesCombinationDTO setPoliciesCombinationDTO(
-			PoliciesDO policiesDO,
-			PoliciesExplainDTO policiesExplainDTO) {
+	private PoliciesCombinationDTO setPoliciesCombinationDTO(PoliciesDO policiesDO, PoliciesExplainDTO policiesExplainDTO, List<TaxPreferenceCountVO> taxPreferenceCountVOS) {
 		PoliciesCombinationDTO policiesCombinationDTO = new PoliciesCombinationDTO();
 		List<String> list = new ArrayList<>();
 		// 设置纳税人、使用企业、适用行业名称值
@@ -319,6 +321,8 @@ public class PoliciesServiceImpl implements PoliciesService {
 		BeanUtils.copyProperties(policiesDO, policiesCombinationDTO);
 		// 设置政策解读对象
 		policiesCombinationDTO.setPoliciesExplainDTO(policiesExplainDTO);
+		//设置关联税收优惠
+		policiesCombinationDTO.setTaxPreferenceCountVOS(taxPreferenceCountVOS);
 		/*// 设置热门问答对象
 		policiesCombinationDTO.setFrequentlyAskedQuestionDTOList(frequentlyAskedQuestionDOList);*/
 		return policiesCombinationDTO;
@@ -684,8 +688,8 @@ public class PoliciesServiceImpl implements PoliciesService {
 	@Override
 	public PageVO<PoliciesTitleVO> fuzzyQuery(KeywordPageQueryDTO keywordPageQueryDTO) {
 		// 查询该政策解读是否被关联了政策法规
-		Page<PoliciesTitleVO> page = new Page<>(keywordPageQueryDTO.getPageNum(),keywordPageQueryDTO.getPageSize());
-		IPage<PoliciesTitleVO> relatedPolicyList = policiesMapper.getRelatedPolicy(page,keywordPageQueryDTO.getKeyword());
+		Page<PoliciesTitleVO> page = new Page<>(keywordPageQueryDTO.getPageNum(), keywordPageQueryDTO.getPageSize());
+		IPage<PoliciesTitleVO> relatedPolicyList = policiesMapper.getRelatedPolicy(page, keywordPageQueryDTO.getKeyword());
 		PageVO<PoliciesTitleVO> pageVO = PageVO.createPageVO(relatedPolicyList, relatedPolicyList.getRecords());
 		log.info("查询该政策解读是否被关联了政策法规={}", relatedPolicyList);
 		return pageVO;
