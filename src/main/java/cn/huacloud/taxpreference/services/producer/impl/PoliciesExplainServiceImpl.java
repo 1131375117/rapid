@@ -159,6 +159,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 
 	/**
 	 * 校验当前政策法规id有没有其他政策解读关联
+	 *
 	 * @param policiesExplainDTO
 	 */
 	private void checkAssociation(PoliciesExplainDTO policiesExplainDTO) {
@@ -166,7 +167,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 		LambdaQueryWrapper<PoliciesExplainDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
 		lambdaQueryWrapper.eq(PoliciesExplainDO::getPoliciesId, policiesExplainDTO.getPoliciesId());
 		PoliciesExplainDO policiesExplainDo = policiesExplainMapper.selectOne(lambdaQueryWrapper);
-		if (policiesExplainDo != null) {
+		if (policiesExplainDo != null && !policiesExplainDo.getPoliciesId().equals(policiesExplainDTO.getPoliciesId())) {
 			throw BizCode._4308.exception();
 		}
 	}
@@ -213,7 +214,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 		if (policiesExplainDO.getPoliciesId() != null) {
 			PoliciesTitleVO policiesTitleVO = new PoliciesTitleVO();
 			PoliciesDO policies = policiesService.getPolicies(policiesExplainDO.getPoliciesId());
-			BeanUtils.copyProperties(policies,policiesTitleVO);
+			BeanUtils.copyProperties(policies, policiesTitleVO);
 			policiesExplainDetailVO.setPolicies(policiesTitleVO);
 		}
 		// 属性拷贝
