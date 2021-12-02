@@ -78,6 +78,9 @@ public class PoliciesCombinationDTO {
 	@ApiModelProperty("标签管理")
 	private List<String> labels;
 
+	@ApiModelProperty("标签管理")
+	private String abolishNote;
+
 	/*@ApiModelProperty("热点问答集合")
 	@Valid
 	private List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOList;*/
