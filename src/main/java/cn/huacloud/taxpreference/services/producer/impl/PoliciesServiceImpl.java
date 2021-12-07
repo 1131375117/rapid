@@ -131,6 +131,8 @@ public class PoliciesServiceImpl implements PoliciesService {
 		policiesCombinationDTO.setId(policiesDO.getId());
 		PoliciesExplainDTO policiesExplainDtoS = policiesCombinationDTO.getPoliciesExplainDTO();
 
+		//校验当前政策法规是否关联了其他解读
+		policiesExplainService.checkAssociation(policiesExplainDtoS);
 		// 新增政策解读
 		PoliciesExplainDTO policiesExplainDTO = new PoliciesExplainDTO();
 		// 判断当前政策解读对象不存在
@@ -399,6 +401,8 @@ public class PoliciesServiceImpl implements PoliciesService {
 		PoliciesExplainDTO policiesExplainDTO = new PoliciesExplainDTO();
 
 		if (policiesCombinationDTO.getPoliciesExplainDTO() != null) {
+			//校验政策法规是否关联了其他解读
+			policiesExplainService.checkAssociation(policiesCombinationDTO.getPoliciesExplainDTO());
 			// 获取政策解读id
 			Long policiesExplainId = policiesCombinationDTO.getPoliciesExplainDTO().getId();
 			BeanUtils.copyProperties(policiesCombinationDTO.getPoliciesExplainDTO(), policiesExplainDTO);

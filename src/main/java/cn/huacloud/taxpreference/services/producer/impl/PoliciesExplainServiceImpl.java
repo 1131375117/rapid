@@ -162,7 +162,8 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 	 *
 	 * @param policiesExplainDTO
 	 */
-	private void checkAssociation(PoliciesExplainDTO policiesExplainDTO) {
+	@Override
+	public void checkAssociation(PoliciesExplainDTO policiesExplainDTO) {
 		// 校验当前政策法规id有没有其他政策解读关联
 		LambdaQueryWrapper<PoliciesExplainDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
 		lambdaQueryWrapper.eq(PoliciesExplainDO::getPoliciesId, policiesExplainDTO.getPoliciesId());
