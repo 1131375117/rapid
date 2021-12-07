@@ -55,6 +55,9 @@ public interface PoliciesExplainService {
 	void deletePoliciesById(Long id);
 
 
+	void deletePoliciesByPolicies(Long policiesId);
+
+
 
 	/**
 	 * 根据政策法规id查询政策解读信息

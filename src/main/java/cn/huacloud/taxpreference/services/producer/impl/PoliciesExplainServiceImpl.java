@@ -240,6 +240,15 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 		policiesExplainEventTrigger.deleteEvent(id);
 	}
 
+	@Override
+	public void deletePoliciesByPolicies(Long policiesId) {
+		LambdaQueryWrapper<PoliciesExplainDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+		lambdaQueryWrapper.eq(PoliciesExplainDO::getPoliciesId,policiesId);
+		PoliciesExplainDO policiesExplainDO = policiesExplainMapper.selectOne(lambdaQueryWrapper);
+		policiesExplainDO.setDeleted(true);
+		policiesExplainMapper.updateById(policiesExplainDO);
+	}
+
 
 	/**
 	 * 根据政策法规id查询政策解读信息
@@ -264,4 +273,5 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 		log.info("根据政策法规id查询政策解读信息={}", policiesExplainDTO);
 		return policiesExplainDTO;
 	}
+
 }

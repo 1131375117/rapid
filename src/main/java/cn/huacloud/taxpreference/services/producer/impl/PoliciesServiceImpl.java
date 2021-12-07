@@ -412,6 +412,8 @@ public class PoliciesServiceImpl implements PoliciesService {
 			} else {
 				policiesExplainService.updatePolicesExplain(policiesExplainDTO);
 			}
+		}else {
+			policiesExplainService.deletePoliciesByPolicies(policiesCombinationDTO.getId());
 		}
 	}
 
