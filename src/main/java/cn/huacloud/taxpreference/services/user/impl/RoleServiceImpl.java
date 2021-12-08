@@ -3,7 +3,7 @@ package cn.huacloud.taxpreference.services.user.impl;
 import cn.huacloud.taxpreference.common.constants.UserConstants;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.BizCode;
-import cn.huacloud.taxpreference.common.enums.UserType;
+import cn.huacloud.taxpreference.common.enums.user.UserType;
 import cn.huacloud.taxpreference.services.user.PermissionService;
 import cn.huacloud.taxpreference.services.user.RoleService;
 import cn.huacloud.taxpreference.services.user.entity.dos.ProducerUserDO;

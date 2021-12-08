@@ -1,7 +1,7 @@
 package cn.huacloud.taxpreference.services.user.entity.dos;
 
 import cn.huacloud.taxpreference.common.enums.PermissionGroup;
-import cn.huacloud.taxpreference.common.enums.UserType;
+import cn.huacloud.taxpreference.common.enums.user.UserType;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;

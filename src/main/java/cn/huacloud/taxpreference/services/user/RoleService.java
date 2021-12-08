@@ -1,7 +1,7 @@
 package cn.huacloud.taxpreference.services.user;
 
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
-import cn.huacloud.taxpreference.common.enums.UserType;
+import cn.huacloud.taxpreference.common.enums.user.UserType;
 import cn.huacloud.taxpreference.services.user.entity.dos.RoleDO;
 import cn.huacloud.taxpreference.services.user.entity.dtos.RoleQueryDTO;
 import cn.huacloud.taxpreference.services.user.entity.vos.RoleListVO;

@@ -1,7 +1,7 @@
 package cn.huacloud.taxpreference.services.user.entity.dtos;
 
 import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
-import cn.huacloud.taxpreference.common.enums.UserType;
+import cn.huacloud.taxpreference.common.enums.user.UserType;
 import lombok.Getter;
 import lombok.Setter;
 

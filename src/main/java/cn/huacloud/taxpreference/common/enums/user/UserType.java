@@ -1,4 +1,4 @@
-package cn.huacloud.taxpreference.common.enums;
+package cn.huacloud.taxpreference.common.enums.user;
 
 import com.baomidou.mybatisplus.annotation.IEnum;
 

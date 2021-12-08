@@ -3,7 +3,7 @@ package cn.huacloud.taxpreference.services.user.impl;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.huacloud.taxpreference.common.annotations.PermissionInfo;
 import cn.huacloud.taxpreference.common.enums.PermissionGroup;
-import cn.huacloud.taxpreference.common.enums.UserType;
+import cn.huacloud.taxpreference.common.enums.user.UserType;
 import cn.huacloud.taxpreference.common.exception.MissingPermissionInfoException;
 import cn.huacloud.taxpreference.services.user.PermissionService;
 import cn.huacloud.taxpreference.services.user.entity.dos.PermissionDO;

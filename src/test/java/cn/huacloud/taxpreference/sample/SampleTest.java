@@ -30,6 +30,12 @@ import java.util.regex.Pattern;
 public class SampleTest {
 
     @Test
+    public void testMD5() {
+        String password = SaSecureUtil.md5("123456");
+        log.info(password);
+    }
+
+    @Test
     public void snowFlake() {
         Snowflake snowflake = new Snowflake();
         long nextId = snowflake.nextId();

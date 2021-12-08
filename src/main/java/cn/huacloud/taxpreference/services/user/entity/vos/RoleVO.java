@@ -1,7 +1,7 @@
 package cn.huacloud.taxpreference.services.user.entity.vos;
 
 import cn.huacloud.taxpreference.common.constants.ValidationGroup;
-import cn.huacloud.taxpreference.common.enums.UserType;
+import cn.huacloud.taxpreference.common.enums.user.UserType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

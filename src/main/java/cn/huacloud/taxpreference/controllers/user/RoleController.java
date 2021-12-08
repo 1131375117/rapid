@@ -5,7 +5,7 @@ import cn.huacloud.taxpreference.common.annotations.PermissionInfo;
 import cn.huacloud.taxpreference.common.constants.ValidationGroup;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.PermissionGroup;
-import cn.huacloud.taxpreference.common.enums.UserType;
+import cn.huacloud.taxpreference.common.enums.user.UserType;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.user.PermissionService;
 import cn.huacloud.taxpreference.services.user.RoleService;

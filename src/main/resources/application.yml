@@ -6,7 +6,7 @@ spring:
     active: stream,dev
   application:
     name: tax-preference-server
-    # file upload
+  # file upload
   servlet:
     multipart:
       max-request-size: 128MB
@@ -30,6 +30,9 @@ swagger:
     user:
       title: "用户管理"
       basePackage: cn.huacloud.taxpreference.controllers.user
+    tool:
+      title: "系统工具"
+      basePackage: cn.huacloud.taxpreference.controllers.tool
 
 # mybatis plus
 mybatis-plus:
