@@ -28,6 +28,7 @@
         <hutool.version>5.7.15</hutool.version>
         <pinyin4j.version>2.5.0</pinyin4j.version>
         <jsoup.version>1.14.3</jsoup.version>
+        <guava.version>31.0.1-jre</guava.version>
     </properties>
 
     <dependencies>
@@ -45,7 +46,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>31.0.1-jre</version>
+            <version>${guava.version}</version>
         </dependency>
         <!--pinyin4j-->
         <dependency>
