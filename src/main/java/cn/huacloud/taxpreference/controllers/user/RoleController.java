@@ -3,12 +3,13 @@ package cn.huacloud.taxpreference.controllers.user;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.huacloud.taxpreference.common.annotations.PermissionInfo;
 import cn.huacloud.taxpreference.common.constants.ValidationGroup;
-import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.PermissionGroup;
+import cn.huacloud.taxpreference.common.enums.user.UserType;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.user.PermissionService;
 import cn.huacloud.taxpreference.services.user.RoleService;
+import cn.huacloud.taxpreference.services.user.entity.dtos.RoleQueryDTO;
 import cn.huacloud.taxpreference.services.user.entity.vos.PermissionGroupVO;
 import cn.huacloud.taxpreference.services.user.entity.vos.RoleListVO;
 import cn.huacloud.taxpreference.services.user.entity.vos.RoleVO;
@@ -41,9 +42,9 @@ public class RoleController {
     @SaCheckPermission("role_query")
     @ApiOperation("角色分页列表")
     @PostMapping("/role/query")
-    public ResultVO<PageVO<RoleListVO>> rolePageQuery(@RequestBody PageQueryDTO pageQueryDTO) {
-        pageQueryDTO.paramReasonable();
-        PageVO<RoleListVO> pageVO = roleService.rolePageQuery(pageQueryDTO);
+    public ResultVO<PageVO<RoleListVO>> rolePageQuery(@RequestBody RoleQueryDTO roleQueryDTO) {
+        roleQueryDTO.paramReasonable();
+        PageVO<RoleListVO> pageVO = roleService.rolePageQuery(roleQueryDTO);
         return ResultVO.ok(pageVO);
     }
 
@@ -55,6 +56,9 @@ public class RoleController {
     @ApiOperation("添加角色")
     @PostMapping("/role")
     public ResultVO<RoleVO> saveRole(@Validated(ValidationGroup.Create.class) @RequestBody RoleVO roleVO) {
+        if (roleVO.getUserType() == null) {
+            roleVO.setUserType(UserType.PRODUCER);
+        }
         roleService.saveRole(roleVO);
         return ResultVO.ok(roleVO);
     }
@@ -67,6 +71,9 @@ public class RoleController {
     @ApiOperation("修改角色信息")
     @PutMapping("/role")
     public ResultVO<RoleVO> updateRole(@Validated(ValidationGroup.Create.class)@RequestBody RoleVO roleVO) {
+        if (roleVO.getUserType() == null) {
+            roleVO.setUserType(UserType.PRODUCER);
+        }
         roleService.updateRole(roleVO);
         return ResultVO.ok(roleVO);
     }

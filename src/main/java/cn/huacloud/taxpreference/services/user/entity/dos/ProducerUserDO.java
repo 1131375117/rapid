@@ -9,13 +9,14 @@ import lombok.experimental.Accessors;
 import java.time.LocalDateTime;
 
 /**
- * 生产者用户实体
+ * 用户实体
  * @author wangkh
  */
 @Data
 @Accessors(chain = true)
 @TableName("t_producer_user")
 public class ProducerUserDO {
+
     /**
      * 主键ID
      */
@@ -23,9 +24,19 @@ public class ProducerUserDO {
     private Long id;
 
     /**
-     * 用户ID
+     * 用户账户
      */
-    private Long userId;
+    private String userAccount;
+
+    /**
+     * 用户密码
+     */
+    private String password;
+
+    /**
+     * 用户姓名、昵称
+     */
+    private String username;
 
     /**
      * 电话号码
@@ -41,6 +52,16 @@ public class ProducerUserDO {
      * 邮箱
      */
     private String email;
+
+    /**
+     * 角色码值集合（以","分隔）
+     */
+    private String roleCodes;
+
+    /**
+     * 是否已禁用
+     */
+    private Boolean disable;
 
     /**
      * 创建时间

@@ -1,4 +1,4 @@
-package cn.huacloud.taxpreference.controllers.common;
+package cn.huacloud.taxpreference.controllers.tool;
 
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.config.SysConfig;

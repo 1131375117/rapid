@@ -1,6 +1,6 @@
 package cn.huacloud.taxpreference.services.user.entity.dos;
 
-import cn.huacloud.taxpreference.common.enums.UserType;
+import cn.huacloud.taxpreference.common.enums.user.CreateWay;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * 用户实体
@@ -16,8 +15,8 @@ import java.util.Date;
  */
 @Data
 @Accessors(chain = true)
-@TableName("t_user")
-public class UserDO {
+@TableName("t_consumer_user")
+public class ConsumerUserDO {
 
     /**
      * 主键ID
@@ -41,9 +40,14 @@ public class UserDO {
     private String username;
 
     /**
-     * 用户类型
+     * 电话号码
      */
-    private UserType userType;
+    private String phoneNumber;
+
+    /**
+     * 邮箱
+     */
+    private String email;
 
     /**
      * 角色码值集合（以","分隔）
@@ -51,9 +55,9 @@ public class UserDO {
     private String roleCodes;
 
     /**
-     * 是否已禁用
+     * 创建方式
      */
-    private Boolean disable;
+    private CreateWay createWay;
 
     /**
      * 创建时间

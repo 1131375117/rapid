@@ -1,8 +1,8 @@
 package cn.huacloud.taxpreference.config;
 
 import cn.dev33.satoken.stp.StpInterface;
-import cn.huacloud.taxpreference.common.utils.UserUtil;
-import cn.huacloud.taxpreference.services.user.entity.vos.LoginUserVO;
+import cn.huacloud.taxpreference.common.utils.ProducerUserUtil;
+import cn.huacloud.taxpreference.services.user.entity.vos.ProducerLoginUserVO;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public class StpInterfaceImpl implements StpInterface {
      */
     @Override
     public List<String> getPermissionList(Object loginId, String loginType) {
-        LoginUserVO loginUserVO = UserUtil.getCurrentUser();
+        ProducerLoginUserVO loginUserVO = ProducerUserUtil.getCurrentUser();
         return loginUserVO.getPermissionCodes();
     }
 
@@ -28,7 +28,7 @@ public class StpInterfaceImpl implements StpInterface {
      */
     @Override
     public List<String> getRoleList(Object loginId, String loginType) {
-        LoginUserVO loginUserVO = UserUtil.getCurrentUser();
+        ProducerLoginUserVO loginUserVO = ProducerUserUtil.getCurrentUser();
         return loginUserVO.getRoleCodes();
     }
 }

@@ -14,7 +14,7 @@ import cn.huacloud.taxpreference.services.producer.entity.vos.ProcessInfoVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.ProcessListVO;
 import cn.huacloud.taxpreference.services.producer.mapper.ProcessServiceMapper;
 import cn.huacloud.taxpreference.services.producer.mapper.TaxPreferenceMapper;
-import cn.huacloud.taxpreference.services.user.entity.vos.LoginUserVO;
+import cn.huacloud.taxpreference.services.user.entity.vos.ProducerLoginUserVO;
 import cn.huacloud.taxpreference.sync.es.trigger.impl.TaxPreferenceEventTrigger;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -52,7 +52,7 @@ public class ProcessServiceImpl implements ProcessService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public ResultVO<Void> insertProcessService(Long[] taxPreferenceIds, LoginUserVO currentUser) {
+	public ResultVO<Void> insertProcessService(Long[] taxPreferenceIds, ProducerLoginUserVO currentUser) {
 		log.info("新增流程参数:taxPreferenceIds={},currentUser={}", taxPreferenceIds, currentUser);
 		for (Long taxPreferenceId : taxPreferenceIds) {
 			judgeProcessIng(taxPreferenceId);
@@ -83,7 +83,7 @@ public class ProcessServiceImpl implements ProcessService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public ResultVO<Void> submitProcess(ProcessSubmitDTO processSubmitDTO, LoginUserVO currentUser) {
+	public ResultVO<Void> submitProcess(ProcessSubmitDTO processSubmitDTO, ProducerLoginUserVO currentUser) {
 		log.info("发布申请dto={},currentUser={}", processSubmitDTO, currentUser);
 		ProcessDO processDO = getProcessDO(processSubmitDTO, currentUser);
 		processServiceMapper.updateById(processDO);
@@ -130,7 +130,7 @@ public class ProcessServiceImpl implements ProcessService {
 	/**
 	 * 封装流程对象
 	 */
-	private ProcessDO getProcessDO(ProcessSubmitDTO processSubmitDTO, LoginUserVO currentUser) {
+	private ProcessDO getProcessDO(ProcessSubmitDTO processSubmitDTO, ProducerLoginUserVO currentUser) {
 		ProcessDO processDO = new ProcessDO();
 		BeanUtils.copyProperties(processSubmitDTO, processDO);
 		processDO.setApproverId(currentUser.getId());

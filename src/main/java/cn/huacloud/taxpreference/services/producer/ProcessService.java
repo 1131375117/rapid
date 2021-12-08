@@ -6,7 +6,7 @@ import cn.huacloud.taxpreference.services.producer.entity.dtos.ProcessListDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.ProcessSubmitDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.ProcessInfoVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.ProcessListVO;
-import cn.huacloud.taxpreference.services.user.entity.vos.LoginUserVO;
+import cn.huacloud.taxpreference.services.user.entity.vos.ProducerLoginUserVO;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ public interface ProcessService {
 	 * @param currentUser
 	 * @return resultVO
 	 */
-	ResultVO<Void> insertProcessService(Long[] taxPreferenceIds, LoginUserVO currentUser);
+	ResultVO<Void> insertProcessService(Long[] taxPreferenceIds, ProducerLoginUserVO currentUser);
 
 	/**
 	 * 查询流程列表
@@ -39,7 +39,7 @@ public interface ProcessService {
 	 * @param currentUser
 	 * @return Void
 	 */
-	ResultVO<Void> submitProcess(ProcessSubmitDTO taxPreferenceId, LoginUserVO currentUser);
+	ResultVO<Void> submitProcess(ProcessSubmitDTO taxPreferenceId, ProducerLoginUserVO currentUser);
 
 	/**
 	 * 税收流程审批信息

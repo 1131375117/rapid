@@ -6,8 +6,8 @@ import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.enums.PermissionGroup;
 import cn.huacloud.taxpreference.common.enums.process.ProcessStatus;
+import cn.huacloud.taxpreference.common.utils.ProducerUserUtil;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
-import cn.huacloud.taxpreference.common.utils.UserUtil;
 import cn.huacloud.taxpreference.services.producer.ProcessService;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.ProcessListDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.ProcessSubmitDTO;
@@ -44,7 +44,7 @@ public class ProcessController {
 	@ApiOperation("税收优惠事项审核列表")
 	@PostMapping("/queryProcessList")
 	public ResultVO<PageVO<ProcessListVO>> queryProcessList(@RequestBody ProcessListDTO processListDTO) {
-		return processService.queryProcessList(processListDTO, UserUtil.getCurrentUser().getId());
+		return processService.queryProcessList(processListDTO, ProducerUserUtil.getCurrentUser().getId());
 	}
 
 	/**
@@ -56,7 +56,7 @@ public class ProcessController {
 	@ApiOperation("税收优惠事项批量发布申请")
 	@PostMapping("/process/{taxPreferenceId}")
 	public ResultVO<Void> insertTaxPreference(@Validated() @NotEmpty(message = "税收优惠id不能为空") @PathVariable("taxPreferenceId") Long[] taxPreferenceIds) {
-		return processService.insertProcessService(taxPreferenceIds, UserUtil.getCurrentUser());
+		return processService.insertProcessService(taxPreferenceIds, ProducerUserUtil.getCurrentUser());
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class ProcessController {
 				&& StringUtils.isBlank(processSubmitDTO.getApprovalNote())) {
 			throw BizCode._4301.exception();
 		}
-		return processService.submitProcess(processSubmitDTO, UserUtil.getCurrentUser());
+		return processService.submitProcess(processSubmitDTO, ProducerUserUtil.getCurrentUser());
 	}
 
 	/**

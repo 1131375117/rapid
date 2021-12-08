@@ -23,7 +23,7 @@ public @interface PermissionInfo {
 
     /**
      * 权限分组
-     * @return
+     * @return 权限所属分组
      */
     PermissionGroup group();
 }

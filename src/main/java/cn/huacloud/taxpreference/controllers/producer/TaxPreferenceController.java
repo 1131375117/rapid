@@ -5,8 +5,8 @@ import cn.huacloud.taxpreference.common.annotations.PermissionInfo;
 import cn.huacloud.taxpreference.common.constants.ValidationGroup;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.PermissionGroup;
+import cn.huacloud.taxpreference.common.utils.ProducerUserUtil;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
-import cn.huacloud.taxpreference.common.utils.UserUtil;
 import cn.huacloud.taxpreference.services.producer.TaxPreferenceService;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryTaxPreferencesDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.TaxPreferenceDTO;
@@ -39,7 +39,7 @@ public class TaxPreferenceController {
     @PostMapping("queryTaxPreference")
     public ResultVO<PageVO<QueryTaxPreferencesVO>> queryTaxPreference( @RequestBody QueryTaxPreferencesDTO queryTaxPreferencesDTO) {
         queryTaxPreferencesDTO.paramReasonable();
-        return taxPreferenceService.queryTaxPreferenceList(queryTaxPreferencesDTO, UserUtil.getCurrentUser().getId());
+        return taxPreferenceService.queryTaxPreferenceList(queryTaxPreferencesDTO, ProducerUserUtil.getCurrentUser().getId());
     }
 
     @PermissionInfo(name = "税收优惠新增接口", group = PermissionGroup.TAX_PREFERENCE)
@@ -47,7 +47,7 @@ public class TaxPreferenceController {
     @ApiOperation("税收优惠新增接口")
     @PostMapping("taxPreference")
     public ResultVO<Void> insertTaxPreference(@Validated(ValidationGroup.Create.class) @RequestBody TaxPreferenceDTO taxPreferenceDTO) {
-        return taxPreferenceService.insertTaxPreference(taxPreferenceDTO,UserUtil.getCurrentUser());
+        return taxPreferenceService.insertTaxPreference(taxPreferenceDTO, ProducerUserUtil.getCurrentUser());
     }
 
     @PermissionInfo(name = "税收优惠修改接口", group = PermissionGroup.TAX_PREFERENCE)
@@ -55,7 +55,7 @@ public class TaxPreferenceController {
     @ApiOperation("税收优惠修改接口")
     @PutMapping("taxPreference")
     public ResultVO<Void> updateTaxPreference(@Validated(ValidationGroup.Update.class) @RequestBody TaxPreferenceDTO taxPreferenceDTO) {
-        return taxPreferenceService.updateTaxPreference(taxPreferenceDTO,UserUtil.getCurrentUser());
+        return taxPreferenceService.updateTaxPreference(taxPreferenceDTO, ProducerUserUtil.getCurrentUser());
     }
 
     /**

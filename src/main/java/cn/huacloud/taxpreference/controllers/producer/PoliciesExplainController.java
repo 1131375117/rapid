@@ -3,17 +3,15 @@ package cn.huacloud.taxpreference.controllers.producer;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.huacloud.taxpreference.common.annotations.PermissionInfo;
 import cn.huacloud.taxpreference.common.constants.ValidationGroup;
-import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.PermissionGroup;
+import cn.huacloud.taxpreference.common.utils.ProducerUserUtil;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
-import cn.huacloud.taxpreference.common.utils.UserUtil;
 import cn.huacloud.taxpreference.services.producer.PoliciesExplainService;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesExplainDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesExplainDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainDetailVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainListVO;
-import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesTitleVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +19,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotEmpty;
-import java.util.List;
 
 /**
  * 政策解读接口
@@ -63,7 +60,7 @@ public class PoliciesExplainController {
 	@PostMapping(value = "/policiesExplain")
 	public ResultVO<PoliciesExplainDTO> insertPoliciesExplain(@Validated(ValidationGroup.Create.class) @RequestBody PoliciesExplainDTO policiesExplainDTO) {
 
-		policiesExplainService.insertPoliciesExplain(policiesExplainDTO, UserUtil.getCurrentUser().getId());
+		policiesExplainService.insertPoliciesExplain(policiesExplainDTO, ProducerUserUtil.getCurrentUser().getId());
 		return ResultVO.ok(policiesExplainDTO);
 	}
 
