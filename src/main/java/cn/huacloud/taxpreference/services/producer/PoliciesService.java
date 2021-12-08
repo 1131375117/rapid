@@ -101,8 +101,8 @@ public interface PoliciesService {
 
 	/**
 	 * 关联政策模糊查询
-	 *
-	 * @return 返回
+	 * @param keywordPageQueryDTO 分页条件
+	 * @return
 	 */
 	PageVO<PoliciesTitleVO> fuzzyQuery(KeywordPageQueryDTO keywordPageQueryDTO);
 }

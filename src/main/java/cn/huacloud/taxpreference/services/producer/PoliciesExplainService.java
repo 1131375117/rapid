@@ -19,9 +19,16 @@ public interface PoliciesExplainService {
 	 * 新增政策解读
 	 *
 	 * @param policiesExplainDTO 政策解读入参对象
-	 * @param userId 用户id
+	 * @param userId             用户id
 	 */
 	void insertPoliciesExplain(PoliciesExplainDTO policiesExplainDTO, Long userId);
+
+	/**
+	 * 校验当前政策法规id有没有其他政策解读关联
+	 *
+	 * @param policiesExplainDTO
+	 */
+	void checkAssociation(PoliciesExplainDTO policiesExplainDTO);
 
 	/**
 	 * 修改政策解读
@@ -54,6 +61,8 @@ public interface PoliciesExplainService {
 	 */
 	void deletePoliciesById(Long id);
 
+
+	void deletePoliciesByPolicies(Long policiesId);
 
 
 	/**
