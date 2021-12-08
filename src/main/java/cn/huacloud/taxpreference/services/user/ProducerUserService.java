@@ -19,7 +19,7 @@ public interface ProducerUserService {
     /**
      * 根据用户账户获取用户基础信息
      * @param userAccount 用户账户
-     * @return userDO
+     * @return producerUserDO
      */
     ProducerUserDO getUserDOByUserAccount(String userAccount);
 

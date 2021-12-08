@@ -1,8 +1,9 @@
 package cn.huacloud.taxpreference.services.user;
 
-import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
+import cn.huacloud.taxpreference.common.enums.UserType;
 import cn.huacloud.taxpreference.services.user.entity.dos.RoleDO;
+import cn.huacloud.taxpreference.services.user.entity.dtos.RoleQueryDTO;
 import cn.huacloud.taxpreference.services.user.entity.vos.RoleListVO;
 import cn.huacloud.taxpreference.services.user.entity.vos.RoleVO;
 
@@ -32,8 +33,9 @@ public interface RoleService {
     /**
      * 获取所有的角色码值
      * @return 角色码值集合
+     * @param userType 用户类型
      */
-    Set<String> getAllRoleCodes();
+    Set<String> getAllRoleCodes(UserType userType);
 
     /**
      * 根据角色码值结合
@@ -44,10 +46,10 @@ public interface RoleService {
 
     /**
      * 角色分页列表
-     * @param pageQueryDTO 分页查询条件
+     * @param roleQueryDTO 分页查询条件
      * @return 角色分页列表
      */
-    PageVO<RoleListVO> rolePageQuery(PageQueryDTO pageQueryDTO);
+    PageVO<RoleListVO> rolePageQuery(RoleQueryDTO roleQueryDTO);
 
     /**
      * 添加角色

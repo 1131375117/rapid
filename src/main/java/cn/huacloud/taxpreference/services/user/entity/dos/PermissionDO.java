@@ -6,12 +6,14 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * 权限数据实体
  * @author wangkh
  */
 @Data
+@Accessors(chain = true)
 @TableName("t_permission")
 public class PermissionDO {
     /**

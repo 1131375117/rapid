@@ -66,26 +66,26 @@ public class ProducerSSOController {
         }
 
         // 根据用户名查找用户
-        ProducerUserDO userDO = userService.getUserDOByUserAccount(userAccount);
-        if (userDO == null) {
+        ProducerUserDO producerUserDO = userService.getUserDOByUserAccount(userAccount);
+        if (producerUserDO == null) {
             log.info("用户登录, 用户账户不存在, userAccount: {}", userAccount);
             throw BizCode._4204.exception();
         }
         // 校验用户密码
-        if (!userDO.getPassword().equals(SaSecureUtil.md5(password))) {
+        if (!producerUserDO.getPassword().equals(SaSecureUtil.md5(password))) {
             log.info("用户登录, 密码不正, userAccount: {}", userAccount);
             throw BizCode._4204.exception();
         }
 
         // 检查账号禁用状态
-        if (userDO.getDisable()) {
+        if (producerUserDO.getDisable()) {
             throw BizCode._4205.exception();
         }
 
         // 执行登录
-        StpUtil.login(userDO.getId());
+        StpUtil.login(producerUserDO.getId());
         // 查询用户登录视图
-        ProducerLoginUserVO loginUserVO = userService.getLoginUserVOById(userDO.getId());
+        ProducerLoginUserVO loginUserVO = userService.getLoginUserVOById(producerUserDO.getId());
         // 保存用户登录视图到 session
         StpUtil.getSession().set(ProducerUserUtil.PRODUCER_USER, loginUserVO);
         log.info("用户登录, 用户登录成功, userAccount: {}", userAccount);
@@ -119,6 +119,13 @@ public class ProducerSSOController {
     @GetMapping("/sso/captcha")
     public ResultVO<CaptchaVO> getCaptcha(@RequestParam(name = "width", defaultValue = "600") Integer width,
                                           @RequestParam(name = "height", defaultValue = "300") Integer height) {
+        if (width > 1200) {
+            width = 1200;
+        }
+        if (height > 600) {
+            height = 600;
+        }
+
         // 生成图片验证码
         LineCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(width, height, 4, 200);
         // 属性设置

@@ -37,8 +37,8 @@ public class TestController {
     @ApiOperation("获取用户接口测试")
     @PostMapping("/test/user_test")
     public ResultVO<ProducerUserDO> insertSysCodeTest() {
-        ProducerUserDO userDO = userService.getUserDOByUserAccount("admin");
-        return ResultVO.ok(userDO);
+        ProducerUserDO producerUserDO = userService.getUserDOByUserAccount("admin");
+        return ResultVO.ok(producerUserDO);
     }
 
     @ApiOperation("新增参数校验测试")

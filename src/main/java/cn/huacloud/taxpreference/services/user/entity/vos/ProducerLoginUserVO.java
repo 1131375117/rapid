@@ -1,6 +1,5 @@
 package cn.huacloud.taxpreference.services.user.entity.vos;
 
-import cn.huacloud.taxpreference.common.enums.UserType;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -18,8 +17,6 @@ public class ProducerLoginUserVO {
     private String userAccount;
     @ApiModelProperty("用户名称、昵称")
     private String username;
-    @ApiModelProperty("用户类型")
-    private UserType userType;
     @ApiModelProperty("用户角色")
     private List<String> roleCodes;
     @ApiModelProperty("用户权限")

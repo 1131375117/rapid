@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -20,7 +21,7 @@ public interface RoleMapper extends BaseMapper<RoleDO> {
      * @param queryPage 分页查询条件
      * @return 角色分页列表
      */
-    IPage<RoleListVO> rolePageQuery(IPage<Object> queryPage);
+    IPage<RoleListVO> rolePageQuery(IPage<Object> queryPage, @Param("userType") String userType);
 
     /**
      * 查看角色码值是否存在

@@ -13,10 +13,11 @@
                  LEFT JOIN (
             SELECT id user_id,
                    role_codes
-            FROM t_user
+            FROM t_producer_user
             WHERE deleted = 0
         ) tmp_user
                            ON FIND_IN_SET(t_role.role_code, tmp_user.role_codes)
+        WHERE t_role.user_type = #{userType}
         GROUP BY role_code
     </select>
 </mapper>

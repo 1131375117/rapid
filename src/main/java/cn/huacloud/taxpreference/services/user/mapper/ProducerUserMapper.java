@@ -18,7 +18,7 @@ public interface ProducerUserMapper extends BaseMapper<ProducerUserDO> {
     /**
      * 根据用户账户查询 UserDO
      * @param userAccount 用户账户
-     * @return userDO
+     * @return producerUserDO
      */
     default ProducerUserDO getUserDOByAccount(String userAccount) {
         LambdaQueryWrapper<ProducerUserDO> queryWrapper = Wrappers.lambdaQuery(ProducerUserDO.class)
@@ -30,7 +30,7 @@ public interface ProducerUserMapper extends BaseMapper<ProducerUserDO> {
     /**
      * 根据角色码值查询 UserDO
      * @param roleCode 角色码值
-     * @return userDO
+     * @return producerUserDO
      */
     default List<ProducerUserDO> getUserDOByRoleCode(String roleCode) {
         LambdaQueryWrapper<ProducerUserDO> queryWrapper = Wrappers.lambdaQuery(ProducerUserDO.class)
@@ -42,7 +42,7 @@ public interface ProducerUserMapper extends BaseMapper<ProducerUserDO> {
     /**
      * 根据用户账户查询 UserDO包括被删除
      * @param userAccount 用户账户
-     * @return userDO
+     * @return producerUserDO
      */
     default ProducerUserDO getUserDOByAccountWithDelete(String userAccount) {
         LambdaQueryWrapper<ProducerUserDO> queryWrapper = Wrappers.lambdaQuery(ProducerUserDO.class)

@@ -5,6 +5,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.huacloud.taxpreference.common.constants.UserConstants;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.BizCode;
+import cn.huacloud.taxpreference.common.enums.UserType;
 import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
 import cn.huacloud.taxpreference.services.user.ProducerUserService;
 import cn.huacloud.taxpreference.services.user.RoleService;
@@ -53,19 +54,19 @@ public class ProducerUserServiceImpl implements ProducerUserService {
 
     @Override
     public ProducerLoginUserVO getLoginUserVOById(Long userId) {
-        ProducerUserDO userDO = producerUserMapper.selectById(userId);
+        ProducerUserDO producerUserDO = producerUserMapper.selectById(userId);
         ProducerLoginUserVO loginUserVO = new ProducerLoginUserVO();
-        BeanUtils.copyProperties(userDO, loginUserVO);
+        BeanUtils.copyProperties(producerUserDO, loginUserVO);
 
         // 判断角色码值是否为空
-        if (StringUtils.isBlank(userDO.getRoleCodes())) {
+        if (StringUtils.isBlank(producerUserDO.getRoleCodes())) {
             loginUserVO.setRoleCodes(new ArrayList<>());
             loginUserVO.setPermissionCodes(new ArrayList<>());
             return loginUserVO;
         }
 
         // 设置角色码值
-        List<RoleDO> roleDOList = roleService.getRoleDOByRoleCodes(Arrays.asList(userDO.getRoleCodes().split(",")));
+        List<RoleDO> roleDOList = roleService.getRoleDOByRoleCodes(Arrays.asList(producerUserDO.getRoleCodes().split(",")));
         List<String> roleCodes = roleDOList.stream().map(RoleDO::getRoleCode).sorted().collect(Collectors.toList());
         loginUserVO.setRoleCodes(roleCodes);
         // 设置权限码值
@@ -105,12 +106,12 @@ public class ProducerUserServiceImpl implements ProducerUserService {
         Map<String, RoleVO> allRoleVOMap = roleService.getAllRoleVOMap();
         // 数据映射
         List<ProducerUserListVO> records = iPage.getRecords().stream()
-                .map(userDO -> {
+                .map(producerUserDO -> {
                     ProducerUserListVO userListVO = new ProducerUserListVO();
                     // 基础属性拷贝
-                    BeanUtils.copyProperties(userDO, userListVO);
+                    BeanUtils.copyProperties(producerUserDO, userListVO);
                     // 设置角色
-                    String roleCodes = userDO.getRoleCodes();
+                    String roleCodes = producerUserDO.getRoleCodes();
                     if (StringUtils.isNotBlank(roleCodes)) {
                         List<RoleVO> roleVOList = Arrays.stream(roleCodes.split(","))
                                 .sorted()
@@ -131,37 +132,37 @@ public class ProducerUserServiceImpl implements ProducerUserService {
     @Override
     public void saveProducerUser(ProducerUserVO producerUserVO) {
         // 保存基本用户信息
-        ProducerUserDO userDO = new ProducerUserDO();
-        BeanUtils.copyProperties(producerUserVO, userDO);
+        ProducerUserDO producerUserDO = new ProducerUserDO();
+        BeanUtils.copyProperties(producerUserVO, producerUserDO);
 
         LocalDateTime now = LocalDateTime.now();
 
         // 密码MD5加密
-        userDO.setPassword(SaSecureUtil.md5(producerUserVO.getPassword()))
+        producerUserDO.setPassword(SaSecureUtil.md5(producerUserVO.getPassword()))
                 .setCreateTime(now)
                 .setDisable(false)
                 .setDeleted(false);
         // 执行保存
-        producerUserMapper.insert(userDO);
+        producerUserMapper.insert(producerUserDO);
         // 用户ID回写
-        producerUserVO.setId(userDO.getId());
+        producerUserVO.setId(producerUserDO.getId());
         // 擦除密码
         producerUserVO.setPassword(null);
 
-        log.info("添加后台用户成功，userAccount：{}", userDO.getUserAccount());
+        log.info("添加后台用户成功，userAccount：{}", producerUserDO.getUserAccount());
     }
 
     @Transactional
     @Override
     public void updateProducerUser(ProducerUserVO producerUserVO) {
         // save user
-        ProducerUserDO userDO = producerUserMapper.selectById(producerUserVO.getId());
+        ProducerUserDO producerUserDO = producerUserMapper.selectById(producerUserVO.getId());
         // validate
-        if (userDO == null) {
+        if (producerUserDO == null) {
             throw BizCode._4100.exception();
         }
         // 管理员账号名称不能被修改
-        if (UserConstants.ADMIN_USER_NAME.equalsIgnoreCase(userDO.getUserAccount())
+        if (UserConstants.ADMIN_USER_NAME.equalsIgnoreCase(producerUserDO.getUserAccount())
                 && !UserConstants.ADMIN_USER_NAME.equalsIgnoreCase(producerUserVO.getUserAccount())) {
             throw BizCode._4213.exception();
         }
@@ -172,29 +173,29 @@ public class ProducerUserServiceImpl implements ProducerUserService {
             throw BizCode._4212.exception();
         }
 
-        CustomBeanUtil.copyProperties(producerUserVO, userDO, true);
+        CustomBeanUtil.copyProperties(producerUserVO, producerUserDO, true);
 
         if (producerUserVO.getPassword() != null) {
             // password md5
-            userDO.setPassword(SaSecureUtil.md5(producerUserVO.getPassword()));
+            producerUserDO.setPassword(SaSecureUtil.md5(producerUserVO.getPassword()));
         }
 
         // execute save
-        producerUserMapper.updateById(userDO);
+        producerUserMapper.updateById(producerUserDO);
 
         // 擦除密码
         producerUserVO.setPassword(null);
-        log.info("更新后台用户信息成功，userAccount：{}", userDO.getUserAccount());
+        log.info("更新后台用户信息成功，userAccount：{}", producerUserDO.getUserAccount());
     }
 
     @Override
     public ProducerUserVO getProducerUserByUserId(Long userId) {
-        ProducerUserDO userDO = producerUserMapper.selectById(userId);
+        ProducerUserDO producerUserDO = producerUserMapper.selectById(userId);
         // validate
-        if (userDO == null) {
+        if (producerUserDO == null) {
             throw BizCode._4100.exception();
         }
-        ProducerUserVO producerUserVO = CustomBeanUtil.copyProperties(userDO, ProducerUserVO.class);
+        ProducerUserVO producerUserVO = CustomBeanUtil.copyProperties(producerUserDO, ProducerUserVO.class);
         // 擦除密码
         producerUserVO.setPassword(null);
         return producerUserVO;
@@ -203,61 +204,61 @@ public class ProducerUserServiceImpl implements ProducerUserService {
     @Transactional
     @Override
     public Boolean switchDisableProducerUser(Long userId) {
-        ProducerUserDO userDO = producerUserMapper.selectById(userId);
+        ProducerUserDO producerUserDO = producerUserMapper.selectById(userId);
         // validate
-        if (userDO == null) {
+        if (producerUserDO == null) {
             throw BizCode._4100.exception();
         }
         // 检查是否为管理员用户
-        adminUserCheck(userDO.getUserAccount());
+        adminUserCheck(producerUserDO.getUserAccount());
 
-        userDO.setDisable(!userDO.getDisable());
-        producerUserMapper.updateById(userDO);
+        producerUserDO.setDisable(!producerUserDO.getDisable());
+        producerUserMapper.updateById(producerUserDO);
         // 禁用用户
-        if (userDO.getDisable()) {
+        if (producerUserDO.getDisable()) {
             StpUtil.logout(userId);
         }
-        log.info("切换用户禁用状态成功，userAccount：{}，disable：{}", userDO.getUserAccount(), userDO.getDisable());
-        return userDO.getDisable();
+        log.info("切换用户禁用状态成功，userAccount：{}，disable：{}", producerUserDO.getUserAccount(), producerUserDO.getDisable());
+        return producerUserDO.getDisable();
     }
 
     @Override
     public void removeProducerUser(Long userId) {
-        ProducerUserDO userDO = producerUserMapper.selectById(userId);
+        ProducerUserDO producerUserDO = producerUserMapper.selectById(userId);
         // validate
-        if (userDO == null) {
+        if (producerUserDO == null) {
             throw BizCode._4100.exception();
         }
         // 检查是否为管理员用户
-        adminUserCheck(userDO.getUserAccount());
-        userDO.setDeleted(true);
-        producerUserMapper.updateById(userDO);
+        adminUserCheck(producerUserDO.getUserAccount());
+        producerUserDO.setDeleted(true);
+        producerUserMapper.updateById(producerUserDO);
     }
 
     @Override
     public void setRoleToUser(Long userId, List<String> roleCodes) {
-        ProducerUserDO userDO = producerUserMapper.selectById(userId);
+        ProducerUserDO producerUserDO = producerUserMapper.selectById(userId);
         // validate
-        if (userDO == null) {
+        if (producerUserDO == null) {
             throw BizCode._4100.exception();
         }
 
         // 检查是否为管理员用户
-        adminUserCheck(userDO.getUserAccount());
+        adminUserCheck(producerUserDO.getUserAccount());
 
-        Set<String> allRoleCodes = roleService.getAllRoleCodes();
+        Set<String> allRoleCodes = roleService.getAllRoleCodes(UserType.PRODUCER);
         Set<String> setRoleCodes = new HashSet<>(roleCodes);
 
         // 取角色码值交集
         setRoleCodes.retainAll(allRoleCodes);
 
         String roleCodesStr = String.join(",", setRoleCodes);
-        userDO.setRoleCodes(roleCodesStr);
+        producerUserDO.setRoleCodes(roleCodesStr);
 
         // 保存更新
-        producerUserMapper.updateById(userDO);
+        producerUserMapper.updateById(producerUserDO);
 
-        log.info("修改用户拥有的角色成功， userAccount：{}，roleCodes：{}", userDO.getUserAccount(), userDO.getRoleCodes());
+        log.info("修改用户拥有的角色成功， userAccount：{}，roleCodes：{}", producerUserDO.getUserAccount(), producerUserDO.getRoleCodes());
 
         // 设置权限后注销指定用户
         // StpUtil.logout(userId);
@@ -265,23 +266,23 @@ public class ProducerUserServiceImpl implements ProducerUserService {
 
     @Override
     public void removeUserRole(Long userId, String roleCode) {
-        ProducerUserDO userDO = producerUserMapper.selectById(userId);
+        ProducerUserDO producerUserDO = producerUserMapper.selectById(userId);
         // 参数校验
-        if (userDO == null) {
+        if (producerUserDO == null) {
             throw BizCode._4100.exception();
         }
         // 检查是否为管理员用户
-        adminUserCheck(userDO.getUserAccount());
+        adminUserCheck(producerUserDO.getUserAccount());
 
-        Set<String> roleCodeList = new HashSet<>(Arrays.asList(userDO.getRoleCodes().split(",")));
+        Set<String> roleCodeList = new HashSet<>(Arrays.asList(producerUserDO.getRoleCodes().split(",")));
         // 移除角色
         roleCodeList.remove(roleCode);
         String roleCodesStr = String.join(",", roleCodeList);
-        userDO.setRoleCodes(roleCodesStr);
+        producerUserDO.setRoleCodes(roleCodesStr);
 
         // 执行保存
-        producerUserMapper.updateById(userDO);
-        log.info("移除后台用户角色成功， userAccount：{}， roleCode：{}", userDO.getUserAccount(), roleCode);
+        producerUserMapper.updateById(producerUserDO);
+        log.info("移除后台用户角色成功， userAccount：{}， roleCode：{}", producerUserDO.getUserAccount(), roleCode);
     }
 
     @Override
@@ -298,14 +299,14 @@ public class ProducerUserServiceImpl implements ProducerUserService {
 
         Map<String, RoleVO> allRoleVOMap = roleService.getAllRoleVOMap();
         for (UserRoleAddDTO addDTO : userRoleAddVOList) {
-            ProducerUserDO userDO = producerUserMapper.selectById(addDTO.getUserId());
+            ProducerUserDO producerUserDO = producerUserMapper.selectById(addDTO.getUserId());
             // 用户校验
-            if (userDO == null) {
+            if (producerUserDO == null) {
                 throw BizCode._4100.exception();
             }
 
             // 跳过管理员
-            if (UserConstants.ADMIN_USER_NAME.equalsIgnoreCase(userDO.getUserAccount())) {
+            if (UserConstants.ADMIN_USER_NAME.equalsIgnoreCase(producerUserDO.getUserAccount())) {
                 continue;
             }
 
@@ -314,11 +315,11 @@ public class ProducerUserServiceImpl implements ProducerUserService {
                 continue;
             }
             // 属性设置
-            String roleCodes = separatorStrAddElement(userDO.getRoleCodes(), addDTO.getAddRoleCode());
-            userDO.setRoleCodes(roleCodes);
+            String roleCodes = separatorStrAddElement(producerUserDO.getRoleCodes(), addDTO.getAddRoleCode());
+            producerUserDO.setRoleCodes(roleCodes);
             // 执行更新
-            producerUserMapper.updateById(userDO);
-            log.info("为用户添加指定权限, userAccount: {} userName: {} roleCode: {}", userDO.getUserAccount(), userDO.getUsername(), addDTO.getAddRoleCode());
+            producerUserMapper.updateById(producerUserDO);
+            log.info("为用户添加指定权限, userAccount: {} userName: {} roleCode: {}", producerUserDO.getUserAccount(), producerUserDO.getUsername(), addDTO.getAddRoleCode());
         }
     }
 
