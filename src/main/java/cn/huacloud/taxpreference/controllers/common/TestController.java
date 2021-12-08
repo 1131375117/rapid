@@ -2,8 +2,8 @@ package cn.huacloud.taxpreference.controllers.common;
 
 import cn.huacloud.taxpreference.common.constants.ValidationGroup;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
-import cn.huacloud.taxpreference.services.user.UserService;
-import cn.huacloud.taxpreference.services.user.entity.dos.UserDO;
+import cn.huacloud.taxpreference.services.user.ProducerUserService;
+import cn.huacloud.taxpreference.services.user.entity.dos.ProducerUserDO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,15 +29,15 @@ import java.time.LocalDateTime;
 @RestController
 public class TestController {
 
-    private final UserService userService;
+    private final ProducerUserService userService;
 
     @Autowired
     private final ObjectMapper objectMapper;
 
     @ApiOperation("获取用户接口测试")
     @PostMapping("/test/user_test")
-    public ResultVO<UserDO> insertSysCodeTest() {
-        UserDO userDO = userService.getUserDOByUserAccount("admin");
+    public ResultVO<ProducerUserDO> insertSysCodeTest() {
+        ProducerUserDO userDO = userService.getUserDOByUserAccount("admin");
         return ResultVO.ok(userDO);
     }
 

@@ -11,7 +11,7 @@ import java.util.List;
  * @author wangkh
  */
 @Data
-public class LoginUserVO {
+public class ProducerLoginUserVO {
     @ApiModelProperty("用户ID")
     private Long id;
     @ApiModelProperty("用户账户")

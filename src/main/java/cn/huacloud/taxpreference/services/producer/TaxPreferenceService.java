@@ -9,7 +9,7 @@ import cn.huacloud.taxpreference.services.producer.entity.vos.QueryTaxPreference
 import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceAbolishVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceCountVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceVO;
-import cn.huacloud.taxpreference.services.user.entity.vos.LoginUserVO;
+import cn.huacloud.taxpreference.services.user.entity.vos.ProducerLoginUserVO;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ public interface TaxPreferenceService {
 	 * @param currentUser
 	 * @return resultVO
 	 */
-	ResultVO<Void> insertTaxPreference(TaxPreferenceDTO taxPreferenceDTO, LoginUserVO currentUser);
+	ResultVO<Void> insertTaxPreference(TaxPreferenceDTO taxPreferenceDTO, ProducerLoginUserVO currentUser);
 
 	/**
 	 * 修改税收优惠接口
@@ -36,7 +36,7 @@ public interface TaxPreferenceService {
 	 * @param currentUser
 	 * @return resultVO
 	 */
-	ResultVO<Void> updateTaxPreference(TaxPreferenceDTO taxPreferenceDTO, LoginUserVO currentUser);
+	ResultVO<Void> updateTaxPreference(TaxPreferenceDTO taxPreferenceDTO, ProducerLoginUserVO currentUser);
 
 	/**
 	 * 修改税收优惠查询基本信息接口

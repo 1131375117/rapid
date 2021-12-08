@@ -5,23 +5,20 @@ import cn.huacloud.taxpreference.common.annotations.PermissionInfo;
 import cn.huacloud.taxpreference.common.constants.ValidationGroup;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.PermissionGroup;
+import cn.huacloud.taxpreference.common.utils.ProducerUserUtil;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
-import cn.huacloud.taxpreference.common.utils.UserUtil;
 import cn.huacloud.taxpreference.services.producer.FrequentlyAskedQuestionService;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.FrequentlyAskedQuestionDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesExplainDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.FrequentlyAskedQuestionDetailVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.FrequentlyAskedQuestionVO;
-import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainDetailVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotEmpty;
-import java.util.List;
 
 /**
  * 热门问答接口
@@ -62,7 +59,7 @@ public class FrequentlyAskedQuestionController {
 			@Validated(ValidationGroup.Create.class) @RequestBody
 					FrequentlyAskedQuestionDTO frequentlyAskedQuestionDTO) {
 		frequentlyAskedQuestionService.insertFrequentlyAskedQuestion(
-				frequentlyAskedQuestionDTO, UserUtil.getCurrentUser().getId());
+				frequentlyAskedQuestionDTO, ProducerUserUtil.getCurrentUser().getId());
 		return ResultVO.ok();
 	}
 

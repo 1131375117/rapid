@@ -6,8 +6,8 @@ import cn.huacloud.taxpreference.common.constants.ValidationGroup;
 import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.PermissionGroup;
+import cn.huacloud.taxpreference.common.utils.ProducerUserUtil;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
-import cn.huacloud.taxpreference.common.utils.UserUtil;
 import cn.huacloud.taxpreference.services.producer.PoliciesService;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesCombinationDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryAbolishDTO;
@@ -66,7 +66,7 @@ public class PoliciesController {
 	public ResultVO<PoliciesCombinationDTO> savePolicies(
 			@Validated(ValidationGroup.Create.class) @ApiParam("政策法规组合") @RequestBody
 					PoliciesCombinationDTO policiesCombinationDTO) {
-		policiesService.savePolicies(policiesCombinationDTO, UserUtil.getCurrentUser().getId());
+		policiesService.savePolicies(policiesCombinationDTO, ProducerUserUtil.getCurrentUser().getId());
 		return ResultVO.ok(policiesCombinationDTO);
 	}
 
@@ -98,7 +98,7 @@ public class PoliciesController {
 	public ResultVO<Void> updatePolicies(
 			@Validated(ValidationGroup.Update.class) @RequestBody
 					PoliciesCombinationDTO policiesCombinationDTO) {
-		policiesCombinationDTO.setInputUserId(UserUtil.getCurrentUser().getId());
+		policiesCombinationDTO.setInputUserId(ProducerUserUtil.getCurrentUser().getId());
 		policiesService.updatePolicies(policiesCombinationDTO);
 		return ResultVO.ok();
 	}

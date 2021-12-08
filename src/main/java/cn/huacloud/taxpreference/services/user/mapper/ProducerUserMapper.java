@@ -6,39 +6,47 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
- * 生产者用户数据操作
+ * 用户数据操作
  * @author wangkh
  */
 @Repository
 public interface ProducerUserMapper extends BaseMapper<ProducerUserDO> {
+
     /**
-     * 根据用户ID查询后台用户信息
-     * @param userId 用户ID
-     * @return
+     * 根据用户账户查询 UserDO
+     * @param userAccount 用户账户
+     * @return userDO
      */
-    default ProducerUserDO selectByUserId(Long userId) {
+    default ProducerUserDO getUserDOByAccount(String userAccount) {
         LambdaQueryWrapper<ProducerUserDO> queryWrapper = Wrappers.lambdaQuery(ProducerUserDO.class)
-                .eq(ProducerUserDO::getUserId, userId);
+                .eq(ProducerUserDO::getUserAccount, userAccount)
+                .eq(ProducerUserDO::getDeleted, false);
         return selectOne(queryWrapper);
     }
 
     /**
-     * 根据用户ids
-     * @param userIds 用户ID集合
-     * @return map key: userId, value: producerUserDO
+     * 根据角色码值查询 UserDO
+     * @param roleCode 角色码值
+     * @return userDO
      */
-    default Map<Long, ProducerUserDO> getMapByUserIds(List<Long> userIds) {
-        if (userIds.isEmpty()) {
-            return new HashMap<>();
-        }
+    default List<ProducerUserDO> getUserDOByRoleCode(String roleCode) {
         LambdaQueryWrapper<ProducerUserDO> queryWrapper = Wrappers.lambdaQuery(ProducerUserDO.class)
-                .in(ProducerUserDO::getUserId, userIds);
-        return selectList(queryWrapper).stream().collect(Collectors.toMap(ProducerUserDO::getUserId, value -> value));
+                .eq(ProducerUserDO::getDeleted, false)
+                .apply("FIND_IN_SET ('" + roleCode + "', role_Codes)");
+        return selectList(queryWrapper);
+    }
+
+    /**
+     * 根据用户账户查询 UserDO包括被删除
+     * @param userAccount 用户账户
+     * @return userDO
+     */
+    default ProducerUserDO getUserDOByAccountWithDelete(String userAccount) {
+        LambdaQueryWrapper<ProducerUserDO> queryWrapper = Wrappers.lambdaQuery(ProducerUserDO.class)
+                .eq(ProducerUserDO::getUserAccount, userAccount);
+        return selectOne(queryWrapper);
     }
 }

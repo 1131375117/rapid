@@ -3,8 +3,8 @@ package cn.huacloud.taxpreference.controllers.consumer;
 import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
+import cn.huacloud.taxpreference.common.utils.ProducerUserUtil;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
-import cn.huacloud.taxpreference.common.utils.UserUtil;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeCountVO;
 import cn.huacloud.taxpreference.services.consumer.HotContentService;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.GuessYouLikeQueryDTO;
@@ -47,8 +47,8 @@ public class HotContentController {
     @PostMapping("/hotContent/guessYouLike")
     public ResultVO<PageVO<HotContentVO>> guessYouLike(@RequestBody GuessYouLikeQueryDTO pageQuery) throws Exception {
         pageQuery.paramReasonable();
-        if (UserUtil.isLogin()) {
-            pageQuery.setUserId(UserUtil.getCurrentUserId());
+        if (ProducerUserUtil.isLogin()) {
+            pageQuery.setUserId(ProducerUserUtil.getCurrentUserId());
         }
         PageVO<HotContentVO> pageVO = hotContentService.guessYouLike(pageQuery);
         return ResultVO.ok(pageVO);
