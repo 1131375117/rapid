@@ -6,6 +6,7 @@ import cn.huacloud.taxpreference.services.common.mapper.DocStatisticsMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,7 +18,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class DocStatisticsServiceImpl implements DocStatisticsService {
     private final DocStatisticsMapper docStatisticsMapper;
-    private final DocStatisticsService docStatisticsService;
+    private  DocStatisticsService docStatisticsService;
+
+    @Autowired
+    public void setDocStatisticsService(DocStatisticsService docStatisticsService) {
+        this.docStatisticsService = docStatisticsService;
+    }
 
     @Override
     public void insertDocStatisticsService(DocStatisticsDO docStatisticsDO) {
