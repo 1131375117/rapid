@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.common.entity.dos;
 
+import cn.huacloud.taxpreference.common.enums.DocType;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -24,7 +25,7 @@ public class DocStatisticsDO {
     /**
      * 文档类型
      * */
-    private String docType;
+    private DocType docType;
 
     /**
      * 文档id
