@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.consumer.entity.dos;
 
+import cn.huacloud.taxpreference.common.enums.CollectionType;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -31,7 +32,7 @@ public class CollectionDO {
     /**
      * 收藏类型
      */
-    private String collectionType;
+    private CollectionType collectionType;
 
     /**
      * 数据源id

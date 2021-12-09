@@ -1,7 +1,9 @@
 package cn.huacloud.taxpreference.sync.es.trigger.impl;
 
-import cn.huacloud.taxpreference.common.enums.DocDetailsType;
+import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
+import cn.huacloud.taxpreference.services.common.DocStatisticsService;
+import cn.huacloud.taxpreference.services.common.entity.dos.DocStatisticsDO;
 import cn.huacloud.taxpreference.services.consumer.entity.ess.OtherDocES;
 import cn.huacloud.taxpreference.services.producer.entity.dos.OtherDocDO;
 import cn.huacloud.taxpreference.services.producer.mapper.OtherDocMapper;
@@ -19,6 +21,7 @@ import java.util.function.Supplier;
 
 /**
  * 税收优惠ES数据事件触发器
+ *
  * @author fuhua
  */
 @RequiredArgsConstructor
@@ -26,6 +29,7 @@ import java.util.function.Supplier;
 public class OtherDocEventTrigger extends EventTrigger<Long, OtherDocES> {
 
     private final OtherDocMapper otherDocMapper;
+    private final DocStatisticsService statisticsService;
 
 
     @Bean
@@ -39,16 +43,20 @@ public class OtherDocEventTrigger extends EventTrigger<Long, OtherDocES> {
     }
 
     @Override
-    protected DocDetailsType triggerType() {
-        return DocDetailsType.OTHER_DOC;
+    public DocType docType() {
+        return DocType.CASE_ANALYSIS;
     }
 
     @Override
     protected OtherDocES getEntityById(Long id) {
         OtherDocDO otherDocDO = otherDocMapper.selectById(id);
+        DocStatisticsDO docStatisticsDO = statisticsService.selectDocStatistics(id, docType());
+
         // 属性拷贝
         OtherDocES otherDocES = CustomBeanUtil.copyProperties(otherDocDO, OtherDocES.class);
+        CustomBeanUtil.copyProperties(docStatisticsDO, OtherDocES.class);
         otherDocES.setDocType(otherDocDO.getDocType().getSysCode());
+
         return otherDocES;
     }
 

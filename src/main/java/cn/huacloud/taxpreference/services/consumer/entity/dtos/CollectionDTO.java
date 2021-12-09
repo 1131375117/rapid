@@ -1,6 +1,6 @@
 package cn.huacloud.taxpreference.services.consumer.entity.dtos;
 
-import cn.huacloud.taxpreference.common.enums.DocType;
+import cn.huacloud.taxpreference.common.enums.CollectionType;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -19,7 +19,7 @@ public class CollectionDTO {
     /**
      * 消费者用户id
      */
-    @ApiModelProperty("消费者用户id")
+    @ApiModelProperty(hidden = true)
     private Long consumerUserId;
 
     /**
@@ -27,7 +27,7 @@ public class CollectionDTO {
      */
     @ApiModelProperty("收藏类型")
     @NotEmpty(message = "收藏类型不能为空")
-    private String collectionType;
+    private CollectionType collectionType;
 
     /**
      * 数据源id
@@ -36,13 +36,5 @@ public class CollectionDTO {
     @NotEmpty(message = "收藏id不能为空")
     private Long sourceId;
 
-    @ApiModelProperty("状态,true-代表已收藏,false代表未收藏")
-    @NotEmpty(message = "收藏状态必传")
-    private Boolean status;
 
-    /**
-     * 文档类型
-     */
-    @ApiModelProperty("文档类型")
-    private DocType docType;
 }

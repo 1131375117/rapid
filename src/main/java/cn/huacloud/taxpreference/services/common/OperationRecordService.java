@@ -1,6 +1,7 @@
 package cn.huacloud.taxpreference.services.common;
 
 import cn.huacloud.taxpreference.services.common.entity.dtos.OperationRecordDTO;
+import cn.huacloud.taxpreference.services.user.entity.vos.ProducerLoginUserVO;
 
 /**
  * 操作记录服务
@@ -10,7 +11,8 @@ import cn.huacloud.taxpreference.services.common.entity.dtos.OperationRecordDTO;
 public interface OperationRecordService {
     /**
      * 操作记录
-     * @param operationRecordDO
+     * @param operationRecordDTO
+     * @param currentUser
      */
-    void operationRecord(OperationRecordDTO operationRecordDO);
+    void operationRecord(OperationRecordDTO operationRecordDTO, ProducerLoginUserVO currentUser);
 }

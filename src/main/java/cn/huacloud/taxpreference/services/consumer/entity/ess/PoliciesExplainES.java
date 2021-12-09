@@ -6,7 +6,6 @@ import cn.huacloud.taxpreference.services.consumer.entity.CombineText;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -61,6 +60,16 @@ public class PoliciesExplainES extends AbstractCombinePlainContent<Long> {
      * 正文
      */
     private String content;
+
+    /**
+     * 浏览量
+     */
+    private Long views;
+
+    /**
+     * 收藏量
+     */
+    private Long collections;
 
     @Override
     public List<CombineText> combineTextList() {
