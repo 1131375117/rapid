@@ -29,6 +29,7 @@
         <pinyin4j.version>2.5.0</pinyin4j.version>
         <jsoup.version>1.14.3</jsoup.version>
         <guava.version>31.0.1-jre</guava.version>
+        <tencentcloud-sdk-java-sms>3.1.410</tencentcloud-sdk-java-sms>
     </properties>
 
     <dependencies>
@@ -46,7 +47,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
+            <version>31.0.1-jre</version>
         </dependency>
         <!--pinyin4j-->
         <dependency>
@@ -168,6 +169,11 @@
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
             <version>${jsoup.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.tencentcloudapi</groupId>
+            <artifactId>tencentcloud-sdk-java</artifactId>
+            <version>${tencentcloud-sdk-java-sms}</version>
         </dependency>
     </dependencies>
 
