@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.sync.es.trigger.impl;
 
+import cn.huacloud.taxpreference.common.enums.DocDetailsType;
 import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
 import cn.huacloud.taxpreference.services.consumer.entity.ess.FrequentlyAskedQuestionES;
 import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO;
@@ -34,6 +35,12 @@ public class FAQEventTrigger extends EventTrigger<Long, FrequentlyAskedQuestionE
     @Bean
     public Supplier<Flux<Long>> deleteFAQSuppler() {
         return deleteMany::asFlux;
+    }
+
+
+    @Override
+    protected DocDetailsType triggerType() {
+        return DocDetailsType.FREQUENTLY_ASKED_QUESTION;
     }
 
     @Override
