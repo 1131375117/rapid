@@ -42,7 +42,7 @@ public class ConsumerSSOController {
     }
 
     @ApiOperation("用户注册")
-    @PostMapping("/consumer/sso/passwordLogin")
+    @PostMapping("/consumer/sso/register")
     public ResultVO<ProducerLoginUserVO> register() {
 
         return ResultVO.ok(null);
