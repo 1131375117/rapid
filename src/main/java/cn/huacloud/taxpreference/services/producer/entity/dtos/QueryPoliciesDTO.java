@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
- * 政策犯规条件类
+ * 政策法规条件类
  *
  * @author wuxin
  */
