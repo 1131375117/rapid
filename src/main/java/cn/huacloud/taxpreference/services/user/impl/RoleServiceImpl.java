@@ -1,17 +1,18 @@
 package cn.huacloud.taxpreference.services.user.impl;
 
 import cn.huacloud.taxpreference.common.constants.UserConstants;
-import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.BizCode;
+import cn.huacloud.taxpreference.common.enums.user.UserType;
 import cn.huacloud.taxpreference.services.user.PermissionService;
 import cn.huacloud.taxpreference.services.user.RoleService;
+import cn.huacloud.taxpreference.services.user.entity.dos.ProducerUserDO;
 import cn.huacloud.taxpreference.services.user.entity.dos.RoleDO;
-import cn.huacloud.taxpreference.services.user.entity.dos.UserDO;
+import cn.huacloud.taxpreference.services.user.entity.dtos.RoleQueryDTO;
 import cn.huacloud.taxpreference.services.user.entity.vos.RoleListVO;
 import cn.huacloud.taxpreference.services.user.entity.vos.RoleVO;
+import cn.huacloud.taxpreference.services.user.mapper.ProducerUserMapper;
 import cn.huacloud.taxpreference.services.user.mapper.RoleMapper;
-import cn.huacloud.taxpreference.services.user.mapper.UserMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
@@ -36,7 +37,7 @@ public class RoleServiceImpl implements RoleService {
 
     private final RoleMapper roleMapper;
 
-    private final UserMapper userMapper;
+    private final ProducerUserMapper userMapper;
 
     private final PermissionService permissionService;
 
@@ -56,8 +57,9 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Set<String> getAllRoleCodes() {
+    public Set<String> getAllRoleCodes(UserType userType) {
         return roleMapper.selectList(null).stream()
+                .filter(roleDO -> roleDO.getUserType() == userType )
                 .map(RoleDO::getRoleCode)
                 .collect(Collectors.toSet());
     }
@@ -73,8 +75,8 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public PageVO<RoleListVO> rolePageQuery(PageQueryDTO pageQueryDTO) {
-        IPage<RoleListVO> pageVO = roleMapper.rolePageQuery(pageQueryDTO.createQueryPage());
+    public PageVO<RoleListVO> rolePageQuery(RoleQueryDTO roleQueryDTO) {
+        IPage<RoleListVO> pageVO = roleMapper.rolePageQuery(roleQueryDTO.createQueryPage(), roleQueryDTO.getUserType().getValue());
         // 处理权限码值
         for (RoleListVO record : pageVO.getRecords()) {
             String permissionCodes = record.getPermissionCodes();
@@ -129,8 +131,8 @@ public class RoleServiceImpl implements RoleService {
         checkAdminRole(roleDO.getRoleCode());
 
         // 参数校验，只能删除未被使用的角色
-        List<UserDO> userDOS = userMapper.getUserDOByRoleCode(roleDO.getRoleCode());
-        if (userDOS.size() > 0) {
+        List<ProducerUserDO> producerUserDOS = userMapper.getUserDOByRoleCode(roleDO.getRoleCode());
+        if (producerUserDOS.size() > 0) {
             throw BizCode._4207.exception();
         }
 

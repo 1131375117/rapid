@@ -3,6 +3,7 @@ package cn.huacloud.taxpreference.services.user.impl;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.huacloud.taxpreference.common.annotations.PermissionInfo;
 import cn.huacloud.taxpreference.common.enums.PermissionGroup;
+import cn.huacloud.taxpreference.common.enums.user.UserType;
 import cn.huacloud.taxpreference.common.exception.MissingPermissionInfoException;
 import cn.huacloud.taxpreference.services.user.PermissionService;
 import cn.huacloud.taxpreference.services.user.entity.dos.PermissionDO;
@@ -93,10 +94,11 @@ public class PermissionServiceImpl implements PermissionService, CommandLineRunn
                         log.info("Controller方法 {} 添加了@SaCheckPermission注解, 但并未添加@PermissionInfo注解", handlerMethodName);
                         throw new MissingPermissionInfoException("Missing handler method name: " + handlerMethodName);
                     }
-                    PermissionDO permissionDO = new PermissionDO();
-                    permissionDO.setPermissionCode(saCheckPermission.value()[0]);
-                    permissionDO.setPermissionName(permissionInfo.name());
-                    permissionDO.setPermissionGroup(permissionInfo.group());
+                    PermissionDO permissionDO = new PermissionDO()
+                            .setUserType(UserType.PRODUCER)
+                            .setPermissionCode(saCheckPermission.value()[0])
+                            .setPermissionName(permissionInfo.name())
+                            .setPermissionGroup(permissionInfo.group());
                     return permissionDO;
                 }).filter(Objects::nonNull)
                 // 根据权限码值进行排序

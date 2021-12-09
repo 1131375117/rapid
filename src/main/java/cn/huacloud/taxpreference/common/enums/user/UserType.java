@@ -1,4 +1,4 @@
-package cn.huacloud.taxpreference.common.enums;
+package cn.huacloud.taxpreference.common.enums.user;
 
 import com.baomidou.mybatisplus.annotation.IEnum;
 
@@ -9,7 +9,9 @@ import com.baomidou.mybatisplus.annotation.IEnum;
 public enum UserType implements IEnum<String> {
 
     // 生产者用户
-    PRODUCER_USER;
+    PRODUCER,
+    // 消费者用户
+    CONSUMER;
 
     @Override
     public String getValue() {

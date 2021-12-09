@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Data
 @ApiModel
-public class UserListVO {
+public class ProducerUserListVO {
     @ApiModelProperty("用户ID")
     private Long id;
     @ApiModelProperty("用户账户")

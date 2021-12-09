@@ -20,7 +20,7 @@ import cn.huacloud.taxpreference.services.producer.entity.dtos.*;
 import cn.huacloud.taxpreference.services.producer.entity.enums.ValidityEnum;
 import cn.huacloud.taxpreference.services.producer.entity.vos.*;
 import cn.huacloud.taxpreference.services.producer.mapper.*;
-import cn.huacloud.taxpreference.services.user.entity.vos.LoginUserVO;
+import cn.huacloud.taxpreference.services.user.entity.vos.ProducerLoginUserVO;
 import cn.huacloud.taxpreference.sync.es.trigger.impl.TaxPreferenceEventTrigger;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -59,7 +59,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResultVO<Void> insertTaxPreference(TaxPreferenceDTO taxPreferenceDTO, LoginUserVO currentUser) {
+    public ResultVO<Void> insertTaxPreference(TaxPreferenceDTO taxPreferenceDTO, ProducerLoginUserVO currentUser) {
         log.info("新增政策法规dto={}", taxPreferenceDTO);
         taxPreferenceDTO.setInputUserId(currentUser.getId());
         // 检查优惠事项名称是否存在
@@ -86,7 +86,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     /**
      * 是否需要发布
      */
-    private void isRequireReleased(TaxPreferenceDTO taxPreferenceDTO, LoginUserVO currentUser, TaxPreferenceDO taxPreferenceDO) {
+    private void isRequireReleased(TaxPreferenceDTO taxPreferenceDTO, ProducerLoginUserVO currentUser, TaxPreferenceDO taxPreferenceDO) {
         if (TaxStatus.SUBMIT.equals(taxPreferenceDTO.getStatus())) {
             processService.insertProcessService(new Long[]{(taxPreferenceDO.getId())}, currentUser);
         }
@@ -94,7 +94,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResultVO<Void> updateTaxPreference(TaxPreferenceDTO taxPreferenceDTO, LoginUserVO currentUser) {
+    public ResultVO<Void> updateTaxPreference(TaxPreferenceDTO taxPreferenceDTO, ProducerLoginUserVO currentUser) {
         // 判断是否已经发布
         judgeRelease(taxPreferenceDTO.getId());
         // 判断是否在审批中

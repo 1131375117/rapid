@@ -1,41 +1,41 @@
 package cn.huacloud.taxpreference.services.user;
 
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
-import cn.huacloud.taxpreference.services.user.entity.dos.UserDO;
+import cn.huacloud.taxpreference.services.user.entity.dos.ProducerUserDO;
 import cn.huacloud.taxpreference.services.user.entity.dtos.UserQueryDTO;
 import cn.huacloud.taxpreference.services.user.entity.dtos.UserRoleAddDTO;
-import cn.huacloud.taxpreference.services.user.entity.vos.LoginUserVO;
+import cn.huacloud.taxpreference.services.user.entity.vos.ProducerLoginUserVO;
+import cn.huacloud.taxpreference.services.user.entity.vos.ProducerUserListVO;
 import cn.huacloud.taxpreference.services.user.entity.vos.ProducerUserVO;
-import cn.huacloud.taxpreference.services.user.entity.vos.UserListVO;
 
 import java.util.List;
 
 /**
- * 用户服务
+ * 生产者用户服务
  * @author wangkh
  */
-public interface UserService {
+public interface ProducerUserService {
 
     /**
      * 根据用户账户获取用户基础信息
      * @param userAccount 用户账户
-     * @return userDO
+     * @return producerUserDO
      */
-    UserDO getUserDOByUserAccount(String userAccount);
+    ProducerUserDO getUserDOByUserAccount(String userAccount);
 
     /**
      * 根据用户ID取登录用户视图
      * @param userId 用户ID
      * @return loginUserVO
      */
-    LoginUserVO getLoginUserVOById(Long userId);
+    ProducerLoginUserVO getLoginUserVOById(Long userId);
 
     /**
      * 查询用户列表
      * @param userQueryDTO 用户信息查询类
      * @return 用户分页数据
      */
-    PageVO<UserListVO> producerUserPageQuery(UserQueryDTO userQueryDTO);
+    PageVO<ProducerUserListVO> producerUserPageQuery(UserQueryDTO userQueryDTO);
 
     /**
      * 新增后台用户
@@ -85,8 +85,8 @@ public interface UserService {
 
     /**
      *
-     * @param userAccount
-     * @return
+     * @param userAccount 用户账户
+     * @return 是否存在
      */
     boolean isUserAccountExist(String userAccount);
 

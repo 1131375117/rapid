@@ -17,7 +17,7 @@
         p.create_time as createTime,
         u.username as userName
         from t_tax_preference t,
-        t_user u,
+        t_producer_user u,
         t_process p
         <where>
             and t.input_user_id = u.id

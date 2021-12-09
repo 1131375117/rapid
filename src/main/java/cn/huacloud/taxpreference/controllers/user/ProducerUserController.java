@@ -8,11 +8,11 @@ import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.enums.PermissionGroup;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.common.utils.ValidationUtil;
-import cn.huacloud.taxpreference.services.user.UserService;
+import cn.huacloud.taxpreference.services.user.ProducerUserService;
 import cn.huacloud.taxpreference.services.user.entity.dtos.UserQueryDTO;
 import cn.huacloud.taxpreference.services.user.entity.dtos.UserRoleAddDTO;
+import cn.huacloud.taxpreference.services.user.entity.vos.ProducerUserListVO;
 import cn.huacloud.taxpreference.services.user.entity.vos.ProducerUserVO;
-import cn.huacloud.taxpreference.services.user.entity.vos.UserListVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -27,13 +27,13 @@ import java.util.List;
  * 用户接口
  * @author wangkh
  */
-@Api(tags = "用户管理")
+@Api(tags = "后台用户管理")
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
 @RestController
-public class UserController {
+public class ProducerUserController {
 
-    private final UserService userService;
+    private final ProducerUserService userService;
 
     /**
      * 查询后台用户列表
@@ -43,9 +43,9 @@ public class UserController {
     @SaCheckPermission("producer_user_query")
     @ApiOperation("查询后台用户列表")
     @PostMapping("/producer/user/query")
-    public ResultVO<PageVO<UserListVO>> producerUserPageQuery(@RequestBody UserQueryDTO userQueryDTO) {
+    public ResultVO<PageVO<ProducerUserListVO>> producerUserPageQuery(@RequestBody UserQueryDTO userQueryDTO) {
         userQueryDTO.paramReasonable();
-        PageVO<UserListVO> pageVO = userService.producerUserPageQuery(userQueryDTO);
+        PageVO<ProducerUserListVO> pageVO = userService.producerUserPageQuery(userQueryDTO);
         return ResultVO.ok(pageVO);
     }
 
@@ -144,7 +144,7 @@ public class UserController {
     }
 
     @ApiOperation(value = "检查用户账号是否已存在", notes = "true：已存在，不可用；false：不存在，可用")
-    @GetMapping("/user/account/exist")
+    @GetMapping("/producer/user/account/exist")
     public ResultVO<Boolean> isUserAccountExist(String userAccount) {
         boolean exist = userService.isUserAccountExist(userAccount);
         return ResultVO.ok(exist);
