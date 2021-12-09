@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.common.impl;
 
+import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.services.common.DocStatisticsService;
 import cn.huacloud.taxpreference.services.common.entity.dos.DocStatisticsDO;
 import cn.huacloud.taxpreference.services.common.mapper.DocStatisticsMapper;
@@ -17,44 +18,41 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class DocStatisticsServiceImpl implements DocStatisticsService {
     private final DocStatisticsMapper docStatisticsMapper;
-    private final DocStatisticsService docStatisticsService;
 
     @Override
-    public void insertDocStatisticsService(DocStatisticsDO docStatisticsDO) {
-        docStatisticsMapper.insert(docStatisticsDO);
-    }
-
-    @Override
-    public DocStatisticsDO selectOne(DocStatisticsDO docStatisticsDO) {
+    public DocStatisticsDO selectDocStatistics(Long docId, DocType docType) {
         LambdaQueryWrapper<DocStatisticsDO> queryWrapper = Wrappers.lambdaQuery(DocStatisticsDO.class)
-                .eq(DocStatisticsDO::getDocType, docStatisticsDO.getDocType())
-                .eq(DocStatisticsDO::getDocId, docStatisticsDO.getDocId());
+                .eq(DocStatisticsDO::getDocType, docType)
+                .eq(DocStatisticsDO::getDocId, docId);
         return docStatisticsMapper.selectOne(queryWrapper);
     }
 
-    @Override
-    public Long selectCount(DocStatisticsDO docStatisticsDO) {
-        LambdaQueryWrapper<DocStatisticsDO> queryWrapper = Wrappers.lambdaQuery(DocStatisticsDO.class)
-                .eq(DocStatisticsDO::getDocType, docStatisticsDO.getDocType())
-                .eq(DocStatisticsDO::getDocId, docStatisticsDO.getDocId());
-        return docStatisticsMapper.selectCount(queryWrapper);
-    }
-
-    @Override
-    public void updateDocStatisticsService(DocStatisticsDO docStatisticsDO) {
-        docStatisticsMapper.update(docStatisticsDO);
-    }
 
     @Override
     public void saveOrUpdateDocStatisticsService(DocStatisticsDO docStatisticsDO) {
         if (exists(docStatisticsDO)) {
-            docStatisticsService.insertDocStatisticsService(docStatisticsDO);
+            insertDocStatisticsService(docStatisticsDO);
         } else {
-            docStatisticsService.updateDocStatisticsService(docStatisticsDO);
+            updateDocStatisticsService(docStatisticsDO);
         }
     }
 
     private boolean exists(DocStatisticsDO docStatisticsDO) {
-        return docStatisticsService.selectCount(docStatisticsDO) == 0;
+        return selectCount(docStatisticsDO) == 0;
+    }
+
+    private void updateDocStatisticsService(DocStatisticsDO docStatisticsDO) {
+        docStatisticsMapper.update(docStatisticsDO);
+    }
+
+    private void insertDocStatisticsService(DocStatisticsDO docStatisticsDO) {
+        docStatisticsMapper.insert(docStatisticsDO);
+    }
+
+    private Long selectCount(DocStatisticsDO docStatisticsDO) {
+        LambdaQueryWrapper<DocStatisticsDO> queryWrapper = Wrappers.lambdaQuery(DocStatisticsDO.class)
+                .eq(DocStatisticsDO::getDocType, docStatisticsDO.getDocType())
+                .eq(DocStatisticsDO::getDocId, docStatisticsDO.getDocId());
+        return docStatisticsMapper.selectCount(queryWrapper);
     }
 }

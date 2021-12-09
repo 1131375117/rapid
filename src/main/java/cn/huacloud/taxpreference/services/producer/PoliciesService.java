@@ -105,4 +105,5 @@ public interface PoliciesService {
 	 * @return
 	 */
 	PageVO<PoliciesTitleVO> fuzzyQuery(KeywordPageQueryDTO keywordPageQueryDTO);
+
 }

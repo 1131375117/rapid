@@ -1,6 +1,9 @@
 package cn.huacloud.taxpreference.sync.es.trigger.impl;
 
+import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
+import cn.huacloud.taxpreference.services.common.DocStatisticsService;
+import cn.huacloud.taxpreference.services.common.entity.dos.DocStatisticsDO;
 import cn.huacloud.taxpreference.services.consumer.entity.ess.FrequentlyAskedQuestionES;
 import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO;
 import cn.huacloud.taxpreference.services.producer.mapper.FrequentlyAskedQuestionMapper;
@@ -18,6 +21,7 @@ import java.util.function.Supplier;
 
 /**
  * 热点问答ES数据事件触发器
+ *
  * @author wangkh
  */
 @RequiredArgsConstructor
@@ -25,6 +29,8 @@ import java.util.function.Supplier;
 public class FAQEventTrigger extends EventTrigger<Long, FrequentlyAskedQuestionES> {
 
     private final FrequentlyAskedQuestionMapper frequentlyAskedQuestionMapper;
+
+    private final DocStatisticsService docStatisticsService;
 
     @Bean
     public Supplier<Flux<FrequentlyAskedQuestionES>> saveFAQSuppler() {
@@ -36,15 +42,25 @@ public class FAQEventTrigger extends EventTrigger<Long, FrequentlyAskedQuestionE
         return deleteMany::asFlux;
     }
 
+
+    @Override
+    public DocType docType() {
+        return DocType.FREQUENTLY_ASKED_QUESTION;
+    }
+
     @Override
     protected FrequentlyAskedQuestionES getEntityById(Long id) {
         FrequentlyAskedQuestionDO faqDO = frequentlyAskedQuestionMapper.selectById(id);
+        DocStatisticsDO docStatisticsDO = docStatisticsService.selectDocStatistics(id, docType());
+
         if (faqDO.getDeleted()) {
             return null;
         }
 
         // 属性拷贝
         FrequentlyAskedQuestionES faqES = CustomBeanUtil.copyProperties(faqDO, FrequentlyAskedQuestionES.class);
+        faqES.setCollections(docStatisticsDO.getCollections());
+        faqES.setViews(docStatisticsDO.getViews());
 
         // 属性转换
         faqES.setPoliciesIds(split2List(faqDO.getPoliciesIds()));

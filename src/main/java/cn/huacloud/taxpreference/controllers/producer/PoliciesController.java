@@ -162,12 +162,17 @@ public class PoliciesController {
 		return ResultVO.ok();
 	}
 
+	/**
+	 * 校验标题和文号是否重复
+	 * @param titleOrDocCode
+	 * @return
+	 */
 	@PermissionInfo(name = "政策法规标题和文号校验", group = PermissionGroup.POLICIES)
 	@SaCheckPermission("producer_policies_checkTitleAndDocCode")
 	@ApiOperation("政策法规标题和文号校验")
 	@GetMapping(value = "/policies/checkTitleAndDocCode")
 	public ResultVO<Boolean> checkTitleAndDocCode(
-			@Validated @RequestParam String titleOrDocCode) {
+			@Validated @RequestParam(value = "titleOrDocCode") String titleOrDocCode) {
 		Boolean aBoolean = policiesService.checkTitleAndDocCode(titleOrDocCode);
 		return ResultVO.ok(aBoolean);
 	}
@@ -184,5 +189,6 @@ public class PoliciesController {
 		PageVO<PoliciesTitleVO> pageVO = policiesService.fuzzyQuery(keywordPageQueryDTO);
 		return ResultVO.ok(pageVO);
 	}
+
 
 }

@@ -2,7 +2,9 @@ package cn.huacloud.taxpreference.services.consumer.impl;
 
 import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
+import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.services.common.DocStatisticsService;
+import cn.huacloud.taxpreference.services.common.SysParamService;
 import cn.huacloud.taxpreference.services.common.entity.dos.DocStatisticsDO;
 import cn.huacloud.taxpreference.services.consumer.CollectionService;
 import cn.huacloud.taxpreference.services.consumer.entity.dos.CollectionDO;
@@ -31,16 +33,19 @@ public class CollectionServiceImpl implements CollectionService {
 
     private final CollectionMapper collectionMapper;
     private final DocStatisticsService docStatisticsService;
+    private final SysParamService sysParamService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void saveOrCancelCollection(CollectionDTO collectionDtO) {
+
         //保存收藏
         CollectionDO collectionDO = new CollectionDO();
         DocStatisticsDO docStatisticsDO = new DocStatisticsDO()
                 .setDocId(collectionDtO.getSourceId())
-                .setDocType(collectionDtO.getDocType());
+                .setDocType(DocType.valueOf(collectionDtO.getCollectionType().name));
         BeanUtils.copyProperties(collectionDtO, collectionDO);
+
         if (getStatus(collectionDtO)) {
             collectionMapper.deleteById(collectionDO);
             docStatisticsDO.setCollections(-1L);
@@ -69,6 +74,11 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     private Boolean getStatus(CollectionDTO collectionDtO) {
-        return collectionDtO.getStatus();
+        LambdaQueryWrapper<CollectionDO> queryWrapper = Wrappers.lambdaQuery(CollectionDO.class)
+                .eq(CollectionDO::getConsumerUserId, collectionDtO.getConsumerUserId())
+                .eq(CollectionDO::getCollectionType, collectionDtO.getCollectionType())
+                .eq(CollectionDO::getSourceId, collectionDtO.getSourceId());
+        Long count = collectionMapper.selectCount(queryWrapper);
+        return count != 0;
     }
 }

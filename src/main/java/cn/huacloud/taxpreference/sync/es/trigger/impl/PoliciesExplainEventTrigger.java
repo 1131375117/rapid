@@ -1,7 +1,10 @@
 package cn.huacloud.taxpreference.sync.es.trigger.impl;
 
+import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
+import cn.huacloud.taxpreference.services.common.DocStatisticsService;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
+import cn.huacloud.taxpreference.services.common.entity.dos.DocStatisticsDO;
 import cn.huacloud.taxpreference.services.consumer.entity.ess.PoliciesExplainES;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesExplainDO;
@@ -21,6 +24,7 @@ import java.util.function.Supplier;
 
 /**
  * 政策解读ES数据事件触发器
+ *
  * @author wangkh
  */
 @RequiredArgsConstructor
@@ -33,6 +37,8 @@ public class PoliciesExplainEventTrigger extends EventTrigger<Long, PoliciesExpl
 
     private final SysCodeService sysCodeService;
 
+    private final DocStatisticsService statisticsService;
+
     @Bean
     public Supplier<Flux<PoliciesExplainES>> savePoliciesExplainSuppler() {
         return saveMany::asFlux;
@@ -44,8 +50,15 @@ public class PoliciesExplainEventTrigger extends EventTrigger<Long, PoliciesExpl
     }
 
     @Override
+    public DocType docType() {
+        return DocType.POLICIES_EXPLAIN;
+    }
+
+    @Override
     protected PoliciesExplainES getEntityById(Long id) {
+        DocStatisticsDO docStatisticsDO = statisticsService.selectDocStatistics(id, docType());
         PoliciesExplainDO policiesExplainDO = policiesExplainMapper.selectById(id);
+
         if (policiesExplainDO.getDeleted()) {
             return null;
         }
@@ -57,6 +70,7 @@ public class PoliciesExplainEventTrigger extends EventTrigger<Long, PoliciesExpl
 
         // 属性拷贝
         PoliciesExplainES policiesExplainES = CustomBeanUtil.copyProperties(policiesExplainDO, PoliciesExplainES.class);
+        CustomBeanUtil.copyProperties(docStatisticsDO, PoliciesExplainES.class);
 
         // 类型转换属性设置
         policiesExplainES.setTaxCategories(sysCodeService.getSimpleVOByCode(policiesDO.getTaxCategoriesCode()));

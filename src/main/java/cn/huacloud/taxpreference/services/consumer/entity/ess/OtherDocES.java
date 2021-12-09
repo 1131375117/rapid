@@ -47,5 +47,15 @@ public class OtherDocES implements IDGetter<Object> {
      */
     private String extendsField2;
 
+    /**
+     * 浏览量
+     */
+    private Long views;
+
+    /**
+     * 收藏量
+     */
+    private Long collections;
+
 
 }
