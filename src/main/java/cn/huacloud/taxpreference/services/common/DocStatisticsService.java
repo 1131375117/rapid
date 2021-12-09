@@ -17,7 +17,7 @@ public interface DocStatisticsService {
      * @param doctype
      * @return
      */
-    DocStatisticsDO selectOne(Long docId , DocType doctype);
+    DocStatisticsDO selectDocStatistics(Long docId , DocType doctype);
 
     /**
      * 修改或保存统计

@@ -20,7 +20,7 @@ public class DocStatisticsServiceImpl implements DocStatisticsService {
     private final DocStatisticsMapper docStatisticsMapper;
 
     @Override
-    public DocStatisticsDO selectOne(Long docId, DocType docType) {
+    public DocStatisticsDO selectDocStatistics(Long docId, DocType docType) {
         LambdaQueryWrapper<DocStatisticsDO> queryWrapper = Wrappers.lambdaQuery(DocStatisticsDO.class)
                 .eq(DocStatisticsDO::getDocType, docType)
                 .eq(DocStatisticsDO::getDocId, docId);

@@ -51,7 +51,7 @@ public class PoliciesEventTrigger extends EventTrigger<Long, PoliciesES> {
 
     @Override
     protected PoliciesES getEntityById(Long id) {
-        DocStatisticsDO docStatisticsDO = statisticsService.selectOne(id, docType());
+        DocStatisticsDO docStatisticsDO = statisticsService.selectDocStatistics(id, docType());
         PoliciesDO policiesDO = policiesMapper.selectById(id);
         if (policiesDO.getDeleted()) {
             return null;

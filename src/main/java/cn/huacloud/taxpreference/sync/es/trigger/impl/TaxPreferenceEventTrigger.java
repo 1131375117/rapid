@@ -67,7 +67,7 @@ public class TaxPreferenceEventTrigger extends EventTrigger<Long, TaxPreferenceE
 
     @Override
     protected TaxPreferenceES getEntityById(Long id) {
-        DocStatisticsDO docStatisticsDO = statisticsService.selectOne(id, docType());
+        DocStatisticsDO docStatisticsDO = statisticsService.selectDocStatistics(id, docType());
         TaxPreferenceDO taxPreferenceDO = taxPreferenceMapper.selectById(id);
         if (taxPreferenceDO.getDeleted() || taxPreferenceDO.getTaxPreferenceStatus() == TaxPreferenceStatus.UNRELEASED) {
             return null;

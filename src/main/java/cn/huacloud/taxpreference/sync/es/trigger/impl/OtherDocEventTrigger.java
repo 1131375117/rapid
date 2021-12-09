@@ -50,7 +50,7 @@ public class OtherDocEventTrigger extends EventTrigger<Long, OtherDocES> {
     @Override
     protected OtherDocES getEntityById(Long id) {
         OtherDocDO otherDocDO = otherDocMapper.selectById(id);
-        DocStatisticsDO docStatisticsDO = statisticsService.selectOne(id, docType());
+        DocStatisticsDO docStatisticsDO = statisticsService.selectDocStatistics(id, docType());
 
         // 属性拷贝
         OtherDocES otherDocES = CustomBeanUtil.copyProperties(otherDocDO, OtherDocES.class);

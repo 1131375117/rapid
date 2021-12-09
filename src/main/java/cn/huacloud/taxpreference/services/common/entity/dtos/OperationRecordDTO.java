@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotEmpty;
+
 /**
  * 操作记录实体
  *
@@ -21,6 +23,7 @@ public class OperationRecordDTO {
      * 操作类型
      */
     @ApiModelProperty("操作类型")
+    @NotEmpty(message = "操作类型不能为空")
     private DocType operationType;
 
     /**

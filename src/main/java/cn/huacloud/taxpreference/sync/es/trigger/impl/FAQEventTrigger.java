@@ -51,7 +51,7 @@ public class FAQEventTrigger extends EventTrigger<Long, FrequentlyAskedQuestionE
     @Override
     protected FrequentlyAskedQuestionES getEntityById(Long id) {
         FrequentlyAskedQuestionDO faqDO = frequentlyAskedQuestionMapper.selectById(id);
-        DocStatisticsDO docStatisticsDO = docStatisticsService.selectOne(id, docType());
+        DocStatisticsDO docStatisticsDO = docStatisticsService.selectDocStatistics(id, docType());
 
         if (faqDO.getDeleted()) {
             return null;
