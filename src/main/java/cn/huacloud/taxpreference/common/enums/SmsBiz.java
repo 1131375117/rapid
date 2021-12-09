@@ -11,7 +11,7 @@ import java.util.List;
  */
 public enum SmsBiz implements SysParamTypesGetter {
 
-    SEND_LOGIN_VERIFICATION_CODE("发送登录验证码", Arrays.asList("", ""));
+    SEND_LOGIN_VERIFICATION_CODE("发送登录验证码", Arrays.asList("sms.base", "sms.login.verificationCode"));
     /**
      * 系统码值类型
      */

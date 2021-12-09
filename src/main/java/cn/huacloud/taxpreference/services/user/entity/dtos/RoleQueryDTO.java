@@ -12,6 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RoleQueryDTO extends PageQueryDTO {
+
     private UserType userType;
 
     @Override

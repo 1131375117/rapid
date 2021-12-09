@@ -7,5 +7,9 @@ import java.util.List;
  */
 public interface SysParamTypesGetter {
 
+    /**
+     * 返回参数类型集合
+     * @return 参数类型集合
+     */
     List<String> getSysParamTypes();
 }
