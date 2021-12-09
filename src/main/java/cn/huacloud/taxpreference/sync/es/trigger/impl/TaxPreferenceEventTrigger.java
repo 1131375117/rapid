@@ -3,7 +3,9 @@ package cn.huacloud.taxpreference.sync.es.trigger.impl;
 import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.common.enums.taxpreference.TaxPreferenceStatus;
 import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
+import cn.huacloud.taxpreference.services.common.DocStatisticsService;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
+import cn.huacloud.taxpreference.services.common.entity.dos.DocStatisticsDO;
 import cn.huacloud.taxpreference.services.consumer.entity.ess.TaxPreferenceES;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesDigestSearchVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.SubmitConditionSearchVO;
@@ -29,6 +31,7 @@ import java.util.stream.Collectors;
 
 /**
  * 税收优惠ES数据事件触发器
+ *
  * @author wangkh
  */
 @RequiredArgsConstructor
@@ -44,6 +47,8 @@ public class TaxPreferenceEventTrigger extends EventTrigger<Long, TaxPreferenceE
     private final ProcessServiceMapper processServiceMapper;
 
     private final SysCodeService sysCodeService;
+
+    private final DocStatisticsService statisticsService;
 
     @Bean
     public Supplier<Flux<TaxPreferenceES>> saveTaxPreferenceSuppler() {
@@ -62,6 +67,7 @@ public class TaxPreferenceEventTrigger extends EventTrigger<Long, TaxPreferenceE
 
     @Override
     protected TaxPreferenceES getEntityById(Long id) {
+        DocStatisticsDO docStatisticsDO = statisticsService.selectOne(id, docType());
         TaxPreferenceDO taxPreferenceDO = taxPreferenceMapper.selectById(id);
         if (taxPreferenceDO.getDeleted() || taxPreferenceDO.getTaxPreferenceStatus() == TaxPreferenceStatus.UNRELEASED) {
             return null;
@@ -69,6 +75,7 @@ public class TaxPreferenceEventTrigger extends EventTrigger<Long, TaxPreferenceE
 
         // 属性拷贝
         TaxPreferenceES taxPreferenceES = CustomBeanUtil.copyProperties(taxPreferenceDO, TaxPreferenceES.class);
+        CustomBeanUtil.copyProperties(docStatisticsDO, TaxPreferenceES.class);
 
         // 类型转换属性设置
         taxPreferenceES.setTitle(taxPreferenceDO.getTaxPreferenceName());

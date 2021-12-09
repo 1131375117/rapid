@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.common;
 
+import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.services.common.entity.dos.DocStatisticsDO;
 
 /**
@@ -8,37 +9,18 @@ import cn.huacloud.taxpreference.services.common.entity.dos.DocStatisticsDO;
  * @author hua-cloud
  */
 public interface DocStatisticsService {
-    /**
-     * 统计服务数据插入
-     *
-     * @param docStatisticsDO
-     */
-    void insertDocStatisticsService(DocStatisticsDO docStatisticsDO);
+
 
     /**
      * 查询
-     *
-     * @param docStatisticsDO
+     * @param docId
+     * @param doctype
+     * @return
      */
-    DocStatisticsDO selectOne(DocStatisticsDO docStatisticsDO);
+    DocStatisticsDO selectOne(Long docId , DocType doctype);
 
     /**
-     * 查询个数
-     *
-     * @param docStatisticsDO
-     */
-    Long selectCount(DocStatisticsDO docStatisticsDO);
-
-    /**
-     * 统计服务数据修改
-     *
-     * @param docStatisticsDO
-     */
-    void updateDocStatisticsService(DocStatisticsDO docStatisticsDO);
-
-    /**
-     * 统计服务数据修改或保存
-     *
+     * 修改或保存统计
      * @param docStatisticsDO
      */
     void saveOrUpdateDocStatisticsService(DocStatisticsDO docStatisticsDO);

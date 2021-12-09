@@ -7,7 +7,7 @@ import cn.huacloud.taxpreference.services.common.entity.dtos.OperationRecordDTO;
 /**
  * @author hua-cloud
  */
-public interface Subject {
+public interface WatchOperation {
 
     boolean supported(DocType docType);
 

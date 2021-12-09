@@ -10,7 +10,8 @@ import cn.huacloud.taxpreference.services.common.entity.dos.OperationRecordDO;
 import cn.huacloud.taxpreference.services.common.entity.dos.SysParamDO;
 import cn.huacloud.taxpreference.services.common.entity.dtos.OperationRecordDTO;
 import cn.huacloud.taxpreference.services.common.mapper.OperationRecordMapper;
-import cn.huacloud.taxpreference.services.common.watch.WatchSubject;
+import cn.huacloud.taxpreference.services.common.watch.WatchViews;
+import cn.huacloud.taxpreference.services.user.entity.vos.ProducerLoginUserVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class OperationRecordServiceImpl implements OperationRecordService {
 
     private final OperationRecordMapper operationRecordMapper;
 
-    private  DocStatisticsService docStatisticsService;
+    private DocStatisticsService docStatisticsService;
 
     @Autowired
     public void setDocStatisticsService(DocStatisticsService docStatisticsService) {
@@ -36,17 +37,18 @@ public class OperationRecordServiceImpl implements OperationRecordService {
     }
 
     private final SysParamService sysParamService;
-    private final WatchSubject watchSubject;
+    private final WatchViews watchSubject;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void operationRecord(OperationRecordDTO operationRecordDTO) {
+    public void operationRecord(OperationRecordDTO operationRecordDTO, ProducerLoginUserVO currentUser) {
 
         /*
          * 插入操作记录表
          * */
         OperationRecordDO operationRecordDO = new OperationRecordDO();
         BeanUtils.copyProperties(operationRecordDTO, operationRecordDO);
+        operationRecordDO.setConsumerUserId(currentUser.getId());
         operationRecordMapper.insert(operationRecordDO);
 
         /*
@@ -69,7 +71,7 @@ public class OperationRecordServiceImpl implements OperationRecordService {
         /*
          * 写入es
          * */
-        watchSubject.apply(docStatisticsDO.getDocType(),operationRecordDTO);
+        watchSubject.apply(docStatisticsDO.getDocType(), operationRecordDTO);
 
     }
 

@@ -2,7 +2,7 @@ package cn.huacloud.taxpreference.sync.es.trigger.impl;
 
 import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
-import cn.huacloud.taxpreference.services.common.SysParamService;
+import cn.huacloud.taxpreference.services.common.DocStatisticsService;
 import cn.huacloud.taxpreference.services.common.entity.dos.DocStatisticsDO;
 import cn.huacloud.taxpreference.services.consumer.entity.ess.FrequentlyAskedQuestionES;
 import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO;
@@ -21,6 +21,7 @@ import java.util.function.Supplier;
 
 /**
  * 热点问答ES数据事件触发器
+ *
  * @author wangkh
  */
 @RequiredArgsConstructor
@@ -29,7 +30,7 @@ public class FAQEventTrigger extends EventTrigger<Long, FrequentlyAskedQuestionE
 
     private final FrequentlyAskedQuestionMapper frequentlyAskedQuestionMapper;
 
-    private final SysParamService sysParamService;
+    private final DocStatisticsService docStatisticsService;
 
     @Bean
     public Supplier<Flux<FrequentlyAskedQuestionES>> saveFAQSuppler() {
@@ -49,9 +50,8 @@ public class FAQEventTrigger extends EventTrigger<Long, FrequentlyAskedQuestionE
 
     @Override
     protected FrequentlyAskedQuestionES getEntityById(Long id) {
-        new DocStatisticsDO().setDocId(id).setDocType(DocType.FREQUENTLY_ASKED_QUESTION);
         FrequentlyAskedQuestionDO faqDO = frequentlyAskedQuestionMapper.selectById(id);
-       // sysParamService.selectByParamKey()
+        DocStatisticsDO docStatisticsDO = docStatisticsService.selectOne(id, docType());
 
         if (faqDO.getDeleted()) {
             return null;
@@ -59,6 +59,8 @@ public class FAQEventTrigger extends EventTrigger<Long, FrequentlyAskedQuestionE
 
         // 属性拷贝
         FrequentlyAskedQuestionES faqES = CustomBeanUtil.copyProperties(faqDO, FrequentlyAskedQuestionES.class);
+        faqES.setCollections(docStatisticsDO.getCollections());
+        faqES.setViews(docStatisticsDO.getViews());
 
         // 属性转换
         faqES.setPoliciesIds(split2List(faqDO.getPoliciesIds()));

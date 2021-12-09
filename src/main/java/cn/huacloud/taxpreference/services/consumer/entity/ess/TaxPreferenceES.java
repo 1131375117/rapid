@@ -111,6 +111,16 @@ public class TaxPreferenceES extends AbstractCombinePlainContent<Long> {
      */
     private List<String> labels;
 
+    /**
+     * 浏览量
+     */
+    private Long views;
+
+    /**
+     * 收藏量
+     */
+    private Long collections;
+
 
     @Override
     public List<CombineText> combineTextList() {

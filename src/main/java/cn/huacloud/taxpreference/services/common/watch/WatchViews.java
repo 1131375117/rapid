@@ -16,20 +16,19 @@ import java.util.HashMap;
  **/
 @Service
 @RequiredArgsConstructor
-public class WatchSubject implements Subject, ApplicationContextAware {
+public class WatchViews implements WatchOperation, ApplicationContextAware {
     private final HashMap<DocType, EventTrigger<Long, Object>> sourceMap = new HashMap<>();
 
     @Override
     public boolean supported(DocType docType) {
-        return true;
+        return sourceMap.containsKey(docType);
     }
 
     @Override
-    public void apply(DocType docType,OperationRecordDTO operationRecordDTO) {
+    public void apply(DocType docType, OperationRecordDTO operationRecordDTO) {
         if (supported(docType)) {
             sourceMap.get(docType).saveEvent(Long.valueOf(operationRecordDTO.getOperationParam()));
         }
-
     }
 
 

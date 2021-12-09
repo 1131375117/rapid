@@ -1,8 +1,10 @@
 package cn.huacloud.taxpreference.controllers.common;
 
+import cn.huacloud.taxpreference.common.utils.ConsumerUerUtil;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.common.OperationRecordService;
 import cn.huacloud.taxpreference.services.common.entity.dtos.OperationRecordDTO;
+import cn.huacloud.taxpreference.services.user.entity.vos.ProducerLoginUserVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -31,8 +33,8 @@ public class OperationRecordController {
     @ApiOperation("操作记录接口")
     @PostMapping("/operationRecord")
     public ResultVO<Void> operationRecord(@Validated OperationRecordDTO operationRecordDO) {
-        //todo 获取当前登录用户
-        operationRecord.operationRecord(operationRecordDO);
+        ProducerLoginUserVO currentUser = ConsumerUerUtil.getCurrentUser();
+        operationRecord.operationRecord(operationRecordDO,currentUser);
         return ResultVO.ok();
     }
 }
