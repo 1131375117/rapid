@@ -1,5 +1,7 @@
 package cn.huacloud.taxpreference.services.common.entity.dtos;
 
+import cn.huacloud.taxpreference.common.enums.DocDetailsType;
+import cn.huacloud.taxpreference.common.enums.DocType;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -20,7 +22,13 @@ public class OperationRecordDTO {
      * 操作类型
      */
     @ApiModelProperty("操作类型")
-    private String operationType;
+    private DocDetailsType operationType;
+
+    /**
+     * 文档类型
+     */
+    @ApiModelProperty("文档类型")
+    private DocType docType;
 
     /**
      * 操作参数

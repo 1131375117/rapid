@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.sync.es.trigger.impl;
 
+import cn.huacloud.taxpreference.common.enums.DocDetailsType;
 import cn.huacloud.taxpreference.common.enums.taxpreference.TaxPreferenceStatus;
 import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
@@ -52,6 +53,11 @@ public class TaxPreferenceEventTrigger extends EventTrigger<Long, TaxPreferenceE
     @Bean
     public Supplier<Flux<Long>> deleteTaxPreferenceSuppler() {
         return deleteMany::asFlux;
+    }
+
+    @Override
+    protected DocDetailsType triggerType() {
+        return DocDetailsType.TAX_PREFERENCE;
     }
 
     @Override

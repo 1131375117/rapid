@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.consumer.entity.dtos;
 
+import cn.huacloud.taxpreference.common.enums.DocType;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -38,4 +39,10 @@ public class CollectionDTO {
     @ApiModelProperty("状态,true-代表已收藏,false代表未收藏")
     @NotEmpty(message = "收藏状态必传")
     private Boolean status;
+
+    /**
+     * 文档类型
+     */
+    @ApiModelProperty("文档类型")
+    private DocType docType;
 }

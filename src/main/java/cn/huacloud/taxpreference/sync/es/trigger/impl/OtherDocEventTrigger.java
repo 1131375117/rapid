@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.sync.es.trigger.impl;
 
+import cn.huacloud.taxpreference.common.enums.DocDetailsType;
 import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
 import cn.huacloud.taxpreference.services.consumer.entity.ess.OtherDocES;
 import cn.huacloud.taxpreference.services.producer.entity.dos.OtherDocDO;
@@ -35,6 +36,11 @@ public class OtherDocEventTrigger extends EventTrigger<Long, OtherDocES> {
     @Bean
     public Supplier<Flux<Long>> deleteOtherDocSuppler() {
         return deleteMany::asFlux;
+    }
+
+    @Override
+    protected DocDetailsType triggerType() {
+        return DocDetailsType.OTHER_DOC;
     }
 
     @Override

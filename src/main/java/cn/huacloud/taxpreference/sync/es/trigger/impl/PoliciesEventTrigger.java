@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.sync.es.trigger.impl;
 
+import cn.huacloud.taxpreference.common.enums.DocDetailsType;
 import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
 import cn.huacloud.taxpreference.services.consumer.entity.ess.PoliciesES;
@@ -37,6 +38,11 @@ public class PoliciesEventTrigger extends EventTrigger<Long, PoliciesES> {
     @Bean
     public Supplier<Flux<Long>> deletePoliciesSuppler() {
         return deleteMany::asFlux;
+    }
+
+    @Override
+    protected DocDetailsType triggerType() {
+        return DocDetailsType.POLICIES;
     }
 
     @Override

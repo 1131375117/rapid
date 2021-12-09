@@ -2,6 +2,8 @@ package cn.huacloud.taxpreference.services.consumer.impl;
 
 import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
+import cn.huacloud.taxpreference.services.common.DocStatisticsService;
+import cn.huacloud.taxpreference.services.common.entity.dos.DocStatisticsDO;
 import cn.huacloud.taxpreference.services.consumer.CollectionService;
 import cn.huacloud.taxpreference.services.consumer.entity.dos.CollectionDO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.CollectionDTO;
@@ -28,17 +30,26 @@ import java.util.stream.Collectors;
 public class CollectionServiceImpl implements CollectionService {
 
     private final CollectionMapper collectionMapper;
+    private final DocStatisticsService docStatisticsService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void saveOrCancelCollection(CollectionDTO collectionDtO) {
+        //保存收藏
         CollectionDO collectionDO = new CollectionDO();
+        DocStatisticsDO docStatisticsDO = new DocStatisticsDO()
+                .setDocId(collectionDtO.getSourceId())
+                .setDocType(collectionDtO.getDocType());
         BeanUtils.copyProperties(collectionDtO, collectionDO);
         if (getStatus(collectionDtO)) {
             collectionMapper.deleteById(collectionDO);
+            docStatisticsDO.setCollections(-1L);
         } else {
             collectionMapper.insert(collectionDO);
+            docStatisticsDO.setCollections(1L);
         }
+        //保存到统计表
+        docStatisticsService.saveOrUpdateDocStatisticsService(docStatisticsDO);
     }
 
     @Override
