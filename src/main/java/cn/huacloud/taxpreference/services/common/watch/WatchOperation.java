@@ -9,7 +9,7 @@ import cn.huacloud.taxpreference.services.common.entity.dtos.OperationRecordDTO;
  */
 public interface WatchOperation {
 
-    boolean supported(DocType docType);
+    boolean supported(String operationType);
 
     void apply(DocType docType, OperationRecordDTO operationRecordDTO);
 

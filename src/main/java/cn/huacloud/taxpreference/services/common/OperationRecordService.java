@@ -11,8 +11,8 @@ import cn.huacloud.taxpreference.services.user.entity.vos.ProducerLoginUserVO;
 public interface OperationRecordService {
     /**
      * 操作记录
-     * @param operationRecordDO
+     * @param operationRecordDTO
      * @param currentUser
      */
-    void operationRecord(OperationRecordDTO operationRecordDO, ProducerLoginUserVO currentUser);
+    void operationRecord(OperationRecordDTO operationRecordDTO, ProducerLoginUserVO currentUser);
 }

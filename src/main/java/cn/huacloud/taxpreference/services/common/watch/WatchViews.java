@@ -20,13 +20,13 @@ public class WatchViews implements WatchOperation, ApplicationContextAware {
     private final HashMap<DocType, EventTrigger<Long, Object>> sourceMap = new HashMap<>();
 
     @Override
-    public boolean supported(DocType docType) {
-        return sourceMap.containsKey(docType);
+    public boolean supported(String operationType) {
+        return operationType.contains("views");
     }
 
     @Override
     public void apply(DocType docType, OperationRecordDTO operationRecordDTO) {
-        if (supported(docType)) {
+        if (supported(operationRecordDTO.getOperationType())) {
             sourceMap.get(docType).saveEvent(Long.valueOf(operationRecordDTO.getOperationParam()));
         }
     }

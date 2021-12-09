@@ -32,9 +32,9 @@ public class OperationRecordController {
      */
     @ApiOperation("操作记录接口")
     @PostMapping("/operationRecord")
-    public ResultVO<Void> operationRecord(@Validated OperationRecordDTO operationRecordDO) {
+    public ResultVO<Void> operationRecord(@Validated OperationRecordDTO operationRecordDTO) {
         ProducerLoginUserVO currentUser = ConsumerUerUtil.getCurrentUser();
-        operationRecord.operationRecord(operationRecordDO,currentUser);
+        operationRecord.operationRecord(operationRecordDTO,currentUser);
         return ResultVO.ok();
     }
 }
