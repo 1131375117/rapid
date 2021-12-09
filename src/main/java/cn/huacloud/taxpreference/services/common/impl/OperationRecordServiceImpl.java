@@ -12,6 +12,7 @@ import cn.huacloud.taxpreference.services.common.mapper.OperationRecordMapper;
 import cn.huacloud.taxpreference.services.common.watch.WatchSubject;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +26,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class OperationRecordServiceImpl implements OperationRecordService {
 
     private final OperationRecordMapper operationRecordMapper;
-    private final DocStatisticsService docStatisticsService;
+
+    private  DocStatisticsService docStatisticsService;
+
+    @Autowired
+    public void setDocStatisticsService(DocStatisticsService docStatisticsService) {
+        this.docStatisticsService = docStatisticsService;
+    }
+
     private final SysParamService sysParamService;
     private final WatchSubject watchSubject;
 
