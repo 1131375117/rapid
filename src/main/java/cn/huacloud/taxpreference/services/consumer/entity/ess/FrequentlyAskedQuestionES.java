@@ -42,6 +42,15 @@ public class FrequentlyAskedQuestionES extends AbstractCombinePlainContent<Long>
      * 发布日期
      */
     private LocalDate releaseDate;
+    /**
+     * 浏览量
+     */
+    private Long views;
+
+    /**
+     * 收藏量
+     */
+    private Long collections;
 
     @Override
     public List<CombineText> combineTextList() {

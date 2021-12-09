@@ -1,6 +1,7 @@
 package cn.huacloud.taxpreference.services.common.impl;
 
 import cn.huacloud.taxpreference.common.enums.BizCode;
+import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.services.common.DocStatisticsService;
 import cn.huacloud.taxpreference.services.common.OperationRecordService;
 import cn.huacloud.taxpreference.services.common.SysParamService;
@@ -52,16 +53,15 @@ public class OperationRecordServiceImpl implements OperationRecordService {
          * 插入统计表
          * */
         DocStatisticsDO docStatisticsDO = new DocStatisticsDO()
-                .setDocType(operationRecordDTO.getDocType())
-                .setDocId(operationRecordDO.getId())
+                .setDocType(DocType.valueOf(sysParamDO.getParamValue()))
+                .setDocId(Long.valueOf(operationRecordDO.getOperationParam()))
                 .setViews(1L);
         docStatisticsService.saveOrUpdateDocStatisticsService(docStatisticsDO);
 
         /*
          * 写入es
          * */
-        //watchSubject.attach();
-        watchSubject.notifyChanged(docStatisticsDO);
+        watchSubject.apply(docStatisticsDO.getDocType(),operationRecordDTO);
 
     }
 

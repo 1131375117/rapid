@@ -1,6 +1,6 @@
 package cn.huacloud.taxpreference.sync.es.trigger;
 
-import cn.huacloud.taxpreference.common.enums.DocDetailsType;
+import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.common.enums.SysCodeGetter;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeSimpleVO;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -27,7 +27,7 @@ public abstract class EventTrigger<T, R> {
 
     protected Sinks.Many<T> deleteMany = Sinks.many().unicast().onBackpressureBuffer();
 
-     protected abstract DocDetailsType triggerType();
+    public abstract DocType docType();
 
     /**
      * 触发保存事件

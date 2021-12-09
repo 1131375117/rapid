@@ -1,6 +1,6 @@
 package cn.huacloud.taxpreference.sync.es.trigger.impl;
 
-import cn.huacloud.taxpreference.common.enums.DocDetailsType;
+import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
 import cn.huacloud.taxpreference.services.consumer.entity.ess.PoliciesES;
@@ -41,8 +41,8 @@ public class PoliciesEventTrigger extends EventTrigger<Long, PoliciesES> {
     }
 
     @Override
-    protected DocDetailsType triggerType() {
-        return DocDetailsType.POLICIES;
+    public DocType docType() {
+        return DocType.POLICIES;
     }
 
     @Override

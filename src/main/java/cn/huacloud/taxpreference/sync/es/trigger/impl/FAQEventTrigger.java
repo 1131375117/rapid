@@ -1,7 +1,9 @@
 package cn.huacloud.taxpreference.sync.es.trigger.impl;
 
-import cn.huacloud.taxpreference.common.enums.DocDetailsType;
+import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
+import cn.huacloud.taxpreference.services.common.SysParamService;
+import cn.huacloud.taxpreference.services.common.entity.dos.DocStatisticsDO;
 import cn.huacloud.taxpreference.services.consumer.entity.ess.FrequentlyAskedQuestionES;
 import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO;
 import cn.huacloud.taxpreference.services.producer.mapper.FrequentlyAskedQuestionMapper;
@@ -27,6 +29,8 @@ public class FAQEventTrigger extends EventTrigger<Long, FrequentlyAskedQuestionE
 
     private final FrequentlyAskedQuestionMapper frequentlyAskedQuestionMapper;
 
+    private final SysParamService sysParamService;
+
     @Bean
     public Supplier<Flux<FrequentlyAskedQuestionES>> saveFAQSuppler() {
         return saveMany::asFlux;
@@ -39,13 +43,16 @@ public class FAQEventTrigger extends EventTrigger<Long, FrequentlyAskedQuestionE
 
 
     @Override
-    protected DocDetailsType triggerType() {
-        return DocDetailsType.FREQUENTLY_ASKED_QUESTION;
+    public DocType docType() {
+        return DocType.FREQUENTLY_ASKED_QUESTION;
     }
 
     @Override
     protected FrequentlyAskedQuestionES getEntityById(Long id) {
+        new DocStatisticsDO().setDocId(id).setDocType(DocType.FREQUENTLY_ASKED_QUESTION);
         FrequentlyAskedQuestionDO faqDO = frequentlyAskedQuestionMapper.selectById(id);
+       // sysParamService.selectByParamKey()
+
         if (faqDO.getDeleted()) {
             return null;
         }
