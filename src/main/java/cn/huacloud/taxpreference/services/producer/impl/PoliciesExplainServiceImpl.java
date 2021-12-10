@@ -131,8 +131,8 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 	@Override
 	public void insertPoliciesExplain(PoliciesExplainDTO policiesExplainDTO, Long userId) {
 		log.info("新增政策解读dto={}", policiesExplainDTO);
-		if (policiesExplainDTO.getPoliciesId()!=null) {
-			throw  BizCode._4100.exception();
+		if (policiesExplainDTO.getPoliciesId() == null) {
+			throw BizCode._4100.exception();
 		}
 		checkAssociation(policiesExplainDTO);
 		PoliciesExplainDO policiesExplainDO = new PoliciesExplainDO();
