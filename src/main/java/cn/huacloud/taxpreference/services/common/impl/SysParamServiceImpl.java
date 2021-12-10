@@ -8,6 +8,9 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author fuhua
  **/
@@ -23,5 +26,15 @@ public class SysParamServiceImpl implements SysParamService {
                 .eq(SysParamDO::getParamKey, paramKey);
         SysParamDO sysParamDO = sysParamMapper.selectOne(queryWrapper);
         return sysParamDO;
+    }
+
+    @Override
+    public <T> T getObjectParamByTypes(List<String> sysParamTypes, Class<T> clazz) {
+        return null;
+    }
+
+    @Override
+    public <T> Map<String, T> getMapParamByTypes(Class<T> clazz, String... args) {
+        return null;
     }
 }

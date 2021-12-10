@@ -56,7 +56,7 @@ public class PoliciesExplainEventTrigger extends EventTrigger<Long, PoliciesExpl
 
     @Override
     protected PoliciesExplainES getEntityById(Long id) {
-        DocStatisticsDO docStatisticsDO = statisticsService.selectDocStatistics(id, docType());
+    //    DocStatisticsDO docStatisticsDO = statisticsService.selectDocStatistics(id, docType());
         PoliciesExplainDO policiesExplainDO = policiesExplainMapper.selectById(id);
 
         if (policiesExplainDO.getDeleted()) {
@@ -70,7 +70,7 @@ public class PoliciesExplainEventTrigger extends EventTrigger<Long, PoliciesExpl
 
         // 属性拷贝
         PoliciesExplainES policiesExplainES = CustomBeanUtil.copyProperties(policiesExplainDO, PoliciesExplainES.class);
-        CustomBeanUtil.copyProperties(docStatisticsDO, PoliciesExplainES.class);
+   //     CustomBeanUtil.copyProperties(docStatisticsDO, PoliciesExplainES.class);
 
         // 类型转换属性设置
         policiesExplainES.setTaxCategories(sysCodeService.getSimpleVOByCode(policiesDO.getTaxCategoriesCode()));

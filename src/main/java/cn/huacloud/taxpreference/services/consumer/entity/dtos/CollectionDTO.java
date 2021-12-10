@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 /**
  * 收藏DTO
@@ -20,20 +20,20 @@ public class CollectionDTO {
      * 消费者用户id
      */
     @ApiModelProperty(hidden = true)
-    private Long consumerUserId;
+    private Long consumerUserId=1L;
 
     /**
      * 收藏类型
      */
     @ApiModelProperty("收藏类型")
-    @NotEmpty(message = "收藏类型不能为空")
+    @NotNull(message = "收藏类型不能为空")
     private CollectionType collectionType;
 
     /**
      * 数据源id
      */
     @ApiModelProperty("数据源id")
-    @NotEmpty(message = "收藏id不能为空")
+    @NotNull(message = "收藏id不能为空")
     private Long sourceId;
 
 

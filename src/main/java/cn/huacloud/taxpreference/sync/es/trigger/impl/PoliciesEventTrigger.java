@@ -4,7 +4,6 @@ import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
 import cn.huacloud.taxpreference.services.common.DocStatisticsService;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
-import cn.huacloud.taxpreference.services.common.entity.dos.DocStatisticsDO;
 import cn.huacloud.taxpreference.services.consumer.entity.ess.PoliciesES;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
 import cn.huacloud.taxpreference.services.producer.mapper.PoliciesMapper;
@@ -51,7 +50,7 @@ public class PoliciesEventTrigger extends EventTrigger<Long, PoliciesES> {
 
     @Override
     protected PoliciesES getEntityById(Long id) {
-        DocStatisticsDO docStatisticsDO = statisticsService.selectDocStatistics(id, docType());
+     //   DocStatisticsDO docStatisticsDO = statisticsService.selectDocStatistics(id, docType());
         PoliciesDO policiesDO = policiesMapper.selectById(id);
         if (policiesDO.getDeleted()) {
             return null;
@@ -59,7 +58,7 @@ public class PoliciesEventTrigger extends EventTrigger<Long, PoliciesES> {
 
         // 属性拷贝
         PoliciesES policiesES = CustomBeanUtil.copyProperties(policiesDO, PoliciesES.class);
-        CustomBeanUtil.copyProperties(docStatisticsDO, PoliciesES.class);
+     //   CustomBeanUtil.copyProperties(docStatisticsDO, PoliciesES.class);
 
         // 类型转换属性设置
         policiesES.setArea(sysCodeService.getSimpleVOByCode(policiesDO.getAreaCode()));
