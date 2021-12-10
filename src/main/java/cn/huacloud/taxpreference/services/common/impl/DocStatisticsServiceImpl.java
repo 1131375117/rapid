@@ -31,6 +31,8 @@ public class DocStatisticsServiceImpl implements DocStatisticsService {
     @Override
     public void saveOrUpdateDocStatisticsService(DocStatisticsDO docStatisticsDO) {
         if (exists(docStatisticsDO)) {
+            docStatisticsDO.setViews(docStatisticsDO.getViews()==null?0L:docStatisticsDO.getViews());
+            docStatisticsDO.setCollections(docStatisticsDO.getCollections()==null?0L:docStatisticsDO.getCollections());
             insertDocStatisticsService(docStatisticsDO);
         } else {
             updateDocStatisticsService(docStatisticsDO);

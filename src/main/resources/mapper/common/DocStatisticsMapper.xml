@@ -3,13 +3,13 @@
 
 <mapper namespace="cn.huacloud.taxpreference.services.common.mapper.DocStatisticsMapper">
 
-    <update id="update" parameterType="cn.huacloud.taxpreference.services.common.entity.dos.DocStatisticsDO">
+    <update id="update" >
         update t_doc_statistics
         <set>
-            <if test="docStatisticsDO.views!=null">
+            <if test="views!=null">
                 views=views + #{views}
             </if>
-            <if test="docStatisticsDO.collections!=null">
+            <if test="collections!=null">
                 collections=collections + #{collections}
             </if>
         </set>

@@ -2,7 +2,6 @@ package cn.huacloud.taxpreference.controllers.consumer;
 
 import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
-import cn.huacloud.taxpreference.common.utils.ConsumerUerUtil;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.consumer.CollectionService;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.CollectionDTO;
@@ -37,7 +36,7 @@ public class CollectionController {
     @PutMapping("/Collection")
     public ResultVO<Void> saveOrCancelCollection(@Validated CollectionDTO collectionDTO) {
 
-        collectionDTO.setConsumerUserId(ConsumerUerUtil.getCurrentUser().getId());
+       // collectionDTO.setConsumerUserId(ConsumerUerUtil.getCurrentUser().getId());
         collectionService.saveOrCancelCollection(collectionDTO);
         return ResultVO.ok();
     }
