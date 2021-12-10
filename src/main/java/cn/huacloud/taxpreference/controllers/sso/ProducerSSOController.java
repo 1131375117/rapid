@@ -4,6 +4,7 @@ import cn.dev33.satoken.secure.SaSecureUtil;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.utils.ProducerUserUtil;
+import cn.huacloud.taxpreference.common.utils.RedisKeyUtil;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.common.utils.SpringUtil;
 import cn.huacloud.taxpreference.services.user.ProducerUserService;
@@ -57,7 +58,7 @@ public class ProducerSSOController {
 
         // 校验验证码
         if (!isDev) {
-            String captchaRedisKey = getCaptchaRedisKey(captchaId);
+            String captchaRedisKey = RedisKeyUtil.getCaptchaRedisKey(captchaId);
             String serverCaptchaCode = stringRedisTemplate.opsForValue().get(captchaRedisKey);
             if (serverCaptchaCode == null || !serverCaptchaCode.equalsIgnoreCase(captchaCode)) {
                 throw BizCode._4210.exception();
@@ -135,7 +136,7 @@ public class ProducerSSOController {
         captchaVO.setImageBase64(lineCaptcha.getImageBase64());
 
         // 把验证码存入redis
-        String captchaRedisKey = getCaptchaRedisKey(uuid);
+        String captchaRedisKey = RedisKeyUtil.getCaptchaRedisKey(uuid);
         stringRedisTemplate.opsForValue().set(captchaRedisKey, lineCaptcha.getCode());
         // 设置30分钟后过期
         stringRedisTemplate.expire(captchaRedisKey, 30, TimeUnit.MINUTES);
@@ -144,12 +145,5 @@ public class ProducerSSOController {
         return ResultVO.ok(captchaVO);
     }
 
-    /**
-     * 根据captchaId获取验证码redisKey
-     * @param captchaId 验证码ID
-     * @return redisKey
-     */
-    private String getCaptchaRedisKey(String captchaId) {
-        return "captcha:" + captchaId;
-    }
+
 }

@@ -11,12 +11,12 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 短信登录验证码处理器
+ * 短信注册验证处理器
  * @author wangkh
  */
 @RequiredArgsConstructor
 @Component
-public class SmsBizLoginVerificationCodeHandler implements SmsBizHandler {
+public class SmsBizRegisterVerificationCodeHandler implements SmsBizHandler {
 
     private final StringRedisTemplate stringRedisTemplate;
 
@@ -25,7 +25,7 @@ public class SmsBizLoginVerificationCodeHandler implements SmsBizHandler {
 
         String phoneNumber = phoneNumbers.get(0);
         // 获取redis键
-        String redisKey = RedisKeyUtil.getSmsLoginRedisKey(phoneNumber);
+        String redisKey = RedisKeyUtil.getSmsRegisterRedisKey(phoneNumber);
         // 获取随机验证码
         String verificationCode = MessageUtil.getRandomVerificationCode();
         // 保存到redis

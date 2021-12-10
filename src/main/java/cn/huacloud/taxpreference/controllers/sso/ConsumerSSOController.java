@@ -4,7 +4,6 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.huacloud.taxpreference.common.utils.ConsumerStpUtil;
 import cn.huacloud.taxpreference.common.utils.ConsumerUerUtil;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
-import cn.huacloud.taxpreference.services.message.SmsService;
 import cn.huacloud.taxpreference.services.user.entity.dtos.PasswordLoginDTO;
 import cn.huacloud.taxpreference.services.user.entity.dtos.RetrievePasswordDTO;
 import cn.huacloud.taxpreference.services.user.entity.dtos.SmsLoginDTO;
@@ -31,11 +30,11 @@ public class ConsumerSSOController {
 
     private final StringRedisTemplate stringRedisTemplate;
 
-    private final SmsService smsService;
-
     @ApiOperation("短信验证码登录")
     @PostMapping("/consumer/sso/smsLogin")
     public ResultVO<ProducerLoginUserVO> smsLogin(@RequestBody SmsLoginDTO smsLoginDTO) {
+
+
 
         return ResultVO.ok(null);
     }
@@ -43,6 +42,8 @@ public class ConsumerSSOController {
     @ApiOperation("密码登录")
     @PostMapping("/consumer/sso/passwordLogin")
     public ResultVO<ProducerLoginUserVO> passwordLogin(@RequestBody PasswordLoginDTO passwordLoginDTO) {
+
+
 
         return ResultVO.ok(null);
     }
