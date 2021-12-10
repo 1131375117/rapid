@@ -10,7 +10,7 @@ import cn.huacloud.taxpreference.services.common.entity.dos.OperationRecordDO;
 import cn.huacloud.taxpreference.services.common.entity.dos.SysParamDO;
 import cn.huacloud.taxpreference.services.common.entity.dtos.OperationRecordDTO;
 import cn.huacloud.taxpreference.services.common.mapper.OperationRecordMapper;
-import cn.huacloud.taxpreference.services.common.watch.WatchViews;
+import cn.huacloud.taxpreference.services.common.watch.WatchViewService;
 import cn.huacloud.taxpreference.services.user.entity.vos.ProducerLoginUserVO;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -41,7 +41,7 @@ public class OperationRecordServiceImpl implements OperationRecordService {
     }
 
     private final SysParamService sysParamService;
-    private final WatchViews watchSubject;
+    private final WatchViewService watchSubject;
 
     @Override
     @Transactional(rollbackFor = Exception.class)

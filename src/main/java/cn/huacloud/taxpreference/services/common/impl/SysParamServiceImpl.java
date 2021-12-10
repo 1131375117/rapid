@@ -38,23 +38,15 @@ public class SysParamServiceImpl implements SysParamService {
     @Override
     public <T> T getObjectParamByTypes(List<String> sysParamTypes, Class<T> clazz) throws InstantiationException, IllegalAccessException {
         HashMap<Object, Object> objectHashMap = new HashMap<>();
+        Map<String, Integer> indexMap = new HashMap<>();
+        for (int i = 0; i < sysParamTypes.size(); i++) {
+            indexMap.put(sysParamTypes.get(i), i);
+        }
         if (!CollectionUtils.isEmpty(sysParamTypes)) {
             try {
-                LambdaQueryWrapper<SysParamDO> queryWrapper = Wrappers.lambdaQuery(SysParamDO.class);
-                queryWrapper.eq(SysParamDO::getParamStatus, "VALID");
-                queryWrapper.in(SysParamDO::getParamType, sysParamTypes);
-                List<SysParamDO> sysParamDOList = sysParamMapper.selectList(queryWrapper);
-                for (SysParamDO sysParamDO : sysParamDOList) {
-                    String paramKey = sysParamDO.getParamKey();
-                    if (paramKey.contains(".")) {
-                        paramKey = StringUtils.substringAfterLast(paramKey, ".");
-                    }
-                    String paramValue = sysParamDO.getParamValue();
-                    if (objectHashMap.containsKey(paramKey)) {
-                        continue;
-                    }
-                    objectHashMap.put(paramKey, paramValue);
-                }
+                List<SysParamDO> sysParamDOList = sysParamMapper.getSysParamDOList(sysParamTypes);
+                sysParamDOList.sort(Comparator.comparingInt(a -> indexMap.get(a.getParamType())));
+                getMap(objectHashMap, sysParamDOList);
                 String str = objectMapper.writeValueAsString(objectHashMap);
                 return objectMapper.readValue(str, clazz);
             } catch (JsonProcessingException e) {
@@ -67,16 +59,27 @@ public class SysParamServiceImpl implements SysParamService {
     @Override
     public <T> Map<String, T> getMapParamByTypes(Class<T> clazz, String... args) throws JsonProcessingException {
         HashMap<Object, Object> map = new HashMap<>();
-
+        Map<String, Integer> indexMap = new HashMap<>();
         List<SysParamDO> sysParamDOList = sysParamMapper.getSysParamDOList(args);
 
-        Map<String, Integer> indexMap = new HashMap<>();
         for (int i = 0; i < args.length; i++) {
             indexMap.put(args[0], i);
         }
         sysParamDOList.sort(Comparator.comparingInt(a -> indexMap.get(a.getParamType())));
 
+        getMap(map, sysParamDOList);
+        try {
+            String str = objectMapper.writeValueAsString(map);
+            MapType mapType = objectMapper.getTypeFactory().constructMapType(LinkedHashMap.class, String.class, clazz);
+            return objectMapper.readValue(str, mapType);
+        } catch (JsonProcessingException e) {
+            log.error("JsonProcessingException:", e);
+        }
+        return null;
 
+    }
+
+    private void getMap(HashMap<Object, Object> map, List<SysParamDO> sysParamDOList) {
         for (SysParamDO sysParamDO : sysParamDOList) {
             String paramKey = sysParamDO.getParamKey();
             if (paramKey.contains(".")) {
@@ -88,14 +91,5 @@ public class SysParamServiceImpl implements SysParamService {
             }
             map.put(paramKey, paramValue);
         }
-        try {
-            String str = objectMapper.writeValueAsString(map);
-            MapType mapType = objectMapper.getTypeFactory().constructMapType(LinkedHashMap.class, String.class, clazz);
-            return objectMapper.readValue(str, mapType);
-        } catch (JsonProcessingException e) {
-            log.error("JsonProcessingException:", e);
-        }
-        return null;
-
     }
 }
