@@ -9,15 +9,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-
 /**
  * @author fuhua
  **/
 @Service
 @RequiredArgsConstructor
-public class WatchViews implements WatchOperation, ApplicationContextAware {
-    private final HashMap<DocType, EventTrigger<Long, Object>> sourceMap = new HashMap<>();
+public class WatchViewService implements WatchOperation, ApplicationContextAware {
 
     @Override
     public boolean supported(String operationType) {
@@ -27,7 +24,7 @@ public class WatchViews implements WatchOperation, ApplicationContextAware {
     @Override
     public void apply(DocType docType, OperationRecordDTO operationRecordDTO) {
         if (supported(operationRecordDTO.getOperationType())) {
-            sourceMap.get(docType).saveEvent(Long.valueOf(operationRecordDTO.getOperationParam()));
+            TYPE_TRIGGER_MAP.get(docType).saveEvent(Long.valueOf(operationRecordDTO.getOperationParam()));
         }
     }
 
@@ -35,6 +32,6 @@ public class WatchViews implements WatchOperation, ApplicationContextAware {
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         applicationContext.getBeansOfType(EventTrigger.class).values().forEach(eventTrigger ->
-                sourceMap.put(eventTrigger.docType(), eventTrigger));
+                TYPE_TRIGGER_MAP.put(eventTrigger.docType(), eventTrigger));
     }
 }

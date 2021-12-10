@@ -6,6 +6,7 @@ import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.services.common.DocStatisticsService;
 import cn.huacloud.taxpreference.services.common.SysParamService;
 import cn.huacloud.taxpreference.services.common.entity.dos.DocStatisticsDO;
+import cn.huacloud.taxpreference.services.common.watch.WatchViewService;
 import cn.huacloud.taxpreference.services.consumer.CollectionService;
 import cn.huacloud.taxpreference.services.consumer.entity.dos.CollectionDO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.CollectionDTO;
@@ -23,6 +24,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static cn.huacloud.taxpreference.services.common.watch.WatchOperation.TYPE_TRIGGER_MAP;
+
 /**
  * 收藏服务实现类
  *
@@ -35,6 +38,7 @@ public class CollectionServiceImpl implements CollectionService {
     private final CollectionMapper collectionMapper;
     private final DocStatisticsService docStatisticsService;
     private final SysParamService sysParamService;
+    private final WatchViewService watchViewService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -51,6 +55,8 @@ public class CollectionServiceImpl implements CollectionService {
 
         //保存到统计表
         docStatisticsService.saveOrUpdateDocStatisticsService(docStatisticsDO);
+        //应用到es
+        TYPE_TRIGGER_MAP.get(docStatisticsDO.getDocType()).saveEvent(collectionDtO.getSourceId());
     }
 
     @Override
