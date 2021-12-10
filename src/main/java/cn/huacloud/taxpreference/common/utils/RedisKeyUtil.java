@@ -32,4 +32,13 @@ public class RedisKeyUtil {
     public static String getSmsRegisterRedisKey(String phoneNumber) {
         return "sms:register:" + phoneNumber;
     }
+
+    /**
+     * 获取短信找回密码验证码redisKey
+     * @param phoneNumber 电话号码
+     * @return redisKey
+     */
+    public static String getSmsRetrievePasswordRedisKey(String phoneNumber) {
+        return "sms:retrievePassword:" + phoneNumber;
+    }
 }

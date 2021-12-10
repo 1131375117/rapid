@@ -7,15 +7,15 @@ import org.springframework.stereotype.Component;
 import java.util.function.Function;
 
 /**
- * 短信登录验证码处理器
+ * 短信找回密码验证码处理器
  * @author wangkh
  */
 @RequiredArgsConstructor
 @Component
-public class SmsBizLoginVerificationCodeHandler extends AbstractSmsBizVerificationCodeHandler {
+public class SmsBizRetrievePasswordVerificationCodeHandler extends AbstractSmsBizVerificationCodeHandler {
 
     @Override
     protected Function<String, String> redisKeyGetter() {
-        return RedisKeyUtil::getSmsLoginRedisKey;
+        return RedisKeyUtil::getSmsRetrievePasswordRedisKey;
     }
 }

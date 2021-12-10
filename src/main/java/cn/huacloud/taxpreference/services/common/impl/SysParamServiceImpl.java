@@ -14,10 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author fuhua
@@ -72,6 +69,14 @@ public class SysParamServiceImpl implements SysParamService {
         HashMap<Object, Object> map = new HashMap<>();
 
         List<SysParamDO> sysParamDOList = sysParamMapper.getSysParamDOList(args);
+
+        Map<String, Integer> indexMap = new HashMap<>();
+        for (int i = 0; i < args.length; i++) {
+            indexMap.put(args[0], i);
+        }
+        sysParamDOList.sort(Comparator.comparingInt(a -> indexMap.get(a.getParamType())));
+
+
         for (SysParamDO sysParamDO : sysParamDOList) {
             String paramKey = sysParamDO.getParamKey();
             if (paramKey.contains(".")) {
