@@ -1,6 +1,7 @@
 package cn.huacloud.taxpreference.services.common;
 
 import cn.huacloud.taxpreference.services.common.entity.dos.SysParamDO;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,14 @@ public interface SysParamService {
      */
     SysParamDO selectByParamKey(String paramKey);
 
-    <T> T getObjectParamByTypes(List<String> sysParamTypes, Class<T> clazz);
+    /**
+     *
+     * @param sysParamTypes
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    <T> T getObjectParamByTypes(List<String> sysParamTypes, Class<T> clazz) throws InstantiationException, IllegalAccessException;
 
-    <T> Map<String, T> getMapParamByTypes(Class<T> clazz, String... args);
+    <T> Map<String, T> getMapParamByTypes(Class<T> clazz, String... args) throws JsonProcessingException;
 }
