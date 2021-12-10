@@ -1,4 +1,4 @@
-package cn.huacloud.taxpreference.services.common;
+package cn.huacloud.taxpreference.services.message;
 
 import cn.huacloud.taxpreference.common.enums.SmsBiz;
 
@@ -17,10 +17,9 @@ public interface SmsService {
      *
      * @param phoneNumber 电话号码
      * @param smsBiz      短信业务
-     * @param params      参数list
      */
-    default void sendSms(String phoneNumber, SmsBiz smsBiz, List<String> params) {
-        sendSms(Collections.singletonList(phoneNumber), smsBiz, params);
+    default void sendSms(String phoneNumber, SmsBiz smsBiz) {
+        sendSms(Collections.singletonList(phoneNumber), smsBiz);
     }
 
     /**
@@ -28,7 +27,6 @@ public interface SmsService {
      *
      * @param phoneNumbers 电话号码集合
      * @param smsBiz      短信业务
-     * @param params      参数list
      */
-    void sendSms(List<String> phoneNumbers, SmsBiz smsBiz, List<String> params);
+    void sendSms(List<String> phoneNumbers, SmsBiz smsBiz);
 }
