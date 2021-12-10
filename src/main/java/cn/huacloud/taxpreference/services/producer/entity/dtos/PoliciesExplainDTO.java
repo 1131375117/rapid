@@ -40,7 +40,6 @@ public class PoliciesExplainDTO {
 	@ApiModelProperty("正文")
 	private String content;
 
-	@NotEmpty(message = "政策法规id不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
 	@ApiModelProperty("政策法规id")
 	private Long policiesId;
 
