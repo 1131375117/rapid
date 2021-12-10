@@ -4,6 +4,7 @@ import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.services.common.entity.dtos.OperationRecordDTO;
 import cn.huacloud.taxpreference.sync.es.trigger.EventTrigger;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -18,7 +19,7 @@ public class WatchViewService implements WatchOperation, ApplicationContextAware
 
     @Override
     public boolean supported(String operationType) {
-        return operationType.contains("views");
+        return "views".equals(StringUtils.substringBefore(operationType,"."));
     }
 
     @Override

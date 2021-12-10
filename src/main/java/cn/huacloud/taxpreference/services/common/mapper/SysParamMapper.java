@@ -26,4 +26,16 @@ public interface SysParamMapper extends BaseMapper<SysParamDO> {
         return selectList(queryWrapper);
 
     }
+    /**
+     * 查询sysParamDOList
+     * @param paramTypes
+     * @return
+     */
+    default List<SysParamDO> getSysParamDOList(List<String> paramTypes) {
+        LambdaQueryWrapper<SysParamDO> queryWrapper = Wrappers.lambdaQuery(SysParamDO.class);
+        queryWrapper.eq(SysParamDO::getParamStatus, "VALID");
+        queryWrapper.in(SysParamDO::getParamType,paramTypes);
+        return selectList(queryWrapper);
+
+    }
 }
