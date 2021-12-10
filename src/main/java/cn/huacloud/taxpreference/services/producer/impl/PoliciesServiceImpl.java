@@ -676,9 +676,9 @@ public class PoliciesServiceImpl implements PoliciesService {
 				.eq(StringUtils.isNotBlank(titleOrDocCode), PoliciesDO::getTitle, titleOrDocCode)
 				.or()
 				.eq(StringUtils.isNotBlank(titleOrDocCode), PoliciesDO::getDocCode, titleOrDocCode);
-		List<PoliciesDO> policiesDoS = policiesMapper.selectList(lambdaQueryWrapper);
+		Long count = policiesMapper.selectCount(lambdaQueryWrapper);
 		// 判断是否重复
-		return policiesDoS.size() != 0;
+		return count > 0;
 	}
 
 	@Override
