@@ -4,7 +4,11 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.huacloud.taxpreference.common.utils.ConsumerStpUtil;
 import cn.huacloud.taxpreference.common.utils.ConsumerUerUtil;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
+import cn.huacloud.taxpreference.services.message.SmsService;
+import cn.huacloud.taxpreference.services.user.entity.dtos.PasswordLoginDTO;
 import cn.huacloud.taxpreference.services.user.entity.dtos.RetrievePasswordDTO;
+import cn.huacloud.taxpreference.services.user.entity.dtos.SmsLoginDTO;
+import cn.huacloud.taxpreference.services.user.entity.dtos.UserRegisterDTO;
 import cn.huacloud.taxpreference.services.user.entity.vos.ProducerLoginUserVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -27,23 +31,25 @@ public class ConsumerSSOController {
 
     private final StringRedisTemplate stringRedisTemplate;
 
+    private final SmsService smsService;
+
     @ApiOperation("短信验证码登录")
     @PostMapping("/consumer/sso/smsLogin")
-    public ResultVO<ProducerLoginUserVO> smsLogin() {
+    public ResultVO<ProducerLoginUserVO> smsLogin(@RequestBody SmsLoginDTO smsLoginDTO) {
 
         return ResultVO.ok(null);
     }
 
     @ApiOperation("密码登录")
     @PostMapping("/consumer/sso/passwordLogin")
-    public ResultVO<ProducerLoginUserVO> passwordLogin() {
+    public ResultVO<ProducerLoginUserVO> passwordLogin(@RequestBody PasswordLoginDTO passwordLoginDTO) {
 
         return ResultVO.ok(null);
     }
 
     @ApiOperation("用户注册")
     @PostMapping("/consumer/sso/register")
-    public ResultVO<ProducerLoginUserVO> register() {
+    public ResultVO<ProducerLoginUserVO> register(@RequestBody UserRegisterDTO userRegisterDTO) {
 
         return ResultVO.ok(null);
     }

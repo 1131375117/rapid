@@ -1,4 +1,4 @@
-package cn.huacloud.taxpreference.services.common;
+package cn.huacloud.taxpreference.services.message;
 
 import cn.huacloud.taxpreference.common.enums.EmailBiz;
 

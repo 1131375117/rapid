@@ -1,8 +1,8 @@
-package cn.huacloud.taxpreference.services.common.impl;
+package cn.huacloud.taxpreference.services.message.impl;
 
 import cn.huacloud.taxpreference.common.enums.EmailBiz;
-import cn.huacloud.taxpreference.services.common.EmailService;
 import cn.huacloud.taxpreference.services.common.SysParamService;
+import cn.huacloud.taxpreference.services.message.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
