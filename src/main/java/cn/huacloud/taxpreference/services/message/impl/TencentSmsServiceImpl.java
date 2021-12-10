@@ -46,7 +46,7 @@ public class TencentSmsServiceImpl implements SmsService {
 
             // 短信发送
         } catch (Exception e) {
-
+            log.error("发送短信失败", e);
         } finally {
             // 调用后置处理
             handler.afterHandle(phoneNumbers);
@@ -70,6 +70,7 @@ public class TencentSmsServiceImpl implements SmsService {
         request.setSmsSdkAppId(smsParams.getSmsSdkAppId());
         request.setSignName(smsParams.getSignName());
         request.setPhoneNumberSet(phoneNumberSet);
+        request.setTemplateId(smsParams.getTemplateId());
         // 设置短信参数
         request.setTemplateParamSet(params.toArray(new String[0]));
         // 执行发送

@@ -3,7 +3,6 @@ package cn.huacloud.taxpreference.common.utils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.CachedIntrospectionResults;
 import org.springframework.beans.FatalBeanException;
 import org.springframework.core.ResolvableType;
 import org.springframework.lang.Nullable;
@@ -12,7 +11,6 @@ import org.springframework.util.ClassUtils;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
@@ -53,6 +51,9 @@ public class CustomBeanUtil {
      */
     public static <T> T copyProperties(Object source, Class<T> targetClass) {
         try {
+            if (source == null) {
+                return null;
+            }
             Constructor<T> constructor = targetClass.getConstructor();
             T target = constructor.newInstance();
             copyProperties(source, target, false, false, null, null);

@@ -50,7 +50,7 @@ public class ConsumerSSOController {
         // 执行登录
         ConsumerStpUtil.login(loginUserVO.getId());
         // 保存用户登录视图到 session
-        StpUtil.getSession().set(ConsumerUserUtil.CONSUMER_USER, loginUserVO);
+        ConsumerStpUtil.getSession().set(ConsumerUserUtil.CONSUMER_USER, loginUserVO);
         // 返回结果
         return ResultVO.ok(loginUserVO);
     }
@@ -81,7 +81,7 @@ public class ConsumerSSOController {
         // 执行登录
         ConsumerStpUtil.login(loginUserVO.getId());
         // 保存用户登录视图到 session
-        StpUtil.getSession().set(ConsumerUserUtil.CONSUMER_USER, loginUserVO);
+        ConsumerStpUtil.getSession().set(ConsumerUserUtil.CONSUMER_USER, loginUserVO);
         // 返回结果
         return ResultVO.ok(loginUserVO);
     }

@@ -15,7 +15,9 @@ public interface ConsumerUserService {
      */
     default ConsumerLoginUserVO getLoginUserVO(String account) {
         ConsumerLoginUserVO loginUserVO = getLoginUserVOWithPassword(account);
-        loginUserVO.setPassword(null);
+        if (loginUserVO != null) {
+            loginUserVO.setPassword(null);
+        }
         return loginUserVO;
     }
 
