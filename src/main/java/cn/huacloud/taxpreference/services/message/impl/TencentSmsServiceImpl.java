@@ -39,8 +39,8 @@ public class TencentSmsServiceImpl implements SmsService {
             List<String> params = handler.getParams(phoneNumbers);
 
             // 获取系统参数
+            TencentSmsParamDTO smsParams = sysParamService.getObjectParamByTypes(smsBiz.getSysParamTypes(), TencentSmsParamDTO.class);
 
-            TencentSmsParamDTO smsParams = new TencentSmsParamDTO();
             // 发送短信
             sendSms(phoneNumbers, params, smsParams);
 
