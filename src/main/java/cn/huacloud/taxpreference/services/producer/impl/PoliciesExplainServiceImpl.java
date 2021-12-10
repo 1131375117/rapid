@@ -168,8 +168,8 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 		LambdaQueryWrapper<PoliciesExplainDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
 		lambdaQueryWrapper.eq(PoliciesExplainDO::getPoliciesId, policiesExplainDTO.getPoliciesId());
 		lambdaQueryWrapper.eq(PoliciesExplainDO::getDeleted, false);
-		PoliciesExplainDO policiesExplainDo = policiesExplainMapper.selectOne(lambdaQueryWrapper);
-		if (policiesExplainDo != null && !policiesExplainDo.getPoliciesId().equals(policiesExplainDTO.getPoliciesId())) {
+		Long count = policiesExplainMapper.selectCount(lambdaQueryWrapper);
+		if (count > 0) {
 			throw BizCode._4308.exception();
 		}
 	}
@@ -245,8 +245,8 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 	@Override
 	public void deletePoliciesByPolicies(Long policiesId) {
 		LambdaQueryWrapper<PoliciesExplainDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-		lambdaQueryWrapper.eq(PoliciesExplainDO::getPoliciesId,policiesId);
-		lambdaQueryWrapper.eq(PoliciesExplainDO::getDeleted,false);
+		lambdaQueryWrapper.eq(PoliciesExplainDO::getPoliciesId, policiesId);
+		lambdaQueryWrapper.eq(PoliciesExplainDO::getDeleted, false);
 		PoliciesExplainDO policiesExplainDO = policiesExplainMapper.selectOne(lambdaQueryWrapper);
 		policiesExplainDO.setDeleted(true);
 		policiesExplainMapper.updateById(policiesExplainDO);
