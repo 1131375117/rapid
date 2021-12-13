@@ -8,14 +8,12 @@ import cn.huacloud.taxpreference.common.enums.taxpreference.SortType;
 import cn.huacloud.taxpreference.services.common.AttachmentService;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
 import cn.huacloud.taxpreference.services.common.entity.dtos.SysCodeStringDTO;
+import cn.huacloud.taxpreference.services.producer.FrequentlyAskedQuestionService;
 import cn.huacloud.taxpreference.services.producer.PoliciesExplainService;
 import cn.huacloud.taxpreference.services.producer.PoliciesService;
 import cn.huacloud.taxpreference.services.producer.TaxPreferenceService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
-import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesCombinationDTO;
-import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesExplainDTO;
-import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryAbolishDTO;
-import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesDTO;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.*;
 import cn.huacloud.taxpreference.services.producer.entity.enums.CheckStatus;
 import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesSortType;
 import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesStatusEnum;
@@ -53,7 +51,7 @@ public class PoliciesServiceImpl implements PoliciesService {
 
 	private PoliciesExplainService policiesExplainService;
 
-	/*private  FrequentlyAskedQuestionService frequentlyAskedQuestionService;*/
+	private FrequentlyAskedQuestionService frequentlyAskedQuestionService;
 
 	private final SysCodeService sysCodeService;
 
@@ -65,10 +63,10 @@ public class PoliciesServiceImpl implements PoliciesService {
 
 	private final PoliciesEventTrigger policiesEventTrigger;
 
-/*	@Autowired
+	@Autowired
 	public void setFrequentlyAskedQuestionService(FrequentlyAskedQuestionService frequentlyAskedQuestionService) {
 		this.frequentlyAskedQuestionService = frequentlyAskedQuestionService;
-	}*/
+	}
 
 	@Autowired
 	public void setPoliciesExplainService(PoliciesExplainService policiesExplainService) {
@@ -132,7 +130,7 @@ public class PoliciesServiceImpl implements PoliciesService {
 		PoliciesExplainDTO policiesExplainDtoS = policiesCombinationDTO.getPoliciesExplainDTO();
 
 		//校验当前政策法规是否关联了其他解读
-		if(policiesExplainDtoS!=null) {
+		if (policiesExplainDtoS != null) {
 			policiesExplainService.checkAssociation(policiesExplainDtoS);
 		}
 		// 新增政策解读
@@ -274,9 +272,9 @@ public class PoliciesServiceImpl implements PoliciesService {
 		// 根据政策法规id在关联表中查询所有税收优惠的信息
 		List<TaxPreferenceCountVO> taxPreferenceCountVOS =
 				taxPreferenceService.getTaxPreferenceId(policiesDO.getId());
-		/*// 根据政策法规id查询热门问答
+		// 根据政策法规id查询热门问答
 		List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDOList =
-				frequentlyAskedQuestionService.getFrequentlyAskedQuestionByPoliciesId(policiesDO.getId());*/
+				frequentlyAskedQuestionService.getFrequentlyAskedQuestionByPoliciesId(policiesDO.getId());
 		// 返回结果
 		return setPoliciesCombinationDTO(policiesDO, policiesExplainDTO/*, frequentlyAskedQuestionDOList*/, taxPreferenceCountVOS);
 	}
@@ -418,9 +416,9 @@ public class PoliciesServiceImpl implements PoliciesService {
 			} else {
 				policiesExplainService.updatePolicesExplain(policiesExplainDTO);
 			}
-		}else {
+		} else {
 			PoliciesExplainDTO policiesByPoliciesId = policiesExplainService.getPoliciesByPoliciesId(policiesCombinationDTO.getId());
-			if(policiesByPoliciesId!=null) {
+			if (policiesByPoliciesId != null) {
 				policiesExplainService.deletePoliciesByPolicies(policiesCombinationDTO.getId());
 			}
 		}
@@ -668,17 +666,19 @@ public class PoliciesServiceImpl implements PoliciesService {
 
 
 	@Override
-	public Boolean checkTitleAndDocCode(String titleOrDocCode) {
-		log.info("标题或文号={}", titleOrDocCode);
+	public Boolean checkTitleAndDocCode(PoliciesCheckDTO policiesCheckDTO) {
 		// 查询标题和文号
 		LambdaQueryWrapper<PoliciesDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
 		lambdaQueryWrapper
-				.eq(StringUtils.isNotBlank(titleOrDocCode), PoliciesDO::getTitle, titleOrDocCode)
+				.eq(StringUtils.isNotBlank(policiesCheckDTO.getTitle()), PoliciesDO::getTitle, policiesCheckDTO.getTitle())
 				.or()
-				.eq(StringUtils.isNotBlank(titleOrDocCode), PoliciesDO::getDocCode, titleOrDocCode);
-		Long count = policiesMapper.selectCount(lambdaQueryWrapper);
+				.eq(StringUtils.isNotBlank(policiesCheckDTO.getDocCode()), PoliciesDO::getDocCode, policiesCheckDTO.getDocCode());
+		List<PoliciesDO> policiesDOList = policiesMapper.selectList(lambdaQueryWrapper);
 		// 判断是否重复
-		return count > 2;
+		if (policiesDOList.size() > 1) {
+			return true;
+		}
+		return policiesDOList.size() == 1 && policiesDOList.get(0).getId().equals(policiesCheckDTO.getId());
 	}
 
 	@Override
