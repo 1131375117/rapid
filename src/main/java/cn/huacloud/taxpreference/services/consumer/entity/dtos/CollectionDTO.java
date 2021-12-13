@@ -20,7 +20,7 @@ public class CollectionDTO {
      * 消费者用户id
      */
     @ApiModelProperty(hidden = true)
-    private Long consumerUserId=1L;
+    private Long consumerUserId;
 
     /**
      * 收藏类型
