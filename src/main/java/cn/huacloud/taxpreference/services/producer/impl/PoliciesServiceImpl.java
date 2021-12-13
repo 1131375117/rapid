@@ -12,6 +12,7 @@ import cn.huacloud.taxpreference.services.producer.FrequentlyAskedQuestionServic
 import cn.huacloud.taxpreference.services.producer.PoliciesExplainService;
 import cn.huacloud.taxpreference.services.producer.PoliciesService;
 import cn.huacloud.taxpreference.services.producer.TaxPreferenceService;
+import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.*;
 import cn.huacloud.taxpreference.services.producer.entity.enums.CheckStatus;
@@ -273,8 +274,8 @@ public class PoliciesServiceImpl implements PoliciesService {
 		List<TaxPreferenceCountVO> taxPreferenceCountVOS =
 				taxPreferenceService.getTaxPreferenceId(policiesDO.getId());
 		// 根据政策法规id查询热门问答
-		List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDOList =
-				frequentlyAskedQuestionService.getFrequentlyAskedQuestionByPoliciesId(policiesDO.getId());
+//		List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDOList =
+//				frequentlyAskedQuestionService.getFrequentlyAskedQuestionByPoliciesId(policiesDO.getId());
 		// 返回结果
 		return setPoliciesCombinationDTO(policiesDO, policiesExplainDTO/*, frequentlyAskedQuestionDOList*/, taxPreferenceCountVOS);
 	}
@@ -561,37 +562,35 @@ public class PoliciesServiceImpl implements PoliciesService {
 			policiesMapper.updateById(policiesDO);
 			// 删除政策解读
 			deletePoliciesExplain(policiesDO);
-/*			// 删除热点问答
-			deleteFrequentlyAskedQuestion(policiesDO);*/
+			// 删除热点问答
+//			deleteFrequentlyAskedQuestion(policiesDO);
 		}
 		// 触发事件
 		policiesEventTrigger.deleteEvent(policiesDO.getId());
 	}
 
-	/**
-	 * 删除热门问答
-	 *
-	 * @param policiesDO 政策法规对象
-	 *//*
-	private void deleteFrequentlyAskedQuestion(PoliciesDO policiesDO) {
-		// 根据政策法规id查询热门问答
-		List<FrequentlyAskedQuestionDO> frequentlyAskedQuestionIds =
-				policiesMapper.selectFrequentlyAskedQuestionId(policiesDO.getId());
-		log.info("热点问答id集合={}", frequentlyAskedQuestionIds);
-		// 遍历删除政策法规关联关系
-		for (FrequentlyAskedQuestionDO frequentlyAskedQuestionId : frequentlyAskedQuestionIds) {
-			List<String> ids = Arrays.asList(frequentlyAskedQuestionId.getPoliciesIds().split(","));
-			ArrayList<String> list = new ArrayList<>(ids);
-			list.remove(String.valueOf(policiesDO.getId()));
-			frequentlyAskedQuestionId.setPoliciesIds(StringUtils.join(list, ","));
-			frequentlyAskedQuestionMapper.updateById(frequentlyAskedQuestionId);
-		}
-	}
-*/
 
 	/**
-	 * 删除政策解读
-	 *
+	 * 删除热门问答
+	 * @param policiesDO
+	 */
+//	private void deleteFrequentlyAskedQuestion(PoliciesDO policiesDO) {
+//	// 根据政策法规id查询热门问答
+//	List<FrequentlyAskedQuestionDO> frequentlyAskedQuestionIds =
+//	policiesMapper.selectFrequentlyAskedQuestionId(policiesDO.getId());
+//	log.info("热点问答id集合={}", frequentlyAskedQuestionIds);
+//	// 遍历删除政策法规关联关系
+//	for (FrequentlyAskedQuestionDO frequentlyAskedQuestionId : frequentlyAskedQuestionIds) {
+//	List<String> ids = Arrays.asList(frequentlyAskedQuestionId.getPoliciesIds().split(","));
+//	ArrayList<String> list = new ArrayList<>(ids);
+//	list.remove(String.valueOf(policiesDO.getId()));
+//	frequentlyAskedQuestionId.setPoliciesIds(StringUtils.join(list, ","));
+//	frequentlyAskedQuestionMapper.updateById(frequentlyAskedQuestionId);
+//
+//	}
+
+	/**
+	 *                   删除政策解读
 	 * @param policiesDO 政策法规对象
 	 */
 	private void deletePoliciesExplain(PoliciesDO policiesDO) {
@@ -675,10 +674,10 @@ public class PoliciesServiceImpl implements PoliciesService {
 				.eq(StringUtils.isNotBlank(policiesCheckDTO.getDocCode()), PoliciesDO::getDocCode, policiesCheckDTO.getDocCode());
 		List<PoliciesDO> policiesDOList = policiesMapper.selectList(lambdaQueryWrapper);
 		// 判断是否重复
-		if (policiesDOList.size() > 1) {
+		if (policiesDOList.size() == 1 && policiesCheckDTO.getId() == null) {
 			return true;
 		}
-		return policiesDOList.size() == 1 && policiesDOList.get(0).getId().equals(policiesCheckDTO.getId());
+		return policiesDOList.size() == 1 && !policiesDOList.get(0).getId().equals(policiesCheckDTO.getId());
 	}
 
 	@Override
