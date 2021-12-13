@@ -15,9 +15,7 @@ import org.junit.Test;
 import java.lang.reflect.Method;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,6 +26,27 @@ import java.util.regex.Pattern;
  */
 @Slf4j
 public class SampleTest {
+
+    @Test
+    public void testSnowFlake() {
+        Snowflake snowflake = new Snowflake();
+        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+        for (int i = 0; i < 1000; i++) {
+            String id = snowflake.nextId() + "";
+            String uid = id.substring(id.length() - 8);
+            map.put(id, uid);
+        }
+        Set<String> set = new LinkedHashSet<>();
+        Set<String> exSet = new LinkedHashSet<>();
+        for (String value : map.values()) {
+            if (set.contains(value)) {
+                exSet.add(value);
+            } else {
+                set.add(value);
+            }
+        }
+        log.info("");
+    }
 
     @Test
     public void testMD5() {

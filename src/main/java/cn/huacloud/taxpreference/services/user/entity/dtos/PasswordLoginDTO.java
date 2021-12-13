@@ -13,6 +13,8 @@ public class PasswordLoginDTO {
     private String account;
     @ApiModelProperty("加密后的密码")
     private String password;
-    @ApiModelProperty("短信验证码")
-    private String verificationCode;
+    @ApiModelProperty("图形验证码ID")
+    private String captchaId;
+    @ApiModelProperty("图形验证码")
+    private String captchaCode;
 }

@@ -25,7 +25,7 @@ public abstract class AbstractSmsBizVerificationCodeHandler implements SmsBizHan
         // 获取随机验证码
         String verificationCode = MessageUtil.getRandomVerificationCode();
         // 保存到redis
-       stringRedisTemplate.opsForValue().set(redisKey, verificationCode, 15L, TimeUnit.MINUTES);
+        stringRedisTemplate.opsForValue().set(redisKey, verificationCode, 15L, TimeUnit.MINUTES);
 
         return Collections.singletonList(verificationCode);
     }

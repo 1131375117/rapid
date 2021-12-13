@@ -17,6 +17,8 @@ public class ConsumerLoginUserVO {
     private String userAccount;
     @ApiModelProperty("用户名称、昵称")
     private String username;
+    @ApiModelProperty(hidden = true)
+    private String password;
     @ApiModelProperty("用户角色")
     private List<String> roleCodes;
     @ApiModelProperty("用户权限")
