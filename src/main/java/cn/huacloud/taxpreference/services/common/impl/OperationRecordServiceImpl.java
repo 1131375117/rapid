@@ -10,7 +10,7 @@ import cn.huacloud.taxpreference.services.common.entity.dos.OperationRecordDO;
 import cn.huacloud.taxpreference.services.common.entity.dos.SysParamDO;
 import cn.huacloud.taxpreference.services.common.entity.dtos.OperationRecordDTO;
 import cn.huacloud.taxpreference.services.common.mapper.OperationRecordMapper;
-import cn.huacloud.taxpreference.services.common.watch.WatchViewService;
+import cn.huacloud.taxpreference.services.common.watch.WatcherViewService;
 import cn.huacloud.taxpreference.services.user.entity.vos.ConsumerLoginUserVO;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -41,7 +41,7 @@ public class OperationRecordServiceImpl implements OperationRecordService {
     }
 
     private final SysParamService sysParamService;
-    private final WatchViewService watchSubject;
+    private final WatcherViewService watchSubject;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -53,7 +53,7 @@ public class OperationRecordServiceImpl implements OperationRecordService {
         /*
          * 获取文档类型,并进行逻辑校验
          */
-        SysParamDO sysParamDO = sysParamService.selectByParamKey(operationRecordDO.getOperationType());
+        SysParamDO sysParamDO = sysParamService.selectByParamKey(operationRecordDO.getOperationType(),"operation.views");
         if (sysParamDO == null) {
             throw BizCode._4501.exception();
         }

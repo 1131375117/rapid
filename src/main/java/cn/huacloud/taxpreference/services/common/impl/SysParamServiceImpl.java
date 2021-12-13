@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionLikeType;
 import com.fasterxml.jackson.databind.type.MapType;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -32,13 +33,14 @@ public class SysParamServiceImpl implements SysParamService {
     private final ObjectMapper objectMapper;
 
     private final Cache<String, List<SysParamDO>> sysParamCache = CacheBuilder.newBuilder()
-            .expireAfterWrite(2, TimeUnit.HOURS)
+            .expireAfterAccess(2, TimeUnit.HOURS)
             .build();
 
     @Override
-    public SysParamDO selectByParamKey(String paramKey) {
+    public SysParamDO selectByParamKey(String paramKey, String paramType) {
         LambdaQueryWrapper<SysParamDO> queryWrapper = Wrappers.lambdaQuery(SysParamDO.class)
-                .eq(SysParamDO::getParamKey, paramKey);
+                .eq(SysParamDO::getParamKey, paramKey)
+                .eq(StringUtils.isEmpty(paramType), SysParamDO::getParamType, paramType);
         SysParamDO sysParamDO = sysParamMapper.selectOne(queryWrapper);
         return sysParamDO;
     }
@@ -102,6 +104,24 @@ public class SysParamServiceImpl implements SysParamService {
 
     @Override
     public <T> T getSingleParamValue(String sysParamType, String sysParamKey, Class<T> clazz) {
+        List<String> list = new ArrayList<>();
+        LambdaQueryWrapper<SysParamDO> queryWrapper = Wrappers.lambdaQuery(SysParamDO.class);
+        queryWrapper.eq(SysParamDO::getParamKey, sysParamKey);
+        queryWrapper.eq(SysParamDO::getParamType, sysParamType);
+        queryWrapper.eq(SysParamDO::getParamStatus, "VALID");
+        SysParamDO sysParamDO = sysParamMapper.selectOne(queryWrapper);
+        String target;
+        if (sysParamDO != null) {
+            list.add(sysParamDO.getParamValue());
+            try {
+                target = objectMapper.writeValueAsString(list);
+                CollectionLikeType type = objectMapper.getTypeFactory().constructCollectionLikeType(ArrayList.class, clazz);
+                List<T> readValue = objectMapper.readValue(target, type);
+                return readValue.iterator().next();
+            } catch (JsonProcessingException e) {
+                log.error("转换异常:", e);
+            }
+        }
         return null;
     }
 
