@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -30,7 +31,7 @@ public class SysParamServiceImpl implements SysParamService {
     private final SysParamMapper sysParamMapper;
     private final ObjectMapper objectMapper;
 
-    private final Cache<Object, List<SysParamDO>> sysParamCache = CacheBuilder.newBuilder()
+    private final Cache<String, List<SysParamDO>> sysParamCache = CacheBuilder.newBuilder()
             .expireAfterWrite(2, TimeUnit.HOURS)
             .build();
 
@@ -46,14 +47,19 @@ public class SysParamServiceImpl implements SysParamService {
     public <T> T getObjectParamByTypes(List<String> sysParamTypes, Class<T> clazz) {
         HashMap<Object, Object> objectHashMap = new HashMap<>();
         Map<String, Integer> indexMap = new HashMap<>();
+        List<SysParamDO> sysParamDOList = new ArrayList<>();
         for (int i = 0; i < sysParamTypes.size(); i++) {
             indexMap.put(sysParamTypes.get(i), i);
         }
         if (!CollectionUtils.isEmpty(sysParamTypes)) {
             try {
-                //根据类型获取缓存
+                try {
+                    sysParamDOList = sysParamCache.get(sysParamTypes.toString(),
+                            () -> sysParamMapper.getSysParamDOList(sysParamTypes));
+                } catch (ExecutionException e) {
+                    log.error("缓存Exception:", e);
+                }
 
-                List<SysParamDO> sysParamDOList = sysParamMapper.getSysParamDOList(sysParamTypes);
                 sysParamDOList.sort(Comparator.comparingInt(a -> indexMap.get(a.getParamType())));
                 getMap(objectHashMap, sysParamDOList);
                 String str = objectMapper.writeValueAsString(objectHashMap);
