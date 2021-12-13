@@ -6,7 +6,7 @@ import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.services.common.DocStatisticsService;
 import cn.huacloud.taxpreference.services.common.SysParamService;
 import cn.huacloud.taxpreference.services.common.entity.dos.DocStatisticsDO;
-import cn.huacloud.taxpreference.services.common.watch.WatchViewService;
+import cn.huacloud.taxpreference.services.common.watch.WatcherViewService;
 import cn.huacloud.taxpreference.services.consumer.CollectionService;
 import cn.huacloud.taxpreference.services.consumer.entity.dos.CollectionDO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.CollectionDTO;
@@ -38,7 +38,7 @@ public class CollectionServiceImpl implements CollectionService {
     private final CollectionMapper collectionMapper;
     private final DocStatisticsService docStatisticsService;
     private final SysParamService sysParamService;
-    private final WatchViewService watchViewService;
+    private final WatcherViewService watchViewService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)

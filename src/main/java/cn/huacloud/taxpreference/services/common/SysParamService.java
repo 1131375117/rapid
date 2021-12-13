@@ -1,7 +1,6 @@
 package cn.huacloud.taxpreference.services.common;
 
 import cn.huacloud.taxpreference.services.common.entity.dos.SysParamDO;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.util.List;
 import java.util.Map;
@@ -16,7 +15,7 @@ public interface SysParamService {
      * @param paramKey
      * @return
      */
-    SysParamDO selectByParamKey(String paramKey);
+    SysParamDO selectByParamKey(String paramKey,String paramType);
 
     /**
      * 根据指定参数类型返回数据对象
@@ -60,6 +59,6 @@ public interface SysParamService {
      * @param clazz        参数类型
      * @return 参数单一值
      */
-    <T> T getSingleParamValue(String sysParamType, String sysParamKey, Class<T> clazz);
+    <T> T getSingleParamValue(String sysParamType, String sysParamKey, Class<T> clazz) ;
 
 }

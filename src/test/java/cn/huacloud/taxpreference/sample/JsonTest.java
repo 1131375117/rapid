@@ -1,11 +1,16 @@
 package cn.huacloud.taxpreference.sample;
 
+import cn.huacloud.taxpreference.common.enums.DocType;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionLikeType;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * json测试类
@@ -15,6 +20,19 @@ import org.junit.Test;
 public class JsonTest {
 
     ObjectMapper objectMapper = new ObjectMapper();
+
+    @Test
+    public void testConvert() throws Exception {
+        for (int i = 0; i < 100000; i++) {
+            List<String> list = new ArrayList<>();
+            list.add("POLICIES_EXPLAIN");
+            String str = objectMapper.writeValueAsString(list);
+            CollectionLikeType type = objectMapper.getTypeFactory().constructCollectionLikeType(ArrayList.class, DocType.class);
+            List<DocType> target = objectMapper.readValue(str, type);
+            DocType next = target.iterator().next();
+            log.info(next.getName());
+        }
+    }
 
     @Test
     public void testWrite() throws Exception {
