@@ -47,22 +47,14 @@ class SysParamServiceImplTest {
     void getObjectParamByTypes() {
         ArrayList<String> sysparamList = new ArrayList<>();
         sysparamList.add("operation.views");
-        try {
-            Param objectParamByTypes = sysParamService.getObjectParamByTypes(sysparamList, Param.class);
-            System.out.println(objectParamByTypes);
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
+        Param objectParamByTypes = sysParamService.getObjectParamByTypes(sysparamList, Param.class);
+        System.out.println(objectParamByTypes);
     }
 
     @Test
     void getMapParamByTypes() {
-        try {
-            Map<String, DocType> mapParamByTypes = sysParamService.getMapParamByTypes(DocType.class, "operation.views");
-            System.out.println(mapParamByTypes);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+        Map<String, DocType> mapParamByTypes = sysParamService.getMapParamByTypes(DocType.class, "operation.views");
+        System.out.println(mapParamByTypes);
     }
 
 
