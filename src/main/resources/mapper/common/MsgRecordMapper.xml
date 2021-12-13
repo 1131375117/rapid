@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.huacloud.taxpreference.services.message.mapper.MsgRecordMapper">
+    <select id="selectLimitLastCreateTime" resultType="java.time.LocalDateTime">
+        SELECT create_time
+        FROM t_msg_record
+        WHERE msg_type = #{msgType}
+          AND msg_biz_type = #{msgBizType}
+          AND create_time > #{fromTime}
+          AND FIND_IN_SET(#{singleReceiver}, receiver)
+        LIMIT 1
+    </select>
+</mapper>

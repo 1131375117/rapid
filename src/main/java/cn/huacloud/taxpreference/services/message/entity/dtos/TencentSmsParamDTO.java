@@ -1,4 +1,4 @@
-package cn.huacloud.taxpreference.services.message.entity.dots;
+package cn.huacloud.taxpreference.services.message.entity.dtos;
 
 import lombok.Getter;
 import lombok.Setter;

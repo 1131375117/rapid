@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * @author wangkh
  */
-public interface SysCodeService {
+public interface SysCodeService extends CacheClear {
 
     /**
      * 根据系统码值类型获取系统码值
@@ -75,11 +75,6 @@ public interface SysCodeService {
      * @return 系统码值DO list
      */
     List<SysCodeDO> getSysCodeDOByCodeType(SysCodeType sysCodeType);
-
-    /**
-     * 清除系统码值缓存
-     */
-    void cleanSysCodeCache();
 
     /**
      * 获取码值本身和其叶子节点

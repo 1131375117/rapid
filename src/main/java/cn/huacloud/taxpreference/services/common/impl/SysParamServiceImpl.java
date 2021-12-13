@@ -79,6 +79,11 @@ public class SysParamServiceImpl implements SysParamService {
 
     }
 
+    @Override
+    public <T> T getSingleParamValue(String sysParamType, String sysParamKey, Class<T> clazz) {
+        return null;
+    }
+
     private void getMap(HashMap<Object, Object> map, List<SysParamDO> sysParamDOList) {
         for (SysParamDO sysParamDO : sysParamDOList) {
             String paramKey = sysParamDO.getParamKey();

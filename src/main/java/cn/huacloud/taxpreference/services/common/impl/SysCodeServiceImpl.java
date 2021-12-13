@@ -228,14 +228,6 @@ public class SysCodeServiceImpl implements SysCodeService {
     }
 
     @Override
-    public void cleanSysCodeCache() {
-        sysCodeCache.invalidateAll();
-        sysCodeMapCache.invalidateAll();
-        sysCodeTypeMapCache.invalidateAll();
-        sysCodePidMapCache.invalidateAll();
-    }
-
-    @Override
     public List<String> withChildrenCodes(Collection<?> target) {
         Map<String, SysCodeDO> sysCodeMapCache = getSysCodeMapCache();
         List<SysCodeDO> targetCodes = target.stream()
@@ -328,5 +320,13 @@ public class SysCodeServiceImpl implements SysCodeService {
      */
     private boolean isSysCodeDOValid(SysCodeDO sysCodeDO) {
         return SysCodeStatus.VALID.equals(sysCodeDO.getCodeStatus());
+    }
+
+    @Override
+    public void clear() {
+        sysCodeCache.invalidateAll();
+        sysCodeMapCache.invalidateAll();
+        sysCodeTypeMapCache.invalidateAll();
+        sysCodePidMapCache.invalidateAll();
     }
 }

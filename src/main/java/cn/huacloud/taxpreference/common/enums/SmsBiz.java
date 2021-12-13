@@ -4,6 +4,7 @@ import cn.huacloud.taxpreference.services.message.handler.SmsBizHandler;
 import cn.huacloud.taxpreference.services.message.handler.SmsBizLoginVerificationCodeHandler;
 import cn.huacloud.taxpreference.services.message.handler.SmsBizRegisterVerificationCodeHandler;
 import cn.huacloud.taxpreference.services.message.handler.SmsBizRetrievePasswordVerificationCodeHandler;
+import com.baomidou.mybatisplus.annotation.IEnum;
 import lombok.Getter;
 
 import java.util.Arrays;
@@ -13,7 +14,7 @@ import java.util.List;
  * 短信业务枚举
  * @author wangkh
  */
-public enum SmsBiz implements SysParamTypesGetter {
+public enum SmsBiz implements SysParamTypesGetter, IEnum<String> {
 
     LOGIN_VERIFICATION_CODE("发送登录验证码", SmsBizLoginVerificationCodeHandler.class, Arrays.asList("sms.login.verificationCode", "sms.base")),
     REGISTER_VERIFICATION_CODE("发送注册验证码", SmsBizRegisterVerificationCodeHandler.class, Arrays.asList("sms.register.verificationCode", "sms.base")),
@@ -39,5 +40,10 @@ public enum SmsBiz implements SysParamTypesGetter {
         this.bizName = bizName;
         this.smsBizHandlerClass = smsBizHandlerClass;
         this.sysParamTypes = sysParamTypes;
+    }
+
+    @Override
+    public String getValue() {
+        return name();
     }
 }
