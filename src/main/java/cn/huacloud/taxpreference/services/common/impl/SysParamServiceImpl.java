@@ -8,6 +8,8 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.MapType;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author fuhua
@@ -27,6 +30,10 @@ public class SysParamServiceImpl implements SysParamService {
     private final SysParamMapper sysParamMapper;
     private final ObjectMapper objectMapper;
 
+    private final Cache<Object, List<SysParamDO>> sysParamCache = CacheBuilder.newBuilder()
+            .expireAfterWrite(2, TimeUnit.HOURS)
+            .build();
+
     @Override
     public SysParamDO selectByParamKey(String paramKey) {
         LambdaQueryWrapper<SysParamDO> queryWrapper = Wrappers.lambdaQuery(SysParamDO.class)
@@ -36,7 +43,7 @@ public class SysParamServiceImpl implements SysParamService {
     }
 
     @Override
-    public <T> T getObjectParamByTypes(List<String> sysParamTypes, Class<T> clazz) throws InstantiationException, IllegalAccessException {
+    public <T> T getObjectParamByTypes(List<String> sysParamTypes, Class<T> clazz) {
         HashMap<Object, Object> objectHashMap = new HashMap<>();
         Map<String, Integer> indexMap = new HashMap<>();
         for (int i = 0; i < sysParamTypes.size(); i++) {
@@ -44,6 +51,8 @@ public class SysParamServiceImpl implements SysParamService {
         }
         if (!CollectionUtils.isEmpty(sysParamTypes)) {
             try {
+                //根据类型获取缓存
+
                 List<SysParamDO> sysParamDOList = sysParamMapper.getSysParamDOList(sysParamTypes);
                 sysParamDOList.sort(Comparator.comparingInt(a -> indexMap.get(a.getParamType())));
                 getMap(objectHashMap, sysParamDOList);
@@ -53,11 +62,17 @@ public class SysParamServiceImpl implements SysParamService {
                 log.error("JsonProcessingException:", e);
             }
         }
-        return clazz.newInstance();
+        try {
+            return clazz.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            log.error("类实例化异常:", e);
+
+        }
+        return (T) objectHashMap;
     }
 
     @Override
-    public <T> Map<String, T> getMapParamByTypes(Class<T> clazz, String... args) throws JsonProcessingException {
+    public <T> Map<String, T> getMapParamByTypes(Class<T> clazz, String... args) {
         HashMap<Object, Object> map = new HashMap<>();
         Map<String, Integer> indexMap = new HashMap<>();
         List<SysParamDO> sysParamDOList = sysParamMapper.getSysParamDOList(args);
@@ -75,7 +90,7 @@ public class SysParamServiceImpl implements SysParamService {
         } catch (JsonProcessingException e) {
             log.error("JsonProcessingException:", e);
         }
-        return null;
+        return new HashMap<>();
 
     }
 
