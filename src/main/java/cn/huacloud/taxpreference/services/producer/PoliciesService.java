@@ -3,6 +3,7 @@ package cn.huacloud.taxpreference.services.producer;
 import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesCheckDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesCombinationDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryAbolishDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesDTO;
@@ -86,10 +87,10 @@ public interface PoliciesService {
 
 	/**
 	 * 校验标题和文号是否重复
-	 * @param titleOrDocCode 标题或文号
+	 * @param policiesCheckDTO 标题或文号
 	 * @return 返回 true 重复 false 不重复
 	 */
-	Boolean checkTitleAndDocCode(String titleOrDocCode);
+	Boolean checkTitleAndDocCode(PoliciesCheckDTO policiesCheckDTO);
 
 
 	/**
