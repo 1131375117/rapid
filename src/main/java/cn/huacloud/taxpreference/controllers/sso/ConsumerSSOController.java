@@ -72,7 +72,7 @@ public class ConsumerSSOController {
             throw BizCode._4603.exception();
         }
         // 校验用户密码
-        if (!loginUserVO.getPassword().equals(SaSecureUtil.md5(PasswordSecureUtil.decode(passwordLoginDTO.getPassword())))) {
+        if (!loginUserVO.getPassword().equals(SaSecureUtil.md5(PasswordSecureUtil.decrypt(passwordLoginDTO.getPassword())))) {
             throw BizCode._4603.exception();
         }
         // 擦除密码
@@ -92,7 +92,7 @@ public class ConsumerSSOController {
         // 校验验证码
         checkVerificationCode(RedisKeyUtil.getSmsRegisterRedisKey(userRegisterDTO.getPhoneNumber()), userRegisterDTO.getVerificationCode());
         // 执行注册
-        consumerUserService.manualCreateUser(userRegisterDTO.getPhoneNumber(), PasswordSecureUtil.decode(userRegisterDTO.getPassword()));
+        consumerUserService.manualCreateUser(userRegisterDTO.getPhoneNumber(), PasswordSecureUtil.decrypt(userRegisterDTO.getPassword()));
         return ResultVO.ok(null);
     }
 
@@ -108,7 +108,7 @@ public class ConsumerSSOController {
     public ResultVO<Void> retrievePassword(@RequestBody RetrievePasswordDTO retrievePasswordDTO) {
         // 校验验证码
         checkVerificationCode(RedisKeyUtil.getSmsRetrievePasswordRedisKey(retrievePasswordDTO.getPhoneNumber()), retrievePasswordDTO.getVerificationCode());
-        consumerUserService.retrievePassword(retrievePasswordDTO.getPhoneNumber(), PasswordSecureUtil.decode(retrievePasswordDTO.getPassword()));
+        consumerUserService.retrievePassword(retrievePasswordDTO.getPhoneNumber(), PasswordSecureUtil.decrypt(retrievePasswordDTO.getPassword()));
         return ResultVO.ok(null);
     }
 

@@ -2,7 +2,11 @@ package cn.huacloud.taxpreference.sample;
 
 import cn.dev33.satoken.secure.SaSecureUtil;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.PoliciesSearchQueryDTO;
+import cn.hutool.core.codec.Base64;
 import cn.hutool.core.lang.Snowflake;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.asymmetric.KeyType;
+import cn.hutool.crypto.asymmetric.RSA;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -10,9 +14,14 @@ import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
+import org.apache.commons.io.IOUtils;
 import org.junit.Test;
+import org.springframework.core.io.ClassPathResource;
 
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -26,6 +35,49 @@ import java.util.regex.Pattern;
  */
 @Slf4j
 public class SampleTest {
+
+    @Test
+    public void testRsaKeyPrint() {
+        RSA rsa = new RSA();
+        String privateKeyBase64 = rsa.getPrivateKeyBase64();
+        String publicKeyBase64 = rsa.getPublicKeyBase64();
+        log.info(privateKeyBase64);
+        log.info(publicKeyBase64);
+    }
+
+    @Test
+    public void testRsaKey() {
+        RSA rsa = new RSA();
+        PrivateKey privateKey = rsa.getPrivateKey();
+        PublicKey publicKey = rsa.getPublicKey();
+        String privateKeyStr = Base64.encodeStr(privateKey.getEncoded(), false, false);
+        String publicKeyStr = Base64.encodeStr(publicKey.getEncoded(), false, false);
+        RSA testRsa = new RSA(privateKeyStr, publicKeyStr);
+        log.info(privateKeyStr);
+        log.info(publicKeyStr);
+    }
+
+    @Test
+    public void testRsa() throws Exception {
+        String privateKey = readRsaKey("rsa/id_rsa");
+        String publicKey = readRsaKey("rsa/id_rsa.pub");
+        RSA rsa = new RSA(privateKey, publicKey);
+        byte[] bytes = rsa.encrypt("测试", KeyType.PublicKey);
+        byte[] decrypt = rsa.decrypt(bytes, KeyType.PrivateKey);
+        log.info(StrUtil.str(decrypt, StandardCharsets.UTF_8));
+        String data = readRsaKey("rsa/test_data.txt");
+        String str = rsa.decryptStr(data, KeyType.PrivateKey);
+        log.info(str);
+    }
+
+    private String readRsaKey(String path) throws Exception {
+        Optional<String> key = IOUtils.readLines(new ClassPathResource(path).getInputStream(), StandardCharsets.UTF_8)
+                .stream()
+                .filter(line -> !line.startsWith("----"))
+                .map(line -> line.replaceAll("\n", ""))
+                .reduce((a, b) -> a + b);
+        return key.get();
+    }
 
     @Test
     public void testSnowFlake() {
