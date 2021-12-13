@@ -15,13 +15,17 @@ import javax.validation.constraints.NotEmpty;
 @Data
 public class OperationRecordDTO {
 
-    @ApiModelProperty(hidden = true )
+    @ApiModelProperty(hidden = true)
     private Long id;
 
     /**
      * 操作类型
      */
-    @ApiModelProperty("操作类型")
+    @ApiModelProperty(notes = "views.taxPreference->税收优惠浏览量," +
+            "views.policies->政策法规浏览量," +
+            "views.caseAnalysis->案例分析浏览量," +
+            "views.policiesExplain->政策解读浏览量," +
+            "views.frequentlyAskedQuestion->热门问答浏览量")
     @NotEmpty(message = "操作类型不能为空")
     private String operationType;
 

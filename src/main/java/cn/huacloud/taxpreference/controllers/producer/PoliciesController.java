@@ -9,6 +9,7 @@ import cn.huacloud.taxpreference.common.enums.PermissionGroup;
 import cn.huacloud.taxpreference.common.utils.ProducerUserUtil;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.producer.PoliciesService;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesCheckDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesCombinationDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryAbolishDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesDTO;
@@ -164,16 +165,16 @@ public class PoliciesController {
 
 	/**
 	 * 校验标题和文号是否重复
-	 * @param titleOrDocCode
+	 * @param policiesCheckDTO
 	 * @return
 	 */
 	@PermissionInfo(name = "政策法规标题和文号校验", group = PermissionGroup.POLICIES)
 	@SaCheckPermission("producer_policies_checkTitleAndDocCode")
 	@ApiOperation("政策法规标题和文号校验")
-	@GetMapping(value = "/policies/checkTitleAndDocCode")
+	@PostMapping(value = "/policies/checkTitleAndDocCode")
 	public ResultVO<Boolean> checkTitleAndDocCode(
-			@Validated @RequestParam(value = "titleOrDocCode") String titleOrDocCode) {
-		Boolean aBoolean = policiesService.checkTitleAndDocCode(titleOrDocCode);
+			@Validated @RequestBody PoliciesCheckDTO policiesCheckDTO) {
+		Boolean aBoolean = policiesService.checkTitleAndDocCode(policiesCheckDTO);
 		return ResultVO.ok(aBoolean);
 	}
 

@@ -3,6 +3,7 @@ package cn.huacloud.taxpreference.sync.es.trigger.impl;
 import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
 import cn.huacloud.taxpreference.services.common.DocStatisticsService;
+import cn.huacloud.taxpreference.services.common.entity.dos.DocStatisticsDO;
 import cn.huacloud.taxpreference.services.consumer.entity.ess.FrequentlyAskedQuestionES;
 import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO;
 import cn.huacloud.taxpreference.services.producer.mapper.FrequentlyAskedQuestionMapper;
@@ -50,15 +51,15 @@ public class FAQEventTrigger extends EventTrigger<Long, FrequentlyAskedQuestionE
     @Override
     protected FrequentlyAskedQuestionES getEntityById(Long id) {
         FrequentlyAskedQuestionDO faqDO = frequentlyAskedQuestionMapper.selectById(id);
-     //   DocStatisticsDO docStatisticsDO = docStatisticsService.selectDocStatistics(id, docType());
+        DocStatisticsDO docStatisticsDO = docStatisticsService.selectDocStatistics(id, docType());
         if (faqDO.getDeleted()) {
             return null;
         }
 
         // 属性拷贝
         FrequentlyAskedQuestionES faqES = CustomBeanUtil.copyProperties(faqDO, FrequentlyAskedQuestionES.class);
-      //  faqES.setCollections(docStatisticsDO.getCollections());
-      //  faqES.setViews(docStatisticsDO.getViews());
+        faqES.setCollections(docStatisticsDO.getCollections());
+        faqES.setViews(docStatisticsDO.getViews());
 
         // 属性转换
         faqES.setPoliciesIds(split2List(faqDO.getPoliciesIds()));

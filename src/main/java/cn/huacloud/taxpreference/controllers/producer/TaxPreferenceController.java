@@ -42,11 +42,19 @@ public class TaxPreferenceController {
         return taxPreferenceService.queryTaxPreferenceList(queryTaxPreferencesDTO, ProducerUserUtil.getCurrentUser().getId());
     }
 
-    @PermissionInfo(name = "税收优惠新增接口", group = PermissionGroup.TAX_PREFERENCE)
+    @PermissionInfo(name = "税收优惠保存接口", group = PermissionGroup.TAX_PREFERENCE)
     @SaCheckPermission("producer_taxPreference_insert")
-    @ApiOperation("税收优惠新增接口")
-    @PostMapping("taxPreference")
-    public ResultVO<Void> insertTaxPreference(@Validated(ValidationGroup.Create.class) @RequestBody TaxPreferenceDTO taxPreferenceDTO) {
+    @ApiOperation("税收优惠保存接口")
+    @PostMapping("saveTaxPreference")
+    public ResultVO<Void> saveTaxPreference(@RequestBody TaxPreferenceDTO taxPreferenceDTO) {
+        return taxPreferenceService.insertTaxPreference(taxPreferenceDTO, ProducerUserUtil.getCurrentUser());
+    }
+
+    @PermissionInfo(name = "税收优惠提交接口", group = PermissionGroup.TAX_PREFERENCE)
+    @SaCheckPermission("producer_taxPreference_submit")
+    @ApiOperation("税收优惠提交接口")
+    @PostMapping("submitTaxPreference")
+    public ResultVO<Void> submitTaxPreference(@Validated(ValidationGroup.Create.class) @RequestBody TaxPreferenceDTO taxPreferenceDTO) {
         return taxPreferenceService.insertTaxPreference(taxPreferenceDTO, ProducerUserUtil.getCurrentUser());
     }
 

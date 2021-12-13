@@ -29,6 +29,7 @@ public class PoliciesCombinationDTO {
 	private Long id;
 
 	@ApiModelProperty("标题")
+	@NotEmpty(message = "标题不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
 	private String title;
 
 	@ApiModelProperty("文号")
@@ -81,7 +82,7 @@ public class PoliciesCombinationDTO {
 	@ApiModelProperty("标签管理")
 	private String abolishNote;
 
-	/*@ApiModelProperty("热点问答集合")
+/*	@ApiModelProperty("热点问答集合")
 	@Valid
 	private List<FrequentlyAskedQuestionDTO> frequentlyAskedQuestionDTOList;*/
 

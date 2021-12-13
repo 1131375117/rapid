@@ -11,7 +11,7 @@ import cn.huacloud.taxpreference.services.common.entity.dos.SysParamDO;
 import cn.huacloud.taxpreference.services.common.entity.dtos.OperationRecordDTO;
 import cn.huacloud.taxpreference.services.common.mapper.OperationRecordMapper;
 import cn.huacloud.taxpreference.services.common.watch.WatchViewService;
-import cn.huacloud.taxpreference.services.user.entity.vos.ProducerLoginUserVO;
+import cn.huacloud.taxpreference.services.user.entity.vos.ConsumerLoginUserVO;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +45,7 @@ public class OperationRecordServiceImpl implements OperationRecordService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void operationRecord(OperationRecordDTO operationRecordDTO, ProducerLoginUserVO currentUser) {
+    public void operationRecord(OperationRecordDTO operationRecordDTO, ConsumerLoginUserVO currentUser) {
 
         OperationRecordDO operationRecordDO = new OperationRecordDO();
         BeanUtils.copyProperties(operationRecordDTO, operationRecordDO);

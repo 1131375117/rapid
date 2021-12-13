@@ -40,18 +40,18 @@ tax-preference:
     secret-key: "tax_preference"
   index:
     policies:
-      index: policies_index_2021-11-25_dev
+      index: policies_index_2021-12-13_dev
       alias: policies_dev
     policies-explain:
-      index: policies_explain_index_2021-11-25_dev
+      index: policies_explain_index_2021-12-13_dev
       alias: policies_explain_dev
     frequently-asked-question:
-      index: frequently_asked_question_index_2021-11-25_dev
+      index: frequently_asked_question_index_2021-12-13_dev
       alias: frequently_asked_question_dev
     tax-preference:
-      index: tax_preference_index_2021-11-25_dev
+      index: tax_preference_index_2021-12-13_dev
       alias: tax_preference_dev
     other-doc:
-      index: other_doc_index_2021-11-24_dev
+      index: other_doc_index_2021-12-13_dev
       alias: other_doc_dev
 

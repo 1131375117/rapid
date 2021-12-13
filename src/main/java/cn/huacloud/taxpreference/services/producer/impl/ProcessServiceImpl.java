@@ -103,7 +103,10 @@ public class ProcessServiceImpl implements ProcessService {
 		List<ProcessInfoVO> processInfoVOList = new ArrayList<>();
 		Map<String, Object> keymap = new HashMap<>(16);
 		keymap.put(TAX_PREFERENCE_ID, id);
-		List<ProcessDO> processDOList = processServiceMapper.selectByMap(keymap);
+		LambdaQueryWrapper<ProcessDO> queryWrapper = Wrappers.lambdaQuery(ProcessDO.class);
+		queryWrapper.eq(ProcessDO::getTaxPreferenceId,id)
+				.orderByDesc(ProcessDO::getApprovalTime);
+		List<ProcessDO> processDOList = processServiceMapper.selectList(queryWrapper);
 		log.info("查询结果:processDOList:{}", processDOList);
 		processDOList.forEach(processDO -> {
 			ProcessInfoVO processInfoVO = new ProcessInfoVO();

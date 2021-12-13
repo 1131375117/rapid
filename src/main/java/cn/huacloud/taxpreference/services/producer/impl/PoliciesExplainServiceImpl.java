@@ -172,8 +172,11 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 		LambdaQueryWrapper<PoliciesExplainDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
 		lambdaQueryWrapper.eq(PoliciesExplainDO::getPoliciesId, policiesExplainDTO.getPoliciesId());
 		lambdaQueryWrapper.eq(PoliciesExplainDO::getDeleted, false);
-		Long count = policiesExplainMapper.selectCount(lambdaQueryWrapper);
-		if (count > 0) {
+		List<PoliciesExplainDO> policiesExplainDoS = policiesExplainMapper.selectList(lambdaQueryWrapper);
+		if (policiesExplainDoS.size() > 1) {
+			throw BizCode._4308.exception();
+		}
+		if(policiesExplainDoS.size() == 1 && !policiesExplainDTO.getPoliciesId().equals(policiesExplainDoS.get(0).getPoliciesId())){
 			throw BizCode._4308.exception();
 		}
 	}

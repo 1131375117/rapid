@@ -63,12 +63,18 @@
               "type": "keyword"
             }
           }
+        },
+        "views": {
+          "type": "long"
+        },
+        "collections": {
+          "type": "long"
         }
       }
     }
   },
   "priority": 500,
   "_meta": {
-    "description": "t_other_doc案例模板，更新时间2021年11月23日"
+    "description": "t_other_doc案例模板，更新时间2021年12月13日"
   }
 }
