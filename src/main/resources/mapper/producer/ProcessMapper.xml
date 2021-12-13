@@ -29,10 +29,10 @@
                 and t.tax_categories_code = #{query.taxCategoriesCode}
             </if>
             <if test="query.startTime!=null ">
-                and t.create_time >= #{query.startTime}
+                and p.create_time >= #{query.startTime}
             </if>
             <if test="query.endTime!=null ">
-                and t.create_time &lt;= #{query.endTime}
+                and p.create_time &lt;= #{query.endTime}
             </if>
             <if test="query.userName!=null and query.userName!= ''">
                 and u.username like "%"#{query.userName}"%"

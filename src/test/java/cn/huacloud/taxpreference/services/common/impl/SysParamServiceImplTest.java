@@ -21,6 +21,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class SysParamServiceImplTest {
+
     static SysParamService sysParamService;
     static ObjectMapper objectMapper;
     static ArrayList<SysParamDO> sysParamDOArrayList;
@@ -40,7 +41,6 @@ class SysParamServiceImplTest {
         queryWrapper.in(SysParamDO::getParamType, "operation.views");
         when(sysParamMapper.selectList(queryWrapper)).thenReturn(sysParamDOArrayList);
         sysParamService = new SysParamServiceImpl(sysParamMapper, configure);
-
     }
 
     @Test
