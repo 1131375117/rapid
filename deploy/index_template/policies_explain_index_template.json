@@ -89,12 +89,18 @@
         "combinePlainContent": {
           "type": "text",
           "analyzer": "ik_max_word"
+        },
+        "views": {
+          "type": "long"
+        },
+        "collections": {
+          "type": "long"
         }
       }
     }
   },
   "priority": 500,
   "_meta": {
-    "description": "政策解读索引模板，更新时间2021年11月17日"
+    "description": "政策解读索引模板，更新时间2021年12月13日"
   }
 }

@@ -3,6 +3,7 @@ package cn.huacloud.taxpreference.sync.es.trigger.impl;
 import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
 import cn.huacloud.taxpreference.services.common.DocStatisticsService;
+import cn.huacloud.taxpreference.services.common.entity.dos.DocStatisticsDO;
 import cn.huacloud.taxpreference.services.consumer.entity.ess.OtherDocES;
 import cn.huacloud.taxpreference.services.producer.entity.dos.OtherDocDO;
 import cn.huacloud.taxpreference.services.producer.mapper.OtherDocMapper;
@@ -49,11 +50,12 @@ public class OtherDocEventTrigger extends EventTrigger<Long, OtherDocES> {
     @Override
     protected OtherDocES getEntityById(Long id) {
         OtherDocDO otherDocDO = otherDocMapper.selectById(id);
-     //   DocStatisticsDO docStatisticsDO = statisticsService.selectDocStatistics(id, docType());
+        DocStatisticsDO docStatisticsDO = statisticsService.selectDocStatistics(id, docType());
 
         // 属性拷贝
         OtherDocES otherDocES = CustomBeanUtil.copyProperties(otherDocDO, OtherDocES.class);
-      //  CustomBeanUtil.copyProperties(docStatisticsDO, OtherDocES.class);
+        otherDocES.setCollections(docStatisticsDO.getCollections());
+        otherDocES.setViews(docStatisticsDO.getViews());
         otherDocES.setDocType(otherDocDO.getDocType().getSysCode());
 
         return otherDocES;

@@ -18,7 +18,6 @@ public class SysConfig {
      */
     private String password = "12345678Aa";
 
-
     /**
      * 检查系统密码
      * @param password 系统密码

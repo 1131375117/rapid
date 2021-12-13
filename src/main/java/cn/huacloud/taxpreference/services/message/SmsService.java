@@ -29,4 +29,16 @@ public interface SmsService {
      * @param smsBiz      短信业务
      */
     void sendSms(List<String> phoneNumbers, SmsBiz smsBiz);
+
+    /**
+     * 短信发送拦截器
+     */
+    interface Interceptor {
+        /**
+         * 短信发送拦截器
+         * @param phoneNumbers 电话号码集合
+         * @param smsBiz 短信业务
+         */
+        void apply(List<String> phoneNumbers, SmsBiz smsBiz);
+    }
 }

@@ -26,8 +26,6 @@ class SysParamServiceImplTest {
     static ObjectMapper objectMapper;
     static ArrayList<SysParamDO> sysParamDOArrayList;
 
-
-
     @BeforeAll
     static void beforeAll() {
         objectMapper = new ObjectMapper();
@@ -45,24 +43,16 @@ class SysParamServiceImplTest {
 
     @Test
     void getObjectParamByTypes() {
-        ArrayList<String> sysparamList = new ArrayList<>();
-        sysparamList.add("operation.views");
-        try {
-            Param objectParamByTypes = sysParamService.getObjectParamByTypes(sysparamList, Param.class);
-            System.out.println(objectParamByTypes);
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
+        ArrayList<String> sysParamList = new ArrayList<>();
+        sysParamList.add("operation.views");
+        Param objectParamByTypes = sysParamService.getObjectParamByTypes(sysParamList, Param.class);
+        System.out.println(objectParamByTypes);
     }
 
     @Test
     void getMapParamByTypes() {
-        try {
-            Map<String, DocType> mapParamByTypes = sysParamService.getMapParamByTypes(DocType.class, "operation.views");
-            System.out.println(mapParamByTypes);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+        Map<String, DocType> mapParamByTypes = sysParamService.getMapParamByTypes(DocType.class, "operation.views");
+        System.out.println(mapParamByTypes);
     }
 
 
@@ -90,7 +80,6 @@ class SysParamServiceImplTest {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-
     }
 
 }

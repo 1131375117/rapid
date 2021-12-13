@@ -19,13 +19,47 @@ public interface SysParamService {
     SysParamDO selectByParamKey(String paramKey);
 
     /**
+     * 根据指定参数类型返回数据对象
      *
      * @param sysParamTypes
      * @param clazz
      * @param <T>
      * @return
      */
-    <T> T getObjectParamByTypes(List<String> sysParamTypes, Class<T> clazz) throws InstantiationException, IllegalAccessException;
+    <T> T getObjectParamByTypes(List<String> sysParamTypes, Class<T> clazz);
 
-    <T> Map<String, T> getMapParamByTypes(Class<T> clazz, String... args) throws JsonProcessingException;
+    /**
+     * 根据传入类型返回指定类型
+     *
+     * @param clazz
+     * @param args
+     * @param <T>
+     * @return
+     */
+    <T> Map<String, T> getMapParamByTypes(Class<T> clazz, String... args);
+
+    /**
+     * 获取单一参数值
+     *
+     * @param sysParamType 参数类型
+     * @param sysParamKey  参数Key
+     * @param clazz        参数类型
+     * @param defaultValue 默认值
+     * @return 参数单一值
+     */
+    default <T> T getSingleParamValue(String sysParamType, String sysParamKey, Class<T> clazz, T defaultValue) {
+        T value = getSingleParamValue(sysParamType, sysParamKey, clazz);
+        return value == null ? defaultValue : value;
+    }
+
+    /**
+     * 获取单一参数值
+     *
+     * @param sysParamType 参数类型
+     * @param sysParamKey  参数Key
+     * @param clazz        参数类型
+     * @return 参数单一值
+     */
+    <T> T getSingleParamValue(String sysParamType, String sysParamKey, Class<T> clazz);
+
 }
