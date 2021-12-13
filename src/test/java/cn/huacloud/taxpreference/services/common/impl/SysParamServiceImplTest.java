@@ -26,8 +26,6 @@ class SysParamServiceImplTest {
     static ObjectMapper objectMapper;
     static ArrayList<SysParamDO> sysParamDOArrayList;
 
-
-
     @BeforeAll
     static void beforeAll() {
         objectMapper = new ObjectMapper();
@@ -45,9 +43,9 @@ class SysParamServiceImplTest {
 
     @Test
     void getObjectParamByTypes() {
-        ArrayList<String> sysparamList = new ArrayList<>();
-        sysparamList.add("operation.views");
-        Param objectParamByTypes = sysParamService.getObjectParamByTypes(sysparamList, Param.class);
+        ArrayList<String> sysParamList = new ArrayList<>();
+        sysParamList.add("operation.views");
+        Param objectParamByTypes = sysParamService.getObjectParamByTypes(sysParamList, Param.class);
         System.out.println(objectParamByTypes);
     }
 
@@ -82,7 +80,6 @@ class SysParamServiceImplTest {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-
     }
 
 }
