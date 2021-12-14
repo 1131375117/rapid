@@ -5,6 +5,7 @@ import cn.huacloud.taxpreference.common.enums.SysCodeStatus;
 import cn.huacloud.taxpreference.common.enums.SysCodeType;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
 import cn.huacloud.taxpreference.services.common.entity.dos.SysCodeDO;
+import cn.huacloud.taxpreference.services.common.entity.dtos.SysCodeQueryDTO;
 import cn.huacloud.taxpreference.services.common.entity.dtos.SysCodeStringDTO;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeSimpleVO;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeTreeVO;
@@ -240,6 +241,22 @@ public class SysCodeServiceImpl implements SysCodeService {
             setChildren(targetCode, targetSet, sysCodePidMapCache);
         }
         return targetSet.stream().map(SysCodeDO::getCodeValue).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<SysCodeTreeVO> getSysCodeTreeVOLazy(SysCodeQueryDTO sysCodeQueryDTO) {
+        List<SysCodeDO> sysCodeDOList = getSysCodeTypeMapCache().get(sysCodeQueryDTO.getSysCodeType());
+        if (sysCodeDOList == null) {
+            return new ArrayList<>();
+        }
+        return sysCodeDOList.stream()
+                .filter(this::isSysCodeDOValid)
+                .filter(sysCodeDO -> sysCodeQueryDTO.getPid().equals(sysCodeDO.getPid()))
+                .map(sysCodeDO -> {
+                    SysCodeTreeVO sysCodeTreeVO = new SysCodeTreeVO();
+                    BeanUtils.copyProperties(sysCodeDO, sysCodeTreeVO);
+                    return sysCodeTreeVO;
+                }).collect(Collectors.toList());
     }
 
     Stream<SysCodeDO> getValidSortStreamByCodeValues(String codeValues) {

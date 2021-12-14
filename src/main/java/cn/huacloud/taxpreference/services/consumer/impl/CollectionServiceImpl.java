@@ -5,7 +5,7 @@ import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.services.common.DocStatisticsService;
 import cn.huacloud.taxpreference.services.common.SysParamService;
-import cn.huacloud.taxpreference.services.common.entity.dos.DocStatisticsDO;
+import cn.huacloud.taxpreference.services.common.entity.dtos.DocStatisticsPlus;
 import cn.huacloud.taxpreference.services.common.watch.WatcherViewService;
 import cn.huacloud.taxpreference.services.consumer.CollectionService;
 import cn.huacloud.taxpreference.services.consumer.entity.dos.CollectionDO;
@@ -42,28 +42,37 @@ public class CollectionServiceImpl implements CollectionService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void saveOrCancelCollection(CollectionDTO collectionDtO) {
+    public Boolean saveOrCancelCollection(CollectionDTO collectionDTO) {
 
         CollectionDO saveCollectionDO = new CollectionDO();
-        DocStatisticsDO docStatisticsDO = new DocStatisticsDO()
-                .setDocId(collectionDtO.getSourceId())
-                .setDocType(DocType.valueOf(collectionDtO.getCollectionType().name));
-        BeanUtils.copyProperties(collectionDtO, saveCollectionDO);
-
+        DocStatisticsPlus docStatisticsPlus = new DocStatisticsPlus()
+                .setDocId(collectionDTO.getSourceId())
+                .setDocType(DocType.valueOf(collectionDTO.getCollectionType().name));
+        BeanUtils.copyProperties(collectionDTO, saveCollectionDO);
         //收藏或取消收藏
-        saveOrCancelCollection(saveCollectionDO, docStatisticsDO, queryCollection(collectionDtO));
-
+        Boolean flag;
+        if (queryCollection(collectionDTO) != null) {
+            collectionMapper.deleteById(queryCollection(collectionDTO));
+            docStatisticsPlus.setCollectionsPlus(-1L);
+            flag = false;
+        } else {
+            saveCollectionDO.setCreateTime(LocalDateTime.now());
+            collectionMapper.insert(saveCollectionDO);
+            docStatisticsPlus.setCollectionsPlus(1L);
+            flag = true;
+        }
         //保存到统计表
-        docStatisticsService.saveOrUpdateDocStatisticsService(docStatisticsDO);
+        docStatisticsService.saveOrUpdateDocStatisticsService(docStatisticsPlus);
         //应用到es
-        TYPE_TRIGGER_MAP.get(docStatisticsDO.getDocType()).saveEvent(collectionDtO.getSourceId());
+        TYPE_TRIGGER_MAP.get(docStatisticsPlus.getDocType()).saveEvent(collectionDTO.getSourceId());
+        return flag;
     }
 
     @Override
     public PageVO<CollectionVO> queryCollection(PageQueryDTO pageQueryDTO, Long userId) {
         pageQueryDTO.paramReasonable();
         LambdaQueryWrapper<CollectionDO> collectionDOLambdaQueryWrapper = Wrappers.lambdaQuery(CollectionDO.class);
-        collectionDOLambdaQueryWrapper.eq(CollectionDO::getConsumerUserId,userId);
+        collectionDOLambdaQueryWrapper.eq(CollectionDO::getConsumerUserId, userId);
         IPage<CollectionDO> queryPage = pageQueryDTO.createQueryPage();
         IPage<CollectionDO> collectionDOIPage = collectionMapper.selectPage(queryPage, collectionDOLambdaQueryWrapper);
         List<CollectionVO> collectionVOList = collectionDOIPage
@@ -74,20 +83,6 @@ public class CollectionServiceImpl implements CollectionService {
                 }).collect(Collectors.toList());
 
         return PageVO.createPageVO(collectionDOIPage, collectionVOList);
-    }
-
-    /**
-     * 收藏或取消collection
-     */
-    private void saveOrCancelCollection(CollectionDO saveCollectionDO, DocStatisticsDO docStatisticsDO, CollectionDO queryCollection) {
-        if (queryCollection != null) {
-            collectionMapper.deleteById(queryCollection);
-            docStatisticsDO.setCollections(-1L);
-        } else {
-            saveCollectionDO.setCreateTime(LocalDateTime.now());
-            collectionMapper.insert(saveCollectionDO);
-            docStatisticsDO.setCollections(1L);
-        }
     }
 
     /**

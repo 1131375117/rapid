@@ -2,6 +2,7 @@ package cn.huacloud.taxpreference.services.common;
 
 import cn.huacloud.taxpreference.common.enums.SysCodeType;
 import cn.huacloud.taxpreference.services.common.entity.dos.SysCodeDO;
+import cn.huacloud.taxpreference.services.common.entity.dtos.SysCodeQueryDTO;
 import cn.huacloud.taxpreference.services.common.entity.dtos.SysCodeStringDTO;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeSimpleVO;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeTreeVO;
@@ -82,4 +83,11 @@ public interface SysCodeService extends CacheClear {
      * @return 码值集合包含叶子节点
      */
     List<String> withChildrenCodes(Collection<?> target);
+
+    /**
+     * 懒加载获取系统码值
+     * @param sysCodeQueryDTO 系统码值查询对象
+     * @return
+     */
+    List<SysCodeTreeVO> getSysCodeTreeVOLazy(SysCodeQueryDTO sysCodeQueryDTO);
 }

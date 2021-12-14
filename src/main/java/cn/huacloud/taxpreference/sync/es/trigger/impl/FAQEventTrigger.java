@@ -58,13 +58,17 @@ public class FAQEventTrigger extends EventTrigger<Long, FrequentlyAskedQuestionE
 
         // 属性拷贝
         FrequentlyAskedQuestionES faqES = CustomBeanUtil.copyProperties(faqDO, FrequentlyAskedQuestionES.class);
-        if(faqES==null){
-            faqES=new FrequentlyAskedQuestionES();
+        if (faqES == null) {
+            faqES = new FrequentlyAskedQuestionES();
         }
-        if(docStatisticsDO!=null) {
+        if (docStatisticsDO != null) {
             faqES.setCollections(docStatisticsDO.getCollections());
             faqES.setViews(docStatisticsDO.getViews());
+        } else {
+            faqES.setCollections(0L);
+            faqES.setViews(0L);
         }
+
 
         // 属性转换
         faqES.setPoliciesIds(split2List(faqDO.getPoliciesIds()));

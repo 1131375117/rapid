@@ -53,7 +53,7 @@ public class TaxPreferencePoliciesVO {
     /**
      * 政策法规关联具体交款
      */
-    @ApiModelProperty("政策法规关联具体交款")
+    @ApiModelProperty("政策法规关联具体条款")
     private String policiesItems;
 
 }

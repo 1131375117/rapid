@@ -2,6 +2,7 @@ package cn.huacloud.taxpreference.services.common;
 
 import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.services.common.entity.dos.DocStatisticsDO;
+import cn.huacloud.taxpreference.services.common.entity.dtos.DocStatisticsPlus;
 
 /**
  * 统计服务
@@ -21,7 +22,7 @@ public interface DocStatisticsService {
 
     /**
      * 修改或保存统计
-     * @param docStatisticsDO
+     * @param docStatisticsPlus
      */
-    void saveOrUpdateDocStatisticsService(DocStatisticsDO docStatisticsDO);
+    void saveOrUpdateDocStatisticsService(DocStatisticsPlus docStatisticsPlus);
 }
