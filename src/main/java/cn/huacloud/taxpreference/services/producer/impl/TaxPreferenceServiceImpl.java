@@ -62,24 +62,20 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     public ResultVO<Void> insertTaxPreference(TaxPreferenceDTO taxPreferenceDTO, ProducerLoginUserVO currentUser) {
         log.info("新增政策法规dto={}", taxPreferenceDTO);
         taxPreferenceDTO.setInputUserId(currentUser.getId());
-        // 检查优惠事项名称是否存在
-        judgeExists(taxPreferenceDTO);
-        // 检测纳税人类型和标签管理
-        checkLabels(taxPreferenceDTO);
         // 新增-税收优惠表t_tax_preference
         TaxPreferenceDO taxPreferenceDO = getTaxPreferenceDO(taxPreferenceDTO);
         taxPreferenceDO.setCreateTime(LocalDateTime.now());
         log.info("税收优惠新增对象:{}", taxPreferenceDO);
         taxPreferenceMapper.insert(taxPreferenceDO);
         //判断是否需要提交发布申请
+        taxPreferenceDTO.setId(taxPreferenceDO.getId());
         isRequireReleased(taxPreferenceDTO, currentUser, taxPreferenceDO);
+
         // 新增-税收优惠政策法规关联表t_tax_preference_ policies
         insertTaxPreferencePoliciesDO(taxPreferenceDTO, taxPreferenceDO);
 
         // 新增-申报条件表 t_submit_condition
         insertSubmitConditionDOs(taxPreferenceDTO, taxPreferenceDO);
-        //同步到es
-        taxPreferenceEventTrigger.saveEvent(taxPreferenceDO.getId());
         return ResultVO.ok();
     }
 
@@ -88,7 +84,13 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
      */
     private void isRequireReleased(TaxPreferenceDTO taxPreferenceDTO, ProducerLoginUserVO currentUser, TaxPreferenceDO taxPreferenceDO) {
         if (TaxStatus.SUBMIT.equals(taxPreferenceDTO.getStatus())) {
+            // 判断是否存在
+            judgeExists(taxPreferenceDTO);
+            // 检测纳税人类型和标签管理
+            checkLabels(taxPreferenceDTO);
             processService.insertProcessService(new Long[]{(taxPreferenceDO.getId())}, currentUser);
+            //同步到es
+            taxPreferenceEventTrigger.saveEvent(taxPreferenceDTO.getId());
         }
     }
 
@@ -99,8 +101,6 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         judgeRelease(taxPreferenceDTO.getId());
         // 判断是否在审批中
         processService.judgeProcessIng(taxPreferenceDTO.getId());
-        // 判断是否存在
-        judgeExists(taxPreferenceDTO);
         // 判断标签
         checkLabels(taxPreferenceDTO);
         // 修改-税收优惠表t_tax_preference
@@ -113,8 +113,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
 
         // 修改-申报条件表 t_submit_condition
         updateSubmitConditionByTaxPreferenceId(taxPreferenceDTO);
-        //同步到es
-        taxPreferenceEventTrigger.saveEvent(taxPreferenceDTO.getId());
+
         return ResultVO.ok();
     }
 

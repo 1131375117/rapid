@@ -61,4 +61,5 @@ public class PoliciesSearchVO {
 
     @ApiModelProperty("上一篇、下一篇")
     PreviousNextVO<Long> previousNext;
+
 }

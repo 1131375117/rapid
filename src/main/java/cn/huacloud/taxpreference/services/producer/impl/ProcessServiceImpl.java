@@ -64,7 +64,9 @@ public class ProcessServiceImpl implements ProcessService {
 			processDO.setLatestProcess(true);
 			processDO.setCreatorId(currentUser.getId());
 			processDO.setCreatorName(currentUser.getUsername());
-			processDO.setProcessStatus(ProcessStatus.NOT_APPROVED);
+			processDO.setApprovalNote("系统自动审批");
+			//直接修改为审批通过
+			processDO.setProcessStatus(ProcessStatus.APPROVED);
 			processServiceMapper.insert(processDO);
 		}
 		return ResultVO.ok();
