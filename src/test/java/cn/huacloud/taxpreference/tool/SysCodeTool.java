@@ -5,10 +5,15 @@ import cn.huacloud.taxpreference.common.enums.SysCodeStatus;
 import cn.huacloud.taxpreference.common.enums.SysCodeType;
 import cn.huacloud.taxpreference.services.common.entity.dos.SysCodeDO;
 import cn.huacloud.taxpreference.services.common.mapper.SysCodeMapper;
+import cn.huacloud.taxpreference.tool.SysCodeTool.IgnoreProvider;
 import cn.hutool.core.convert.Convert;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +23,7 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -33,7 +39,7 @@ import java.util.stream.Collectors;
  *
  * @author wangkh
  */
-//@Ignore
+@Ignore
 @Slf4j
 public class SysCodeTool extends BaseApplicationTest {
 
@@ -45,7 +51,8 @@ public class SysCodeTool extends BaseApplicationTest {
     @Test
     public void generateSysCode() throws Exception {
         List<SysCodeProvider> sysCodeProviders = Arrays.stream(SysCodeTool.class.getDeclaredFields())
-                .filter(field -> field.getType().isAssignableFrom(SysCodeProvider.class))
+                .filter(field -> field.getType().isAssignableFrom(SysCodeProvider.class)
+                        && !field.isAnnotationPresent(IgnoreProvider.class))
                 .map(field -> {
                     try {
                         return (SysCodeProvider) field.get(this);
@@ -93,7 +100,14 @@ public class SysCodeTool extends BaseApplicationTest {
      * 系统码值提供器
      */
     interface SysCodeProvider {
+
         List<SysCodeDO> fetch(Long nextId) throws Exception;
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ElementType.FIELD})
+    public @interface IgnoreProvider {
+
     }
 
     /**
@@ -105,8 +119,9 @@ public class SysCodeTool extends BaseApplicationTest {
      * 所属区域
      */
     private SysCodeProvider area = nextId -> {
-        List<Area> standardAreas = objectMapper.readValue(new ClassPathResource("sys_code/所属区域.json").getInputStream(), new TypeReference<List<Area>>() {
-        });
+        List<Area> standardAreas = objectMapper.readValue(new ClassPathResource("sys_code/所属区域.json").getInputStream(),
+                new TypeReference<List<Area>>() {
+                });
         List<Area> targetArea = new ArrayList<>();
         Area zy = new Area().setName("中央")
                 .setPid(0L);
@@ -153,6 +168,56 @@ public class SysCodeTool extends BaseApplicationTest {
     /**
      * 适用行业
      */
+    private SysCodeProvider csvIndustry = nextId -> {
+        InputStream inputStream = new ClassPathResource("sys_code/行业代码.csv").getInputStream();
+
+        // 使用指定的字符编码以字符串列表的形式获取InputStream的内容，每行一个条目
+        List<String> list = IOUtils.readLines(inputStream, StandardCharsets.UTF_8);
+
+        Long currentPid = 0L;
+        List<SysCodeDO> sysCodeDOList = new ArrayList<>();
+
+        // 删除.csv第一行
+        list.remove(0);
+        for (String line : list) {
+            String[] split = line.split(",");
+
+            String code = split[6];
+            String name = split[1];
+            String validStatus = split[8];
+
+            Long pid;
+            boolean isLeaf;
+            if (code.length() == 1) {
+                pid = 0L;
+                currentPid = nextId;
+                isLeaf = false;
+            } else {
+                pid = currentPid;
+                isLeaf = true;
+            }
+
+            SysCodeDO sysCodeDO = new SysCodeDO();
+            if (validStatus.contains("Y")) {
+                sysCodeDO.setCodeStatus(SysCodeStatus.VALID);
+            }
+            sysCodeDO.setCodeName(name)
+                    .setCodeValue(code)
+                    .setId(nextId)
+                    .setPid(pid)
+                    .setCodeType(SysCodeType.INDUSTRY)
+                    .setLeaf(isLeaf)
+                    .setSort(nextId);
+
+
+            nextId++;
+            sysCodeDOList.add(sysCodeDO);
+        }
+        return sysCodeDOList;
+
+    };
+
+    @IgnoreProvider
     private SysCodeProvider industry = nextId -> {
         InputStream inputStream = new ClassPathResource("sys_code/适用行业.txt").getInputStream();
         List<String> list = IOUtils.readLines(inputStream, StandardCharsets.UTF_8);
@@ -206,17 +271,20 @@ public class SysCodeTool extends BaseApplicationTest {
     /**
      * 纳税人资格认定类型
      */
-    private SysCodeProvider taxpayerIdentifyType = nextId -> readSingleFile("纳税人资格认定类型.txt", SysCodeType.TAXPAYER_IDENTIFY_TYPE, nextId);
+    private SysCodeProvider taxpayerIdentifyType = nextId -> readSingleFile("纳税人资格认定类型.txt",
+            SysCodeType.TAXPAYER_IDENTIFY_TYPE, nextId);
 
     /**
      * 适用企业类型
      */
-    private SysCodeProvider enterpriseType = nextId -> readSingleFile("适用企业类型.txt", SysCodeType.ENTERPRISE_TYPE, nextId);
+    private SysCodeProvider enterpriseType = nextId -> readSingleFile("适用企业类型.txt", SysCodeType.ENTERPRISE_TYPE,
+            nextId);
 
     /**
      * 纳税人登记注册类型
      */
-    private SysCodeProvider taxpayerRegisterType = nextId -> readSingleFile("纳税人登记注册类型.txt", SysCodeType.TAXPAYER_REGISTER_TYPE, nextId);
+    private SysCodeProvider taxpayerRegisterType = nextId -> readSingleFile("纳税人登记注册类型.txt",
+            SysCodeType.TAXPAYER_REGISTER_TYPE, nextId);
 
     /**
      * 纳税人类型
@@ -293,6 +361,7 @@ public class SysCodeTool extends BaseApplicationTest {
     @Accessors(chain = true)
     @Data
     public static class Area {
+
         private Long id;
         private Long pid;
         private String code;
