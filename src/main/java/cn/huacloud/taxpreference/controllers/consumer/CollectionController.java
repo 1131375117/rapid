@@ -49,8 +49,7 @@ public class CollectionController {
     @ApiOperation("我的收藏展示")
     @PostMapping("/queryCollection")
     public ResultVO<PageVO<CollectionVO>> queryCollection(PageQueryDTO pageQueryDTO) {
-        //todo 获取当前登录用户
-        PageVO<CollectionVO> pageVO = collectionService.queryCollection(pageQueryDTO);
+        PageVO<CollectionVO> pageVO = collectionService.queryCollection(pageQueryDTO,ConsumerUserUtil.getCurrentUser().getId());
         return ResultVO.ok(pageVO);
     }
 }

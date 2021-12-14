@@ -10,7 +10,7 @@ import java.util.HashMap;
 /**
  * @author hua-cloud
  */
-public interface WatchOperation {
+public interface WatcherOperation {
     HashMap<DocType, EventTrigger<Long, Object>> TYPE_TRIGGER_MAP = new HashMap<>();
 
     boolean supported(String operationType);

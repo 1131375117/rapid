@@ -32,7 +32,7 @@ public class OperationRecordDTO {
     /**
      * 操作参数
      */
-    @ApiModelProperty("操作参数")
+    @ApiModelProperty("操作参数,浏览操作只需要给id,例如:5")
     private String operationParam;
 
 }
