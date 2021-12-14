@@ -22,6 +22,7 @@ import java.util.function.Supplier;
 
 /**
  * 政策法规ES数据事件触发器
+ *
  * @author wangkh
  */
 @RequiredArgsConstructor
@@ -59,12 +60,15 @@ public class PoliciesEventTrigger extends EventTrigger<Long, PoliciesES> {
 
         // 属性拷贝
         PoliciesES policiesES = CustomBeanUtil.copyProperties(policiesDO, PoliciesES.class);
-        if(policiesES==null){
-            policiesES=new PoliciesES();
+        if (policiesES == null) {
+            policiesES = new PoliciesES();
         }
-        if(docStatisticsDO!=null){
+        if (docStatisticsDO != null) {
             policiesES.setCollections(docStatisticsDO.getCollections());
             policiesES.setViews(docStatisticsDO.getViews());
+        } else {
+            policiesES.setCollections(0L);
+            policiesES.setViews(0L);
         }
 
         // 类型转换属性设置

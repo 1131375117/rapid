@@ -70,12 +70,15 @@ public class PoliciesExplainEventTrigger extends EventTrigger<Long, PoliciesExpl
 
         // 属性拷贝
         PoliciesExplainES policiesExplainES = CustomBeanUtil.copyProperties(policiesExplainDO, PoliciesExplainES.class);
-        if(policiesExplainES==null){
-            policiesExplainES=new PoliciesExplainES();
+        if (policiesExplainES == null) {
+            policiesExplainES = new PoliciesExplainES();
         }
-        if(docStatisticsDO!=null) {
+        if (docStatisticsDO != null) {
             policiesExplainES.setCollections(docStatisticsDO.getCollections());
             policiesExplainES.setViews(docStatisticsDO.getViews());
+        } else {
+            policiesExplainES.setCollections(0L);
+            policiesExplainES.setViews(0L);
         }
 
         // 类型转换属性设置
