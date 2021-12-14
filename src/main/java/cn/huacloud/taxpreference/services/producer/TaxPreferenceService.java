@@ -10,6 +10,7 @@ import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceAboli
 import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceCountVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceVO;
 import cn.huacloud.taxpreference.services.user.entity.vos.ProducerLoginUserVO;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.List;
 
@@ -27,7 +28,7 @@ public interface TaxPreferenceService {
 	 * @param currentUser
 	 * @return resultVO
 	 */
-	ResultVO<Void> insertTaxPreference(TaxPreferenceDTO taxPreferenceDTO, ProducerLoginUserVO currentUser);
+	ResultVO<Void> insertTaxPreference(TaxPreferenceDTO taxPreferenceDTO, ProducerLoginUserVO currentUser) throws MethodArgumentNotValidException;
 
 	/**
 	 * 修改税收优惠接口
@@ -36,7 +37,7 @@ public interface TaxPreferenceService {
 	 * @param currentUser
 	 * @return resultVO
 	 */
-	ResultVO<Void> updateTaxPreference(TaxPreferenceDTO taxPreferenceDTO, ProducerLoginUserVO currentUser);
+	ResultVO<Void> updateTaxPreference(TaxPreferenceDTO taxPreferenceDTO, ProducerLoginUserVO currentUser) throws MethodArgumentNotValidException;
 
 	/**
 	 * 修改税收优惠查询基本信息接口

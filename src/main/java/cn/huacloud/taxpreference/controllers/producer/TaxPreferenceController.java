@@ -16,6 +16,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotEmpty;
@@ -42,19 +43,19 @@ public class TaxPreferenceController {
         return taxPreferenceService.queryTaxPreferenceList(queryTaxPreferencesDTO, ProducerUserUtil.getCurrentUser().getId());
     }
 
-    @PermissionInfo(name = "税收优惠保存接口", group = PermissionGroup.TAX_PREFERENCE)
+    @PermissionInfo(name = "税收优惠暂存接口", group = PermissionGroup.TAX_PREFERENCE)
     @SaCheckPermission("producer_taxPreference_insert")
-    @ApiOperation("税收优惠保存接口")
+    @ApiOperation("税收优惠暂存接口")
     @PostMapping("saveTaxPreference")
-    public ResultVO<Void> saveTaxPreference(@RequestBody TaxPreferenceDTO taxPreferenceDTO) {
+    public ResultVO<Void> saveTaxPreference(@RequestBody TaxPreferenceDTO taxPreferenceDTO) throws MethodArgumentNotValidException {
         return taxPreferenceService.insertTaxPreference(taxPreferenceDTO, ProducerUserUtil.getCurrentUser());
     }
 
-    @PermissionInfo(name = "税收优惠提交接口", group = PermissionGroup.TAX_PREFERENCE)
+    @PermissionInfo(name = "暂存税收优惠提交接口", group = PermissionGroup.TAX_PREFERENCE)
     @SaCheckPermission("producer_taxPreference_submit")
-    @ApiOperation("税收优惠提交接口")
+    @ApiOperation("暂存税收优惠提交接口")
     @PostMapping("submitTaxPreference")
-    public ResultVO<Void> submitTaxPreference(@Validated(ValidationGroup.Create.class) @RequestBody TaxPreferenceDTO taxPreferenceDTO) {
+    public ResultVO<Void> submitTaxPreference(@Validated(ValidationGroup.Create.class) @RequestBody TaxPreferenceDTO taxPreferenceDTO) throws MethodArgumentNotValidException {
         return taxPreferenceService.insertTaxPreference(taxPreferenceDTO, ProducerUserUtil.getCurrentUser());
     }
 
@@ -62,15 +63,15 @@ public class TaxPreferenceController {
     @SaCheckPermission("producer_taxPreference_update_save")
     @ApiOperation("保存税收优惠修改接口")
     @PutMapping("saveTaxPreference")
-    public ResultVO<Void> updateTaxPreferenceSave(@RequestBody TaxPreferenceDTO taxPreferenceDTO) {
+    public ResultVO<Void> updateTaxPreferenceSave(@RequestBody TaxPreferenceDTO taxPreferenceDTO) throws MethodArgumentNotValidException {
         return taxPreferenceService.updateTaxPreference(taxPreferenceDTO, ProducerUserUtil.getCurrentUser());
     }
 
     @PermissionInfo(name = "提交税收优惠修改接口", group = PermissionGroup.TAX_PREFERENCE)
     @SaCheckPermission("producer_taxPreference_update_submit")
-    @ApiOperation("保存税收优惠修改接口")
+    @ApiOperation("提交税收优惠修改接口")
     @PutMapping("submitTaxPreference")
-    public ResultVO<Void> updateTaxPreferenceSubmit(@Validated(ValidationGroup.Update.class) @RequestBody TaxPreferenceDTO taxPreferenceDTO) {
+    public ResultVO<Void> updateTaxPreferenceSubmit(@Validated(ValidationGroup.Update.class) @RequestBody TaxPreferenceDTO taxPreferenceDTO) throws MethodArgumentNotValidException {
         return taxPreferenceService.updateTaxPreference(taxPreferenceDTO, ProducerUserUtil.getCurrentUser());
     }
     /**

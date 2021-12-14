@@ -18,6 +18,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotEmpty;
@@ -55,8 +56,7 @@ public class ProcessController {
 	@SaCheckPermission("producer_process_release")
 	@ApiOperation("税收优惠事项批量发布申请")
 	@PostMapping("/process/{taxPreferenceId}")
-	public ResultVO<Void> insertTaxPreference(@Validated() @NotEmpty(message = "税收优惠id不能为空") @PathVariable("taxPreferenceId") Long[] taxPreferenceIds) {
-
+	public ResultVO<Void> insertTaxPreference(@Validated() @NotEmpty(message = "税收优惠id不能为空") @PathVariable("taxPreferenceId") Long[] taxPreferenceIds) throws MethodArgumentNotValidException {
 		return processService.insertProcessService(taxPreferenceIds, ProducerUserUtil.getCurrentUser());
 	}
 
