@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static cn.huacloud.taxpreference.services.common.watch.WatchOperation.TYPE_TRIGGER_MAP;
+import static cn.huacloud.taxpreference.services.common.watch.WatcherOperation.TYPE_TRIGGER_MAP;
 
 /**
  * 收藏服务实现类
@@ -60,9 +60,10 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     @Override
-    public PageVO<CollectionVO> queryCollection(PageQueryDTO pageQueryDTO) {
-
+    public PageVO<CollectionVO> queryCollection(PageQueryDTO pageQueryDTO, Long userId) {
+        pageQueryDTO.paramReasonable();
         LambdaQueryWrapper<CollectionDO> collectionDOLambdaQueryWrapper = Wrappers.lambdaQuery(CollectionDO.class);
+        collectionDOLambdaQueryWrapper.eq(CollectionDO::getConsumerUserId,userId);
         IPage<CollectionDO> queryPage = pageQueryDTO.createQueryPage();
         IPage<CollectionDO> collectionDOIPage = collectionMapper.selectPage(queryPage, collectionDOLambdaQueryWrapper);
         List<CollectionVO> collectionVOList = collectionDOIPage

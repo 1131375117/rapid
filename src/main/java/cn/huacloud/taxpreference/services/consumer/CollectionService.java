@@ -21,6 +21,7 @@ public interface CollectionService {
      * 展示我的收藏
      *
      * @param pageQueryDTO
+     * @param id
      */
-    PageVO<CollectionVO> queryCollection(PageQueryDTO pageQueryDTO);
+    PageVO<CollectionVO> queryCollection(PageQueryDTO pageQueryDTO, Long id);
 }
