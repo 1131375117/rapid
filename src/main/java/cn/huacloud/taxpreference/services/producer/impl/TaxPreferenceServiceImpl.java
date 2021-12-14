@@ -159,17 +159,35 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         }
         BeanUtils.copyProperties(taxPreferenceDO, taxPreferenceVO);
         //设置行业类型和码值
-        taxPreferenceVO.setIndustryCodes(Arrays.asList(taxPreferenceDO.getIndustryCodes().split(",")));
-        taxPreferenceVO.setIndustryNames(Arrays.asList(taxPreferenceDO.getIndustryNames().split(",")));
+        if (!StringUtils.isEmpty(taxPreferenceDO.getIndustryCodes())) {
+            taxPreferenceVO.setIndustryCodes(Arrays.asList(taxPreferenceDO.getIndustryCodes().split(",")));
+        } else {
+            taxPreferenceVO.setIndustryCodes(new ArrayList<>());
+        }
+        if (!StringUtils.isEmpty(taxPreferenceDO.getIndustryCodes())) {
+            taxPreferenceVO.setIndustryNames(Arrays.asList(taxPreferenceDO.getIndustryNames().split(",")));
+        } else {
+            taxPreferenceVO.setIndustryNames(new ArrayList<>());
+        }
+
         //设置信用凭证
-        if(taxPreferenceDO.getTaxpayerCreditRatings()!=null){
+        if (taxPreferenceDO.getTaxpayerCreditRatings() != null) {
             taxPreferenceVO.setTaxpayerCreditRatings(Arrays.asList(taxPreferenceDO.getTaxpayerCreditRatings().split(",")));
-        }else{
+        } else {
             taxPreferenceVO.setTaxpayerCreditRatings(new ArrayList<>());
         }
         //设置企业类型和码值
-        taxPreferenceVO.setEnterpriseTypeCodes(Arrays.asList(taxPreferenceDO.getEnterpriseTypeCodes().split(",")));
-        taxPreferenceVO.setEnterpriseTypeNames(Arrays.asList(taxPreferenceDO.getEnterpriseTypeNames().split(",")));
+        if (!StringUtils.isEmpty(taxPreferenceDO.getEnterpriseTypeCodes())) {
+            taxPreferenceVO.setEnterpriseTypeCodes(Arrays.asList(taxPreferenceDO.getEnterpriseTypeCodes().split(",")));
+        } else {
+            taxPreferenceVO.setEnterpriseTypeCodes(new ArrayList<>());
+        }
+        if (!StringUtils.isEmpty(taxPreferenceDO.getEnterpriseTypeNames())) {
+            taxPreferenceVO.setEnterpriseTypeNames(Arrays.asList(taxPreferenceDO.getEnterpriseTypeNames().split(",")));
+        } else {
+            taxPreferenceVO.setEnterpriseTypeNames(new ArrayList<>());
+        }
+
         //设置标签
         if (!StringUtils.isEmpty(taxPreferenceDO.getLabels())) {
             List<String> labels = Arrays.asList(taxPreferenceDO.getLabels().split(","));

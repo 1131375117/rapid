@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.common.mapper;
 
+import cn.huacloud.taxpreference.common.enums.SysCodeStatus;
 import cn.huacloud.taxpreference.services.common.entity.dos.SysParamDO;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -21,7 +22,7 @@ public interface SysParamMapper extends BaseMapper<SysParamDO> {
      */
     default List<SysParamDO> getSysParamDOList(String... paramTypes) {
         LambdaQueryWrapper<SysParamDO> queryWrapper = Wrappers.lambdaQuery(SysParamDO.class);
-        queryWrapper.eq(SysParamDO::getParamStatus, "VALID");
+        queryWrapper.eq(SysParamDO::getParamStatus, SysCodeStatus.VALID);
         queryWrapper.in(SysParamDO::getParamType,Arrays.asList(paramTypes));
         return selectList(queryWrapper);
 
@@ -33,7 +34,7 @@ public interface SysParamMapper extends BaseMapper<SysParamDO> {
      */
     default List<SysParamDO> getSysParamDOList(List<String> paramTypes) {
         LambdaQueryWrapper<SysParamDO> queryWrapper = Wrappers.lambdaQuery(SysParamDO.class);
-        queryWrapper.eq(SysParamDO::getParamStatus, "VALID");
+        queryWrapper.eq(SysParamDO::getParamStatus, SysCodeStatus.VALID);
         queryWrapper.in(SysParamDO::getParamType,paramTypes);
         return selectList(queryWrapper);
 
