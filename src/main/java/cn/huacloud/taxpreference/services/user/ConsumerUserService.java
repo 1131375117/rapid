@@ -21,7 +21,6 @@ public interface ConsumerUserService {
         return loginUserVO;
     }
 
-
     /**
      * 获取用户登录视图
      * @param account 账户：用户账户、手机号、邮箱
@@ -31,6 +30,7 @@ public interface ConsumerUserService {
 
     /**
      * 用户自动注册
+     * @param phoneNumber 手机号
      */
     void autoCreateUserByPhoneNumber(String phoneNumber);
 
@@ -48,19 +48,4 @@ public interface ConsumerUserService {
      */
     void retrievePassword(String phoneNumber, String password);
 
-    /**
-     * 检查手号机是否已经注册
-     */
-
-    /**
-     * 检查用户账户、手机、邮箱是否已经注册
-     */
-
-    /**
-     * 根据手机号用户登录信息
-     */
-
-    /**
-     * 根据用户账户、手机号、邮箱获取用户登录信息
-     */
 }

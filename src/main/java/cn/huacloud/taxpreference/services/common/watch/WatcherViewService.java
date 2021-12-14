@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
  **/
 @Service
 @RequiredArgsConstructor
-public class WatcherViewService implements WatchOperation, ApplicationContextAware {
+public class WatcherViewService implements WatcherOperation, ApplicationContextAware {
 
     @Override
     public boolean supported(String operationType) {

@@ -40,7 +40,7 @@ public class SysParamServiceImpl implements SysParamService {
     public SysParamDO selectByParamKey(String paramKey, String paramType) {
         LambdaQueryWrapper<SysParamDO> queryWrapper = Wrappers.lambdaQuery(SysParamDO.class)
                 .eq(SysParamDO::getParamKey, paramKey)
-                .eq(StringUtils.isEmpty(paramType), SysParamDO::getParamType, paramType);
+                .eq(!StringUtils.isEmpty(paramType), SysParamDO::getParamType, paramType);
         SysParamDO sysParamDO = sysParamMapper.selectOne(queryWrapper);
         return sysParamDO;
     }

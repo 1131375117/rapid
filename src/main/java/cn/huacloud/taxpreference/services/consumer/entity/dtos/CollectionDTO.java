@@ -25,7 +25,11 @@ public class CollectionDTO {
     /**
      * 收藏类型
      */
-    @ApiModelProperty("收藏类型")
+    @ApiModelProperty(notes = "收藏类型,POLICIES-政策法规," +
+                            "POLICIES_EXPLAIN-政策解读," +
+            "FREQUENTLY_ASKED_QUESTION-热门问答," +
+            "TAX_PREFERENCE-税收优惠," +
+            "CASE_ANALYSIS-案例分析")
     @NotNull(message = "收藏类型不能为空")
     private CollectionType collectionType;
 
