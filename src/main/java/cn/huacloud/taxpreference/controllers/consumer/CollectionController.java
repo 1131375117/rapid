@@ -32,11 +32,12 @@ public class CollectionController {
      */
     @ApiOperation("点击收藏功能")
     @ConsumerUserCheckLogin
-    @PutMapping("/Collection")
     public ResultVO<Void> saveOrCancelCollection(@Validated CollectionDTO collectionDTO) {
+    @PutMapping("/collection")
+    public ResultVO<Boolean> saveOrCancelCollection(@Validated CollectionDTO collectionDTO) {
         collectionDTO.setConsumerUserId(ConsumerUserUtil.getCurrentUser().getId());
-        collectionService.saveOrCancelCollection(collectionDTO);
-        return ResultVO.ok();
+        Boolean isCollection = collectionService.saveOrCancelCollection(collectionDTO);
+        return ResultVO.ok(isCollection).setMsg("收藏状态是否收藏");
     }
 
     /**
@@ -48,5 +49,5 @@ public class CollectionController {
     public ResultVO<PageVO<CollectionVO>> queryCollection(PageQueryDTO pageQueryDTO) {
         PageVO<CollectionVO> pageVO = collectionService.queryCollection(pageQueryDTO,ConsumerUserUtil.getCurrentUser().getId());
         return ResultVO.ok(pageVO);
-    }*/
+    }
 }

@@ -3,6 +3,7 @@ package cn.huacloud.taxpreference.services.common.impl;
 import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.services.common.DocStatisticsService;
 import cn.huacloud.taxpreference.services.common.entity.dos.DocStatisticsDO;
+import cn.huacloud.taxpreference.services.common.entity.dtos.DocStatisticsPlus;
 import cn.huacloud.taxpreference.services.common.mapper.DocStatisticsMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -29,7 +30,12 @@ public class DocStatisticsServiceImpl implements DocStatisticsService {
 
 
     @Override
-    public void saveOrUpdateDocStatisticsService(DocStatisticsDO docStatisticsDO) {
+    public void saveOrUpdateDocStatisticsService(DocStatisticsPlus docStatisticsPlus) {
+        DocStatisticsDO docStatisticsDO = new DocStatisticsDO();
+        docStatisticsDO.setDocType(docStatisticsPlus.getDocType());
+        docStatisticsDO.setCollections(docStatisticsPlus.getCollectionsPlus());
+        docStatisticsDO.setViews(docStatisticsPlus.getViewsPlus());
+        docStatisticsDO.setDocId(docStatisticsPlus.getDocId());
         if (exists(docStatisticsDO)) {
             docStatisticsDO.setViews(docStatisticsDO.getViews()==null?0L:docStatisticsDO.getViews());
             docStatisticsDO.setCollections(docStatisticsDO.getCollections()==null?0L:docStatisticsDO.getCollections());

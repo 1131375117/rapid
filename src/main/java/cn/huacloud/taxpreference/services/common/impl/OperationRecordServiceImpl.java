@@ -5,9 +5,9 @@ import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.services.common.DocStatisticsService;
 import cn.huacloud.taxpreference.services.common.OperationRecordService;
 import cn.huacloud.taxpreference.services.common.SysParamService;
-import cn.huacloud.taxpreference.services.common.entity.dos.DocStatisticsDO;
 import cn.huacloud.taxpreference.services.common.entity.dos.OperationRecordDO;
 import cn.huacloud.taxpreference.services.common.entity.dos.SysParamDO;
+import cn.huacloud.taxpreference.services.common.entity.dtos.DocStatisticsPlus;
 import cn.huacloud.taxpreference.services.common.entity.dtos.OperationRecordDTO;
 import cn.huacloud.taxpreference.services.common.mapper.OperationRecordMapper;
 import cn.huacloud.taxpreference.services.common.watch.WatcherViewService;
@@ -76,16 +76,16 @@ public class OperationRecordServiceImpl implements OperationRecordService {
         /*
          * 插入统计表
          * */
-        DocStatisticsDO docStatisticsDO = new DocStatisticsDO()
-                .setDocType(DocType.valueOf(sysParamDO.getParamValue()))
-                .setDocId(Long.valueOf(operationRecordDO.getOperationParam()))
-                .setViews(1L);
-        docStatisticsService.saveOrUpdateDocStatisticsService(docStatisticsDO);
+        DocStatisticsPlus docStatisticsPlus = new DocStatisticsPlus();
+        docStatisticsPlus.setDocType(DocType.valueOf(sysParamDO.getParamValue()));
+        docStatisticsPlus.setDocId(Long.valueOf(operationRecordDO.getOperationParam()));
+        docStatisticsPlus.setViewsPlus(1L);
+        docStatisticsService.saveOrUpdateDocStatisticsService(docStatisticsPlus);
 
         /*
          * 写入es
          * */
-        watchSubject.apply(docStatisticsDO.getDocType(), operationRecordDTO);
+        watchSubject.apply(docStatisticsPlus.getDocType(), operationRecordDTO);
 
     }
 
