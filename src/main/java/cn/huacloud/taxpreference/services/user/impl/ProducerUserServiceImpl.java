@@ -98,7 +98,8 @@ public class ProducerUserServiceImpl implements ProducerUserService {
                 .like(userAccountKeyword != null, ProducerUserDO::getUserAccount, userAccountKeyword)
                 .like(usernameKeyword != null, ProducerUserDO::getUsername, usernameKeyword)
                 .apply(roleCode != null, "FIND_IN_SET ('" + roleCode + "', role_codes)")
-                .apply(excludeRoleCode != null, "NOT FIND_IN_SET ('" + excludeRoleCode + "', role_codes)");
+                .apply(excludeRoleCode != null, "NOT FIND_IN_SET ('" + excludeRoleCode + "', role_codes)")
+                .orderByDesc(ProducerUserDO::getCreateTime);
         // 执行查询
         IPage<ProducerUserDO> iPage = producerUserMapper.selectPage(userQueryDTO.createQueryPage(), queryWrapper);
 
