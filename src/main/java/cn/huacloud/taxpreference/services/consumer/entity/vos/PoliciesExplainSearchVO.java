@@ -26,7 +26,7 @@ public class PoliciesExplainSearchVO {
     private String docSource;
 
     @ApiModelProperty("所属税种")
-    private SysCodeSimpleVO taxCategories;
+    private List<SysCodeSimpleVO> taxCategories;
 
     @ApiModelProperty("纳税人资格认定类型")
     private List<SysCodeSimpleVO> taxpayerIdentifyTypes;
