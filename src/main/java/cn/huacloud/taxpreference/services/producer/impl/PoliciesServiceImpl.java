@@ -241,18 +241,6 @@ public class PoliciesServiceImpl implements PoliciesService {
 		return false;
 	}
 
-//	/**
-//	 * 拼接转换
-//	 */
-//	@NotNull
-//	private String convert2String(List<String> industryCodes) {
-//		Set<String> keySet;
-//		keySet = new TreeSet<>();
-//		industryCodes.forEach(
-//				industryCode -> keySet.add(sysCodeService.getCodeNameByCodeValue(industryCode)));
-//		log.info("keySet={}", keySet);
-//		return StringUtils.join(keySet, ",");
-//	}
 
 	/**
 	 * 根据政策法规id获取详细信息
@@ -366,6 +354,10 @@ public class PoliciesServiceImpl implements PoliciesService {
 	 */
 	private void updatePolicies(
 			PoliciesCombinationDTO policiesCombinationDTO, PoliciesDO policiesDO) {
+		//拼接文号
+		String docCode = DocCodeUtil.getDocCode(policiesCombinationDTO.getDocWordCode(), policiesCombinationDTO.getDocYearCode(), policiesCombinationDTO.getDocNumCode());
+		policiesDO.setDocCode(docCode);
+
 		BeanUtils.copyProperties(policiesCombinationDTO, policiesDO);
 		SysCodeStringDTO taxpayerIdentifyTypeDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getTaxpayerIdentifyTypeCodes(), false);
 		SysCodeStringDTO enterpriseTypeDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getEnterpriseTypeCodes(), false);
