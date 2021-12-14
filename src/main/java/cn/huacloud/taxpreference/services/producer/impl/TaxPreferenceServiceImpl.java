@@ -31,8 +31,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -51,15 +53,20 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     private final TaxPreferencePoliciesMapper taxPreferencePoliciesMapper;
     private final SubmitConditionMapper submitConditionMapper;
     private final ProcessServiceMapper processServiceMapper;
-    private final ProcessService processService;
+    private ProcessService processService;
     private final PoliciesMapper policiesMapper;
     private final SysCodeService sysCodeService;
     private final TaxPreferenceEventTrigger taxPreferenceEventTrigger;
     static final String TAX_PREFERENCE_ID = "tax_preference_id";
 
+    @Autowired
+    public void setProcessService(ProcessService processService) {
+        this.processService = processService;
+    }
+
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResultVO<Void> insertTaxPreference(TaxPreferenceDTO taxPreferenceDTO, ProducerLoginUserVO currentUser) {
+    public ResultVO<Void> insertTaxPreference(TaxPreferenceDTO taxPreferenceDTO, ProducerLoginUserVO currentUser) throws MethodArgumentNotValidException {
         log.info("新增政策法规dto={}", taxPreferenceDTO);
         taxPreferenceDTO.setInputUserId(currentUser.getId());
         // 新增-税收优惠表t_tax_preference
@@ -82,7 +89,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     /**
      * 是否需要发布
      */
-    private void isRequireReleased(TaxPreferenceDTO taxPreferenceDTO, ProducerLoginUserVO currentUser, TaxPreferenceDO taxPreferenceDO) {
+    private void isRequireReleased(TaxPreferenceDTO taxPreferenceDTO, ProducerLoginUserVO currentUser, TaxPreferenceDO taxPreferenceDO) throws MethodArgumentNotValidException {
         if (TaxStatus.SUBMIT.equals(taxPreferenceDTO.getStatus())) {
             // 判断是否存在
             judgeExists(taxPreferenceDTO);
@@ -96,7 +103,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResultVO<Void> updateTaxPreference(TaxPreferenceDTO taxPreferenceDTO, ProducerLoginUserVO currentUser) {
+    public ResultVO<Void> updateTaxPreference(TaxPreferenceDTO taxPreferenceDTO, ProducerLoginUserVO currentUser) throws MethodArgumentNotValidException {
         // 判断是否已经发布
         judgeRelease(taxPreferenceDTO.getId());
         // 判断是否在审批中
@@ -155,7 +162,11 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         taxPreferenceVO.setIndustryCodes(Arrays.asList(taxPreferenceDO.getIndustryCodes().split(",")));
         taxPreferenceVO.setIndustryNames(Arrays.asList(taxPreferenceDO.getIndustryNames().split(",")));
         //设置信用凭证
-        taxPreferenceVO.setTaxpayerCreditRatings(Arrays.asList(taxPreferenceDO.getTaxpayerCreditRatings().split(",")));
+        if(taxPreferenceDO.getTaxpayerCreditRatings()!=null){
+            taxPreferenceVO.setTaxpayerCreditRatings(Arrays.asList(taxPreferenceDO.getTaxpayerCreditRatings().split(",")));
+        }else{
+            taxPreferenceVO.setTaxpayerCreditRatings(new ArrayList<>());
+        }
         //设置企业类型和码值
         taxPreferenceVO.setEnterpriseTypeCodes(Arrays.asList(taxPreferenceDO.getEnterpriseTypeCodes().split(",")));
         taxPreferenceVO.setEnterpriseTypeNames(Arrays.asList(taxPreferenceDO.getEnterpriseTypeNames().split(",")));
@@ -342,7 +353,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
             throws TaxPreferenceException {
         PoliciesDO policiesDO = policiesMapper.selectById(taxPreferencePoliciesVO.getPoliciesId());
         if (policiesDO == null) {
-            throw BizCode._4304.exception();
+            return new PoliciesDO();
         }
         return policiesDO;
     }

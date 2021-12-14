@@ -7,6 +7,7 @@ import cn.huacloud.taxpreference.services.producer.entity.dtos.ProcessSubmitDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.ProcessInfoVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.ProcessListVO;
 import cn.huacloud.taxpreference.services.user.entity.vos.ProducerLoginUserVO;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ public interface ProcessService {
 	 * @param currentUser
 	 * @return resultVO
 	 */
-	ResultVO<Void> insertProcessService(Long[] taxPreferenceIds, ProducerLoginUserVO currentUser);
+	ResultVO<Void> insertProcessService(Long[] taxPreferenceIds, ProducerLoginUserVO currentUser) throws MethodArgumentNotValidException;
 
 	/**
 	 * 查询流程列表
