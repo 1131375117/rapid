@@ -58,14 +58,21 @@ public class TaxPreferenceController {
         return taxPreferenceService.insertTaxPreference(taxPreferenceDTO, ProducerUserUtil.getCurrentUser());
     }
 
-    @PermissionInfo(name = "税收优惠修改接口", group = PermissionGroup.TAX_PREFERENCE)
-    @SaCheckPermission("producer_taxPreference_update")
-    @ApiOperation("税收优惠修改接口")
-    @PutMapping("taxPreference")
-    public ResultVO<Void> updateTaxPreference(@Validated(ValidationGroup.Update.class) @RequestBody TaxPreferenceDTO taxPreferenceDTO) {
+    @PermissionInfo(name = "保存税收优惠修改接口", group = PermissionGroup.TAX_PREFERENCE)
+    @SaCheckPermission("producer_taxPreference_update_save")
+    @ApiOperation("保存税收优惠修改接口")
+    @PutMapping("saveTaxPreference")
+    public ResultVO<Void> updateTaxPreferenceSave(@RequestBody TaxPreferenceDTO taxPreferenceDTO) {
         return taxPreferenceService.updateTaxPreference(taxPreferenceDTO, ProducerUserUtil.getCurrentUser());
     }
 
+    @PermissionInfo(name = "提交税收优惠修改接口", group = PermissionGroup.TAX_PREFERENCE)
+    @SaCheckPermission("producer_taxPreference_update_submit")
+    @ApiOperation("保存税收优惠修改接口")
+    @PutMapping("submitTaxPreference")
+    public ResultVO<Void> updateTaxPreferenceSubmit(@Validated(ValidationGroup.Update.class) @RequestBody TaxPreferenceDTO taxPreferenceDTO) {
+        return taxPreferenceService.updateTaxPreference(taxPreferenceDTO, ProducerUserUtil.getCurrentUser());
+    }
     /**
      * 税收优惠事项基本信息展示
      * 查询条件:优惠事项id

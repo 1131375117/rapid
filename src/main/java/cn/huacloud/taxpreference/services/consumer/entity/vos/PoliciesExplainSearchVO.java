@@ -45,4 +45,10 @@ public class PoliciesExplainSearchVO {
 
     @ApiModelProperty("上一篇、下一篇")
     PreviousNextVO<Long> previousNext;
+
+    @ApiModelProperty("浏览量")
+    private Long views;
+
+    @ApiModelProperty("收藏量")
+    private Long collections;
 }

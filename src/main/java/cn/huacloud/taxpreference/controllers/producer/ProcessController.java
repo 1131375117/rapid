@@ -56,6 +56,7 @@ public class ProcessController {
 	@ApiOperation("税收优惠事项批量发布申请")
 	@PostMapping("/process/{taxPreferenceId}")
 	public ResultVO<Void> insertTaxPreference(@Validated() @NotEmpty(message = "税收优惠id不能为空") @PathVariable("taxPreferenceId") Long[] taxPreferenceIds) {
+
 		return processService.insertProcessService(taxPreferenceIds, ProducerUserUtil.getCurrentUser());
 	}
 

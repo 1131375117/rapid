@@ -50,4 +50,10 @@ public class TaxPreferencePoliciesVO {
     @ApiModelProperty("具体优惠内容摘要")
     private String digest;
 
+    /**
+     * 政策法规关联具体交款
+     */
+    @ApiModelProperty("政策法规关联具体交款")
+    private String policiesItems;
+
 }

@@ -1,5 +1,7 @@
 package cn.huacloud.taxpreference.common.utils;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * 文号工具类
  * @author wangkh
@@ -15,10 +17,10 @@ public class DocCodeUtil {
      */
     public static String getDocCode(String docWordCode, String docYearCode, Integer docNumCode) {
         StringBuilder sb = new StringBuilder("");
-        if (docWordCode != null) {
+        if (StringUtils.isNotBlank(docWordCode)) {
             sb.append(docWordCode);
         }
-        if (docYearCode != null) {
+        if (StringUtils.isNotBlank(docYearCode)) {
             sb.append("〔").append(docYearCode).append("〕");
         }
         if (docNumCode != null) {
