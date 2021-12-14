@@ -20,8 +20,14 @@ public class PoliciesVO extends PoliciesCommonListVO{
     private Long id;
     @ApiModelProperty("文号")
     private String docCode;
+    @ApiModelProperty("字号")
+    private String docWordCode;
+    @ApiModelProperty("年号")
+    private String docYearCode;
+    @ApiModelProperty("编号")
+    private Integer docNumCode;
     @ApiModelProperty("所属税种名称")
-    private String taxCategoriesName;
+    private String taxCategoriesNames;
     @ApiModelProperty("所属区域名称")
     private String areaName;
     @ApiModelProperty("有效性")

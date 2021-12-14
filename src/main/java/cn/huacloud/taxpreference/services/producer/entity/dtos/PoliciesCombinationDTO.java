@@ -76,6 +76,9 @@ public class PoliciesCombinationDTO {
 //	@NotNull(message = "发布日期不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
 	private LocalDate releaseDate;
 
+	@ApiModelProperty("所属专题")
+	private String specialSubject;
+
 	@ApiModelProperty("摘要")
 //	@NotEmpty(message = "摘要不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
 	private String digest;

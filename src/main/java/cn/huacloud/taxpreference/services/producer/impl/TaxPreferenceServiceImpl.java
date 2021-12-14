@@ -560,7 +560,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         // 判断废止状态--全文废止
         if (ValidityEnum.FULL_TEXT_REPEAL
                 .getValue()
-                .equals(queryAbolishDTO.getValidity())) {
+                .equals(queryAbolishDTO.getValidity().name())) {
             // 调用查询废止接口
             List<TaxPreferenceAbolishVO> taxPreferenceAbolish =
                     getTaxPreferenceAbolish(queryAbolishDTO.getId());
@@ -575,7 +575,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
                 // 判断废止状态--部分废止
             }
         } else if (ValidityEnum.PARTIAL_REPEAL.getValue()
-                .equals(queryAbolishDTO.getValidity())) {
+                .equals(queryAbolishDTO.getValidity().name())) {
             List<Long> ids = queryAbolishDTO.getIds();
 
             if (ids != null && ids.size() > 0) {
