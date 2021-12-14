@@ -23,8 +23,8 @@ public enum ValidityEnum implements IEnum<String>, SysCodeGetter {
 	 */
 
 
-	INVALID("失效"),
 	FULL_TEXT_VALID("全文有效"),
+	INVALID("失效"),
 	FULL_TEXT_REPEAL("全文废止"),
 	PARTIAL_VALID("部分有效"),
 	CLAUSE_INVALIDITY("条款失效"),

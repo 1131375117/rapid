@@ -1,6 +1,8 @@
 package cn.huacloud.taxpreference.services.common.impl;
 
+import cn.huacloud.taxpreference.common.constants.SysParamTypes;
 import cn.huacloud.taxpreference.common.enums.DocType;
+import cn.huacloud.taxpreference.common.enums.SysCodeStatus;
 import cn.huacloud.taxpreference.services.common.SysParamService;
 import cn.huacloud.taxpreference.services.common.entity.Param;
 import cn.huacloud.taxpreference.services.common.entity.dos.SysParamDO;
@@ -35,8 +37,8 @@ class SysParamServiceImplTest {
         ObjectMapper configure = objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         SysParamMapper sysParamMapper = mock(SysParamMapper.class);
         LambdaQueryWrapper<SysParamDO> queryWrapper = Wrappers.lambdaQuery(SysParamDO.class);
-        queryWrapper.eq(SysParamDO::getParamStatus, "VALID");
-        queryWrapper.in(SysParamDO::getParamType, "operation.views");
+        queryWrapper.eq(SysParamDO::getParamStatus, SysCodeStatus.VALID);
+        queryWrapper.in(SysParamDO::getParamType, SysParamTypes.OPERATION_VIEWS);
         when(sysParamMapper.selectList(queryWrapper)).thenReturn(sysParamDOArrayList);
         sysParamService = new SysParamServiceImpl(sysParamMapper, configure);
     }
@@ -44,14 +46,14 @@ class SysParamServiceImplTest {
     @Test
     void getObjectParamByTypes() {
         ArrayList<String> sysParamList = new ArrayList<>();
-        sysParamList.add("operation.views");
+        sysParamList.add("OPERATION_VIEWS");
         Param objectParamByTypes = sysParamService.getObjectParamByTypes(sysParamList, Param.class);
         System.out.println(objectParamByTypes);
     }
 
     @Test
     void getMapParamByTypes() {
-        Map<String, DocType> mapParamByTypes = sysParamService.getMapParamByTypes(DocType.class, "operation.views");
+        Map<String, DocType> mapParamByTypes = sysParamService.getMapParamByTypes(DocType.class, SysParamTypes.OPERATION_VIEWS);
         System.out.println(mapParamByTypes);
     }
 

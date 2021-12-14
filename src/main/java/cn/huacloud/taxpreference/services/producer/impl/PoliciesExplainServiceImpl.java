@@ -115,8 +115,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 					// 属性拷贝
 					BeanUtils.copyProperties(policiesExplainDO, policiesExplainListVO);
 					return policiesExplainListVO;
-				})
-						.collect(Collectors.toList());
+				}).collect(Collectors.toList());
 		log.info("政策解读列表查询对象={}", policiesExplainDoPage);
 		return PageVO.createPageVO(policiesExplainDoPage, records);
 	}
@@ -176,7 +175,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 		if (policiesExplainDoS.size() > 1) {
 			throw BizCode._4308.exception();
 		}
-		if(policiesExplainDoS.size() == 1 && !policiesExplainDTO.getPoliciesId().equals(policiesExplainDoS.get(0).getPoliciesId())){
+		if (policiesExplainDoS.size() == 1 && !policiesExplainDTO.getPoliciesId().equals(policiesExplainDoS.get(0).getPoliciesId())) {
 			throw BizCode._4308.exception();
 		}
 	}

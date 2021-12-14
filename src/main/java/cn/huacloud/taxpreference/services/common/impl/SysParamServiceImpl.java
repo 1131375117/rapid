@@ -1,5 +1,7 @@
 package cn.huacloud.taxpreference.services.common.impl;
 
+import cn.huacloud.taxpreference.common.constants.SysParamTypes;
+import cn.huacloud.taxpreference.common.enums.SysCodeStatus;
 import cn.huacloud.taxpreference.services.common.SysParamService;
 import cn.huacloud.taxpreference.services.common.entity.dos.SysParamDO;
 import cn.huacloud.taxpreference.services.common.mapper.SysParamMapper;
@@ -107,8 +109,8 @@ public class SysParamServiceImpl implements SysParamService {
         List<String> list = new ArrayList<>();
         LambdaQueryWrapper<SysParamDO> queryWrapper = Wrappers.lambdaQuery(SysParamDO.class);
         queryWrapper.eq(SysParamDO::getParamKey, sysParamKey);
-        queryWrapper.eq(SysParamDO::getParamType, sysParamType);
-        queryWrapper.eq(SysParamDO::getParamStatus, "VALID");
+        queryWrapper.eq(SysParamDO::getParamType, SysParamTypes.OPERATION_VIEWS);
+        queryWrapper.eq(SysParamDO::getParamStatus, SysCodeStatus.VALID);
         SysParamDO sysParamDO = sysParamMapper.selectOne(queryWrapper);
         String target;
         if (sysParamDO != null) {

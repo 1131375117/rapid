@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.common.impl;
 
+import cn.huacloud.taxpreference.common.constants.SysParamTypes;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.services.common.DocStatisticsService;
@@ -53,7 +54,7 @@ public class OperationRecordServiceImpl implements OperationRecordService {
         /*
          * 获取文档类型,并进行逻辑校验
          */
-        SysParamDO sysParamDO = sysParamService.selectByParamKey(operationRecordDO.getOperationType(),"operation.views");
+        SysParamDO sysParamDO = sysParamService.selectByParamKey(operationRecordDO.getOperationType(), SysParamTypes.OPERATION_VIEWS);
         if (sysParamDO == null) {
             throw BizCode._4501.exception();
         }

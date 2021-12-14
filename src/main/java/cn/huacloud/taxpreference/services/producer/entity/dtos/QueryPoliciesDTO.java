@@ -3,6 +3,7 @@ package cn.huacloud.taxpreference.services.producer.entity.dtos;
 import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
 import cn.huacloud.taxpreference.services.producer.entity.enums.KeywordType;
 import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesSortType;
+import cn.huacloud.taxpreference.services.producer.entity.enums.ValidityEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -57,7 +58,7 @@ public class QueryPoliciesDTO extends KeywordPageQueryDTO {
 	private List<String> areaCode;
 
 	@ApiModelProperty("有效性")
-	private String validity;
+	private ValidityEnum validity;
 
 	@ApiModelProperty("发布日期")
 	private LocalDate releaseDate;
