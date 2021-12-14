@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.message.interceptor;
 
+import cn.huacloud.taxpreference.common.constants.SysParamTypes;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.enums.MsgType;
 import cn.huacloud.taxpreference.common.enums.SmsBiz;
@@ -31,11 +32,9 @@ public class SmsBizRateLimitInterceptor implements SmsService.Interceptor {
 
     private static final long DEFAULT_RATE_LIMIT_SECONDS = 60;
 
-    private static final String SYS_PARAM_TYPE = "sms.rateLimitSeconds";
-
     @Override
     public void apply(List<String> phoneNumbers, SmsBiz smsBiz) {
-        Long rateLimitSeconds = sysParamService.getSingleParamValue(SYS_PARAM_TYPE, null, Long.class, DEFAULT_RATE_LIMIT_SECONDS);
+        Long rateLimitSeconds = sysParamService.getSingleParamValue(SysParamTypes.SMS_RATE_LIMIT_SECONDS, null, Long.class, DEFAULT_RATE_LIMIT_SECONDS);
         for (String phoneNumber : phoneNumbers) {
             LocalDateTime lastTime = msgRecordMapper.getLimitLastCreateTime(MsgType.SMS, smsBiz, phoneNumber, rateLimitSeconds);
             if (lastTime != null) {
