@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.producer.impl;
 
+import cn.huacloud.taxpreference.common.constants.SysParamTypes;
 import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.AttachmentType;
@@ -8,6 +9,7 @@ import cn.huacloud.taxpreference.common.enums.taxpreference.SortType;
 import cn.huacloud.taxpreference.common.utils.DocCodeUtil;
 import cn.huacloud.taxpreference.services.common.AttachmentService;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
+import cn.huacloud.taxpreference.services.common.SysParamService;
 import cn.huacloud.taxpreference.services.common.entity.dtos.SysCodeStringDTO;
 import cn.huacloud.taxpreference.services.producer.FrequentlyAskedQuestionService;
 import cn.huacloud.taxpreference.services.producer.PoliciesExplainService;
@@ -67,6 +69,8 @@ public class PoliciesServiceImpl implements PoliciesService {
 	private final AttachmentService attachmentService;
 
 	private final PoliciesEventTrigger policiesEventTrigger;
+
+	private final SysParamService sysParamService;
 
 	@Autowired
 	public void setFrequentlyAskedQuestionService(FrequentlyAskedQuestionService frequentlyAskedQuestionService) {
@@ -181,7 +185,11 @@ public class PoliciesServiceImpl implements PoliciesService {
 		//拼接文号
 		String docCode = DocCodeUtil.getDocCode(policiesCombinationDTO.getDocWordCode(), policiesCombinationDTO.getDocYearCode(), policiesCombinationDTO.getDocNumCode());
 		policiesDO.setDocCode(docCode);
-
+		//获取所属专题
+		Map<String, String> mapParamByTypes = sysParamService.getMapParamByTypes(String.class, SysParamTypes.POLICIES_SPECIAL_SUBJECT);
+		String specialSubject = mapParamByTypes.get(policiesCombinationDTO.getSpecialSubject());
+		policiesDO.setSpecialSubject(specialSubject);
+		//获取纳税人、使用企业、适用行业码值、所属税种信息
 		SysCodeStringDTO taxpayerIdentifyTypeDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getTaxpayerIdentifyTypeCodes(), false);
 		SysCodeStringDTO enterpriseTypeDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getEnterpriseTypeCodes(), false);
 		SysCodeStringDTO industryDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getIndustryCodes(), false);
@@ -360,6 +368,10 @@ public class PoliciesServiceImpl implements PoliciesService {
 		//拼接文号
 		String docCode = DocCodeUtil.getDocCode(policiesCombinationDTO.getDocWordCode(), policiesCombinationDTO.getDocYearCode(), policiesCombinationDTO.getDocNumCode());
 		policiesDO.setDocCode(docCode);
+		//获取所属专题
+		Map<String, String> mapParamByTypes = sysParamService.getMapParamByTypes(String.class, SysParamTypes.POLICIES_SPECIAL_SUBJECT);
+		String specialSubject = mapParamByTypes.get(policiesCombinationDTO.getSpecialSubject());
+		policiesDO.setSpecialSubject(specialSubject);
 
 		BeanUtils.copyProperties(policiesCombinationDTO, policiesDO);
 		SysCodeStringDTO taxpayerIdentifyTypeDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getTaxpayerIdentifyTypeCodes(), false);
