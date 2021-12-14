@@ -25,9 +25,6 @@
         FROM
         t_policies tp
         <where>
-            <if test="queryPoliciesDTO.taxCategoriesCode != null and queryPoliciesDTO.taxCategoriesCode != '' ">
-                and tp.tax_categories_code = #{queryPoliciesDTO.taxCategoriesCode}
-            </if>
             <if test="queryPoliciesDTO.areaCode != null and queryPoliciesDTO.areaCode.size>0 ">
                 <foreach collection="queryPoliciesDTO.areaCode" item="area">
                     and tp.area_code=#{area}

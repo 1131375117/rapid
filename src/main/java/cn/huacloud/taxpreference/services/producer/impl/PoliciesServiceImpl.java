@@ -5,6 +5,7 @@ import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.AttachmentType;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.enums.taxpreference.SortType;
+import cn.huacloud.taxpreference.common.utils.DocCodeUtil;
 import cn.huacloud.taxpreference.services.common.AttachmentService;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
 import cn.huacloud.taxpreference.services.common.entity.dtos.SysCodeStringDTO;
@@ -174,6 +175,10 @@ public class PoliciesServiceImpl implements PoliciesService {
 	 */
 	private void fillProperties(
 			PoliciesCombinationDTO policiesCombinationDTO, Long userId, PoliciesDO policiesDO) {
+		//拼接文号
+		String docCode = DocCodeUtil.getDocCode(policiesCombinationDTO.getDocWordCode(), policiesCombinationDTO.getDocYearCode(), policiesCombinationDTO.getDocNumCode());
+		policiesDO.setDocCode(docCode);
+
 		SysCodeStringDTO taxpayerIdentifyTypeDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getTaxpayerIdentifyTypeCodes(), false);
 		SysCodeStringDTO enterpriseTypeDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getEnterpriseTypeCodes(), false);
 		SysCodeStringDTO industryDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getIndustryCodes(), false);

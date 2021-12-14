@@ -29,6 +29,20 @@ public class PoliciesES extends AbstractCombinePlainContent<Long> {
      */
     private String docCode;
     /**
+     * 字号
+     */
+    private String docWordCode;
+
+    /**
+     * 年号
+     */
+    private String docYearCode;
+
+    /**
+     * 编号
+     */
+    private Integer docNumCode;
+    /**
      * 所属区域
      */
     private SysCodeSimpleVO area;

@@ -29,6 +29,9 @@ public class QueryPoliciesDTO extends KeywordPageQueryDTO {
 	@ApiModelProperty("标题")
 	private String title;
 
+	@ApiModelProperty("文号")
+	private String docCode;
+
 	@ApiModelProperty("字号")
 	private String docWordCode;
 
@@ -39,7 +42,7 @@ public class QueryPoliciesDTO extends KeywordPageQueryDTO {
 	private Integer docNumCode;
 
 	@ApiModelProperty("所属税种码值")
-	private String taxCategoriesCode;
+	private List<String> taxCategoriesCodes;
 
 	@ApiModelProperty("纳税人资格认定类型码值")
 	private List<String> taxpayerIdentifyTypeCodes;

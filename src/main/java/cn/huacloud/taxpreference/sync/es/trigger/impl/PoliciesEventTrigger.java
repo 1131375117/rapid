@@ -59,8 +59,10 @@ public class PoliciesEventTrigger extends EventTrigger<Long, PoliciesES> {
 
         // 属性拷贝
         PoliciesES policiesES = CustomBeanUtil.copyProperties(policiesDO, PoliciesES.class);
-        policiesES.setCollections(docStatisticsDO.getCollections());
-        policiesES.setViews(docStatisticsDO.getViews());
+        if(docStatisticsDO!=null){
+            policiesES.setCollections(docStatisticsDO.getCollections());
+            policiesES.setViews(docStatisticsDO.getViews());
+        }
 
         // 类型转换属性设置
         policiesES.setArea(sysCodeService.getSimpleVOByCode(policiesDO.getAreaCode()));

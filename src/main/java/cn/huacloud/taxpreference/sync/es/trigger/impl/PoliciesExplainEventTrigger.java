@@ -70,8 +70,10 @@ public class PoliciesExplainEventTrigger extends EventTrigger<Long, PoliciesExpl
 
         // 属性拷贝
         PoliciesExplainES policiesExplainES = CustomBeanUtil.copyProperties(policiesExplainDO, PoliciesExplainES.class);
-        policiesExplainES.setCollections(docStatisticsDO.getCollections());
-        policiesExplainES.setViews(docStatisticsDO.getViews());
+        if(docStatisticsDO!=null) {
+            policiesExplainES.setCollections(docStatisticsDO.getCollections());
+            policiesExplainES.setViews(docStatisticsDO.getViews());
+        }
 
         // 类型转换属性设置
         policiesExplainES.setTaxCategories(sysCodeService.getSimpleVOListByCodeValues(policiesDO.getTaxCategoriesCodes()));
