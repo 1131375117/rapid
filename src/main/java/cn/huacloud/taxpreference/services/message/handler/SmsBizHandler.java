@@ -3,6 +3,7 @@ package cn.huacloud.taxpreference.services.message.handler;
 import java.util.List;
 
 /**
+ * 短信具体业务发送处理器
  * @author wangkh
  */
 public interface SmsBizHandler {
