@@ -74,7 +74,7 @@ public class PoliciesExplainEventTrigger extends EventTrigger<Long, PoliciesExpl
         policiesExplainES.setViews(docStatisticsDO.getViews());
 
         // 类型转换属性设置
-        policiesExplainES.setTaxCategories(sysCodeService.getSimpleVOByCode(policiesDO.getTaxCategoriesCode()));
+        policiesExplainES.setTaxCategories(sysCodeService.getSimpleVOListByCodeValues(policiesDO.getTaxCategoriesCodes()));
         policiesExplainES.setArea(sysCodeService.getSimpleVOByCode(policiesDO.getAreaCode()));
         policiesExplainES.setTaxpayerIdentifyTypes(sysCodeService.getSimpleVOListByCodeValues(policiesDO.getTaxpayerIdentifyTypeCodes()));
         policiesExplainES.setEnterpriseTypes(sysCodeService.getSimpleVOListByCodeValues(policiesDO.getEnterpriseTypeCodes()));

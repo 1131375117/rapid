@@ -39,7 +39,7 @@ public class PoliciesES extends AbstractCombinePlainContent<Long> {
     /**
      * 所属税种
      */
-    private SysCodeSimpleVO taxCategories;
+    private List<SysCodeSimpleVO> taxCategories;
     /**
      * 纳税人资格认定类型
      */

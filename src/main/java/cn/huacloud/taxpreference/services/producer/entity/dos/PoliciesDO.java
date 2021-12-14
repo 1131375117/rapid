@@ -32,11 +32,24 @@ public class PoliciesDO {
 	 * 标题
 	 */
 	private String title;
-
 	/**
 	 * 文号
 	 */
 	private String docCode;
+	/**
+	 * 字号
+	 */
+	private String docWordCode;
+
+	/**
+	 * 年号
+	 */
+	private String docYearCode;
+
+	/**
+	 * 编号
+	 */
+	private Integer docNumCode;
 
 	/**
 	 * 所属区域名称
@@ -56,12 +69,12 @@ public class PoliciesDO {
 	/**
 	 * 所属税种名称
 	 */
-	private String taxCategoriesName;
+	private String taxCategoriesNames;
 
 	/**
 	 * 所属税种码值
 	 */
-	private String taxCategoriesCode;
+	private String taxCategoriesCodes;
 
 	/**
 	 * 纳税人资格认定类型名称

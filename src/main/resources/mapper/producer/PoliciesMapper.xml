@@ -8,9 +8,9 @@
         tp.doc_code AS docCode,
         tp.area_name AS areaName,
         tp.doc_source AS docSource,
-        tp.tax_categories_name AS taxCategoriesName,
+        tp.tax_categories_names AS taxCategoriesNames,
         tp.taxpayer_identify_type_names AS taxpayerIdentifyTypeNames,
-        tp.enterprise_type_names AS enterpriseTypeCodes,
+        tp.enterprise_type_names AS enterpriseTypeNames,
         tp.industry_names AS industryNames,
         tp.validity AS validity,
         tp.release_date AS releaseDate,
@@ -64,6 +64,13 @@
                 and (1!=1
                 <foreach collection="queryPoliciesDTO.enterpriseTypeCodes" item="enterpriseTypeCodes">
                     or FIND_IN_SET(#{enterpriseTypeCodes},tp.enterprise_type_codes)
+                </foreach>
+                )
+            </if>
+            <if test="queryPoliciesDTO.taxCategoriesCodes!=null and queryPoliciesDTO.taxCategoriesCodes.size>0 ">
+                and (1!=1
+                <foreach collection="queryPoliciesDTO.taxCategoriesCodes" item="taxCategoriesCodes">
+                    or FIND_IN_SET(#{taxCategoriesCodes},tp.tax_categories_codes)
                 </foreach>
                 )
             </if>

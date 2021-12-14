@@ -118,7 +118,7 @@ public class PoliciesServiceImpl implements PoliciesService {
 	@Override
 	public void savePolicies(PoliciesCombinationDTO policiesCombinationDTO, Long userId) {
 		log.info("新增政策法规组合dto={}", policiesCombinationDTO);
-		// 校验标题和文号是否存在
+		// 校验标题是否存在
 		judgeExists(policiesCombinationDTO);
 		// 新增政策法规
 		PoliciesDO policiesDO = new PoliciesDO();
@@ -177,14 +177,17 @@ public class PoliciesServiceImpl implements PoliciesService {
 		SysCodeStringDTO taxpayerIdentifyTypeDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getTaxpayerIdentifyTypeCodes(), false);
 		SysCodeStringDTO enterpriseTypeDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getEnterpriseTypeCodes(), false);
 		SysCodeStringDTO industryDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getIndustryCodes(), false);
-		// 设置纳税人、使用企业、适用行业码值
+		SysCodeStringDTO taxCategoriesDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getTaxCategoriesCodes(), false);
+		// 设置纳税人、使用企业、适用行业码值、所属税种
 		policiesDO.setTaxpayerIdentifyTypeCodes(taxpayerIdentifyTypeDTO.getCodes());
 		policiesDO.setEnterpriseTypeCodes(enterpriseTypeDTO.getCodes());
 		policiesDO.setIndustryCodes(industryDTO.getCodes());
+		policiesDO.setTaxCategoriesCodes(taxCategoriesDTO.getCodes());
 		// 设置纳税人、使用企业、适用行业名称值
 		policiesDO.setTaxpayerIdentifyTypeNames(taxpayerIdentifyTypeDTO.getNames());
 		policiesDO.setEnterpriseTypeNames(enterpriseTypeDTO.getNames());
 		policiesDO.setIndustryNames(industryDTO.getNames());
+		policiesDO.setTaxCategoriesNames(taxCategoriesDTO.getNames());
 		// 设置用户id
 		policiesDO.setInputUserId(userId);
 		// 添加废止状态
@@ -199,8 +202,6 @@ public class PoliciesServiceImpl implements PoliciesService {
 		policiesDO.setDeleted(false);
 		// 设置所属区域名称
 		policiesDO.setAreaName(sysCodeService.getCodeNameByCodeValue(policiesCombinationDTO.getAreaCode()));
-		// 设置所属税种名称
-		policiesDO.setTaxCategoriesName(sysCodeService.getCodeNameByCodeValue(policiesCombinationDTO.getTaxCategoriesCode()));
 		// 设置标签
 		policiesDO.setLabels(StringUtils.join(policiesCombinationDTO.getLabels(), ","));
 
@@ -208,25 +209,20 @@ public class PoliciesServiceImpl implements PoliciesService {
 	}
 
 	/**
-	 * 校验标题和文号是否重复
+	 * 校验标题是否重复
 	 *
 	 * @param policiesCombinationDTO 政策法规组合
 	 * @return 返回结果
 	 */
 	private Boolean judgeExists(PoliciesCombinationDTO policiesCombinationDTO) {
 		log.info("政策法规组合dto={}", policiesCombinationDTO);
-		// 查询标题或文号
+		// 查询标题
 		LambdaQueryWrapper<PoliciesDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
 		lambdaQueryWrapper
 				.eq(
 						StringUtils.isNotBlank(policiesCombinationDTO.getTitle()),
 						PoliciesDO::getTitle,
-						policiesCombinationDTO.getTitle())
-				.or()
-				.eq(
-						StringUtils.isNotBlank(policiesCombinationDTO.getDocCode()),
-						PoliciesDO::getDocCode,
-						policiesCombinationDTO.getDocCode());
+						policiesCombinationDTO.getTitle());
 		List<PoliciesDO> policiesDOList = policiesMapper.selectList(lambdaQueryWrapper);
 		// 判断是否重复
 		if (policiesDOList.size() > 1) {
@@ -369,17 +365,17 @@ public class PoliciesServiceImpl implements PoliciesService {
 		SysCodeStringDTO taxpayerIdentifyTypeDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getTaxpayerIdentifyTypeCodes(), false);
 		SysCodeStringDTO enterpriseTypeDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getEnterpriseTypeCodes(), false);
 		SysCodeStringDTO industryDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getIndustryCodes(), false);
-		// 设置纳税人、使用企业、适用行业码值
+		SysCodeStringDTO taxCategoriesDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getTaxCategoriesCodes(), false);
+		// 设置纳税人、使用企业、适用行业码值、所属税种
 		policiesDO.setTaxpayerIdentifyTypeCodes(taxpayerIdentifyTypeDTO.getCodes());
 		policiesDO.setEnterpriseTypeCodes(enterpriseTypeDTO.getCodes());
 		policiesDO.setIndustryCodes(industryDTO.getCodes());
-		// 设置纳税人、使用企业、适用行业名称值
+		policiesDO.setTaxCategoriesCodes(taxCategoriesDTO.getCodes());
+		// 设置纳税人、使用企业、适用行业名称值、所属税种
 		policiesDO.setTaxpayerIdentifyTypeNames(taxpayerIdentifyTypeDTO.getNames());
 		policiesDO.setEnterpriseTypeNames(enterpriseTypeDTO.getNames());
 		policiesDO.setIndustryNames(industryDTO.getNames());
-		// 设置所属税种
-		policiesDO.setTaxCategoriesCode(policiesCombinationDTO.getTaxCategoriesCode());
-		policiesDO.setTaxCategoriesName(sysCodeService.getCodeNameByCodeValue(policiesCombinationDTO.getTaxCategoriesCode()));
+		policiesDO.setTaxCategoriesNames(taxCategoriesDTO.getNames());
 		// 设置区域
 		policiesDO.setAreaName(sysCodeService.getCodeNameByCodeValue(policiesCombinationDTO.getAreaCode()));
 		policiesDO.setAreaCode(policiesCombinationDTO.getAreaCode());
@@ -590,7 +586,8 @@ public class PoliciesServiceImpl implements PoliciesService {
 //	}
 
 	/**
-	 *                   删除政策解读
+	 * 删除政策解读
+	 *
 	 * @param policiesDO 政策法规对象
 	 */
 	private void deletePoliciesExplain(PoliciesDO policiesDO) {
@@ -669,9 +666,7 @@ public class PoliciesServiceImpl implements PoliciesService {
 		// 查询标题和文号
 		LambdaQueryWrapper<PoliciesDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
 		lambdaQueryWrapper
-				.eq(StringUtils.isNotBlank(policiesCheckDTO.getTitle()), PoliciesDO::getTitle, policiesCheckDTO.getTitle())
-				.or()
-				.eq(StringUtils.isNotBlank(policiesCheckDTO.getDocCode()), PoliciesDO::getDocCode, policiesCheckDTO.getDocCode());
+				.eq(StringUtils.isNotBlank(policiesCheckDTO.getTitle()), PoliciesDO::getTitle, policiesCheckDTO.getTitle());
 		List<PoliciesDO> policiesDOList = policiesMapper.selectList(lambdaQueryWrapper);
 		// 判断是否重复
 		if (policiesDOList.size() == 1 && policiesCheckDTO.getId() == null) {

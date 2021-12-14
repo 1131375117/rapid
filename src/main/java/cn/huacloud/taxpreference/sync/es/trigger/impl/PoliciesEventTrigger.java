@@ -64,7 +64,7 @@ public class PoliciesEventTrigger extends EventTrigger<Long, PoliciesES> {
 
         // 类型转换属性设置
         policiesES.setArea(sysCodeService.getSimpleVOByCode(policiesDO.getAreaCode()));
-        policiesES.setTaxCategories(sysCodeService.getSimpleVOByCode(policiesDO.getTaxCategoriesCode()));
+        policiesES.setTaxCategories(sysCodeService.getSimpleVOListByCodeValues(policiesDO.getTaxCategoriesCodes()));
         policiesES.setTaxpayerIdentifyTypes(sysCodeService.getSimpleVOListByCodeValues(policiesDO.getTaxpayerIdentifyTypeCodes()));
         policiesES.setEnterpriseTypes(sysCodeService.getSimpleVOListByCodeValues(policiesDO.getEnterpriseTypeCodes()));
         policiesES.setIndustries(sysCodeService.getSimpleVOListByCodeValues(policiesDO.getIndustryCodes()));
