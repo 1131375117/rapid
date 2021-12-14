@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.controllers.tool;
 
+import cn.huacloud.taxpreference.common.utils.PasswordSecureUtil;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.config.SysConfig;
 import cn.huacloud.taxpreference.services.common.CacheClear;
@@ -41,4 +42,9 @@ public class SysToolController {
         return ResultVO.ok();
     }
 
+    @ApiOperation("把命名密码加密成密文")
+    @PostMapping("/tool/encryptPassword")
+    public ResultVO<String> getEncryptPassword(String value) {
+        return ResultVO.ok(PasswordSecureUtil.encrypt(value));
+    }
 }
