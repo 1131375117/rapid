@@ -75,6 +75,9 @@ public class TaxPreferenceEventTrigger extends EventTrigger<Long, TaxPreferenceE
 
         // 属性拷贝
         TaxPreferenceES taxPreferenceES = CustomBeanUtil.copyProperties(taxPreferenceDO, TaxPreferenceES.class);
+        if(taxPreferenceES==null){
+            taxPreferenceES=new TaxPreferenceES();
+        }
         if(docStatisticsDO!=null) {
             taxPreferenceES.setCollections(docStatisticsDO.getCollections());
             taxPreferenceES.setViews(docStatisticsDO.getViews());

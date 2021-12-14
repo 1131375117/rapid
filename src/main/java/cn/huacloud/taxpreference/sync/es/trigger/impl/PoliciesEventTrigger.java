@@ -59,6 +59,9 @@ public class PoliciesEventTrigger extends EventTrigger<Long, PoliciesES> {
 
         // 属性拷贝
         PoliciesES policiesES = CustomBeanUtil.copyProperties(policiesDO, PoliciesES.class);
+        if(policiesES==null){
+            policiesES=new PoliciesES();
+        }
         if(docStatisticsDO!=null){
             policiesES.setCollections(docStatisticsDO.getCollections());
             policiesES.setViews(docStatisticsDO.getViews());

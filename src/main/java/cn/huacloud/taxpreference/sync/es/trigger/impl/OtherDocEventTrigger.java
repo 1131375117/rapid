@@ -54,6 +54,9 @@ public class OtherDocEventTrigger extends EventTrigger<Long, OtherDocES> {
 
         // 属性拷贝
         OtherDocES otherDocES = CustomBeanUtil.copyProperties(otherDocDO, OtherDocES.class);
+        if(otherDocES==null){
+            otherDocES=new OtherDocES();
+        }
         if(docStatisticsDO!=null) {
             otherDocES.setCollections(docStatisticsDO.getCollections());
             otherDocES.setViews(docStatisticsDO.getViews());
