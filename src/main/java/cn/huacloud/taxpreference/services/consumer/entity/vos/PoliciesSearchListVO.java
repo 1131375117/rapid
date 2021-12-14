@@ -55,4 +55,10 @@ public class PoliciesSearchListVO {
 
     @ApiModelProperty("无装饰的组合文本")
     private String combinePlainContent;
+
+    @ApiModelProperty("浏览量")
+    private Long views;
+
+    @ApiModelProperty("收藏量")
+    private Long collections;
 }

@@ -52,4 +52,9 @@ public class TaxPreferencePoliciesDO {
 	 */
 	private String digest;
 
+	/**
+	 * 具体条款
+	 */
+	private String policiesItems;
+
 }
