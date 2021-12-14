@@ -34,12 +34,12 @@ public class CollectionController {
      * 参数列表：docId,收藏类型
      */
     @ApiOperation("点击收藏功能")
-    @PutMapping("/Collection")
-    public ResultVO<Void> saveOrCancelCollection(@Validated CollectionDTO collectionDTO) {
+    @PutMapping("/collection")
+    public ResultVO<Boolean> saveOrCancelCollection(@Validated CollectionDTO collectionDTO) {
 
         collectionDTO.setConsumerUserId(ConsumerUserUtil.getCurrentUser().getId());
-        collectionService.saveOrCancelCollection(collectionDTO);
-        return ResultVO.ok();
+        Boolean isCollection = collectionService.saveOrCancelCollection(collectionDTO);
+        return ResultVO.ok(isCollection).setMsg("收藏状态是否收藏");
     }
 
     /**

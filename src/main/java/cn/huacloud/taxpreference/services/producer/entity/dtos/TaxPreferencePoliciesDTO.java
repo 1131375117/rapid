@@ -44,10 +44,10 @@ public class TaxPreferencePoliciesDTO {
 	@NotEmpty(message = "具体优惠内容摘要不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
 	private String digest;
 	/**
-	 * 政策法规关联具体交款
+	 * 政策法规关联具体条款
 	 */
-	@ApiModelProperty("政策法规关联具体交款")
-	@NotEmpty(message = "政策法规关联具体交款", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+	@ApiModelProperty("政策法规关联具体条款")
+	@NotEmpty(message = "政策法规关联具体条款", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
 	private String policiesItems;
 
 

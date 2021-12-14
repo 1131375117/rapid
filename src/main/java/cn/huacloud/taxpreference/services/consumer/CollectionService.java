@@ -15,7 +15,7 @@ public interface CollectionService {
      *
      * @param collectionDTO
      */
-    void saveOrCancelCollection(CollectionDTO collectionDTO);
+    Boolean saveOrCancelCollection(CollectionDTO collectionDTO);
 
     /**
      * 展示我的收藏
