@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.common.utils;
 
+import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.crypto.asymmetric.RSA;
 
@@ -24,7 +25,11 @@ public class PasswordSecureUtil {
      * @return 解密后的密码
      */
     public static String decrypt(String encryptPassword) {
-        return Holder.RSA.decryptStr(encryptPassword, KeyType.PrivateKey);
+        try {
+            return Holder.RSA.decryptStr(encryptPassword, KeyType.PrivateKey);
+        } catch (Exception e) {
+            throw BizCode._4604.exception();
+        }
     }
 
     /**
