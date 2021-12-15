@@ -316,6 +316,12 @@ public class PoliciesServiceImpl implements PoliciesService {
 		} else {
 			policiesCombinationDTO.setTaxpayerIdentifyTypeCodes(list);
 		}
+		if (StringUtils.isNotBlank(policiesDO.getTaxCategoriesCodes())) {
+			policiesCombinationDTO.setTaxCategoriesCodes(
+					Arrays.asList((policiesDO.getTaxCategoriesCodes()).split(",")));
+		} else {
+			policiesCombinationDTO.setTaxpayerIdentifyTypeCodes(list);
+		}
 		// 设置标签
 		if (StringUtils.isNotBlank(policiesDO.getLabels())) {
 			policiesCombinationDTO.setLabels(Arrays.asList(policiesDO.getLabels().split(",")));
@@ -378,11 +384,11 @@ public class PoliciesServiceImpl implements PoliciesService {
 //		String specialSubject = mapParamByTypes.get(policiesCombinationDTO.getSpecialSubject());
 		policiesDO.setSpecialSubject(policiesCombinationDTO.getSpecialSubject());
 
-		//设置摘要
-		String content = policiesDO.getContent();
-		String parse = String.valueOf(Jsoup.parse(content));
-		String substring = parse.substring(0, 200);
-		log.info("修改政策法规对象={}", policiesDO);
+//		//设置摘要
+//		String content = policiesDO.getContent();
+//		String parse = String.valueOf(Jsoup.parse(content));
+//		String substring = parse.substring(0, 200);
+//		log.info("修改政策法规对象={}", policiesDO);
 
 
 		BeanUtils.copyProperties(policiesCombinationDTO, policiesDO);
