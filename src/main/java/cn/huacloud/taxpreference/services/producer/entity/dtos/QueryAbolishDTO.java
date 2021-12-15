@@ -1,6 +1,7 @@
 package cn.huacloud.taxpreference.services.producer.entity.dtos;
 
 import cn.huacloud.taxpreference.common.constants.ValidationGroup;
+import cn.huacloud.taxpreference.services.producer.entity.enums.ValidityEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -19,8 +20,8 @@ public class QueryAbolishDTO {
 	private Long id;
 
 	@ApiModelProperty("废止状态")
-	@NotEmpty(message = "废止状态不能为空")
-	private String validity;
+	@NotNull(message = "废止状态不能为空")
+	private ValidityEnum validity;
 
 	@ApiModelProperty("废止说明")
 	@NotEmpty(message = "废止说明不能为空")

@@ -13,10 +13,7 @@ import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesCheckDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesCombinationDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryAbolishDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesDTO;
-import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesAbolishVO;
-import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesCheckDeleteVO;
-import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesTitleVO;
-import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesVO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -25,7 +22,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import java.util.List;
 
 /**
  * 政策法规接口
@@ -182,7 +181,7 @@ public class PoliciesController {
 	/**
 	 * 关联政策（模糊查询，政策法规）
 	 */
-	@PermissionInfo(name = "关联政策查询", group = PermissionGroup.POLICIES_EXPLAIN)
+	@PermissionInfo(name = "关联政策查询", group = PermissionGroup.POLICIES)
 	@SaCheckPermission("producer_relatedPolicies_query")
 	@ApiOperation("关联政策查询")
 	@PostMapping("/policies/relatedPolicies/query")
@@ -190,6 +189,20 @@ public class PoliciesController {
 		PageVO<PoliciesTitleVO> pageVO = policiesService.fuzzyQuery(keywordPageQueryDTO);
 		return ResultVO.ok(pageVO);
 	}
+
+	/**
+	 * 所属行业查询（模糊查询，政策法规）
+	 */
+	@PermissionInfo(name = "所属行业查询", group = PermissionGroup.POLICIES)
+	@SaCheckPermission("producer_relatedPolicies_query")
+	@ApiOperation("所属行业查询")
+	@PostMapping("/policies/industry/query")
+	public ResultVO<List<PoliciesIndustryVO>> industry(@RequestParam(value = "title") String title) {
+		List<PoliciesIndustryVO> policiesIndustryVO = policiesService.industryQuery(title);
+		return ResultVO.ok(policiesIndustryVO);
+	}
+
+
 
 
 }

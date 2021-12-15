@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.producer.impl;
 
+import cn.huacloud.taxpreference.common.constants.SysParamTypes;
 import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.AttachmentType;
@@ -8,12 +9,12 @@ import cn.huacloud.taxpreference.common.enums.taxpreference.SortType;
 import cn.huacloud.taxpreference.common.utils.DocCodeUtil;
 import cn.huacloud.taxpreference.services.common.AttachmentService;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
+import cn.huacloud.taxpreference.services.common.SysParamService;
 import cn.huacloud.taxpreference.services.common.entity.dtos.SysCodeStringDTO;
 import cn.huacloud.taxpreference.services.producer.FrequentlyAskedQuestionService;
 import cn.huacloud.taxpreference.services.producer.PoliciesExplainService;
 import cn.huacloud.taxpreference.services.producer.PoliciesService;
 import cn.huacloud.taxpreference.services.producer.TaxPreferenceService;
-import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.*;
 import cn.huacloud.taxpreference.services.producer.entity.enums.CheckStatus;
@@ -24,8 +25,11 @@ import cn.huacloud.taxpreference.services.producer.entity.vos.*;
 import cn.huacloud.taxpreference.services.producer.mapper.FrequentlyAskedQuestionMapper;
 import cn.huacloud.taxpreference.services.producer.mapper.PoliciesMapper;
 import cn.huacloud.taxpreference.sync.es.trigger.impl.PoliciesEventTrigger;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 政策法规服务实现类
@@ -64,6 +69,8 @@ public class PoliciesServiceImpl implements PoliciesService {
 	private final AttachmentService attachmentService;
 
 	private final PoliciesEventTrigger policiesEventTrigger;
+
+	private final SysParamService sysParamService;
 
 	@Autowired
 	public void setFrequentlyAskedQuestionService(FrequentlyAskedQuestionService frequentlyAskedQuestionService) {
@@ -178,7 +185,11 @@ public class PoliciesServiceImpl implements PoliciesService {
 		//拼接文号
 		String docCode = DocCodeUtil.getDocCode(policiesCombinationDTO.getDocWordCode(), policiesCombinationDTO.getDocYearCode(), policiesCombinationDTO.getDocNumCode());
 		policiesDO.setDocCode(docCode);
-
+		//获取所属专题
+		Map<String, String> mapParamByTypes = sysParamService.getMapParamByTypes(String.class, SysParamTypes.POLICIES_SPECIAL_SUBJECT);
+		String specialSubject = mapParamByTypes.get(policiesCombinationDTO.getSpecialSubject());
+		policiesDO.setSpecialSubject(specialSubject);
+		//获取纳税人、使用企业、适用行业码值、所属税种信息
 		SysCodeStringDTO taxpayerIdentifyTypeDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getTaxpayerIdentifyTypeCodes(), false);
 		SysCodeStringDTO enterpriseTypeDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getEnterpriseTypeCodes(), false);
 		SysCodeStringDTO industryDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getIndustryCodes(), false);
@@ -357,6 +368,10 @@ public class PoliciesServiceImpl implements PoliciesService {
 		//拼接文号
 		String docCode = DocCodeUtil.getDocCode(policiesCombinationDTO.getDocWordCode(), policiesCombinationDTO.getDocYearCode(), policiesCombinationDTO.getDocNumCode());
 		policiesDO.setDocCode(docCode);
+		//获取所属专题
+		Map<String, String> mapParamByTypes = sysParamService.getMapParamByTypes(String.class, SysParamTypes.POLICIES_SPECIAL_SUBJECT);
+		String specialSubject = mapParamByTypes.get(policiesCombinationDTO.getSpecialSubject());
+		policiesDO.setSpecialSubject(specialSubject);
 
 		BeanUtils.copyProperties(policiesCombinationDTO, policiesDO);
 		SysCodeStringDTO taxpayerIdentifyTypeDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getTaxpayerIdentifyTypeCodes(), false);
@@ -615,12 +630,12 @@ public class PoliciesServiceImpl implements PoliciesService {
 			throw BizCode._4100.exception();
 		}
 		// 判断条件--全文废止
-		if (ValidityEnum.FULL_TEXT_REPEAL.getValue().equals(queryAbolishDTO.getValidity())) {
+		if (ValidityEnum.FULL_TEXT_REPEAL.getValue().equals(queryAbolishDTO.getValidity().name())) {
 			// 设置政策法规的有效性
 			policiesDO.setValidity(ValidityEnum.FULL_TEXT_REPEAL);
 			policiesDO.setAbolishNote(queryAbolishDTO.getAbolishNote());
 			// 判断条件--部分废止
-		} else if (ValidityEnum.PARTIAL_REPEAL.getValue().equals(queryAbolishDTO.getValidity())) {
+		} else if (ValidityEnum.PARTIAL_REPEAL.getValue().equals(queryAbolishDTO.getValidity().name())) {
 			// 设置政策法规的有效性
 			policiesDO.setValidity(ValidityEnum.PARTIAL_VALID);
 			policiesDO.setAbolishNote(queryAbolishDTO.getAbolishNote());
@@ -686,5 +701,18 @@ public class PoliciesServiceImpl implements PoliciesService {
 		PageVO<PoliciesTitleVO> pageVO = PageVO.createPageVO(relatedPolicyList, relatedPolicyList.getRecords());
 		log.info("查询该政策解读是否被关联了政策法规={}", relatedPolicyList);
 		return pageVO;
+	}
+
+	@Override
+	public List<PoliciesIndustryVO> industryQuery(String title) {
+		LambdaQueryWrapper<PoliciesDO> wrapper = Wrappers.lambdaQuery(PoliciesDO.class)
+				.like(StringUtils.isNotBlank(title),PoliciesDO::getIndustryNames,title);
+		List<PoliciesDO> policiesDOList = policiesMapper.selectList(wrapper);
+		List<PoliciesIndustryVO> collect = policiesDOList.stream().map(policiesDO -> {
+			PoliciesIndustryVO policiesIndustryVO = new PoliciesIndustryVO();
+			BeanUtils.copyProperties(policiesDO,policiesIndustryVO);
+			return policiesIndustryVO;
+		}).collect(Collectors.toList());
+		return collect;
 	}
 }

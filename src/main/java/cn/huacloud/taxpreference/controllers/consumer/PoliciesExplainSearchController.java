@@ -49,7 +49,7 @@ public class PoliciesExplainSearchController {
     }
 
     @ApiOperation("政策解读详情")
-    @PostMapping("/policiesExplain/{id}")
+    @GetMapping("/policiesExplain/{id}")
     public ResultVO<PoliciesExplainSearchVO> pageSearch(@PathVariable("id") Long id) throws Exception {
         PoliciesExplainSearchVO pageVO = policiesExplainSearchService.getPoliciesExplainDetails(id);
         return ResultVO.ok(pageVO);
