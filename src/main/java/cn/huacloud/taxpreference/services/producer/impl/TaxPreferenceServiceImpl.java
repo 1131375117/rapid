@@ -74,15 +74,18 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         taxPreferenceDO.setCreateTime(LocalDateTime.now());
         log.info("税收优惠新增对象:{}", taxPreferenceDO);
         taxPreferenceMapper.insert(taxPreferenceDO);
-        //判断是否需要提交发布申请
+
         taxPreferenceDTO.setId(taxPreferenceDO.getId());
-        isRequireReleased(taxPreferenceDTO, currentUser, taxPreferenceDO);
 
         // 新增-税收优惠政策法规关联表t_tax_preference_ policies
         insertTaxPreferencePoliciesDO(taxPreferenceDTO, taxPreferenceDO);
 
         // 新增-申报条件表 t_submit_condition
         insertSubmitConditionDOs(taxPreferenceDTO, taxPreferenceDO);
+
+        //判断是否需要提交发布申请
+        isRequireReleased(taxPreferenceDTO, currentUser, taxPreferenceDO);
+
         return ResultVO.ok();
     }
 

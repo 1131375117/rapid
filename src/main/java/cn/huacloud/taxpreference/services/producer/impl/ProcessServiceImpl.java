@@ -35,11 +35,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import static cn.huacloud.taxpreference.services.producer.impl.TaxPreferenceServiceImpl.TAX_PREFERENCE_ID;
 
 /**
  * 流程接口impl
@@ -133,8 +129,6 @@ public class ProcessServiceImpl implements ProcessService {
     public ResultVO<List<ProcessInfoVO>> queryProcessInfo(Long id) {
         log.info("查询条件:id-{}", id);
         List<ProcessInfoVO> processInfoVOList = new ArrayList<>();
-        Map<String, Object> keymap = new HashMap<>(16);
-        keymap.put(TAX_PREFERENCE_ID, id);
         LambdaQueryWrapper<ProcessDO> queryWrapper = Wrappers.lambdaQuery(ProcessDO.class);
         queryWrapper.eq(ProcessDO::getTaxPreferenceId, id)
                 .orderByDesc(ProcessDO::getApprovalTime);
