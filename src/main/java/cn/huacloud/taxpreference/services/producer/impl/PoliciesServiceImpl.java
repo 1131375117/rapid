@@ -35,11 +35,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -186,9 +189,9 @@ public class PoliciesServiceImpl implements PoliciesService {
 		String docCode = DocCodeUtil.getDocCode(policiesCombinationDTO.getDocWordCode(), policiesCombinationDTO.getDocYearCode(), policiesCombinationDTO.getDocNumCode());
 		policiesDO.setDocCode(docCode);
 		//获取所属专题
-		Map<String, String> mapParamByTypes = sysParamService.getMapParamByTypes(String.class, SysParamTypes.POLICIES_SPECIAL_SUBJECT);
-		String specialSubject = mapParamByTypes.get(policiesCombinationDTO.getSpecialSubject());
-		policiesDO.setSpecialSubject(specialSubject);
+//		Map<String, String> mapParamByTypes = sysParamService.getMapParamByTypes(String.class, SysParamTypes.POLICIES_SPECIAL_SUBJECT);
+//		String specialSubject = mapParamByTypes.get(policiesCombinationDTO.getSpecialSubject());
+		policiesDO.setSpecialSubject(policiesCombinationDTO.getSpecialSubject());
 		//获取纳税人、使用企业、适用行业码值、所属税种信息
 		SysCodeStringDTO taxpayerIdentifyTypeDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getTaxpayerIdentifyTypeCodes(), false);
 		SysCodeStringDTO enterpriseTypeDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getEnterpriseTypeCodes(), false);
@@ -220,6 +223,8 @@ public class PoliciesServiceImpl implements PoliciesService {
 		policiesDO.setAreaName(sysCodeService.getCodeNameByCodeValue(policiesCombinationDTO.getAreaCode()));
 		// 设置标签
 		policiesDO.setLabels(StringUtils.join(policiesCombinationDTO.getLabels(), ","));
+
+
 
 		log.info("新增政策法规对象={}", policiesDO);
 	}
@@ -369,9 +374,16 @@ public class PoliciesServiceImpl implements PoliciesService {
 		String docCode = DocCodeUtil.getDocCode(policiesCombinationDTO.getDocWordCode(), policiesCombinationDTO.getDocYearCode(), policiesCombinationDTO.getDocNumCode());
 		policiesDO.setDocCode(docCode);
 		//获取所属专题
-		Map<String, String> mapParamByTypes = sysParamService.getMapParamByTypes(String.class, SysParamTypes.POLICIES_SPECIAL_SUBJECT);
-		String specialSubject = mapParamByTypes.get(policiesCombinationDTO.getSpecialSubject());
-		policiesDO.setSpecialSubject(specialSubject);
+//		Map<String, String> mapParamByTypes = sysParamService.getMapParamByTypes(String.class, SysParamTypes.POLICIES_SPECIAL_SUBJECT);
+//		String specialSubject = mapParamByTypes.get(policiesCombinationDTO.getSpecialSubject());
+		policiesDO.setSpecialSubject(policiesCombinationDTO.getSpecialSubject());
+
+		//设置摘要
+		String content = policiesDO.getContent();
+		String parse = String.valueOf(Jsoup.parse(content));
+		String substring = parse.substring(0, 200);
+		log.info("修改政策法规对象={}", policiesDO);
+
 
 		BeanUtils.copyProperties(policiesCombinationDTO, policiesDO);
 		SysCodeStringDTO taxpayerIdentifyTypeDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getTaxpayerIdentifyTypeCodes(), false);
@@ -397,7 +409,7 @@ public class PoliciesServiceImpl implements PoliciesService {
 		policiesDO.setUpdateTime(LocalDateTime.now());
 		// 设置有效性
 		policiesDO.setValidity(policiesCombinationDTO.getValidity());
-		log.info("修改政策法规对象={}", policiesDO);
+
 		policiesMapper.updateById(policiesDO);
 	}
 
@@ -706,11 +718,11 @@ public class PoliciesServiceImpl implements PoliciesService {
 	@Override
 	public List<PoliciesIndustryVO> industryQuery(String title) {
 		LambdaQueryWrapper<PoliciesDO> wrapper = Wrappers.lambdaQuery(PoliciesDO.class)
-				.like(StringUtils.isNotBlank(title),PoliciesDO::getIndustryNames,title);
+				.like(StringUtils.isNotBlank(title), PoliciesDO::getIndustryNames, title);
 		List<PoliciesDO> policiesDOList = policiesMapper.selectList(wrapper);
 		List<PoliciesIndustryVO> collect = policiesDOList.stream().map(policiesDO -> {
 			PoliciesIndustryVO policiesIndustryVO = new PoliciesIndustryVO();
-			BeanUtils.copyProperties(policiesDO,policiesIndustryVO);
+			BeanUtils.copyProperties(policiesDO, policiesIndustryVO);
 			return policiesIndustryVO;
 		}).collect(Collectors.toList());
 		return collect;
