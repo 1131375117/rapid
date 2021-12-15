@@ -12,11 +12,13 @@ public interface SysParamTypes {
     // 短信登录
     String SMS_LOGIN_VERIFICATION_CODE = "sms.login.verificationCode";
     // 短信注册
-    String SMS_REGISTER_VERIFICATION_CODE = "sms.login.verificationCode";
+    String SMS_REGISTER_VERIFICATION_CODE = "sms.register.verificationCode";
     // 短信找回密码
-    String SMS_RETRIEVE_PASSWORD_VERIFICATION_CODE = "sms.login.verificationCode";
+    String SMS_RETRIEVE_PASSWORD_VERIFICATION_CODE = "sms.retrievePassword.verificationCode";
     // 短信发送频率时间限制
     String SMS_RATE_LIMIT_SECONDS = "sms.rateLimitSeconds";
+    // 短信验证码过期时间
+    String SMS_VERIFICATION_CODE_EXPIRE_MINUTES = "sms.verificationCodeExpireMinutes";
     // 所属专题
     String POLICIES_SPECIAL_SUBJECT ="policies.specialSubject";
 }

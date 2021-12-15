@@ -1,6 +1,5 @@
 package cn.huacloud.taxpreference.services.common.impl;
 
-import cn.huacloud.taxpreference.common.constants.SysParamTypes;
 import cn.huacloud.taxpreference.common.enums.SysCodeStatus;
 import cn.huacloud.taxpreference.services.common.SysParamService;
 import cn.huacloud.taxpreference.services.common.entity.dos.SysParamDO;
@@ -106,25 +105,27 @@ public class SysParamServiceImpl implements SysParamService {
 
     @Override
     public <T> T getSingleParamValue(String sysParamType, String sysParamKey, Class<T> clazz) {
-        List<String> list = new ArrayList<>();
         LambdaQueryWrapper<SysParamDO> queryWrapper = Wrappers.lambdaQuery(SysParamDO.class);
         queryWrapper.eq(SysParamDO::getParamKey, sysParamKey);
-        queryWrapper.eq(SysParamDO::getParamType, SysParamTypes.OPERATION_VIEWS);
+        queryWrapper.eq(sysParamKey != null, SysParamDO::getParamType, sysParamKey);
         queryWrapper.eq(SysParamDO::getParamStatus, SysCodeStatus.VALID);
-        SysParamDO sysParamDO = sysParamMapper.selectOne(queryWrapper);
+        List<SysParamDO> sysParamDOList = sysParamMapper.selectList(queryWrapper);
         String target;
-        if (sysParamDO != null) {
-            list.add(sysParamDO.getParamValue());
-            try {
-                target = objectMapper.writeValueAsString(list);
-                CollectionLikeType type = objectMapper.getTypeFactory().constructCollectionLikeType(ArrayList.class, clazz);
-                List<T> readValue = objectMapper.readValue(target, type);
-                return readValue.iterator().next();
-            } catch (JsonProcessingException e) {
-                log.error("转换异常:", e);
-            }
+        if (CollectionUtils.isEmpty(sysParamDOList)) {
+            return null;
         }
-        return null;
+        // 反序列化value
+        List<String> wrapper = new ArrayList<>();
+        wrapper.add(sysParamDOList.iterator().next().getParamValue());
+        try {
+            target = objectMapper.writeValueAsString(wrapper);
+            CollectionLikeType type = objectMapper.getTypeFactory().constructCollectionLikeType(ArrayList.class, clazz);
+            List<T> readValue = objectMapper.readValue(target, type);
+            return readValue.iterator().next();
+        } catch (JsonProcessingException e) {
+            log.error("转换异常:", e);
+            return null;
+        }
     }
 
     private void getMap(HashMap<Object, Object> map, List<SysParamDO> sysParamDOList) {
