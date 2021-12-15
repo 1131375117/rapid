@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  **/
 @Api(tags = "收藏功能")
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/collection")
+@RequestMapping("/api/v1")
 @RestController
 public class CollectionController {
 
