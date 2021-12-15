@@ -13,6 +13,7 @@ import cn.huacloud.taxpreference.services.producer.entity.dos.ProcessDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferenceDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.ProcessListDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.ProcessSubmitDTO;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.TaxPreferenceDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.ProcessInfoVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.ProcessListVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceVO;
@@ -71,6 +72,12 @@ public class ProcessServiceImpl implements ProcessService {
             //校验税收优惠是否存在必填未校验
             TaxPreferenceVO taxPreferenceVO = taxPreferenceService.queryTaxPreferenceInfo(taxPreferenceId).getData();
                 ValidationUtil.validate(taxPreferenceVO, ValidationGroup.Manual.class);
+            TaxPreferenceDTO taxPreferenceDTO = new TaxPreferenceDTO();
+            BeanUtils.copyProperties(taxPreferenceVO,taxPreferenceDTO);
+            // 判断是否存在
+            taxPreferenceService.judgeExists(taxPreferenceDTO);
+            // 检测纳税人类型和标签管理
+            taxPreferenceService.checkLabels(taxPreferenceDTO);
             //税收优惠
             judgeProcessIng(taxPreferenceId);
             //新增先查询是否存在并更新流程状态
@@ -82,9 +89,15 @@ public class ProcessServiceImpl implements ProcessService {
             processDO.setCreatorId(currentUser.getId());
             processDO.setCreatorName(currentUser.getUsername());
             processDO.setApprovalNote("系统自动审批");
+            processDO.setApproverName("系统管理员");
+            processDO.setApprovalTime(LocalDateTime.now());
             //直接修改为审批通过
             processDO.setProcessStatus(ProcessStatus.APPROVED);
             processServiceMapper.insert(processDO);
+            TaxPreferenceDO taxPreferenceDO = getTaxPreferenceDO(processDO);
+            taxPreferenceMapper.updateById(taxPreferenceDO);
+            //同步到es
+            taxPreferenceEventTrigger.saveEvent(taxPreferenceDO.getId());
         }
         return ResultVO.ok();
     }

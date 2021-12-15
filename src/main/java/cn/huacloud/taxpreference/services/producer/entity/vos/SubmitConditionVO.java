@@ -32,7 +32,6 @@ public class SubmitConditionVO {
      * 排序字段
      */
     @ApiModelProperty("排序字段")
-    @NotEmpty(message = "排序字段不能为空",groups = ValidationGroup.Manual.class)
     private Long sort;
 
 }
