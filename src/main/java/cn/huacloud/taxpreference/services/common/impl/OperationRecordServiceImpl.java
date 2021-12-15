@@ -54,7 +54,7 @@ public class OperationRecordServiceImpl implements OperationRecordService {
         /*
          * 获取文档类型,并进行逻辑校验
          */
-        SysParamDO sysParamDO = sysParamService.selectByParamKey(operationRecordDO.getOperationType(), SysParamTypes.OPERATION_VIEWS);
+        SysParamDO sysParamDO = sysParamService.getSysParamDO(SysParamTypes.OPERATION_VIEWS, operationRecordDTO.getOperationType());
         if (sysParamDO == null) {
             throw BizCode._4501.exception();
         }

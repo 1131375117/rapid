@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.IEnum;
  * @author wangkh
  */
 public enum  SysParamStatus implements IEnum<String> {
+
     VALID("有效");
 
     public final String name;

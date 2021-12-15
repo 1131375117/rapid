@@ -1,13 +1,12 @@
 package cn.huacloud.taxpreference.services.common.mapper;
 
-import cn.huacloud.taxpreference.common.enums.SysCodeStatus;
+import cn.huacloud.taxpreference.common.enums.SysParamStatus;
 import cn.huacloud.taxpreference.services.common.entity.dos.SysParamDO;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.springframework.stereotype.Repository;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -16,27 +15,14 @@ import java.util.List;
 @Repository
 public interface SysParamMapper extends BaseMapper<SysParamDO> {
     /**
-     * 查询sysParamDOList
-     * @param paramTypes
-     * @return
+     * 根据系统参数类型获取系统参数集合
+     * @param paramType 系统参数类型
+     * @return 系统参数集合
      */
-    default List<SysParamDO> getSysParamDOList(String... paramTypes) {
-        LambdaQueryWrapper<SysParamDO> queryWrapper = Wrappers.lambdaQuery(SysParamDO.class);
-        queryWrapper.eq(SysParamDO::getParamStatus, SysCodeStatus.VALID);
-        queryWrapper.in(SysParamDO::getParamType,Arrays.asList(paramTypes));
+    default List<SysParamDO> getSysParamDOListByType(String paramType) {
+        LambdaQueryWrapper<SysParamDO> queryWrapper = Wrappers.lambdaQuery(SysParamDO.class)
+                .eq(SysParamDO::getParamType, paramType)
+                .eq(SysParamDO::getParamStatus, SysParamStatus.VALID);
         return selectList(queryWrapper);
-
-    }
-    /**
-     * 查询sysParamDOList
-     * @param paramTypes
-     * @return
-     */
-    default List<SysParamDO> getSysParamDOList(List<String> paramTypes) {
-        LambdaQueryWrapper<SysParamDO> queryWrapper = Wrappers.lambdaQuery(SysParamDO.class);
-        queryWrapper.eq(SysParamDO::getParamStatus, SysCodeStatus.VALID);
-        queryWrapper.in(SysParamDO::getParamType,paramTypes);
-        return selectList(queryWrapper);
-
     }
 }

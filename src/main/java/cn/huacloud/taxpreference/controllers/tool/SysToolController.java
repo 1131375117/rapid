@@ -1,6 +1,5 @@
 package cn.huacloud.taxpreference.controllers.tool;
 
-import cn.huacloud.taxpreference.common.utils.PasswordSecureUtil;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.config.SysConfig;
 import cn.huacloud.taxpreference.services.common.CacheClear;
@@ -9,7 +8,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -19,7 +17,6 @@ import java.util.List;
  */
 @Api(tags = "系统工具接口")
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
 @RestController
 @Slf4j
 public class SysToolController {
@@ -40,11 +37,5 @@ public class SysToolController {
             }
         }
         return ResultVO.ok();
-    }
-
-    @ApiOperation("把命名密码加密成密文")
-    @PostMapping("/tool/encryptPassword")
-    public ResultVO<String> getEncryptPassword(String value) {
-        return ResultVO.ok(PasswordSecureUtil.encrypt(value));
     }
 }

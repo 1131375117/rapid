@@ -1,8 +1,9 @@
 package cn.huacloud.taxpreference.services.common.impl;
 
-import cn.huacloud.taxpreference.common.enums.SysCodeStatus;
+import cn.huacloud.taxpreference.common.enums.SysParamStatus;
 import cn.huacloud.taxpreference.services.common.SysParamService;
 import cn.huacloud.taxpreference.services.common.entity.dos.SysParamDO;
+import cn.huacloud.taxpreference.services.common.handler.param.SysParamHandler;
 import cn.huacloud.taxpreference.services.common.mapper.SysParamMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -21,6 +22,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author fuhua
@@ -33,83 +35,82 @@ public class SysParamServiceImpl implements SysParamService {
     private final SysParamMapper sysParamMapper;
     private final ObjectMapper objectMapper;
 
-    private final Cache<String, List<SysParamDO>> sysParamCache = CacheBuilder.newBuilder()
-            .expireAfterAccess(2, TimeUnit.HOURS)
+    /**
+     * key -> sysParamType， value -> List<SysParamDO>
+     */
+    private final Cache<String, List<SysParamDO>> sysParamTypeCache = CacheBuilder.newBuilder()
+            .expireAfterWrite(2, TimeUnit.HOURS)
             .build();
 
     @Override
-    public SysParamDO selectByParamKey(String paramKey, String paramType) {
+    public SysParamDO getSysParamDO(String paramType, String paramKey) {
         LambdaQueryWrapper<SysParamDO> queryWrapper = Wrappers.lambdaQuery(SysParamDO.class)
                 .eq(SysParamDO::getParamKey, paramKey)
-                .eq(!StringUtils.isEmpty(paramType), SysParamDO::getParamType, paramType);
-        SysParamDO sysParamDO = sysParamMapper.selectOne(queryWrapper);
-        return sysParamDO;
+                .eq(!StringUtils.isEmpty(paramType), SysParamDO::getParamType, paramType)
+                .eq(SysParamDO::getParamStatus, SysParamStatus.VALID);
+        List<SysParamDO> sysParamDOS = sysParamMapper.selectList(queryWrapper);
+        if (sysParamDOS.isEmpty()) {
+            return null;
+        }
+        return sysParamDOS.iterator().next();
     }
 
     @Override
     public <T> T getObjectParamByTypes(List<String> sysParamTypes, Class<T> clazz) {
-        HashMap<Object, Object> objectHashMap = new HashMap<>();
-        Map<String, Integer> indexMap = new HashMap<>();
-        List<SysParamDO> sysParamDOList = new ArrayList<>();
-        for (int i = 0; i < sysParamTypes.size(); i++) {
-            indexMap.put(sysParamTypes.get(i), i);
+        // 返回空对象
+        T emptyObject;
+        try {
+            emptyObject = clazz.newInstance();
+        } catch (Exception e) {
+            log.error("系统参数获取对象参数失败", e);
+            return null;
         }
-        if (!CollectionUtils.isEmpty(sysParamTypes)) {
-            try {
-                try {
-                    sysParamDOList = sysParamCache.get(sysParamTypes.toString(),
-                            () -> sysParamMapper.getSysParamDOList(sysParamTypes));
-                } catch (ExecutionException e) {
-                    log.error("缓存Exception:", e);
-                }
-
-                sysParamDOList.sort(Comparator.comparingInt(a -> indexMap.get(a.getParamType())));
-                getMap(objectHashMap, sysParamDOList);
-                String str = objectMapper.writeValueAsString(objectHashMap);
-                return objectMapper.readValue(str, clazz);
-            } catch (JsonProcessingException e) {
-                log.error("JsonProcessingException:", e);
-            }
+        // 判断类型是否为空
+        if (CollectionUtils.isEmpty(sysParamTypes)) {
+            return emptyObject;
         }
         try {
-            return clazz.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            log.error("类实例化异常:", e);
-
+            List<SysParamDO> sysParamDOList = getCacheSysParamByTypes(sysParamTypes.toArray(new String[0]));
+            Map<Object, Object> tempMap = new HashMap<>();
+            Map<String, Integer> indexMap = getIndexMap(sysParamTypes);
+            sysParamDOList.sort(Comparator.comparingInt(a -> indexMap.get(a.getParamType())));
+            setPropertyToMap(tempMap, sysParamDOList);
+            String str = objectMapper.writeValueAsString(tempMap);
+            return objectMapper.readValue(str, clazz);
+        } catch (JsonProcessingException e) {
+            log.error("系统参数JSON反序列化失败:", e);
+            return emptyObject;
         }
-        return (T) objectHashMap;
     }
 
     @Override
-    public <T> Map<String, T> getMapParamByTypes(Class<T> clazz, String... args) {
-        HashMap<Object, Object> map = new HashMap<>();
-        Map<String, Integer> indexMap = new HashMap<>();
-        List<SysParamDO> sysParamDOList = sysParamMapper.getSysParamDOList(args);
+    public <T> Map<String, T> getMapParamByTypes(Class<T> clazz, String... sysParamTypes) {
 
-        for (int i = 0; i < args.length; i++) {
-            indexMap.put(args[0], i);
-        }
+        List<SysParamDO> sysParamDOList = getCacheSysParamByTypes(sysParamTypes);
+
+        Map<String, Integer> indexMap = getIndexMap(Arrays.asList(sysParamTypes));
         sysParamDOList.sort(Comparator.comparingInt(a -> indexMap.get(a.getParamType())));
 
-        getMap(map, sysParamDOList);
+        Map<Object, Object> tempMap = new LinkedHashMap<>();
+        setPropertyToMap(tempMap, sysParamDOList);
+
         try {
-            String str = objectMapper.writeValueAsString(map);
+            String str = objectMapper.writeValueAsString(tempMap);
             MapType mapType = objectMapper.getTypeFactory().constructMapType(LinkedHashMap.class, String.class, clazz);
             return objectMapper.readValue(str, mapType);
         } catch (JsonProcessingException e) {
             log.error("JsonProcessingException:", e);
+            return new LinkedHashMap<>();
         }
-        return new HashMap<>();
-
     }
 
     @Override
     public <T> T getSingleParamValue(String sysParamType, String sysParamKey, Class<T> clazz) {
-        LambdaQueryWrapper<SysParamDO> queryWrapper = Wrappers.lambdaQuery(SysParamDO.class)
-                .eq(SysParamDO::getParamType, sysParamType)
-                .eq(sysParamKey != null, SysParamDO::getParamKey, sysParamKey)
-                .eq(SysParamDO::getParamStatus, SysCodeStatus.VALID);
-        List<SysParamDO> sysParamDOList = sysParamMapper.selectList(queryWrapper);
+        List<SysParamDO> sysParamDOList = getCacheSysParamByTypes(sysParamKey);
+        if (sysParamKey != null) {
+            // 参数Key过滤
+            sysParamDOList = sysParamDOList.stream().filter(sysParamDO -> sysParamKey.equals(sysParamDO.getParamKey())).collect(Collectors.toList());
+        }
         String target;
         if (CollectionUtils.isEmpty(sysParamDOList)) {
             return null;
@@ -128,7 +129,45 @@ public class SysParamServiceImpl implements SysParamService {
         }
     }
 
-    private void getMap(HashMap<Object, Object> map, List<SysParamDO> sysParamDOList) {
+    @Override
+    public <T> T getParamByHandler(SysParamHandler<T> handler) {
+
+        return null;
+    }
+
+
+    /**
+     * 通过系统参数类型从缓存中获取系统参数
+     *
+     * @param paramTypes 系统参数类型
+     * @return 系统参数集合
+     */
+    private List<SysParamDO> getCacheSysParamByTypes(String... paramTypes) {
+        List<SysParamDO> merge = new ArrayList<>();
+        try {
+            for (String paramType : paramTypes) {
+                List<SysParamDO> sysParamDOS = sysParamTypeCache.get(paramType, () -> sysParamMapper.getSysParamDOListByType(paramType));
+                merge.addAll(sysParamDOS);
+            }
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+        return merge;
+    }
+
+    private Map<String, Integer> getIndexMap(List<String> sysParamTypes) {
+        Map<String, Integer> indexMap = new HashMap<>();
+        for (int i = 0; i < sysParamTypes.size(); i++) {
+            String key = sysParamTypes.get(i);
+            if (indexMap.containsKey(key)) {
+                continue;
+            }
+            indexMap.put(key, i);
+        }
+        return indexMap;
+    }
+
+    private void setPropertyToMap(Map<Object, Object> map, List<SysParamDO> sysParamDOList) {
         for (SysParamDO sysParamDO : sysParamDOList) {
             String paramKey = sysParamDO.getParamKey();
             if (paramKey.contains(".")) {

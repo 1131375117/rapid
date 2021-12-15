@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.common.entity.dos;
 
+import cn.huacloud.taxpreference.common.enums.SysParamStatus;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -48,5 +49,5 @@ public class SysParamDO {
     /**
      * 参数状态
      */
-    private String paramStatus;
+    private SysParamStatus paramStatus;
 }

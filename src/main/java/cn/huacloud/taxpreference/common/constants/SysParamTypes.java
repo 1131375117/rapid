@@ -6,7 +6,7 @@ package cn.huacloud.taxpreference.common.constants;
  */
 public interface SysParamTypes {
     // 操作记录查看详情
-    String OPERATION_VIEWS = "OPERATION_VIEWS";
+    String OPERATION_VIEWS = "operation.views";
     // 短信基础参数
     String SMS_BASE = "sms.base";
     // 短信登录
