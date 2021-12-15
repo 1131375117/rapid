@@ -103,4 +103,17 @@ public interface TaxPreferenceService {
 	 * @return
 	 */
 	List<TaxPreferenceCountVO> getTaxPreferenceId(Long policiesId);
+
+	/**
+	 *
+	 * @param taxPreferenceDTO
+	 * @return
+	 */
+	Boolean judgeExists(TaxPreferenceDTO taxPreferenceDTO);
+
+	/**
+	 * 检查标签
+	 * @param taxPreferenceDTO
+	 */
+	 void checkLabels(TaxPreferenceDTO taxPreferenceDTO) ;
 }

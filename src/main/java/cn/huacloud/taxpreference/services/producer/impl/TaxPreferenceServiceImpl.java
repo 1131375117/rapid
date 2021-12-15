@@ -91,13 +91,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
      */
     public void isRequireReleased(TaxPreferenceDTO taxPreferenceDTO, ProducerLoginUserVO currentUser, TaxPreferenceDO taxPreferenceDO) throws MethodArgumentNotValidException {
         if (TaxStatus.SUBMIT.equals(taxPreferenceDTO.getStatus())) {
-            // 判断是否存在
-            judgeExists(taxPreferenceDTO);
-            // 检测纳税人类型和标签管理
-            checkLabels(taxPreferenceDTO);
             processService.insertProcessService(new Long[]{(taxPreferenceDO.getId())}, currentUser);
-            //同步到es
-            taxPreferenceEventTrigger.saveEvent(taxPreferenceDTO.getId());
         }
     }
 
@@ -492,7 +486,8 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     /**
      * 判断此税收优惠事项是否存在
      */
-    private Boolean judgeExists(TaxPreferenceDTO taxPreferenceDTO) {
+    @Override
+    public Boolean judgeExists(TaxPreferenceDTO taxPreferenceDTO) {
         log.info("judgeExists:taxPreferenceDTO={}", taxPreferenceDTO);
         LambdaQueryWrapper<TaxPreferenceDO> queryWrapper =
                 Wrappers.lambdaQuery(TaxPreferenceDO.class)
@@ -513,6 +508,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     /**
      * 判断纳税人是否与标签冲突
      */
+    @Override
     public void checkLabels(TaxPreferenceDTO taxPreferenceDTO) {
         if (TaxpayerTypeConstants.YBNSR.equals(taxPreferenceDTO.getTaxpayerTypeCode())) {
             taxPreferenceDTO
