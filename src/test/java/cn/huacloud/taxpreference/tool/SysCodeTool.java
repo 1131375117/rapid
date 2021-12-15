@@ -76,6 +76,7 @@ public class SysCodeTool extends BaseApplicationTest {
             if (sysCodeDO.getCodeValue() != null) {
                 continue;
             }
+            // 首字母拼音
             String codeValue = sysCodeDO.getCodeType().getValue() + "_" + toFistLetterPinyin(sysCodeDO.getCodeName());
             sysCodeDO.setCodeValue(codeValue);
             if (map.containsKey(codeValue)) {
@@ -113,6 +114,60 @@ public class SysCodeTool extends BaseApplicationTest {
     /**
      * 所属税种
      */
+    private SysCodeProvider DM_GY_ZSXMcsvIndustry = nextId -> {
+        InputStream inputStream = new ClassPathResource("sys_code/征收项目代码表(DM_GY_ZSXM)码值.csv").getInputStream();
+
+        // 使用指定的字符编码以字符串列表的形式获取InputStream的内容，每行一个条目
+        List<String> list = IOUtils.readLines(inputStream, StandardCharsets.UTF_8);
+
+        Long currentPid = 0L;
+        List<SysCodeDO> sysCodeDOList = new ArrayList<>();
+        // 删除.csv第一行,第二行
+        list.remove(0);
+        list.remove(0);
+        for (String line : list) {
+            String[] split = line.split(",");
+
+            String code = split[5];
+            String name = split[1];
+            String validStatus = split[4];
+
+            Long pid;
+            boolean isLeaf;
+            if (code.length() == 0) {
+                pid = 0L;
+                currentPid = nextId;
+                isLeaf = false;
+            } else {
+                pid = currentPid;
+                isLeaf = true;
+            }
+
+            SysCodeDO sysCodeDO = new SysCodeDO();
+            if (validStatus.contains("Y")) {
+                sysCodeDO.setCodeStatus(SysCodeStatus.VALID);
+            } else if (validStatus.contains("N")) {
+                sysCodeDO.setCodeStatus(SysCodeStatus.HIDDEN);
+            }
+            sysCodeDO.setCodeName(name)
+                    .setId(nextId)
+                    .setPid(pid)
+                    .setCodeType(SysCodeType.TAX_CATEGORIES)
+                    .setLeaf(isLeaf)
+                    .setSort(nextId);
+
+            if (code == null) {
+                sysCodeDO.setCodeValue(name);
+            } else {
+                sysCodeDO.setCodeValue(code);
+            }
+            nextId++;
+            sysCodeDOList.add(sysCodeDO);
+        }
+        return sysCodeDOList;
+
+    };
+    @IgnoreProvider
     private SysCodeProvider taxCategories = nextId -> readSingleFile("所属税种.txt", SysCodeType.TAX_CATEGORIES, nextId);
 
     /**
@@ -165,6 +220,7 @@ public class SysCodeTool extends BaseApplicationTest {
         return nextId;
     }
 
+
     /**
      * 适用行业
      */
@@ -200,6 +256,8 @@ public class SysCodeTool extends BaseApplicationTest {
             SysCodeDO sysCodeDO = new SysCodeDO();
             if (validStatus.contains("Y")) {
                 sysCodeDO.setCodeStatus(SysCodeStatus.VALID);
+            } else if (validStatus.contains("N")) {
+                sysCodeDO.setCodeStatus(SysCodeStatus.HIDDEN);
             }
             sysCodeDO.setCodeName(name)
                     .setCodeValue(code)
@@ -208,7 +266,6 @@ public class SysCodeTool extends BaseApplicationTest {
                     .setCodeType(SysCodeType.INDUSTRY)
                     .setLeaf(isLeaf)
                     .setSort(nextId);
-
 
             nextId++;
             sysCodeDOList.add(sysCodeDO);
@@ -277,6 +334,61 @@ public class SysCodeTool extends BaseApplicationTest {
     /**
      * 适用企业类型
      */
+    private SysCodeProvider DM_DJ_DJZCLX_csvIndustry = nextId -> {
+        InputStream inputStream = new ClassPathResource("sys_code/登记注册类型代码表(DM_DJ_DJZCLX)码值.csv").getInputStream();
+
+        // 使用指定的字符编码以字符串列表的形式获取InputStream的内容，每行一个条目
+        List<String> list = IOUtils.readLines(inputStream, StandardCharsets.UTF_8);
+
+        Long currentPid = 0L;
+        List<SysCodeDO> sysCodeDOList = new ArrayList<>();
+        // 删除.csv第一行,第二行
+        list.remove(0);
+        list.remove(0);
+        for (String line : list) {
+            String[] split = line.split(",");
+
+            String code = split[5];
+            String name = split[1];
+            String validStatus = split[7];
+
+            Long pid;
+            boolean isLeaf;
+            if (code.length() == 0) {
+                pid = 0L;
+                currentPid = nextId;
+                isLeaf = false;
+            } else {
+                pid = currentPid;
+                isLeaf = true;
+            }
+
+            SysCodeDO sysCodeDO = new SysCodeDO();
+            if (validStatus.contains("Y")) {
+                sysCodeDO.setCodeStatus(SysCodeStatus.VALID);
+            } else if (validStatus.contains("N")) {
+                sysCodeDO.setCodeStatus(SysCodeStatus.HIDDEN);
+            }
+            if (code == null) {
+                sysCodeDO.setCodeValue(name);
+            } else {
+                sysCodeDO.setCodeValue(code);
+            }
+            sysCodeDO.setCodeName(name)
+                    .setId(nextId)
+                    .setPid(pid)
+                    .setCodeType(SysCodeType.ENTERPRISE_TYPE)
+                    .setLeaf(isLeaf)
+                    .setSort(nextId);
+
+
+            nextId++;
+            sysCodeDOList.add(sysCodeDO);
+        }
+        return sysCodeDOList;
+
+    };
+    @IgnoreProvider
     private SysCodeProvider enterpriseType = nextId -> readSingleFile("适用企业类型.txt", SysCodeType.ENTERPRISE_TYPE,
             nextId);
 
