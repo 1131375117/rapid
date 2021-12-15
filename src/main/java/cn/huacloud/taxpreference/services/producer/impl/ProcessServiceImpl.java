@@ -89,11 +89,15 @@ public class ProcessServiceImpl implements ProcessService {
             processDO.setCreatorId(currentUser.getId());
             processDO.setCreatorName(currentUser.getUsername());
             processDO.setApprovalNote("系统自动审批");
+            processDO.setApproverName("系统管理员");
+            processDO.setApprovalTime(LocalDateTime.now());
             //直接修改为审批通过
             processDO.setProcessStatus(ProcessStatus.APPROVED);
             processServiceMapper.insert(processDO);
+            TaxPreferenceDO taxPreferenceDO = getTaxPreferenceDO(processDO);
+            taxPreferenceMapper.updateById(taxPreferenceDO);
             //同步到es
-            taxPreferenceEventTrigger.saveEvent(taxPreferenceDTO.getId());
+            taxPreferenceEventTrigger.saveEvent(taxPreferenceDO.getId());
         }
         return ResultVO.ok();
     }

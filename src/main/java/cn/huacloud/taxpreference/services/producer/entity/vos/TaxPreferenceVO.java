@@ -159,7 +159,7 @@ public class TaxPreferenceVO {
      * 申报信息
      */
     @ApiModelProperty("申报信息")
-    @NotEmpty(message = "收入税种种类名称不能为空",groups = ValidationGroup.Manual.class)
+    @NotEmpty(message = "申报信息",groups = ValidationGroup.Manual.class)
     private List<@Valid SubmitConditionVO> submitConditionVOList;
 
 }
