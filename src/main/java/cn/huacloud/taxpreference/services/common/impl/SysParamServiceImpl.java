@@ -105,10 +105,10 @@ public class SysParamServiceImpl implements SysParamService {
 
     @Override
     public <T> T getSingleParamValue(String sysParamType, String sysParamKey, Class<T> clazz) {
-        LambdaQueryWrapper<SysParamDO> queryWrapper = Wrappers.lambdaQuery(SysParamDO.class);
-        queryWrapper.eq(SysParamDO::getParamKey, sysParamKey);
-        queryWrapper.eq(sysParamKey != null, SysParamDO::getParamType, sysParamKey);
-        queryWrapper.eq(SysParamDO::getParamStatus, SysCodeStatus.VALID);
+        LambdaQueryWrapper<SysParamDO> queryWrapper = Wrappers.lambdaQuery(SysParamDO.class)
+                .eq(SysParamDO::getParamType, sysParamType)
+                .eq(sysParamKey != null, SysParamDO::getParamKey, sysParamKey)
+                .eq(SysParamDO::getParamStatus, SysCodeStatus.VALID);
         List<SysParamDO> sysParamDOList = sysParamMapper.selectList(queryWrapper);
         String target;
         if (CollectionUtils.isEmpty(sysParamDOList)) {

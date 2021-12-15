@@ -25,7 +25,6 @@ public class CollectionVO {
      * 数据源id
      */
     @ApiModelProperty("数据源id")
-
     private Long sourceId;
 
 }

@@ -34,5 +34,6 @@ public interface HotContentService {
      * @param pageQuery 查询条件
      * @return 文档类型统计数
      */
+    @Deprecated
     List<SysCodeCountVO> allDocCount(KeywordPageQueryDTO pageQuery) throws Exception;
 }
