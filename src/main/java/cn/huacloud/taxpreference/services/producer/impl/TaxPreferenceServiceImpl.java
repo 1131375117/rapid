@@ -89,7 +89,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     /**
      * 是否需要发布
      */
-    private void isRequireReleased(TaxPreferenceDTO taxPreferenceDTO, ProducerLoginUserVO currentUser, TaxPreferenceDO taxPreferenceDO) throws MethodArgumentNotValidException {
+    public void isRequireReleased(TaxPreferenceDTO taxPreferenceDTO, ProducerLoginUserVO currentUser, TaxPreferenceDO taxPreferenceDO) throws MethodArgumentNotValidException {
         if (TaxStatus.SUBMIT.equals(taxPreferenceDTO.getStatus())) {
             // 判断是否存在
             judgeExists(taxPreferenceDTO);
@@ -513,7 +513,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     /**
      * 判断纳税人是否与标签冲突
      */
-    private void checkLabels(TaxPreferenceDTO taxPreferenceDTO) {
+    public void checkLabels(TaxPreferenceDTO taxPreferenceDTO) {
         if (TaxpayerTypeConstants.YBNSR.equals(taxPreferenceDTO.getTaxpayerTypeCode())) {
             taxPreferenceDTO
                     .getLabels()
