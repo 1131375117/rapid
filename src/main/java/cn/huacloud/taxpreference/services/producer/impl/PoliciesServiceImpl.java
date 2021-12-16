@@ -67,7 +67,6 @@ public class PoliciesServiceImpl implements PoliciesService {
 
 	private final PoliciesEventTrigger policiesEventTrigger;
 
-	private final SysParamService sysParamService;
 
 	@Autowired
 	public void setFrequentlyAskedQuestionService(FrequentlyAskedQuestionService frequentlyAskedQuestionService) {

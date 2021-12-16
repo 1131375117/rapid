@@ -23,7 +23,7 @@ public class PoliciesVO extends PoliciesCommonListVO{
     @ApiModelProperty("字号")
     private String docWordCode;
     @ApiModelProperty("年号")
-    private String docYearCode;
+    private Integer docYearCode;
     @ApiModelProperty("编号")
     private Integer docNumCode;
     @ApiModelProperty("所属税种名称")

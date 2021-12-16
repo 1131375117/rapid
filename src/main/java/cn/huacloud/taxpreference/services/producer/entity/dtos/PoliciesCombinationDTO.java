@@ -39,7 +39,7 @@ public class PoliciesCombinationDTO {
 	private String docWordCode;
 
 	@ApiModelProperty("年号")
-	private String docYearCode;
+	private Integer docYearCode;
 
 	@ApiModelProperty("编号")
 	private Integer docNumCode;

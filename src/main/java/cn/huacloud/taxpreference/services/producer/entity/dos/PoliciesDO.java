@@ -44,7 +44,7 @@ public class PoliciesDO {
 	/**
 	 * 年号
 	 */
-	private String docYearCode;
+	private Integer docYearCode;
 
 	/**
 	 * 编号

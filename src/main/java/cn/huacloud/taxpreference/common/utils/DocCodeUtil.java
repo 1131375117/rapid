@@ -15,12 +15,12 @@ public class DocCodeUtil {
      * @param docNumCode 序号
      * @return 拼接后的文号
      */
-    public static String getDocCode(String docWordCode, String docYearCode, Integer docNumCode) {
+    public static String getDocCode(String docWordCode, Integer docYearCode, Integer docNumCode) {
         StringBuilder sb = new StringBuilder("");
         if (StringUtils.isNotBlank(docWordCode)) {
             sb.append(docWordCode);
         }
-        if (StringUtils.isNotBlank(docYearCode)) {
+        if (docYearCode != null) {
             sb.append("〔").append(docYearCode).append("〕");
         }
         if (docNumCode != null) {
