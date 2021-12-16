@@ -2,8 +2,6 @@ package cn.huacloud.taxpreference.services.producer.entity.dtos;
 
 
 import cn.huacloud.taxpreference.common.constants.ValidationGroup;
-import cn.huacloud.taxpreference.services.common.entity.vos.AttachmentVO;
-import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeVO;
 import cn.huacloud.taxpreference.services.producer.entity.enums.ValidityEnum;
 import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceCountVO;
 import io.swagger.annotations.ApiModel;
@@ -12,7 +10,6 @@ import lombok.Data;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -39,7 +36,7 @@ public class PoliciesCombinationDTO {
 	private String docWordCode;
 
 	@ApiModelProperty("年号")
-	private String docYearCode;
+	private Integer docYearCode;
 
 	@ApiModelProperty("编号")
 	private Integer docNumCode;
