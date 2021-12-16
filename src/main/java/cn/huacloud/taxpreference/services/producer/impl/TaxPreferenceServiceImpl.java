@@ -457,18 +457,18 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         taxPreferenceDO.setDeleted(false);
         taxPreferenceDO.setUpdateTime(LocalDateTime.now());
         taxPreferenceDO.setTaxPreferenceStatus(TaxPreferenceStatus.UNRELEASED);
-        SysCodeStringDTO industries = sysCodeService.getSysCodeStringDTO(taxPreferenceDTO.getIndustryCodes(), false);
-        SysCodeStringDTO enterprises = sysCodeService.getSysCodeStringDTO(taxPreferenceDTO.getEnterpriseTypeCodes(), false);
-        SysCodeStringDTO taxCategories = sysCodeService.getSysCodeStringDTO(taxPreferenceDTO.getTaxCategoriesCode(), false);
+        SysCodeStringDTO industries = sysCodeService.getSysCodeStringDTO(SysCodeType.INDUSTRY,taxPreferenceDTO.getIndustryCodes(), false);
+        SysCodeStringDTO enterprises = sysCodeService.getSysCodeStringDTO(SysCodeType.ENTERPRISE_TYPE,taxPreferenceDTO.getEnterpriseTypeCodes(), false);
+        SysCodeStringDTO taxCategories = sysCodeService.getSysCodeStringDTO(SysCodeType.TAX_CATEGORIES,taxPreferenceDTO.getTaxCategoriesCode(), false);
         // 收入税种种类名称
         taxPreferenceDO.setTaxCategoriesName(taxCategories.getNames());
         taxPreferenceDO.setTaxCategoriesCode(taxCategories.getCodes());
         // taxpayer_register_type_name-纳税人登记注册类型名称
         taxPreferenceDO.setTaxpayerRegisterTypeName(
-                sysCodeService.getCodeNameByCodeValue(taxPreferenceDTO.getTaxpayerRegisterTypeCode()));
+                sysCodeService.getSysCodeName(SysCodeType.TAXPAYER_REGISTER_TYPE,taxPreferenceDTO.getTaxpayerRegisterTypeCode()));
         // 纳税人类型名称-taxpayer_type_name
         taxPreferenceDO.setTaxpayerTypeName(
-                sysCodeService.getCodeNameByCodeValue(taxPreferenceDTO.getTaxpayerTypeCode()));
+                sysCodeService.getSysCodeName(SysCodeType.TAXPAYER_TYPE,taxPreferenceDTO.getTaxpayerTypeCode()));
         // 行业code
         taxPreferenceDO.setIndustryCodes(industries.getCodes());
         // 适用企业类型
