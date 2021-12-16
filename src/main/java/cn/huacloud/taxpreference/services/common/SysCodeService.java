@@ -29,7 +29,17 @@ public interface SysCodeService extends CacheClear {
      * @param codeValue 码值代码
      * @return 码值名称 如果码值不存在则返回null
      */
+    @Deprecated
     String getCodeNameByCodeValue(String codeValue);
+
+
+    /**
+     * 获取系统码值对象
+     * @param sysCodeType 系统码值类型
+     * @param codeValue 系统码值
+     * @return 系统码值对象
+     */
+    SysCodeDO getSysCodeDO(SysCodeType sysCodeType, String codeValue);
 
     /**
      * 码字字符串集合获取视图对象集合

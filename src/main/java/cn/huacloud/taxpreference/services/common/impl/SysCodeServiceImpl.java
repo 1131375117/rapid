@@ -66,6 +66,13 @@ public class SysCodeServiceImpl implements SysCodeService {
             .expireAfterWrite(2, TimeUnit.HOURS)
             .build();
 
+    /**
+     * SysCodeType -> List<SysCodeDO>
+     */
+    private final Cache<SysCodeType, Map<String, SysCodeDO>> typedCodeMapCache = CacheBuilder.newBuilder()
+            .expireAfterWrite(2, TimeUnit.HOURS)
+            .build();
+
     @Override
     public List<SysCodeTreeVO> getSysCodeTreeVO(final SysCodeType sysCodeType) {
         List<SysCodeDO> sysCodeDOList = getSysCodeTypeMapCache().get(sysCodeType);
@@ -88,6 +95,12 @@ public class SysCodeServiceImpl implements SysCodeService {
     public String getCodeNameByCodeValue(String codeValue) {
         SysCodeDO sysCodeDO = getSysCodeMapCache().get(codeValue);
         return sysCodeDO == null ? null : sysCodeDO.getCodeName();
+    }
+
+    @Override
+    public SysCodeDO getSysCodeDO(SysCodeType sysCodeType, String codeValue) {
+        Map<String, SysCodeDO> codeMapByType = getCodeMapByType(sysCodeType);
+        return codeMapByType.get(codeValue);
     }
 
     @Override
@@ -293,10 +306,22 @@ public class SysCodeServiceImpl implements SysCodeService {
      *
      * @return key：码值；value：sysCodeDO
      */
-    private Map<String, SysCodeDO> getSysCodeMapCache() {
+    @Deprecated
+    public Map<String, SysCodeDO> getSysCodeMapCache() {
         try {
-            return sysCodeMapCache.get(this, () ->
-                    getSysCodeCache().stream().collect(Collectors.toMap(SysCodeDO::getCodeValue, value -> value))
+            return sysCodeMapCache.get(this, () -> {
+                        List<SysCodeDO> sysCodeDOList = getSysCodeCache();
+                        Map<String, SysCodeDO> map = new HashMap<>();
+                        for (SysCodeDO sysCodeDO : sysCodeDOList) {
+                            String codeValue = sysCodeDO.getCodeValue();
+                            if (map.containsKey(codeValue)) {
+                                log.error("类型为：{}，的系统码值重复：{}", sysCodeDO.getCodeType().getValue(), codeValue);
+                                continue;
+                            }
+                            map.put(codeValue, sysCodeDO);
+                        }
+                        return map;
+                    }
             );
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
@@ -311,6 +336,36 @@ public class SysCodeServiceImpl implements SysCodeService {
     private Map<Long, List<SysCodeDO>> getSysCodePidMapCache() {
         try {
             return sysCodePidMapCache.get(this, () -> getSysCodeCache().stream().collect(Collectors.groupingBy(SysCodeDO::getPid)));
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 获取类型下的系统码值map
+     *
+     * @param sysCodeType 系统码值类型
+     * @return map key -> codeValue, value -> SysCodeDO
+     */
+    private Map<String, SysCodeDO> getCodeMapByType(SysCodeType sysCodeType) {
+        try {
+            return typedCodeMapCache.get(sysCodeType, () -> {
+                Map<SysCodeType, List<SysCodeDO>> sysCodeTypeMapCache = getSysCodeTypeMapCache();
+                List<SysCodeDO> sysCodeDOList = sysCodeTypeMapCache.get(sysCodeType);
+                Map<String, SysCodeDO> map = new HashMap<>();
+                if (CollectionUtils.isEmpty(sysCodeDOList)) {
+                    return map;
+                }
+                for (SysCodeDO sysCodeDO : sysCodeDOList) {
+                    String codeValue = sysCodeDO.getCodeValue();
+                    if (map.containsKey(codeValue)) {
+                        log.error("类型为：{}，的系统码值重复：{}", sysCodeDO.getCodeType().getValue(), codeValue);
+                        continue;
+                    }
+                    map.put(codeValue, sysCodeDO);
+                }
+                return map;
+            });
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
         }
@@ -345,5 +400,6 @@ public class SysCodeServiceImpl implements SysCodeService {
         sysCodeMapCache.invalidateAll();
         sysCodeTypeMapCache.invalidateAll();
         sysCodePidMapCache.invalidateAll();
+        typedCodeMapCache.invalidateAll();
     }
 }

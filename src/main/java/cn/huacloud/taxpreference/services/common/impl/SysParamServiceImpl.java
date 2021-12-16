@@ -42,6 +42,8 @@ public class SysParamServiceImpl implements SysParamService {
             .expireAfterWrite(2, TimeUnit.HOURS)
             .build();
 
+    private final List<SysParamHandler<?, ?>> handlers;
+
     @Override
     public SysParamDO getSysParamDO(String paramType, String paramKey) {
         LambdaQueryWrapper<SysParamDO> queryWrapper = Wrappers.lambdaQuery(SysParamDO.class)
@@ -130,9 +132,20 @@ public class SysParamServiceImpl implements SysParamService {
     }
 
     @Override
-    public <T> T getParamByHandler(SysParamHandler<T> handler) {
-
-        return null;
+    public <T, R> R getParamByHandler(Class<SysParamHandler<T, R>> handlerClass, T handlerParam, List<String> paramTypes) {
+        Optional<SysParamHandler<?, ?>> optional = handlers.stream()
+                .filter(handler -> handlerClass.isAssignableFrom(handler.getClass()))
+                .findFirst();
+        if (!optional.isPresent()) {
+            return null;
+        }
+        SysParamHandler<T, R> handler = (SysParamHandler<T, R>) optional.get();
+        if (paramTypes.isEmpty()) {
+            log.error("参数处理器的参数类型不能为空");
+            return null;
+        }
+        List<SysParamDO> sysParamDOS = getCacheSysParamByTypes(paramTypes.toArray(new String[0]));
+        return handler.handle(sysParamDOS, handlerParam);
     }
 
 

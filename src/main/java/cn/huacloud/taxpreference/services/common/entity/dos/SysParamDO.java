@@ -47,6 +47,10 @@ public class SysParamDO {
      */
     private String extendsField2;
     /**
+     * 扩展属性3
+     */
+    private String extendsField3;
+    /**
      * 参数状态
      */
     private SysParamStatus paramStatus;
