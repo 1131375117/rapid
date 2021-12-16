@@ -112,7 +112,7 @@ public class SysCodeTool extends BaseApplicationTest {
     }
 
     /**
-     * 所属税种
+     * 征收项目代码表(DM_GY_ZSXM)码值
      */
     private SysCodeProvider DM_GY_ZSXMcsvIndustry = nextId -> {
         InputStream inputStream = new ClassPathResource("sys_code/征收项目代码表(DM_GY_ZSXM)码值.csv").getInputStream();
@@ -128,7 +128,7 @@ public class SysCodeTool extends BaseApplicationTest {
         for (String line : list) {
             String[] split = line.split(",");
 
-            String code = split[5];
+            String code = split[0];
             String name = split[1];
             String validStatus = split[4];
 
@@ -152,7 +152,7 @@ public class SysCodeTool extends BaseApplicationTest {
             sysCodeDO.setCodeName(name)
                     .setId(nextId)
                     .setPid(pid)
-                    .setCodeType(SysCodeType.TAX_CATEGORIES)
+                    .setCodeType(SysCodeType.TAXPAYER_TYPE)
                     .setLeaf(isLeaf)
                     .setSort(nextId);
 
@@ -181,7 +181,7 @@ public class SysCodeTool extends BaseApplicationTest {
         List<Area> targetArea = new ArrayList<>();
         Area zy = new Area().setName("中央")
                 .setPid(0L);
-        Area df = new Area().setName("地方（各省-市）")
+        Area df = new Area().setName("地方")
                 .setPid(0L)
                 .setCityList(standardAreas);
         targetArea.add(zy);
@@ -200,7 +200,8 @@ public class SysCodeTool extends BaseApplicationTest {
         for (Area area : areas) {
 
             SysCodeDO sysCodeDO = new SysCodeDO();
-            String codeValue = area.getCode() == null ? null : SysCodeType.AREA.getValue() + "_" + area.getCode();
+//            String codeValue = area.getCode() == null ? null : SysCodeType.AREA.getValue() + "_" + area.getCode();
+            String codeValue = area.getCode() == null ? null : area.getCode();
             sysCodeDO.setCodeName(area.getName())
                     .setCodeValue(codeValue)
                     .setId(nextId)
@@ -225,6 +226,63 @@ public class SysCodeTool extends BaseApplicationTest {
     /**
      * 适用行业
      */
+    private SysCodeProvider DM_GY_HYcsvIndustry = nextId -> {
+        InputStream inputStream = new ClassPathResource("sys_code/行业代码（DM_GY_HY）.csv").getInputStream();
+
+        // 使用指定的字符编码以字符串列表的形式获取InputStream的内容，每行一个条目
+        List<String> list = IOUtils.readLines(inputStream, StandardCharsets.UTF_8);
+
+        Long currentPid = 0L;
+        List<SysCodeDO> sysCodeDOList = new ArrayList<>();
+
+        // 删除.csv第一行
+        list.remove(0);
+        list.remove(0);
+        for (String line : list) {
+            String[] split = line.split(",");
+
+            String code = split[0];
+            String name = split[1];
+            String validStatus = split[8];
+            String parentCode = split[6];
+            // 小类Y 不要。
+            String smallClassSign = split[5];
+            if (smallClassSign.contains("Y")) {
+                continue;
+            }
+            Long pid;
+            boolean isLeaf;
+            if (parentCode.length() == 1) {
+                pid = 0L;
+                currentPid = nextId;
+                isLeaf = false;
+            } else {
+                pid = currentPid;
+                isLeaf = true;
+            }
+
+            SysCodeDO sysCodeDO = new SysCodeDO();
+            if (validStatus.contains("Y")) {
+                sysCodeDO.setCodeStatus(SysCodeStatus.VALID);
+            } else if (validStatus.contains("N")) {
+                sysCodeDO.setCodeStatus(SysCodeStatus.HIDDEN);
+            }
+            sysCodeDO.setCodeName(name)
+                    .setCodeValue(code)
+                    .setId(nextId)
+                    .setPid(pid)
+                    .setCodeType(SysCodeType.INDUSTRY)
+                    .setLeaf(isLeaf)
+                    .setSort(nextId);
+
+            nextId++;
+            sysCodeDOList.add(sysCodeDO);
+        }
+        return sysCodeDOList;
+
+    };
+
+    @IgnoreProvider
     private SysCodeProvider csvIndustry = nextId -> {
         InputStream inputStream = new ClassPathResource("sys_code/行业代码.csv").getInputStream();
 
@@ -233,6 +291,19 @@ public class SysCodeTool extends BaseApplicationTest {
 
         Long currentPid = 0L;
         List<SysCodeDO> sysCodeDOList = new ArrayList<>();
+
+        // 添加不限码值
+        SysCodeDO unlimited = new SysCodeDO().setCodeName("不限")
+                .setCodeValue(SysCodeType.INDUSTRY.getValue() + "_" + "BX")
+                .setId(nextId)
+                .setPid(0L)
+                .setCodeType(SysCodeType.INDUSTRY)
+                .setCodeStatus(SysCodeStatus.VALID)
+                .setLeaf(true)
+                .setSort(nextId);
+        sysCodeDOList.add(unlimited);
+        nextId++;
+
 
         // 删除.csv第一行
         list.remove(0);
@@ -333,7 +404,124 @@ public class SysCodeTool extends BaseApplicationTest {
             SysCodeType.TAXPAYER_IDENTIFY_TYPE, nextId);
 
     /**
-     * 适用企业类型
+     * 减免税事项代码表 减免事项
+     */
+    private SysCodeProvider TAX_DEDUCTIONS_EXEMPTIONS_csvIndustry = nextId -> {
+        InputStream inputStream = new ClassPathResource("sys_code/减免税事项代码表.csv").getInputStream();
+
+        // 使用指定的字符编码以字符串列表的形式获取InputStream的内容，每行一个条目
+        List<String> list = IOUtils.readLines(inputStream, StandardCharsets.UTF_8);
+
+        List<SysCodeDO> sysCodeDOList = new ArrayList<>();
+        // 删除.csv第一行,第二行
+        list.remove(0);
+        for (String line : list) {
+            String[] split = line.split(",");
+
+            String code = split[1];
+            String name = split[2];
+            String ExtendsField1 = split[3];
+
+            SysCodeDO sysCodeDO = new SysCodeDO();
+            Long pid = 0L;
+            Boolean isLeaf = false;
+            sysCodeDO.setCodeName(name)
+                    .setId(nextId)
+                    .setPid(pid)
+                    .setCodeValue(code)
+                    .setCodeStatus(SysCodeStatus.VALID)
+                    .setCodeType(SysCodeType.EXEMPT_MATTER)
+                    .setExtendsField1(ExtendsField1)
+                    .setLeaf(isLeaf)
+                    .setSort(nextId);
+
+            nextId++;
+            sysCodeDOList.add(sysCodeDO);
+        }
+        return sysCodeDOList;
+    };
+
+    /**
+     * 收入种类代码表 所属税种
+     */
+    private SysCodeProvider TYPE_OF_INCOME_csvIndustry = nextId -> {
+        InputStream inputStream = new ClassPathResource("sys_code/收入种类代码（2021-12-14new）.csv").getInputStream();
+
+        // 使用指定的字符编码以字符串列表的形式获取InputStream的内容，每行一个条目
+        List<String> list = IOUtils.readLines(inputStream, StandardCharsets.UTF_8);
+
+        List<SysCodeDO> sysCodeDOList = new ArrayList<>();
+        // 删除.csv第一行,第二行
+        list.remove(0);
+        for (String line : list) {
+            String[] split = line.split(",");
+
+            String code = split[1];
+            String name = split[3];
+
+            SysCodeDO sysCodeDO = new SysCodeDO();
+            Long pid = 0L;
+            Boolean isLeaf = false;
+            sysCodeDO.setCodeName(name)
+                    .setId(nextId)
+                    .setPid(pid)
+                    .setCodeValue(code)
+                    .setCodeStatus(SysCodeStatus.VALID)
+                    .setCodeType(SysCodeType.TAX_CATEGORIES)
+                    .setLeaf(isLeaf)
+                    .setSort(nextId);
+
+            nextId++;
+            sysCodeDOList.add(sysCodeDO);
+        }
+        return sysCodeDOList;
+    };
+
+    /**
+     * 企业类型代码表
+     */
+    private SysCodeProvider TYPE_OF_ENTERPRISE_csvIndustry = nextId -> {
+        InputStream inputStream = new ClassPathResource("sys_code/企业类型代码表（2021-12-14new）.csv").getInputStream();
+
+        // 使用指定的字符编码以字符串列表的形式获取InputStream的内容，每行一个条目
+        List<String> list = IOUtils.readLines(inputStream, StandardCharsets.UTF_8);
+
+        List<SysCodeDO> sysCodeDOList = new ArrayList<>();
+        // 删除.csv第一行
+        list.remove(0);
+        for (String line : list) {
+            String[] split = line.split(",");
+
+            String code = split[0];
+            String name = split[1];
+            String validStatus = split[3];
+
+            Long pid = 0L;
+            boolean isLeaf = false;
+
+            SysCodeDO sysCodeDO = new SysCodeDO();
+            if (validStatus.contains("Y")) {
+                sysCodeDO.setCodeStatus(SysCodeStatus.VALID);
+            } else if (validStatus.contains("N")) {
+                sysCodeDO.setCodeStatus(SysCodeStatus.HIDDEN);
+            }
+            sysCodeDO.setCodeName(name)
+                    .setId(nextId)
+                    .setPid(pid)
+                    .setCodeValue(code)
+                    .setCodeType(SysCodeType.ENTERPRISE_TYPE)
+                    .setLeaf(isLeaf)
+                    .setSort(nextId);
+
+
+            nextId++;
+            sysCodeDOList.add(sysCodeDO);
+        }
+        return sysCodeDOList;
+
+    };
+    /**
+     *  登记注册类型代码表(DM_DJ_DJZCLX)码值
      */
     private SysCodeProvider DM_DJ_DJZCLX_csvIndustry = nextId -> {
         InputStream inputStream = new ClassPathResource("sys_code/登记注册类型代码表(DM_DJ_DJZCLX)码值.csv").getInputStream();
@@ -349,7 +537,7 @@ public class SysCodeTool extends BaseApplicationTest {
         for (String line : list) {
             String[] split = line.split(",");
 
-            String code = split[5];
+            String code = split[0];
             String name = split[1];
             String validStatus = split[7];
 
@@ -378,7 +566,7 @@ public class SysCodeTool extends BaseApplicationTest {
             sysCodeDO.setCodeName(name)
                     .setId(nextId)
                     .setPid(pid)
-                    .setCodeType(SysCodeType.ENTERPRISE_TYPE)
+                    .setCodeType(SysCodeType.TAXPAYER_REGISTER_TYPE)
                     .setLeaf(isLeaf)
                     .setSort(nextId);
 
@@ -402,6 +590,7 @@ public class SysCodeTool extends BaseApplicationTest {
     /**
      * 纳税人类型
      */
+    @IgnoreProvider
     private SysCodeProvider taxpayerType = nextId -> {
         List<SysCodeDO> sysCodeDOList = readSingleFile("纳税人类型.txt", SysCodeType.TAXPAYER_TYPE, nextId);
         // TAX_CATEGORIES_ZZS、TAX_CATEGORIES_QYSDS

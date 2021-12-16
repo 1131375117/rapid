@@ -1,6 +1,7 @@
 package cn.huacloud.taxpreference.sync.es.trigger.impl;
 
 import cn.huacloud.taxpreference.common.enums.DocType;
+import cn.huacloud.taxpreference.common.enums.SysCodeType;
 import cn.huacloud.taxpreference.common.enums.taxpreference.TaxPreferenceStatus;
 import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
 import cn.huacloud.taxpreference.services.common.DocStatisticsService;
@@ -88,11 +89,11 @@ public class TaxPreferenceEventTrigger extends EventTrigger<Long, TaxPreferenceE
 
         // 类型转换属性设置
         taxPreferenceES.setTitle(taxPreferenceDO.getTaxPreferenceName());
-        taxPreferenceES.setTaxCategories(sysCodeService.getSimpleVOByCode(taxPreferenceDO.getTaxCategoriesCode()));
-        taxPreferenceES.setTaxpayerRegisterType(sysCodeService.getSimpleVOByCode(taxPreferenceDO.getTaxpayerRegisterTypeCode()));
-        taxPreferenceES.setTaxpayerType(sysCodeService.getSimpleVOByCode(taxPreferenceDO.getTaxpayerTypeCode()));
-        taxPreferenceES.setIndustries(sysCodeService.getSimpleVOListByCodeValues(taxPreferenceDO.getIndustryCodes()));
-        taxPreferenceES.setEnterpriseTypes(sysCodeService.getSimpleVOListByCodeValues(taxPreferenceDO.getEnterpriseTypeCodes()));
+        taxPreferenceES.setTaxCategories(sysCodeService.getSimpleVOByCode(SysCodeType.TAX_CATEGORIES,taxPreferenceDO.getTaxCategoriesCode()));
+        taxPreferenceES.setTaxpayerRegisterType(sysCodeService.getSimpleVOByCode(SysCodeType.TAXPAYER_REGISTER_TYPE,taxPreferenceDO.getTaxpayerRegisterTypeCode()));
+        taxPreferenceES.setTaxpayerType(sysCodeService.getSimpleVOByCode(SysCodeType.TAXPAYER_TYPE,taxPreferenceDO.getTaxpayerTypeCode()));
+        taxPreferenceES.setIndustries(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.INDUSTRY,taxPreferenceDO.getIndustryCodes()));
+        taxPreferenceES.setEnterpriseTypes(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.ENTERPRISE_TYPE,taxPreferenceDO.getEnterpriseTypeCodes()));
         taxPreferenceES.setValidity(getEnumSysCode(taxPreferenceDO.getValidity()));
         taxPreferenceES.setLabels(split2List(taxPreferenceDO.getLabels()));
 

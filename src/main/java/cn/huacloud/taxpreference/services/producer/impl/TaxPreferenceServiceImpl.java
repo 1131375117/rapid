@@ -494,7 +494,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         Set<String> keySet = new HashSet<>();
         stringList.forEach(
                 industryCode -> {
-                    keySet.add(sysCodeService.getCodeNameByCodeValue(industryCode));
+                    keySet.add(sysCodeService.getSysCodeName(SysCodeType.INDUSTRY,industryCode));
                 });
         log.info("keySet={}", keySet);
         return StringUtils.join(keySet, ",");

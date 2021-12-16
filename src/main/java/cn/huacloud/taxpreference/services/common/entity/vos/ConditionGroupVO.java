@@ -3,8 +3,6 @@ package cn.huacloud.taxpreference.services.common.entity.vos;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.util.List;
-
 /**
  * 税收优惠条件分组视图
  * @author wangkh
@@ -20,8 +18,4 @@ public class ConditionGroupVO {
      * 值
      */
     private String value;
-    /**
-     * 成员
-     */
-    private List<ConditionGroupVO> list;
 }

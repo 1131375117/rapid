@@ -36,7 +36,7 @@ public class PoliciesES extends AbstractCombinePlainContent<Long> {
     /**
      * 年号
      */
-    private String docYearCode;
+    private Integer docYearCode;
 
     /**
      * 编号

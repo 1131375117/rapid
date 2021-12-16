@@ -46,13 +46,6 @@ public class SysCodeServiceImpl implements SysCodeService {
             .build();
 
     /**
-     * CodeValue -> SysCodeDO
-     */
-    private final Cache<Object, Map<String, SysCodeDO>> sysCodeMapCache = CacheBuilder.newBuilder()
-            .expireAfterWrite(2, TimeUnit.HOURS)
-            .build();
-
-    /**
      * SysCodeType -> List<SysCodeDO>
      */
     private final Cache<Object, Map<SysCodeType, List<SysCodeDO>>> sysCodeTypeMapCache = CacheBuilder.newBuilder()
@@ -308,33 +301,6 @@ public class SysCodeServiceImpl implements SysCodeService {
     }
 
     /**
-     * 从缓存中获取所有的系统码值Map
-     *
-     * @return key：码值；value：sysCodeDO
-     */
-    @Deprecated
-    public Map<String, SysCodeDO> getSysCodeMapCache() {
-        try {
-            return sysCodeMapCache.get(this, () -> {
-                        List<SysCodeDO> sysCodeDOList = getCacheSysCodes();
-                        Map<String, SysCodeDO> map = new HashMap<>();
-                        for (SysCodeDO sysCodeDO : sysCodeDOList) {
-                            String codeValue = sysCodeDO.getCodeValue();
-                            if (map.containsKey(codeValue)) {
-                                log.error("类型为：{}，的系统码值重复：{}", sysCodeDO.getCodeType().getValue(), codeValue);
-                                continue;
-                            }
-                            map.put(codeValue, sysCodeDO);
-                        }
-                        return map;
-                    }
-            );
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
      * 从缓存中获取所有的系统码值TypeMap
      *
      * @return key：码值类型；value：sysCodeDO
@@ -403,7 +369,6 @@ public class SysCodeServiceImpl implements SysCodeService {
     @Override
     public void clear() {
         sysCodeCache.invalidateAll();
-        sysCodeMapCache.invalidateAll();
         sysCodeTypeMapCache.invalidateAll();
         sysCodePidMapCache.invalidateAll();
         typedCodeMapCache.invalidateAll();
