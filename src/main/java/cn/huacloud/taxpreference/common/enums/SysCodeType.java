@@ -14,6 +14,7 @@ public enum SysCodeType implements IEnum<String> {
     ENTERPRISE_TYPE("适用企业类型"),
     TAXPAYER_REGISTER_TYPE("纳税人登记注册类型"),
     TAXPAYER_TYPE("纳税人类型"),
+    TAXPAYER_CREDIT_RATINGS("纳税信用等级"),
     EXEMPT_MATTER("减免事项");
 
     public final String name;
