@@ -33,8 +33,8 @@ import java.util.stream.Collectors;
 public class SysParamServiceImpl implements SysParamService {
 
     private final SysParamMapper sysParamMapper;
-    private final ObjectMapper objectMapper;
 
+    private final ObjectMapper objectMapper;
     /**
      * key -> sysParamType， value -> List<SysParamDO>
      */
@@ -179,5 +179,10 @@ public class SysParamServiceImpl implements SysParamService {
             }
             map.put(paramKey, paramValue);
         }
+    }
+
+    @Override
+    public void clear() {
+        sysParamTypeCache.invalidateAll();
     }
 }

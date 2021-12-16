@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * @author fuhua
  */
-public interface SysParamService {
+public interface SysParamService extends CacheClear {
 
     /**
      * 更加系统码值
