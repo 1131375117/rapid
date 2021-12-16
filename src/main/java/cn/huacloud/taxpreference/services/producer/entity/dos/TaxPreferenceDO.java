@@ -26,12 +26,12 @@ public class TaxPreferenceDO {
 	/**
 	 * 收入税种种类名称
 	 */
-	private String taxCategoriesName;
+	private String taxCategoriesNames;
 
 	/**
 	 * 收入税种种类码值
 	 */
-	private String taxCategoriesCode;
+	private String taxCategoriesCodes;
 
 	/**
 	 * 纳税人登记注册类型名称
