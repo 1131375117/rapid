@@ -38,7 +38,7 @@ public class TaxPreferenceDTO {
      */
     @ApiModelProperty("收入税种种类码值")
     @NotEmpty(message = "收入税种种类码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
-    private List<String> taxCategoriesCode;
+    private List<String> taxCategoriesCodes;
 
 
     /**

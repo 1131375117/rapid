@@ -459,7 +459,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         taxPreferenceDO.setTaxPreferenceStatus(TaxPreferenceStatus.UNRELEASED);
         SysCodeStringDTO industries = sysCodeService.getSysCodeStringDTO(SysCodeType.INDUSTRY,taxPreferenceDTO.getIndustryCodes(), false);
         SysCodeStringDTO enterprises = sysCodeService.getSysCodeStringDTO(SysCodeType.ENTERPRISE_TYPE,taxPreferenceDTO.getEnterpriseTypeCodes(), false);
-        SysCodeStringDTO taxCategories = sysCodeService.getSysCodeStringDTO(SysCodeType.TAX_CATEGORIES,taxPreferenceDTO.getTaxCategoriesCode(), false);
+        SysCodeStringDTO taxCategories = sysCodeService.getSysCodeStringDTO(SysCodeType.TAX_CATEGORIES,taxPreferenceDTO.getTaxCategoriesCodes(), false);
         // 收入税种种类名称
         taxPreferenceDO.setTaxCategoriesName(taxCategories.getNames());
         taxPreferenceDO.setTaxCategoriesCode(taxCategories.getCodes());
