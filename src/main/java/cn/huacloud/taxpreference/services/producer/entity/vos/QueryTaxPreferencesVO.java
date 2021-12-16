@@ -34,7 +34,7 @@ public class QueryTaxPreferencesVO {
      * 收入税种种类名称
      */
     @ApiModelProperty("收入税种种类名称")
-    private String taxCategoriesName;
+    private String taxCategoriesNames;
 
     /**
      * 适用企业类型名称

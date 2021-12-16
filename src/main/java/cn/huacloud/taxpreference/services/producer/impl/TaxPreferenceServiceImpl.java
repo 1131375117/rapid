@@ -167,15 +167,15 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
             taxPreferenceVO.setIndustryNames(new ArrayList<>());
         }
         //设置所属税种码值
-        if (!StringUtils.isEmpty(taxPreferenceDO.getTaxCategoriesCode())) {
-            taxPreferenceVO.setTaxCategoriesCodes(Arrays.asList(taxPreferenceDO.getTaxCategoriesCode().split(",")));
+        if (!StringUtils.isEmpty(taxPreferenceDO.getTaxCategoriesCodes())) {
+            taxPreferenceVO.setTaxCategoriesCodes(Arrays.asList(taxPreferenceDO.getTaxCategoriesCodes().split(",")));
         } else {
             taxPreferenceVO.setTaxCategoriesCodes(new ArrayList<>());
         }
 
         //设置所属税种名称
-        if (!StringUtils.isEmpty(taxPreferenceDO.getTaxCategoriesName())) {
-            taxPreferenceVO.setTaxCategoriesNames(Arrays.asList(taxPreferenceDO.getTaxCategoriesName().split(",")));
+        if (!StringUtils.isEmpty(taxPreferenceDO.getTaxCategoriesNames())) {
+            taxPreferenceVO.setTaxCategoriesNames(Arrays.asList(taxPreferenceDO.getTaxCategoriesNames().split(",")));
         } else {
             taxPreferenceVO.setTaxCategoriesNames(new ArrayList<>());
         }
@@ -459,10 +459,10 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         taxPreferenceDO.setTaxPreferenceStatus(TaxPreferenceStatus.UNRELEASED);
         SysCodeStringDTO industries = sysCodeService.getSysCodeStringDTO(SysCodeType.INDUSTRY,taxPreferenceDTO.getIndustryCodes(), false);
         SysCodeStringDTO enterprises = sysCodeService.getSysCodeStringDTO(SysCodeType.ENTERPRISE_TYPE,taxPreferenceDTO.getEnterpriseTypeCodes(), false);
-        SysCodeStringDTO taxCategories = sysCodeService.getSysCodeStringDTO(SysCodeType.TAX_CATEGORIES,taxPreferenceDTO.getTaxCategoriesCode(), false);
+        SysCodeStringDTO taxCategories = sysCodeService.getSysCodeStringDTO(SysCodeType.TAX_CATEGORIES,taxPreferenceDTO.getTaxCategoriesCodes(), false);
         // 收入税种种类名称
-        taxPreferenceDO.setTaxCategoriesName(taxCategories.getNames());
-        taxPreferenceDO.setTaxCategoriesCode(taxCategories.getCodes());
+        taxPreferenceDO.setTaxCategoriesNames(taxCategories.getNames());
+        taxPreferenceDO.setTaxCategoriesCodes(taxCategories.getCodes());
         // taxpayer_register_type_name-纳税人登记注册类型名称
         taxPreferenceDO.setTaxpayerRegisterTypeName(
                 sysCodeService.getSysCodeName(SysCodeType.TAXPAYER_REGISTER_TYPE,taxPreferenceDTO.getTaxpayerRegisterTypeCode()));
@@ -494,7 +494,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         Set<String> keySet = new HashSet<>();
         stringList.forEach(
                 industryCode -> {
-                    keySet.add(sysCodeService.getCodeNameByCodeValue(industryCode));
+                    keySet.add(sysCodeService.getSysCodeName(SysCodeType.INDUSTRY,industryCode));
                 });
         log.info("keySet={}", keySet);
         return StringUtils.join(keySet, ",");

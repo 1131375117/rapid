@@ -7,7 +7,7 @@ public class DocCodeUtilTest {
     @Test
     public void getDocCode() {
         String docWordCode = "财税";
-        String docYearCode = "2019";
+        Integer docYearCode = 2019;
         Integer docNumCode = 56;
 
         String docCode01 = DocCodeUtil.getDocCode(null, null, null);

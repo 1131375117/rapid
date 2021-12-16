@@ -1,6 +1,7 @@
 package cn.huacloud.taxpreference.sync.es.trigger.impl;
 
 import cn.huacloud.taxpreference.common.enums.DocType;
+import cn.huacloud.taxpreference.common.enums.SysCodeType;
 import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
 import cn.huacloud.taxpreference.services.common.DocStatisticsService;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
@@ -72,11 +73,11 @@ public class PoliciesEventTrigger extends EventTrigger<Long, PoliciesES> {
         }
 
         // 类型转换属性设置
-        policiesES.setArea(sysCodeService.getSimpleVOByCode(policiesDO.getAreaCode()));
-        policiesES.setTaxCategories(sysCodeService.getSimpleVOListByCodeValues(policiesDO.getTaxCategoriesCodes()));
-        policiesES.setTaxpayerIdentifyTypes(sysCodeService.getSimpleVOListByCodeValues(policiesDO.getTaxpayerIdentifyTypeCodes()));
-        policiesES.setEnterpriseTypes(sysCodeService.getSimpleVOListByCodeValues(policiesDO.getEnterpriseTypeCodes()));
-        policiesES.setIndustries(sysCodeService.getSimpleVOListByCodeValues(policiesDO.getIndustryCodes()));
+        policiesES.setArea(sysCodeService.getSimpleVOByCode(SysCodeType.AREA,policiesDO.getAreaCode()));
+        policiesES.setTaxCategories(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.TAX_CATEGORIES,policiesDO.getTaxCategoriesCodes()));
+        policiesES.setTaxpayerIdentifyTypes(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.TAXPAYER_IDENTIFY_TYPE,policiesDO.getTaxpayerIdentifyTypeCodes()));
+        policiesES.setEnterpriseTypes(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.ENTERPRISE_TYPE,policiesDO.getEnterpriseTypeCodes()));
+        policiesES.setIndustries(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.INDUSTRY,policiesDO.getIndustryCodes()));
         policiesES.setValidity(getEnumSysCode(policiesDO.getValidity()));
         policiesES.setLabels(split2List(policiesDO.getLabels()));
 

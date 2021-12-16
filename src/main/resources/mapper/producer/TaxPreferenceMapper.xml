@@ -4,13 +4,13 @@
 <mapper namespace="cn.huacloud.taxpreference.services.producer.mapper.TaxPreferenceMapper">
     <insert id="insertTaxPreference" keyProperty="id" useGeneratedKeys="true"
             parameterType="cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferenceDO">
-        insert into t_tax_preference (tax_categories_name, tax_categories_code, taxpayer_register_type_name,
+        insert into t_tax_preference (tax_categories_names, tax_categories_codes, taxpayer_register_type_name,
                                       taxpayer_register_type_code, taxpayer_type_name, taxpayer_type_code,
                                       industry_names, industry_codes, enterprise_type_names, enterprise_type_codes,
                                       taxpayer_credit_ratings, tax_preference_name, keep_query_data,
                                       submit_tax_data, submit_time_limit, submit_description, create_time, update_time,
                                       deleted)
-        values (#{taxCategoriesName}, #{taxCategoriesCode}, #{taxpayerRegisterTypeName},
+        values (#{taxCategoriesNames}, #{taxCategoriesCodes}, #{taxpayerRegisterTypeName},
                 #{taxpayerRegisterTypeCode}, #{taxpayerTypeName}, #{taxpayerTypeCode},
                 #{industryNames}, #{industryCodes}, #{enterpriseTypeNames},
                 #{enterpriseTypeCodes}, #{taxpayerCreditRatings}, #{taxPreferenceName},
@@ -27,7 +27,7 @@
             resultType="cn.huacloud.taxpreference.services.producer.entity.vos.QueryTaxPreferencesVO">
         select p.id,p.tax_preference_name as taxPreferenceName,p.industry_names as industryNames ,p.taxpayer_type_name
         as taxpayerTypeName,
-        p.tax_categories_name as taxCategoriesName,p.enterprise_type_names as enterpriseTypeNames,
+        p.tax_categories_names as taxCategoriesNames,p.enterprise_type_names as enterpriseTypeNames,
         p.validity,p.create_time as createTime,p.taxpayer_credit_ratings as taxpayerCreditRatings,
         p.taxpayer_register_type_name as taxpayerRegisterTypeName,
         p.tax_preference_status as taxPreferenceStatus
@@ -37,8 +37,8 @@
             <if test="queryTaxPreferencesDTO.keyword!=null and queryTaxPreferencesDTO.keyword!= ''">
                 and p.tax_preference_name like "%"#{queryTaxPreferencesDTO.keyword}"%"
             </if>
-            <if test="queryTaxPreferencesDTO.taxCategoriesCode != null and queryTaxPreferencesDTO.taxCategoriesCode != '' ">
-                and p.tax_categories_code= #{queryTaxPreferencesDTO.taxCategoriesCode}
+            <if test="queryTaxPreferencesDTO.taxCategoriesCodes != null and queryTaxPreferencesDTO.taxCategoriesCodes != '' ">
+                and p.tax_categories_code= #{queryTaxPreferencesDTO.taxCategoriesCodes}
             </if>
             <if test="queryTaxPreferencesDTO.taxpayerRegisterTypeCode != null and queryTaxPreferencesDTO.taxpayerRegisterTypeCode != '' ">
                 and p.taxpayer_register_type_code=#{queryTaxPreferencesDTO.taxpayerRegisterTypeCode}
