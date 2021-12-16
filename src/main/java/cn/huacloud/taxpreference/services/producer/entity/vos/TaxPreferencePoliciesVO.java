@@ -31,7 +31,6 @@ public class TaxPreferencePoliciesVO {
     private String policiesName;
 
     @ApiModelProperty("政策法规文号")
-    @NotEmpty(message = "政策法规文号不能为空",groups = ValidationGroup.Manual.class)
     private String docCode;
     /**
      * 有效期起-政策法规

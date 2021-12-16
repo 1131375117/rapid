@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,7 +33,7 @@ public class OperationRecordController {
      */
     @ApiOperation("操作记录接口")
     @PostMapping("/operationRecord")
-    public ResultVO<Void> operationRecord(@Validated OperationRecordDTO operationRecordDTO) {
+    public ResultVO<Void> operationRecord(@RequestBody @Validated OperationRecordDTO operationRecordDTO) {
         ConsumerLoginUserVO currentUser = ConsumerUserUtil.getCurrentUser();
         operationRecord.operationRecord(operationRecordDTO,currentUser);
         return ResultVO.ok();

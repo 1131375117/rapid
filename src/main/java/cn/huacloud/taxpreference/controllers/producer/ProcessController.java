@@ -58,6 +58,7 @@ public class ProcessController {
 	@PostMapping("/process/{taxPreferenceId}")
 	public ResultVO<Void> insertTaxPreference(@Validated() @NotEmpty(message = "税收优惠id不能为空") @PathVariable("taxPreferenceId") Long[] taxPreferenceIds) throws MethodArgumentNotValidException {
 		return processService.insertProcessService(taxPreferenceIds, ProducerUserUtil.getCurrentUser());
+
 	}
 
 	/**

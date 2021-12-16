@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -37,7 +38,7 @@ public class CollectionDTO {
      * 数据源id
      */
     @ApiModelProperty("数据源id")
-    @NotNull(message = "收藏id不能为空")
+    @NotEmpty(message = "收藏id不能为空")
     private Long sourceId;
 
 
