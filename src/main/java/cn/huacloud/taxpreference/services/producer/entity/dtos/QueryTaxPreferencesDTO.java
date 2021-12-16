@@ -21,7 +21,7 @@ public class QueryTaxPreferencesDTO extends KeywordPageQueryDTO {
      * 收入税种种类码值
      */
     @ApiModelProperty("收入税种种类码值")
-    private List<String> taxCategoriesCode;
+    private List<String> taxCategoriesCodes;
 
     /**
      * 纳税人登记注册类型码值

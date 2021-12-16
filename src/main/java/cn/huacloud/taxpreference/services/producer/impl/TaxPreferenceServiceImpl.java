@@ -166,6 +166,19 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         } else {
             taxPreferenceVO.setIndustryNames(new ArrayList<>());
         }
+        //设置所属税种码值
+        if (!StringUtils.isEmpty(taxPreferenceDO.getTaxCategoriesCode())) {
+            taxPreferenceVO.setTaxCategoriesCodes(Arrays.asList(taxPreferenceDO.getTaxCategoriesCode().split(",")));
+        } else {
+            taxPreferenceVO.setTaxCategoriesCodes(new ArrayList<>());
+        }
+
+        //设置所属税种名称
+        if (!StringUtils.isEmpty(taxPreferenceDO.getTaxCategoriesName())) {
+            taxPreferenceVO.setTaxCategoriesNames(Arrays.asList(taxPreferenceDO.getTaxCategoriesName().split(",")));
+        } else {
+            taxPreferenceVO.setTaxCategoriesNames(new ArrayList<>());
+        }
 
         //设置信用凭证
         if (taxPreferenceDO.getTaxpayerCreditRatings() != null) {
@@ -446,9 +459,10 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         taxPreferenceDO.setTaxPreferenceStatus(TaxPreferenceStatus.UNRELEASED);
         SysCodeStringDTO industries = sysCodeService.getSysCodeStringDTO(taxPreferenceDTO.getIndustryCodes(), false);
         SysCodeStringDTO enterprises = sysCodeService.getSysCodeStringDTO(taxPreferenceDTO.getEnterpriseTypeCodes(), false);
+        SysCodeStringDTO taxCategories = sysCodeService.getSysCodeStringDTO(taxPreferenceDTO.getTaxCategoriesCode(), false);
         // 收入税种种类名称
-        taxPreferenceDO.setTaxCategoriesName(
-                sysCodeService.getCodeNameByCodeValue(taxPreferenceDTO.getTaxCategoriesCode()));
+        taxPreferenceDO.setTaxCategoriesName(taxCategories.getNames());
+        taxPreferenceDO.setTaxCategoriesCode(taxCategories.getCodes());
         // taxpayer_register_type_name-纳税人登记注册类型名称
         taxPreferenceDO.setTaxpayerRegisterTypeName(
                 sysCodeService.getCodeNameByCodeValue(taxPreferenceDTO.getTaxpayerRegisterTypeCode()));

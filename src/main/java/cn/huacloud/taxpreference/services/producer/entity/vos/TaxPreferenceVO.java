@@ -26,14 +26,14 @@ public class TaxPreferenceVO {
      */
     @ApiModelProperty("收入税种种类名称")
     @NotEmpty(message = "收入税种种类名称不能为空",groups = ValidationGroup.Manual.class)
-    private String taxCategoriesName;
+    private List<@Valid String> taxCategoriesNames;
 
     /**
      * 收入税种种类码值
      */
     @ApiModelProperty("收入税种种类码值")
     @NotEmpty(message = "收入税种种类码值不能为空",groups = ValidationGroup.Manual.class)
-    private String taxCategoriesCode;
+    private List<@Valid String> taxCategoriesCodes;
 
     /**
      * 纳税人登记注册类型名称
