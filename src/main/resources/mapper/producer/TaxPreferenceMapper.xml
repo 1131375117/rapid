@@ -65,6 +65,14 @@
                 </foreach>
                 )
             </if>
+            <if test="queryTaxPreferencesDTO.taxCategoriesCodes!=null and queryTaxPreferencesDTO.taxCategoriesCodes.size>0 ">
+                and (1!=1
+                <foreach collection="queryTaxPreferencesDTO.taxCategoriesCodes" item="taxCategories">
+                    or FIND_IN_SET(#{taxCategories},p.taxCategoriesCode)
+                </foreach>
+                )
+            </if>
+
             <if test=" queryTaxPreferencesDTO.industryCodes!=null and queryTaxPreferencesDTO.industryCodes.size>0 ">
                 and (1!=1
                 <foreach collection="queryTaxPreferencesDTO.industryCodes" item="industryCode">
@@ -86,11 +94,12 @@
 
     </select>
 
-    <select id="selectByIdList" resultType="cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferenceDO" parameterType="long" >
-        SELECT tp.id as id,
+    <select id="selectByIdList" resultType="cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferenceDO"
+            parameterType="long">
+        SELECT tp.id                  as id,
                tp.tax_preference_name as taxPreferenceName,
-               tp.validity as validity
-        FROM  t_tax_preference_policies ttp
+               tp.validity            as validity
+        FROM t_tax_preference_policies ttp
                  LEFT JOIN t_policies t ON t.id = ttp.policies_id
                  LEFT JOIN t_tax_preference tp ON ttp.tax_preference_id = tp.id
         WHERE t.id = #{policiesId}
@@ -98,17 +107,14 @@
 
     <select id="selectTaxPreferenceId"
             resultType="cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceCountVO">
-        SELECT
-            count( ttp.tax_preference_id ) AS count,
-            ttp.tax_preference_id,
-            t.tax_preference_name
-        FROM
-            t_tax_preference_policies ttp
-            LEFT JOIN t_tax_preference t ON t.id = ttp.tax_preference_id
-        WHERE
-            ttp.tax_preference_id IN ( SELECT tax_preference_id FROM t_tax_preference_policies WHERE policies_id = #{policiesId} )
-            and t.tax_preference_status='RELEASED'
-        GROUP BY
-            ttp.tax_preference_id
+        SELECT count(ttp.tax_preference_id) AS count,
+               ttp.tax_preference_id,
+               t.tax_preference_name
+        FROM t_tax_preference_policies ttp
+                 LEFT JOIN t_tax_preference t ON t.id = ttp.tax_preference_id
+        WHERE ttp.tax_preference_id IN
+              (SELECT tax_preference_id FROM t_tax_preference_policies WHERE policies_id = #{policiesId})
+          and t.tax_preference_status = 'RELEASED'
+        GROUP BY ttp.tax_preference_id
     </select>
 </mapper>

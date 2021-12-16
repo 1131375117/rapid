@@ -33,14 +33,16 @@ import java.util.stream.Collectors;
 public class SysParamServiceImpl implements SysParamService {
 
     private final SysParamMapper sysParamMapper;
-    private final ObjectMapper objectMapper;
 
+    private final ObjectMapper objectMapper;
     /**
      * key -> sysParamType， value -> List<SysParamDO>
      */
     private final Cache<String, List<SysParamDO>> sysParamTypeCache = CacheBuilder.newBuilder()
             .expireAfterWrite(2, TimeUnit.HOURS)
             .build();
+
+    private final List<SysParamHandler<?, ?>> handlers;
 
     @Override
     public SysParamDO getSysParamDO(String paramType, String paramKey) {
@@ -106,7 +108,7 @@ public class SysParamServiceImpl implements SysParamService {
 
     @Override
     public <T> T getSingleParamValue(String sysParamType, String sysParamKey, Class<T> clazz) {
-        List<SysParamDO> sysParamDOList = getCacheSysParamByTypes(sysParamKey);
+        List<SysParamDO> sysParamDOList = getCacheSysParamByTypes(sysParamType);
         if (sysParamKey != null) {
             // 参数Key过滤
             sysParamDOList = sysParamDOList.stream().filter(sysParamDO -> sysParamKey.equals(sysParamDO.getParamKey())).collect(Collectors.toList());
@@ -130,9 +132,20 @@ public class SysParamServiceImpl implements SysParamService {
     }
 
     @Override
-    public <T> T getParamByHandler(SysParamHandler<T> handler) {
-
-        return null;
+    public <T, R> R getParamByHandler(Class<SysParamHandler<T, R>> handlerClass, T handlerParam, List<String> paramTypes) {
+        Optional<SysParamHandler<?, ?>> optional = handlers.stream()
+                .filter(handler -> handlerClass.isAssignableFrom(handler.getClass()))
+                .findFirst();
+        if (!optional.isPresent()) {
+            return null;
+        }
+        SysParamHandler<T, R> handler = (SysParamHandler<T, R>) optional.get();
+        if (paramTypes.isEmpty()) {
+            log.error("参数处理器的参数类型不能为空");
+            return null;
+        }
+        List<SysParamDO> sysParamDOS = getCacheSysParamByTypes(paramTypes.toArray(new String[0]));
+        return handler.handle(sysParamDOS, handlerParam);
     }
 
 
@@ -179,5 +192,10 @@ public class SysParamServiceImpl implements SysParamService {
             }
             map.put(paramKey, paramValue);
         }
+    }
+
+    @Override
+    public void clear() {
+        sysParamTypeCache.invalidateAll();
     }
 }

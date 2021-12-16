@@ -40,7 +40,7 @@ class SysParamServiceImplTest {
         queryWrapper.eq(SysParamDO::getParamStatus, SysCodeStatus.VALID);
         queryWrapper.in(SysParamDO::getParamType, SysParamTypes.OPERATION_VIEWS);
         when(sysParamMapper.selectList(queryWrapper)).thenReturn(sysParamDOArrayList);
-        sysParamService = new SysParamServiceImpl(sysParamMapper, configure);
+        sysParamService = new SysParamServiceImpl(sysParamMapper, configure, new ArrayList<>());
     }
 
     @Test

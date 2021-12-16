@@ -66,6 +66,13 @@ public class SysCodeServiceImpl implements SysCodeService {
             .expireAfterWrite(2, TimeUnit.HOURS)
             .build();
 
+    /**
+     * SysCodeType -> List<SysCodeDO>
+     */
+    private final Cache<SysCodeType, Map<String, SysCodeDO>> typedCodeMapCache = CacheBuilder.newBuilder()
+            .expireAfterWrite(2, TimeUnit.HOURS)
+            .build();
+
     @Override
     public List<SysCodeTreeVO> getSysCodeTreeVO(final SysCodeType sysCodeType) {
         List<SysCodeDO> sysCodeDOList = getSysCodeTypeMapCache().get(sysCodeType);
@@ -86,47 +93,40 @@ public class SysCodeServiceImpl implements SysCodeService {
 
     @Override
     public String getCodeNameByCodeValue(String codeValue) {
-        SysCodeDO sysCodeDO = getSysCodeMapCache().get(codeValue);
-        return sysCodeDO == null ? null : sysCodeDO.getCodeName();
+        return "";
     }
 
     @Override
-    public List<SysCodeVO> getListByCodeValues(String codeValues) {
-        if (StringUtils.isBlank(codeValues)) {
-            return new ArrayList<>();
+    public String getSysCodeName(SysCodeType sysCodeType, String codeValue) {
+        SysCodeDO sysCodeDO = getSysCodeDO(sysCodeType, codeValue);
+        if (sysCodeDO == null) {
+            return "";
         }
-        return getValidSortStreamByCodeValues(codeValues)
-                .map(sysCodeDO -> {
-                    SysCodeVO sysCodeVO = new SysCodeVO();
-                    BeanUtils.copyProperties(sysCodeDO, sysCodeVO);
-                    return sysCodeVO;
-                }).collect(Collectors.toList());
+        return sysCodeDO.getCodeName();
+    }
+
+    @Override
+    public SysCodeDO getSysCodeDO(SysCodeType sysCodeType, String codeValue) {
+        Map<String, SysCodeDO> codeMapByType = getCacheCodeMapByType(sysCodeType);
+        return codeMapByType.get(codeValue);
     }
 
     @Override
     public SysCodeStringDTO getSysCodeStringDTO(Collection<String> codes, boolean withChildren) {
+        SysCodeStringDTO sysCodeStringDTO = new SysCodeStringDTO();
+        sysCodeStringDTO.setNames("");
+        sysCodeStringDTO.setCodes("");
+        return sysCodeStringDTO;
+    }
+
+    @Override
+    public SysCodeStringDTO getSysCodeStringDTO(SysCodeType sysCodeType, Collection<String> codes, boolean withChildren) {
         SysCodeStringDTO stringDTO = new SysCodeStringDTO();
         stringDTO.setNames("");
         stringDTO.setCodes("");
 
         // is empty
         if (CollectionUtils.isEmpty(codes)) {
-            return stringDTO;
-        }
-
-        // 确定类型
-        SysCodeType sysCodeType = null;
-        for (String code : codes) {
-            Map<String, SysCodeDO> sysCodeMapCache = getSysCodeMapCache();
-            SysCodeDO sysCodeDO = sysCodeMapCache.get(code);
-            if (sysCodeDO != null) {
-                sysCodeType = sysCodeDO.getCodeType();
-                break;
-            }
-        }
-
-        // 所有码值都是无效的
-        if (sysCodeType == null) {
             return stringDTO;
         }
 
@@ -186,7 +186,7 @@ public class SysCodeServiceImpl implements SysCodeService {
 
     @Override
     public SysCodeVO getCodeVOByCodeName(SysCodeType codeType, String codeName) {
-        Optional<SysCodeDO> first = getSysCodeCache().stream()
+        Optional<SysCodeDO> first = getCacheSysCodes().stream()
                 .filter(sysCodeDO -> sysCodeDO.getCodeType() == codeType
                         && sysCodeDO.getCodeName().equals(codeName)).findFirst();
         if (first.isPresent()) {
@@ -200,10 +200,15 @@ public class SysCodeServiceImpl implements SysCodeService {
 
     @Override
     public List<SysCodeSimpleVO> getSimpleVOListByCodeValues(String codeValues) {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<SysCodeSimpleVO> getSimpleVOListByCodeValues(SysCodeType sysCodeType, String codeValues) {
         if (StringUtils.isBlank(codeValues)) {
             return new ArrayList<>();
         }
-        return getValidSortStreamByCodeValues(codeValues)
+        return getValidSortStreamByCodeValues(sysCodeType, codeValues)
                 .map(sysCodeDO -> new SysCodeSimpleVO()
                         .setCodeName(sysCodeDO.getCodeName())
                         .setCodeValue(sysCodeDO.getCodeValue()))
@@ -212,17 +217,26 @@ public class SysCodeServiceImpl implements SysCodeService {
 
     @Override
     public SysCodeSimpleVO getSimpleVOByCode(String codeValue) {
-        SysCodeDO sysCodeDO = getSysCodeMapCache().get(codeValue);
+        /*SysCodeDO sysCodeDO = getSysCodeMapCache().get(codeValue);
         if (sysCodeDO == null) {
             return new SysCodeSimpleVO();
         }
+        return new SysCodeSimpleVO().setCodeName(sysCodeDO.getCodeName())
+                .setCodeValue(sysCodeDO.getCodeValue());*/
+        return new SysCodeSimpleVO();
+    }
+
+    @Override
+    public SysCodeSimpleVO getSimpleVOByCode(SysCodeType sysCodeType, String codeValue) {
+        Map<String, SysCodeDO> codeMapByType = getCacheCodeMapByType(sysCodeType);
+        SysCodeDO sysCodeDO = codeMapByType.get(codeValue);
         return new SysCodeSimpleVO().setCodeName(sysCodeDO.getCodeName())
                 .setCodeValue(sysCodeDO.getCodeValue());
     }
 
     @Override
     public List<SysCodeDO> getSysCodeDOByCodeType(SysCodeType sysCodeType) {
-        return getSysCodeCache().stream()
+        return getCacheSysCodes().stream()
                 .filter(this::isSysCodeDOValid)
                 .sorted(Comparator.comparing(SysCodeDO::getSort))
                 .collect(Collectors.toList());
@@ -230,9 +244,14 @@ public class SysCodeServiceImpl implements SysCodeService {
 
     @Override
     public List<String> withChildrenCodes(Collection<?> target) {
-        Map<String, SysCodeDO> sysCodeMapCache = getSysCodeMapCache();
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<String> withChildrenCodes(SysCodeType sysCodeType, Collection<?> target) {
+        Map<String, SysCodeDO> sysCodeDOMap = getCacheCodeMapByType(sysCodeType);
         List<SysCodeDO> targetCodes = target.stream()
-                .map(sysCodeMapCache::get)
+                .map(sysCodeDOMap::get)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
         Map<Long, List<SysCodeDO>> sysCodePidMapCache = getSysCodePidMapCache();
@@ -259,8 +278,8 @@ public class SysCodeServiceImpl implements SysCodeService {
                 }).collect(Collectors.toList());
     }
 
-    Stream<SysCodeDO> getValidSortStreamByCodeValues(String codeValues) {
-        Map<String, SysCodeDO> sysCodeMapCache = getSysCodeMapCache();
+    Stream<SysCodeDO> getValidSortStreamByCodeValues(SysCodeType sysCodeType, String codeValues) {
+        Map<String, SysCodeDO> sysCodeMapCache = getCacheCodeMapByType(sysCodeType);
         return Arrays.stream(codeValues.split(","))
                 .map(sysCodeMapCache::get)
                 .filter(Objects::nonNull)
@@ -276,7 +295,7 @@ public class SysCodeServiceImpl implements SysCodeService {
     private Map<SysCodeType, List<SysCodeDO>> getSysCodeTypeMapCache() {
         try {
             return sysCodeTypeMapCache.get(this, () -> {
-                        Map<SysCodeType, List<SysCodeDO>> map = getSysCodeCache().stream().collect(Collectors.groupingBy(SysCodeDO::getCodeType));
+                        Map<SysCodeType, List<SysCodeDO>> map = getCacheSysCodes().stream().collect(Collectors.groupingBy(SysCodeDO::getCodeType));
                         for (Map.Entry<SysCodeType, List<SysCodeDO>> entry : map.entrySet()) {
                             entry.getValue().sort(Comparator.comparing(SysCodeDO::getSort));
                         }
@@ -293,10 +312,22 @@ public class SysCodeServiceImpl implements SysCodeService {
      *
      * @return key：码值；value：sysCodeDO
      */
-    private Map<String, SysCodeDO> getSysCodeMapCache() {
+    @Deprecated
+    public Map<String, SysCodeDO> getSysCodeMapCache() {
         try {
-            return sysCodeMapCache.get(this, () ->
-                    getSysCodeCache().stream().collect(Collectors.toMap(SysCodeDO::getCodeValue, value -> value))
+            return sysCodeMapCache.get(this, () -> {
+                        List<SysCodeDO> sysCodeDOList = getCacheSysCodes();
+                        Map<String, SysCodeDO> map = new HashMap<>();
+                        for (SysCodeDO sysCodeDO : sysCodeDOList) {
+                            String codeValue = sysCodeDO.getCodeValue();
+                            if (map.containsKey(codeValue)) {
+                                log.error("类型为：{}，的系统码值重复：{}", sysCodeDO.getCodeType().getValue(), codeValue);
+                                continue;
+                            }
+                            map.put(codeValue, sysCodeDO);
+                        }
+                        return map;
+                    }
             );
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
@@ -310,7 +341,37 @@ public class SysCodeServiceImpl implements SysCodeService {
      */
     private Map<Long, List<SysCodeDO>> getSysCodePidMapCache() {
         try {
-            return sysCodePidMapCache.get(this, () -> getSysCodeCache().stream().collect(Collectors.groupingBy(SysCodeDO::getPid)));
+            return sysCodePidMapCache.get(this, () -> getCacheSysCodes().stream().collect(Collectors.groupingBy(SysCodeDO::getPid)));
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 获取类型下的系统码值map
+     *
+     * @param sysCodeType 系统码值类型
+     * @return map key -> codeValue, value -> SysCodeDO
+     */
+    private Map<String, SysCodeDO> getCacheCodeMapByType(SysCodeType sysCodeType) {
+        try {
+            return typedCodeMapCache.get(sysCodeType, () -> {
+                Map<SysCodeType, List<SysCodeDO>> sysCodeTypeMapCache = getSysCodeTypeMapCache();
+                List<SysCodeDO> sysCodeDOList = sysCodeTypeMapCache.get(sysCodeType);
+                Map<String, SysCodeDO> map = new HashMap<>();
+                if (CollectionUtils.isEmpty(sysCodeDOList)) {
+                    return map;
+                }
+                for (SysCodeDO sysCodeDO : sysCodeDOList) {
+                    String codeValue = sysCodeDO.getCodeValue();
+                    if (map.containsKey(codeValue)) {
+                        log.error("类型为：{}，的系统码值重复：{}", sysCodeDO.getCodeType().getValue(), codeValue);
+                        continue;
+                    }
+                    map.put(codeValue, sysCodeDO);
+                }
+                return map;
+            });
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
         }
@@ -321,7 +382,7 @@ public class SysCodeServiceImpl implements SysCodeService {
      *
      * @return 系统码值集合
      */
-    private List<SysCodeDO> getSysCodeCache() {
+    private List<SysCodeDO> getCacheSysCodes() {
         try {
             return sysCodeCache.get(this, sysCodeMapper::getAllSysCodes);
         } catch (ExecutionException e) {
@@ -345,5 +406,6 @@ public class SysCodeServiceImpl implements SysCodeService {
         sysCodeMapCache.invalidateAll();
         sysCodeTypeMapCache.invalidateAll();
         sysCodePidMapCache.invalidateAll();
+        typedCodeMapCache.invalidateAll();
     }
 }

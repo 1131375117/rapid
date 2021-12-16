@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * @author fuhua
  */
-public interface SysParamService {
+public interface SysParamService extends CacheClear {
 
     /**
      * 更加系统码值
@@ -64,8 +64,8 @@ public interface SysParamService {
 
     /**
      * 通过参数处理器来获取参数
-     * @param handler 参数处理器
+     * @param handlerClass 参数处理器类型
      * @return 处理好的参数
      */
-    <T> T getParamByHandler(SysParamHandler<T> handler);
+    <T, R> R getParamByHandler(Class<SysParamHandler<T, R>> handlerClass, T handlerParam, List<String> paramTypes);
 }
