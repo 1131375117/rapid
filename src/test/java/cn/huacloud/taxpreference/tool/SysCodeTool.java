@@ -156,11 +156,12 @@ public class SysCodeTool extends BaseApplicationTest {
                     .setLeaf(isLeaf)
                     .setSort(nextId);
 
-            if (code == null) {
+            if (StringUtils.isEmpty(code)) {
                 sysCodeDO.setCodeValue(name);
             } else {
                 sysCodeDO.setCodeValue(code);
             }
+
             nextId++;
             sysCodeDOList.add(sysCodeDO);
         }
@@ -369,7 +370,7 @@ public class SysCodeTool extends BaseApplicationTest {
             } else if (validStatus.contains("N")) {
                 sysCodeDO.setCodeStatus(SysCodeStatus.HIDDEN);
             }
-            if (code == null) {
+            if (StringUtils.isEmpty(code)) {
                 sysCodeDO.setCodeValue(name);
             } else {
                 sysCodeDO.setCodeValue(code);
