@@ -101,6 +101,9 @@
           "type": "date",
           "format": "yyyy-MM-dd"
         },
+        "specialSubject": {
+          "type": "keyword"
+        },
         "digest": {
           "type": "text",
           "analyzer": "ik_max_word"

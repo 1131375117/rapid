@@ -61,6 +61,10 @@ public class PoliciesSearchQueryDTO extends AbstractHighlightPageQueryDTO {
     @FilterField("validity.codeValue")
     public ValidityEnum validity;
 
+    @ApiModelProperty("所属专题")
+    @FilterField("specialSubject")
+    private List<String> specialSubjects;
+
     @Override
     public String index(ElasticsearchIndexConfig config) {
         return config.getPolicies().getAlias();

@@ -75,6 +75,10 @@ public class PoliciesES extends AbstractCombinePlainContent<Long> {
      */
     private LocalDate releaseDate;
     /**
+     * 所属专题
+     */
+    private String specialSubject;
+    /**
      * 摘要
      */
     private String digest;
