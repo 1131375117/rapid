@@ -1,8 +1,12 @@
 package cn.huacloud.taxpreference.services.consumer.impl;
 
+import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
+import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.services.consumer.TaxPreferenceSearchService;
+import cn.huacloud.taxpreference.services.consumer.entity.dtos.LatestTaxPreferenceSearchQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.TaxPreferenceSearchQueryDTO;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.DocSearchSimpleVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.HotLabelVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PreviousNextVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.TaxPreferenceSearchVO;
@@ -17,13 +21,18 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.sort.SortBuilders;
+import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -68,23 +77,7 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
     @Override
     public QueryBuilder getQueryBuilder(TaxPreferenceSearchQueryDTO pageQuery) {
 
-        // 是否使用推荐
-        if (pageQuery.getUseRecommend()) {
-            // TODO 设置智能推荐的匹配过滤条件
-        }
-
-        BoolQueryBuilder queryBuilder = generatorDefaultQueryBuilder(pageQuery);
-
-        // 关键字查询
-        String keyword = pageQuery.getKeyword();
-        if (keyword != null) {
-            BoolQueryBuilder keywordQuery = boolQuery();
-            List<String> searchFields = pageQuery.searchFields();
-            for (String searchField : searchFields) {
-                keywordQuery.should(matchPhraseQuery(searchField, keyword));
-            }
-            queryBuilder.must(keywordQuery);
-        }
+        BoolQueryBuilder queryBuilder = getDefaultQueryBuilder(pageQuery);
 
         // 标签过滤
         String label = pageQuery.getLabel();
@@ -108,6 +101,62 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
         PreviousNextVO<Long> defaultPreviousNext = getDefaultPreviousNext(getIndex(), id);
         taxPreferenceSearchVO.setPreviousNext(defaultPreviousNext);
         return taxPreferenceSearchVO;
+    }
+
+    @Override
+    public PageVO<DocSearchSimpleVO> latestTaxPreference(LatestTaxPreferenceSearchQueryDTO pageQuery) throws Exception {
+        // 构建查询条件
+        QueryBuilder queryBuilder;
+        if (pageQuery.getTaxCategoriesCodes() == null) {
+            queryBuilder = matchAllQuery();
+        } else {
+            queryBuilder = termsQuery("taxCategories.codeValue", pageQuery.getTaxCategoriesCodes());
+        }
+        // 执行查询
+        SearchResponse response = simplePageSearch(getIndex(),
+                queryBuilder,
+                pageQuery,
+                SortBuilders.fieldSort("releaseDate").order(SortOrder.DESC));
+
+        // 数据映射
+        SearchHits hits = response.getHits();
+        List<DocSearchSimpleVO> records = new ArrayList<>();
+        for (SearchHit hit : hits.getHits()) {
+            DocSearchSimpleVO docSearchSimpleVO = objectMapper.readValue(hit.getSourceAsString(), DocSearchSimpleVO.class);
+            records.add(docSearchSimpleVO);
+        }
+
+        // 返回数据
+        return new PageVO<DocSearchSimpleVO>()
+                .setTotal(hits.getTotalHits().value)
+                .setPageNum(pageQuery.getPageNum())
+                .setPageSize(pageQuery.getPageSize())
+                .setRecords(records);
+    }
+
+    @Override
+    public PageVO<DocSearchSimpleVO> hotTaxPreference(PageQueryDTO pageQuery) throws Exception {
+        // 执行查询
+        SearchResponse response = simplePageSearch(getIndex(),
+                matchAllQuery(),
+                pageQuery,
+                SortBuilders.fieldSort("views").order(SortOrder.DESC),
+                SortBuilders.fieldSort("releaseDate").order(SortOrder.DESC));
+
+        // 数据映射
+        SearchHits hits = response.getHits();
+        List<DocSearchSimpleVO> records = new ArrayList<>();
+        for (SearchHit hit : hits.getHits()) {
+            DocSearchSimpleVO docSearchSimpleVO = objectMapper.readValue(hit.getSourceAsString(), DocSearchSimpleVO.class);
+            records.add(docSearchSimpleVO);
+        }
+
+        // 返回数据
+        return new PageVO<DocSearchSimpleVO>()
+                .setTotal(hits.getTotalHits().value)
+                .setPageNum(pageQuery.getPageNum())
+                .setPageSize(pageQuery.getPageSize())
+                .setRecords(records);
     }
 
     @Override

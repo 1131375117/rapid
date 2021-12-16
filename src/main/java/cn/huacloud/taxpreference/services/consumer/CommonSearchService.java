@@ -13,7 +13,7 @@ import java.util.List;
  * 热点内容服务
  * @author wangkh
  */
-public interface HotContentService {
+public interface CommonSearchService {
     /**
      * 本周热点内容
      * 热点内容通过浏览次数、收藏次数来
@@ -34,6 +34,5 @@ public interface HotContentService {
      * @param pageQuery 查询条件
      * @return 文档类型统计数
      */
-    @Deprecated
     List<SysCodeCountVO> allDocCount(KeywordPageQueryDTO pageQuery) throws Exception;
 }

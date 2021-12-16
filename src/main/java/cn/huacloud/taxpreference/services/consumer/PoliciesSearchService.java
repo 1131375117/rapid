@@ -33,4 +33,11 @@ public interface PoliciesSearchService extends SearchService<PoliciesSearchQuery
      * @return 分页数据
      */
     PageVO<PoliciesSearchSimpleVO> latestLocalPolicies(PageQueryDTO pageQuery) throws Exception;
+
+    /**
+     * 热门政策（首页）
+     * @param pageQuery
+     * @return
+     */
+    PageVO<PoliciesSearchSimpleVO> hotPolicies(PageQueryDTO pageQuery) throws Exception;
 }

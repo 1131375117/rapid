@@ -37,7 +37,13 @@ import java.util.regex.Pattern;
 @Slf4j
 public class SampleTest {
 
-
+    @Test
+    public void testStringBuilderDelete() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("name01");
+        int length = sb.length();
+        sb.delete(0, length - 2);
+    }
 
     @Test
     public void testSubject() throws Exception {

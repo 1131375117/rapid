@@ -1,9 +1,11 @@
 package cn.huacloud.taxpreference.controllers.consumer;
 
+import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.consumer.OtherDocSearchService;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.OtherDocQueryDTO;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.DocSearchSimpleVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.OtherDocVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -22,6 +24,14 @@ import org.springframework.web.bind.annotation.*;
 public class OtherDocSearchController {
 
     private final OtherDocSearchService otherDocSearchService;
+
+    @ApiOperation("最新案例解析（首页）")
+    @GetMapping("/otherDoc/caseAnalyse/latest")
+    public ResultVO<PageVO<DocSearchSimpleVO>> latestCaseAnalyse(PageQueryDTO pageQuery) throws Exception {
+        pageQuery.paramReasonable();
+        PageVO<DocSearchSimpleVO> page = otherDocSearchService.latestCaseAnalyse(pageQuery);
+        return ResultVO.ok(page);
+    }
 
     @ApiOperation("案例分析检索")
     @PostMapping("/otherDoc")

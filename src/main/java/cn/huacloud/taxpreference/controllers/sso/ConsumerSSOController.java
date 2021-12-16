@@ -1,7 +1,6 @@
 package cn.huacloud.taxpreference.controllers.sso;
 
 import cn.dev33.satoken.secure.SaSecureUtil;
-import cn.dev33.satoken.stp.StpUtil;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.utils.*;
 import cn.huacloud.taxpreference.services.user.ConsumerUserService;
@@ -123,7 +122,7 @@ public class ConsumerSSOController {
     @PostMapping("/consumer/sso/logout")
     public ResultVO<Void> logout() {
         String currentUserAccount = ConsumerUserUtil.getCurrentUserAccount();
-        StpUtil.logout();
+        ConsumerStpUtil.logout();
         log.info("用户登出, userAccount: {}", currentUserAccount);
         return ResultVO.ok();
     }

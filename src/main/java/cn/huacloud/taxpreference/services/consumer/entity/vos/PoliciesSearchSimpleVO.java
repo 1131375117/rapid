@@ -4,6 +4,8 @@ import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeSimpleVO;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.time.LocalDate;
+
 /**
  * @author wangkh
  */
@@ -17,4 +19,7 @@ public class PoliciesSearchSimpleVO {
 
     @ApiModelProperty("所属区域")
     private SysCodeSimpleVO area;
+
+    @ApiModelProperty("发布日期")
+    private LocalDate releaseDate;
 }

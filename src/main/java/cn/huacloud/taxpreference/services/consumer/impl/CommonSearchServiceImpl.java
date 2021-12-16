@@ -37,7 +37,7 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
  */
 @RequiredArgsConstructor
 @Service
-public class HotContentServiceImpl implements HotContentService {
+public class CommonSearchServiceImpl implements CommonSearchService {
 
     private final RestHighLevelClient restHighLevelClient;
 

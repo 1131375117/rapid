@@ -26,7 +26,7 @@ public class PoliciesExplainSearchController {
 
     private final PoliciesExplainSearchService policiesExplainSearchService;
 
-    @ApiOperation("最新政策解读")
+    @ApiOperation("最新政策解读（首页）")
     @GetMapping("/policiesExplain/latest")
     public ResultVO<PageVO<PoliciesExplainSearchSimpleVO>> latestPoliciesExplain(PageQueryDTO pageQuery) throws Exception {
         pageQuery.paramReasonable();

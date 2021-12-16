@@ -25,6 +25,15 @@
         "docCode": {
           "type": "keyword"
         },
+        "docWordCode": {
+          "type": "keyword"
+        },
+        "docYearCode": {
+          "type": "integer"
+        },
+        "docNumCode": {
+          "type": "integer"
+        },
         "area": {
           "properties": {
             "codeName": {

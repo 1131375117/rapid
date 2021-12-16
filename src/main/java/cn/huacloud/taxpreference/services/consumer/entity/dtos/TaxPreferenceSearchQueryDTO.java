@@ -1,6 +1,8 @@
 package cn.huacloud.taxpreference.services.consumer.entity.dtos;
 
 import cn.huacloud.taxpreference.common.annotations.FilterField;
+import cn.huacloud.taxpreference.common.annotations.WithChildrenCodes;
+import cn.huacloud.taxpreference.common.enums.SysCodeType;
 import cn.huacloud.taxpreference.config.ElasticsearchIndexConfig;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -20,11 +22,12 @@ import java.util.Set;
 public class TaxPreferenceSearchQueryDTO extends AbstractHighlightPageQueryDTO {
 
     @ApiModelProperty("是否使用推荐")
+    @Deprecated
     private Boolean useRecommend;
 
     @ApiModelProperty("所属税种")
     @FilterField("taxCategories.codeValue")
-    private String taxCategoriesCode;
+    private List<String> taxCategoriesCodes;
 
     @ApiModelProperty("纳税人登记注册类型码值")
     @FilterField("taxpayerRegisterType.codeValue")
@@ -35,7 +38,8 @@ public class TaxPreferenceSearchQueryDTO extends AbstractHighlightPageQueryDTO {
     private String taxpayerTypeCode;
 
     @ApiModelProperty("适用行业码值")
-    @FilterField(value = "industries.codeValue", withChildren = true)
+    @WithChildrenCodes(SysCodeType.INDUSTRY)
+    @FilterField(value = "industries.codeValue")
     private List<String> industryCodes;
 
     @ApiModelProperty("适用企业类型码值")
@@ -56,7 +60,14 @@ public class TaxPreferenceSearchQueryDTO extends AbstractHighlightPageQueryDTO {
 
     @Override
     public List<String> searchFields() {
-        return Arrays.asList("taxPreferenceName", "combinePlainContent");
+        switch (getSearchScope()) {
+            case CONTENT:
+                return Collections.singletonList("combinePlainContent");
+            case TITLE_AND_CONTENT:
+                return Arrays.asList("taxPreferenceName", "combinePlainContent");
+            default:
+                return Collections.singletonList("taxPreferenceName");
+        }
     }
 
     @Override

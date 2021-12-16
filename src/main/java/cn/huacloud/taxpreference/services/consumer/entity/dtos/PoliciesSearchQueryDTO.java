@@ -2,14 +2,15 @@ package cn.huacloud.taxpreference.services.consumer.entity.dtos;
 
 import cn.huacloud.taxpreference.common.annotations.FilterField;
 import cn.huacloud.taxpreference.common.annotations.RangeField;
+import cn.huacloud.taxpreference.common.annotations.WithChildrenCodes;
 import cn.huacloud.taxpreference.common.entity.dtos.LocalDateRangeQueryDTO;
+import cn.huacloud.taxpreference.common.enums.SysCodeType;
 import cn.huacloud.taxpreference.config.ElasticsearchIndexConfig;
 import cn.huacloud.taxpreference.services.producer.entity.enums.ValidityEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -19,8 +20,16 @@ import java.util.List;
 @Setter
 public class PoliciesSearchQueryDTO extends AbstractHighlightPageQueryDTO {
 
-    @ApiModelProperty("文号")
-    private String docCode;
+    @ApiModelProperty("文号字号")
+    private String docWordCode;
+
+    @ApiModelProperty("文号年号")
+    @FilterField("docYearCode")
+    private Integer docYearCode;
+
+    @ApiModelProperty("文号编号")
+    @FilterField("docNumCode")
+    private Integer docNumCode;
 
     @ApiModelProperty("所属税种")
     @FilterField("taxCategories.codeValue")
@@ -31,11 +40,13 @@ public class PoliciesSearchQueryDTO extends AbstractHighlightPageQueryDTO {
     private LocalDateRangeQueryDTO releaseDate;
 
     @ApiModelProperty("所属区域码值")
-    @FilterField(value = "area.codeValue", withChildren = true)
+    @WithChildrenCodes(SysCodeType.AREA)
+    @FilterField(value = "area.codeValue")
     private String areaCode;
 
     @ApiModelProperty("适用行业码值")
-    @FilterField(value = "industries.codeValue", withChildren = true)
+    @WithChildrenCodes(SysCodeType.INDUSTRY)
+    @FilterField(value = "industries.codeValue")
     private List<String> industryCodes;
 
     @ApiModelProperty("纳税人资格认定类型码值")
@@ -53,11 +64,6 @@ public class PoliciesSearchQueryDTO extends AbstractHighlightPageQueryDTO {
     @Override
     public String index(ElasticsearchIndexConfig config) {
         return config.getPolicies().getAlias();
-    }
-
-    @Override
-    public List<String> searchFields() {
-        return Arrays.asList("title", "combinePlainContent");
     }
 
 }

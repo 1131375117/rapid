@@ -6,7 +6,7 @@ import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.utils.ProducerUserUtil;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeCountVO;
-import cn.huacloud.taxpreference.services.consumer.HotContentService;
+import cn.huacloud.taxpreference.services.consumer.CommonSearchService;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.GuessYouLikeQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.HotContentVO;
 import io.swagger.annotations.Api;
@@ -23,15 +23,15 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/search")
 @RestController
-public class HotContentController {
+public class CommonSearchController {
 
-    private final HotContentService hotContentService;
+    private final CommonSearchService commonSearchService;
 
     @ApiOperation("高级搜索统计所有文档数")
     @PostMapping("/allDocCount")
     public ResultVO<List<SysCodeCountVO>> allDocCount(@RequestBody KeywordPageQueryDTO pageQuery) throws Exception {
         pageQuery.paramReasonable();
-        List<SysCodeCountVO> sysCodeCountVOList = hotContentService.allDocCount(pageQuery);
+        List<SysCodeCountVO> sysCodeCountVOList = commonSearchService.allDocCount(pageQuery);
         return ResultVO.ok(sysCodeCountVOList);
     }
 
@@ -39,7 +39,7 @@ public class HotContentController {
     @GetMapping("/hotContent/weekly")
     public ResultVO<PageVO<HotContentVO>> weeklyHotContent(PageQueryDTO pageQuery) throws Exception {
         pageQuery.paramReasonable();
-        PageVO<HotContentVO> pageVO = hotContentService.weeklyHotContent(pageQuery);
+        PageVO<HotContentVO> pageVO = commonSearchService.weeklyHotContent(pageQuery);
         return ResultVO.ok(pageVO);
     }
 
@@ -50,7 +50,7 @@ public class HotContentController {
         if (ProducerUserUtil.isLogin()) {
             pageQuery.setUserId(ProducerUserUtil.getCurrentUserId());
         }
-        PageVO<HotContentVO> pageVO = hotContentService.guessYouLike(pageQuery);
+        PageVO<HotContentVO> pageVO = commonSearchService.guessYouLike(pageQuery);
         return ResultVO.ok(pageVO);
     }
 }

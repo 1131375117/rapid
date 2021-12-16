@@ -6,6 +6,7 @@ import cn.huacloud.taxpreference.config.ElasticsearchIndexConfig;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,7 +29,14 @@ public class OtherDocQueryDTO extends AbstractHighlightPageQueryDTO {
 
     @Override
     public List<String> searchFields() {
-        return Collections.singletonList("title");
+        switch (getSearchScope()) {
+            case CONTENT:
+                return Collections.singletonList("plainContent");
+            case TITLE_AND_CONTENT:
+                return Arrays.asList("title", "plainContent");
+            default:
+                return Collections.singletonList("title");
+        }
     }
 
     @Override

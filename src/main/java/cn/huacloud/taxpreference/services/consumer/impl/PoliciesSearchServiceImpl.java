@@ -48,23 +48,12 @@ public class PoliciesSearchServiceImpl implements PoliciesSearchService {
     @Override
     public QueryBuilder getQueryBuilder(PoliciesSearchQueryDTO pageQuery) {
 
-        BoolQueryBuilder queryBuilder = generatorDefaultQueryBuilder(pageQuery);
-
-        // 关键字查询
-        String keyword = pageQuery.getKeyword();
-        if (keyword != null) {
-            BoolQueryBuilder keywordQuery = boolQuery();
-            List<String> searchFields = pageQuery.searchFields();
-            for (String searchField : searchFields) {
-                keywordQuery.should(matchPhraseQuery(searchField, keyword));
-            }
-            queryBuilder.must(keywordQuery);
-        }
+        BoolQueryBuilder queryBuilder = getDefaultQueryBuilder(pageQuery);
 
         // 文号查询
-        String docCode = pageQuery.getDocCode();
-        if (docCode != null) {
-            queryBuilder.must(wildcardQuery("docCode", formatWildcardValue(docCode)));
+        String docWordCode = pageQuery.getDocWordCode();
+        if (docWordCode != null) {
+            queryBuilder.must(wildcardQuery("docWordCode", formatWildcardValue(docWordCode)));
         }
 
         return queryBuilder;
@@ -93,12 +82,37 @@ public class PoliciesSearchServiceImpl implements PoliciesSearchService {
 
     @Override
     public PageVO<PoliciesSearchSimpleVO> latestCentralPolicies(PageQueryDTO pageQuery) throws Exception {
-        return latestAreaPolicies(pageQuery, Collections.singletonList("AREA_ZY"), null);
+        return latestAreaPolicies(pageQuery, Collections.singletonList("ZY"), null);
     }
 
     @Override
     public PageVO<PoliciesSearchSimpleVO> latestLocalPolicies(PageQueryDTO pageQuery) throws Exception {
-        return latestAreaPolicies(pageQuery, null, Arrays.asList("AREA_ZY", "AREA_DF(GS-S)"));
+        return latestAreaPolicies(pageQuery, null, Arrays.asList("ZY", "DF"));
+    }
+
+    @Override
+    public PageVO<PoliciesSearchSimpleVO> hotPolicies(PageQueryDTO pageQuery) throws Exception {
+        // 执行查询
+        SearchResponse response = simplePageSearch(getIndex(),
+                matchAllQuery(),
+                pageQuery,
+                SortBuilders.fieldSort("views").order(SortOrder.DESC),
+                SortBuilders.fieldSort("releaseDate").order(SortOrder.DESC));
+
+        // 数据映射
+        SearchHits hits = response.getHits();
+        List<PoliciesSearchSimpleVO> records = new ArrayList<>();
+        for (SearchHit hit : hits.getHits()) {
+            PoliciesSearchSimpleVO policiesSearchSimpleVO = objectMapper.readValue(hit.getSourceAsString(), PoliciesSearchSimpleVO.class);
+            records.add(policiesSearchSimpleVO);
+        }
+
+        // 返回数据
+        return new PageVO<PoliciesSearchSimpleVO>()
+                .setTotal(hits.getTotalHits().value)
+                .setPageNum(pageQuery.getPageNum())
+                .setPageSize(pageQuery.getPageSize())
+                .setRecords(records);
     }
 
     /**

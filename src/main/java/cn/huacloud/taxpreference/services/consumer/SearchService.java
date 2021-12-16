@@ -2,6 +2,7 @@ package cn.huacloud.taxpreference.services.consumer;
 
 import cn.huacloud.taxpreference.common.annotations.FilterField;
 import cn.huacloud.taxpreference.common.annotations.RangeField;
+import cn.huacloud.taxpreference.common.annotations.WithChildrenCodes;
 import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.dtos.RangeQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
@@ -111,20 +112,31 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
      * @return 查询构造器
      */
     default QueryBuilder getQueryBuilder(T pageQuery) {
+        return getDefaultQueryBuilder(pageQuery);
+    }
 
+    default BoolQueryBuilder getDefaultQueryBuilder(T pageQuery) {
         BoolQueryBuilder queryBuilder = generatorDefaultQueryBuilder(pageQuery);
-
         // 关键字查询
-        String keyword = pageQuery.getKeyword();
-        if (keyword != null) {
-            BoolQueryBuilder keywordQuery = boolQuery();
-            List<String> searchFields = pageQuery.searchFields();
-            for (String searchField : searchFields) {
-                keywordQuery.should(matchPhraseQuery(searchField, keyword));
+        List<String> keywordSplit = pageQuery.getKeywordSplit();
+        if (keywordSplit != null) {
+            BoolQueryBuilder keywordSplitQuery = boolQuery();
+            for (String keyword : keywordSplit) {
+                BoolQueryBuilder keywordQuery = boolQuery();
+                List<String> searchFields = pageQuery.searchFields();
+                for (String searchField : searchFields) {
+                    if (pageQuery.getPreciseQuery()) {
+                        // 精确查询
+                        keywordQuery.should(matchPhraseQuery(searchField, keyword));
+                    } else {
+                        // 模糊查询
+                        keywordQuery.should(matchQuery(searchField, keyword));
+                    }
+                }
+                keywordSplitQuery.must(keywordQuery);
             }
-            queryBuilder.must(keywordQuery);
+            queryBuilder.must(keywordSplitQuery);
         }
-
         return queryBuilder;
     }
 
@@ -269,6 +281,7 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
                 .trackTotalHits(true)
                 .query(queryBuilder)
                 .from(pageQuery.from())
+                .fetchSource(null, getExcludeSource())
                 .size(pageQuery.getPageSize());
 
         // 设置排序
@@ -370,6 +383,7 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
             // 获取字段名称
             FilterField annotation = fieldWrapper.getField().getAnnotation(FilterField.class);
             String name = annotation.value();
+            WithChildrenCodes withChildrenCodesAnnotation = fieldWrapper.getField().getAnnotation(WithChildrenCodes.class);
             // 设置过滤条件
             if (value instanceof Collection) {
                 // 集合
@@ -378,9 +392,10 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
                 if (collection.isEmpty()) {
                     return;
                 }
-                if (annotation.withChildren()) {
+                // 是否包含叶子节点码值
+                if (withChildrenCodesAnnotation != null) {
                     SysCodeService sysCodeService = SpringUtil.getBean(SysCodeService.class);
-                    List<String> withChildrenCodes = sysCodeService.withChildrenCodes(collection);
+                    List<String> withChildrenCodes = sysCodeService.withChildrenCodes(withChildrenCodesAnnotation.value(), collection);
                     if (withChildrenCodes.isEmpty()) {
                         return;
                     }
@@ -393,7 +408,17 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
                 IEnum<?> iEnum = (IEnum<?>) value;
                 boolQueryBuilder.must(matchQuery(name, iEnum.getValue()));
             } else if (value instanceof String) {
-                boolQueryBuilder.must(matchQuery(name, value));
+                // 是否包含叶子节点码值
+                if (withChildrenCodesAnnotation != null) {
+                    SysCodeService sysCodeService = SpringUtil.getBean(SysCodeService.class);
+                    List<String> withChildrenCodes = sysCodeService.withChildrenCodes(withChildrenCodesAnnotation.value(), Collections.singleton(value));
+                    if (withChildrenCodes.isEmpty()) {
+                        return;
+                    }
+                    boolQueryBuilder.must(termsQuery(name, withChildrenCodes));
+                } else {
+                    boolQueryBuilder.must(matchQuery(name, value));
+                }
             } else {
                 throw new RuntimeException("未支持的数据类型：" + value.getClass().getName());
             }
