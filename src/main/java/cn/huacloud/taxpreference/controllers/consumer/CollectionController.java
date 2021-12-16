@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,7 +34,7 @@ public class CollectionController {
     @ApiOperation(value = "点击收藏功能", notes = "返回值boolean表示收藏的当前状态，true：已收藏；false：未收藏")
     @ConsumerUserCheckLogin
     @PutMapping("/collection")
-    public ResultVO<Boolean> saveOrCancelCollection(@Validated CollectionDTO collectionDTO) {
+    public ResultVO<Boolean> saveOrCancelCollection(@RequestBody @Validated CollectionDTO collectionDTO) {
         collectionDTO.setConsumerUserId(ConsumerUserUtil.getCurrentUser().getId());
         Boolean isCollection = collectionService.saveOrCancelCollection(collectionDTO);
         return ResultVO.ok(isCollection);
