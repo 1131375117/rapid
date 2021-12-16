@@ -150,7 +150,6 @@ public class SampleTest {
     public void testSuper() {
         PoliciesSearchQueryDTO queryDTO = new PoliciesSearchQueryDTO();
         queryDTO.setAreaCode("");
-        queryDTO.setDocCode("");
         queryDTO.paramReasonable();
         log.info("{}", queryDTO);
     }
