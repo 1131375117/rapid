@@ -4,6 +4,7 @@ import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.AttachmentType;
 import cn.huacloud.taxpreference.common.enums.BizCode;
+import cn.huacloud.taxpreference.common.enums.SysCodeType;
 import cn.huacloud.taxpreference.common.enums.taxpreference.SortType;
 import cn.huacloud.taxpreference.common.utils.DocCodeUtil;
 import cn.huacloud.taxpreference.services.common.AttachmentService;
@@ -194,10 +195,10 @@ public class PoliciesServiceImpl implements PoliciesService {
 
 		BeanUtils.copyProperties(policiesCombinationDTO, policiesDO);
 		//获取纳税人、使用企业、适用行业码值、所属税种信息
-		SysCodeStringDTO taxpayerIdentifyTypeDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getTaxpayerIdentifyTypeCodes(), false);
-		SysCodeStringDTO enterpriseTypeDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getEnterpriseTypeCodes(), false);
-		SysCodeStringDTO industryDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getIndustryCodes(), false);
-		SysCodeStringDTO taxCategoriesDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getTaxCategoriesCodes(), false);
+		SysCodeStringDTO taxpayerIdentifyTypeDTO = sysCodeService.getSysCodeStringDTO(SysCodeType.TAXPAYER_IDENTIFY_TYPE,policiesCombinationDTO.getTaxpayerIdentifyTypeCodes(), false);
+		SysCodeStringDTO enterpriseTypeDTO = sysCodeService.getSysCodeStringDTO(SysCodeType.ENTERPRISE_TYPE,policiesCombinationDTO.getEnterpriseTypeCodes(), false);
+		SysCodeStringDTO industryDTO = sysCodeService.getSysCodeStringDTO(SysCodeType.INDUSTRY,policiesCombinationDTO.getIndustryCodes(), false);
+		SysCodeStringDTO taxCategoriesDTO = sysCodeService.getSysCodeStringDTO(SysCodeType.TAX_CATEGORIES,policiesCombinationDTO.getTaxCategoriesCodes(), false);
 		// 设置纳税人、使用企业、适用行业码值、所属税种
 		policiesDO.setTaxpayerIdentifyTypeCodes(taxpayerIdentifyTypeDTO.getCodes());
 		policiesDO.setEnterpriseTypeCodes(enterpriseTypeDTO.getCodes());
@@ -221,7 +222,7 @@ public class PoliciesServiceImpl implements PoliciesService {
 		// 设置删除
 		policiesDO.setDeleted(false);
 		// 设置所属区域名称
-		policiesDO.setAreaName(sysCodeService.getCodeNameByCodeValue(policiesCombinationDTO.getAreaCode()));
+		policiesDO.setAreaName(sysCodeService.getSysCodeName(SysCodeType.AREA,policiesCombinationDTO.getAreaCode()));
 		// 设置标签
 		policiesDO.setLabels(StringUtils.join(policiesCombinationDTO.getLabels(), ","));
 
@@ -398,10 +399,10 @@ public class PoliciesServiceImpl implements PoliciesService {
 
 
 		BeanUtils.copyProperties(policiesCombinationDTO, policiesDO);
-		SysCodeStringDTO taxpayerIdentifyTypeDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getTaxpayerIdentifyTypeCodes(), false);
-		SysCodeStringDTO enterpriseTypeDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getEnterpriseTypeCodes(), false);
-		SysCodeStringDTO industryDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getIndustryCodes(), false);
-		SysCodeStringDTO taxCategoriesDTO = sysCodeService.getSysCodeStringDTO(policiesCombinationDTO.getTaxCategoriesCodes(), false);
+		SysCodeStringDTO taxpayerIdentifyTypeDTO = sysCodeService.getSysCodeStringDTO(SysCodeType.TAXPAYER_IDENTIFY_TYPE,policiesCombinationDTO.getTaxpayerIdentifyTypeCodes(), false);
+		SysCodeStringDTO enterpriseTypeDTO = sysCodeService.getSysCodeStringDTO(SysCodeType.ENTERPRISE_TYPE,policiesCombinationDTO.getEnterpriseTypeCodes(), false);
+		SysCodeStringDTO industryDTO = sysCodeService.getSysCodeStringDTO(SysCodeType.INDUSTRY,policiesCombinationDTO.getIndustryCodes(), false);
+		SysCodeStringDTO taxCategoriesDTO = sysCodeService.getSysCodeStringDTO(SysCodeType.TAX_CATEGORIES,policiesCombinationDTO.getTaxCategoriesCodes(), false);
 		// 设置纳税人、使用企业、适用行业码值、所属税种
 		policiesDO.setTaxpayerIdentifyTypeCodes(taxpayerIdentifyTypeDTO.getCodes());
 		policiesDO.setEnterpriseTypeCodes(enterpriseTypeDTO.getCodes());
@@ -413,7 +414,7 @@ public class PoliciesServiceImpl implements PoliciesService {
 		policiesDO.setIndustryNames(industryDTO.getNames());
 		policiesDO.setTaxCategoriesNames(taxCategoriesDTO.getNames());
 		// 设置区域
-		policiesDO.setAreaName(sysCodeService.getCodeNameByCodeValue(policiesCombinationDTO.getAreaCode()));
+		policiesDO.setAreaName(sysCodeService.getSysCodeName(SysCodeType.AREA,policiesCombinationDTO.getAreaCode()));
 		policiesDO.setAreaCode(policiesCombinationDTO.getAreaCode());
 		// 设置标签
 		policiesDO.setLabels(StringUtils.join(policiesCombinationDTO.getLabels(), ","));
