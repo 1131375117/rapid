@@ -106,7 +106,7 @@ public class SysParamServiceImpl implements SysParamService {
 
     @Override
     public <T> T getSingleParamValue(String sysParamType, String sysParamKey, Class<T> clazz) {
-        List<SysParamDO> sysParamDOList = getCacheSysParamByTypes(sysParamKey);
+        List<SysParamDO> sysParamDOList = getCacheSysParamByTypes(sysParamType);
         if (sysParamKey != null) {
             // 参数Key过滤
             sysParamDOList = sysParamDOList.stream().filter(sysParamDO -> sysParamKey.equals(sysParamDO.getParamKey())).collect(Collectors.toList());
