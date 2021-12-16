@@ -65,10 +65,10 @@
                 </foreach>
                 )
             </if>
-            <if test="queryTaxPreferencesDTO.taxCategoriesCode!=null and queryTaxPreferencesDTO.taxCategoriesCode.size>0 ">
+            <if test="queryTaxPreferencesDTO.taxCategoriesCodes!=null and queryTaxPreferencesDTO.taxCategoriesCodes.size>0 ">
                 and (1!=1
-                <foreach collection="queryTaxPreferencesDTO.taxCategoriesCode" item="taxCategories">
-                    or p.taxCategoriesCode =#{taxCategories}
+                <foreach collection="queryTaxPreferencesDTO.taxCategoriesCodes" item="taxCategories">
+                    or FIND_IN_SET(#{taxCategories},p.taxCategoriesCode)
                 </foreach>
                 )
             </if>
