@@ -62,7 +62,6 @@ public class TaxPreferencePoliciesVO {
      * 政策法规关联具体交款
      */
     @ApiModelProperty("政策法规关联具体条款")
-    @NotEmpty(message = "政策法规关联具体条款不能为空",groups = ValidationGroup.Manual.class)
     private String policiesItems;
 
 }
