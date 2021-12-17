@@ -39,8 +39,8 @@ public class QueryTaxPreferencesVO {
     /**
      * 适用企业类型名称
      */
-    @ApiModelProperty("适用企业类型名称")
-    private String enterpriseTypeNames;
+    @ApiModelProperty("适用企业类型")
+    private String enterpriseType;
 
     /**
      * 适用企业类型名称

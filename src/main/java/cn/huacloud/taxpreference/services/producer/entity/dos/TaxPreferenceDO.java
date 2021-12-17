@@ -66,12 +66,7 @@ public class TaxPreferenceDO {
 	/**
 	 * 适用企业类型名称
 	 */
-	private String enterpriseTypeNames;
-
-	/**
-	 * 适用企业类型码值
-	 */
-	private String enterpriseTypeCodes;
+	private String enterpriseType;
 
 	/**
 	 * 纳税信用等级

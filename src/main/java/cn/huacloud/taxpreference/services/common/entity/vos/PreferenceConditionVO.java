@@ -3,13 +3,15 @@ package cn.huacloud.taxpreference.services.common.entity.vos;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.util.List;
+
 /**
  * 税收优惠条件分组视图
  * @author wangkh
  */
 @Accessors(chain = true)
 @Data
-public class ConditionGroupVO {
+public class PreferenceConditionVO {
     /**
      * 名称
      */
@@ -17,5 +19,5 @@ public class ConditionGroupVO {
     /**
      * 值
      */
-    private String value;
+    private List<SysCodeSimpleVO> values;
 }

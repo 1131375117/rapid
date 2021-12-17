@@ -26,7 +26,5 @@ public class SubmitConditionDTO {
     /**
      * 排序字段
      */
-/*    @ApiModelProperty("排序字段")
-    private String sort;*/
 
 }

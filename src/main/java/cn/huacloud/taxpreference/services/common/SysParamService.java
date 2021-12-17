@@ -67,5 +67,13 @@ public interface SysParamService extends CacheClear {
      * @param handlerClass 参数处理器类型
      * @return 处理好的参数
      */
-    <T, R> R getParamByHandler(Class<SysParamHandler<T, R>> handlerClass, T handlerParam, List<String> paramTypes);
+    <T, R> R getParamByHandler(Class<? extends SysParamHandler<T, R>> handlerClass, T handlerParam, List<String> paramTypes);
+
+    /**
+     * 通过系统参数类型从缓存中获取系统参数
+     *
+     * @param paramTypes 系统参数类型
+     * @return 系统参数集合
+     */
+    List<SysParamDO> getSysParamDOByTypes(String... paramTypes);
 }

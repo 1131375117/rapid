@@ -6,14 +6,14 @@
             parameterType="cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferenceDO">
         insert into t_tax_preference (tax_categories_names, tax_categories_codes, taxpayer_register_type_name,
                                       taxpayer_register_type_code, taxpayer_type_name, taxpayer_type_code,
-                                      industry_names, industry_codes, enterprise_type_names, enterprise_type_codes,
+                                      industry_names, industry_codes,  enterprise_type,
                                       taxpayer_credit_ratings, tax_preference_name, keep_query_data,
                                       submit_tax_data, submit_time_limit, submit_description, create_time, update_time,
                                       deleted)
         values (#{taxCategoriesNames}, #{taxCategoriesCodes}, #{taxpayerRegisterTypeName},
                 #{taxpayerRegisterTypeCode}, #{taxpayerTypeName}, #{taxpayerTypeCode},
-                #{industryNames}, #{industryCodes}, #{enterpriseTypeNames},
-                #{enterpriseTypeCodes}, #{taxpayerCreditRatings}, #{taxPreferenceName},
+                #{industryNames}, #{industryCodes},
+                #{enterpriseType}, #{taxpayerCreditRatings}, #{taxPreferenceName},
                 #{keepQueryData}, #{submitTaxData},
                 #{submitTimeLimit}, #{submitDescription}, #{createTime},
                 #{updateTime}, #{deleted})
@@ -27,7 +27,7 @@
             resultType="cn.huacloud.taxpreference.services.producer.entity.vos.QueryTaxPreferencesVO">
         select p.id,p.tax_preference_name as taxPreferenceName,p.industry_names as industryNames ,p.taxpayer_type_name
         as taxpayerTypeName,
-        p.tax_categories_names as taxCategoriesNames,p.enterprise_type_names as enterpriseTypeNames,
+        p.tax_categories_names as taxCategoriesNames,p.enterprise_type as enterpriseType,
         p.validity,p.create_time as createTime,p.taxpayer_credit_ratings as taxpayerCreditRatings,
         p.taxpayer_register_type_name as taxpayerRegisterTypeName,
         p.tax_preference_status as taxPreferenceStatus
@@ -36,6 +36,9 @@
             and p.deleted=0
             <if test="queryTaxPreferencesDTO.keyword!=null and queryTaxPreferencesDTO.keyword!= ''">
                 and p.tax_preference_name like "%"#{queryTaxPreferencesDTO.keyword}"%"
+            </if>
+            <if test="queryTaxPreferencesDTO.enterpriseType!=null and queryTaxPreferencesDTO.enterpriseType!=''">
+                and p.enterprise_type like "%"#{queryTaxPreferencesDTO.enterpriseType}"%"
             </if>
             <if test="queryTaxPreferencesDTO.taxCategoriesCodes != null and queryTaxPreferencesDTO.taxCategoriesCodes != '' ">
                 and p.tax_categories_codes= #{queryTaxPreferencesDTO.taxCategoriesCodes}
@@ -58,6 +61,7 @@
             <if test="queryTaxPreferencesDTO.endTime!=null ">
                 and p.create_time &lt;= #{queryTaxPreferencesDTO.endTime}
             </if>
+
             <if test="queryTaxPreferencesDTO.taxpayerCreditRatings!=null and queryTaxPreferencesDTO.taxpayerCreditRatings.size>0 ">
                 and (1!=1
                 <foreach collection="queryTaxPreferencesDTO.taxpayerCreditRatings" item="credit">
@@ -80,13 +84,7 @@
                 </foreach>
                 )
             </if>
-            <if test="queryTaxPreferencesDTO.enterpriseTypeCodes!=null and queryTaxPreferencesDTO.enterpriseTypeCodes.size>0 ">
-                and (1!=1
-                <foreach collection="queryTaxPreferencesDTO.enterpriseTypeCodes" item="enterpriseTypeCode">
-                    or FIND_IN_SET(#{enterpriseTypeCode},p.enterprise_type_codes)
-                </foreach>
-                )
-            </if>
+
 
 
         </where>

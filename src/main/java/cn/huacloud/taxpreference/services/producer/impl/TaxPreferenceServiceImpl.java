@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.producer.impl;
 
+import cn.huacloud.taxpreference.common.constants.ConditionType;
 import cn.huacloud.taxpreference.common.constants.TaxpayerTypeConstants;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.BizCode;
@@ -34,6 +35,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.time.LocalDateTime;
@@ -58,6 +60,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     private final SysCodeService sysCodeService;
     private final TaxPreferenceEventTrigger taxPreferenceEventTrigger;
     static final String TAX_PREFERENCE_ID = "tax_preference_id";
+    static HashSet<String> keyProperties = new HashSet<>();
 
     @Autowired
     public void setProcessService(ProcessService processService) {
@@ -180,30 +183,11 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
             taxPreferenceVO.setTaxCategoriesNames(new ArrayList<>());
         }
 
-        //设置信用凭证
-        if (taxPreferenceDO.getTaxpayerCreditRatings() != null) {
-            taxPreferenceVO.setTaxpayerCreditRatings(Arrays.asList(taxPreferenceDO.getTaxpayerCreditRatings().split(",")));
-        } else {
-            taxPreferenceVO.setTaxpayerCreditRatings(new ArrayList<>());
-        }
-        //设置企业类型和码值
-        if (!StringUtils.isEmpty(taxPreferenceDO.getEnterpriseTypeCodes())) {
-            taxPreferenceVO.setEnterpriseTypeCodes(Arrays.asList(taxPreferenceDO.getEnterpriseTypeCodes().split(",")));
-        } else {
-            taxPreferenceVO.setEnterpriseTypeCodes(new ArrayList<>());
-        }
-        if (!StringUtils.isEmpty(taxPreferenceDO.getEnterpriseTypeNames())) {
-            taxPreferenceVO.setEnterpriseTypeNames(Arrays.asList(taxPreferenceDO.getEnterpriseTypeNames().split(",")));
-        } else {
-            taxPreferenceVO.setEnterpriseTypeNames(new ArrayList<>());
-        }
-
         //设置标签
         if (!StringUtils.isEmpty(taxPreferenceDO.getLabels())) {
             List<String> labels = Arrays.asList(taxPreferenceDO.getLabels().split(","));
             taxPreferenceVO.setLabels(labels);
         }
-
 
         // 查询政策信息
         List<TaxPreferencePoliciesVO> taxPreferencePoliciesVOList =
@@ -212,7 +196,8 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
 
         // 查询申报信息
         List<SubmitConditionDO> submitConditionDOList = submitConditionMapper.selectByMap(columnMap);
-        List<SubmitConditionVO> submitConditionVOList = getSubmitConditionVOS(submitConditionDOList);
+        List<SubmitConditionVO> submitConditionVOList = getSubmitConditionVOS(submitConditionDOList, taxPreferenceVO);
+
         taxPreferenceVO.setSubmitConditionVOList(submitConditionVOList);
         log.info("税收优惠详情获取查询结果:taxPreferenceVO:{}", taxPreferenceVO);
         return ResultVO.ok(taxPreferenceVO);
@@ -306,13 +291,22 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
      * @return submitConditionVO
      */
     private List<SubmitConditionVO> getSubmitConditionVOS(
-            List<SubmitConditionDO> submitConditionDOS) {
+            List<SubmitConditionDO> submitConditionDOS, TaxPreferenceVO taxPreferenceVO) {
         List<SubmitConditionVO> submitConditionVOList = new ArrayList<>();
         submitConditionDOS.forEach(
                 submitConditionDO -> {
-                    SubmitConditionVO submitConditionVO = new SubmitConditionVO();
-                    BeanUtils.copyProperties(submitConditionDO, submitConditionVO);
-                    submitConditionVOList.add(submitConditionVO);
+                    if (ConditionType.GENERAL_TAXPAYER.contains(submitConditionDO.getConditionName())) {
+                        taxPreferenceVO.setGeneralTaxpayer(submitConditionDO.getRequirement());
+
+                    } else if (ConditionType.TAXPAYER_CREDIT_RATINGS.contains(submitConditionDO.getConditionName())) {
+                        taxPreferenceVO.setTaxpayerCreditRatings(Arrays.asList(submitConditionDO.getRequirement().split(",")));
+                    } else if (ConditionType.ANNUAL_PROFIT.contains(submitConditionDO.getConditionName())) {
+                        taxPreferenceVO.setAnnualProfit(submitConditionDO.getRequirement());
+                    } else {
+                        SubmitConditionVO submitConditionVO = new SubmitConditionVO();
+                        BeanUtils.copyProperties(submitConditionDO, submitConditionVO);
+                        submitConditionVOList.add(submitConditionVO);
+                    }
                 });
         log.info("申报信息结果:submitConditionVOList={}", submitConditionVOList);
         return submitConditionVOList;
@@ -410,6 +404,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
      */
     public void insertSubmitConditionDOs(
             TaxPreferenceDTO taxPreferenceDTO, TaxPreferenceDO taxPreferenceDO) {
+        Long sort = 0L;
         log.info(
                 "新增到申报条件表t_submit_condition-参数:taxPreferenceDTO={},taxPreferenceDO={}",
                 taxPreferenceDTO,
@@ -421,8 +416,37 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
                 BeanUtils.copyProperties(submitConditionDTOList.get(i), submitConditionDO);
                 submitConditionDO.setTaxPreferenceId(taxPreferenceDO.getId());
                 submitConditionDO.setSort((long) i + 1);
+                sort++;
                 submitConditionMapper.insert(submitConditionDO);
             }
+        }
+        if (!CollectionUtils.isEmpty(taxPreferenceDTO.getTaxpayerCreditRatings())) {
+            SubmitConditionDO submitConditionDO = new SubmitConditionDO();
+            submitConditionDO.setConditionName(ConditionType.TAXPAYER_CREDIT_RATINGS);
+            submitConditionDO.setTaxPreferenceId(taxPreferenceDO.getId());
+            submitConditionDO.setSort(sort);
+            submitConditionDO.setRequirement(StringUtils.join(taxPreferenceDTO.getTaxpayerCreditRatings(), ","));
+            sort++;
+            submitConditionMapper.insert(submitConditionDO);
+        }
+
+        if (!StringUtils.isEmpty(taxPreferenceDTO.getGeneralTaxpayer())) {
+            SubmitConditionDO submitConditionDO = new SubmitConditionDO();
+            submitConditionDO.setConditionName(ConditionType.GENERAL_TAXPAYER);
+            submitConditionDO.setTaxPreferenceId(taxPreferenceDO.getId());
+            submitConditionDO.setSort(sort);
+            submitConditionDO.setRequirement(taxPreferenceDTO.getGeneralTaxpayer());
+            sort++;
+            submitConditionMapper.insert(submitConditionDO);
+        }
+
+        if (!StringUtils.isEmpty(taxPreferenceDTO.getAnnualProfit())) {
+            SubmitConditionDO submitConditionDO = new SubmitConditionDO();
+            submitConditionDO.setConditionName(ConditionType.ANNUAL_PROFIT);
+            submitConditionDO.setTaxPreferenceId(taxPreferenceDO.getId());
+            submitConditionDO.setSort(sort);
+            submitConditionDO.setRequirement(taxPreferenceDTO.getAnnualProfit());
+            submitConditionMapper.insert(submitConditionDO);
         }
     }
 
@@ -457,32 +481,27 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         taxPreferenceDO.setDeleted(false);
         taxPreferenceDO.setUpdateTime(LocalDateTime.now());
         taxPreferenceDO.setTaxPreferenceStatus(TaxPreferenceStatus.UNRELEASED);
-        SysCodeStringDTO industries = sysCodeService.getSysCodeStringDTO(SysCodeType.INDUSTRY,taxPreferenceDTO.getIndustryCodes(), false);
-        SysCodeStringDTO enterprises = sysCodeService.getSysCodeStringDTO(SysCodeType.ENTERPRISE_TYPE,taxPreferenceDTO.getEnterpriseTypeCodes(), false);
-        SysCodeStringDTO taxCategories = sysCodeService.getSysCodeStringDTO(SysCodeType.TAX_CATEGORIES,taxPreferenceDTO.getTaxCategoriesCodes(), false);
-        SysCodeStringDTO taxpayerCreditRatings = sysCodeService.getSysCodeStringDTO(SysCodeType.TAXPAYER_CREDIT_RATINGS,taxPreferenceDTO.getTaxpayerCreditRatings(), false);
+        SysCodeStringDTO industries = sysCodeService.getSysCodeStringDTO(SysCodeType.INDUSTRY, taxPreferenceDTO.getIndustryCodes(), false);
+        SysCodeStringDTO taxCategories = sysCodeService.getSysCodeStringDTO(SysCodeType.TAX_CATEGORIES, taxPreferenceDTO.getTaxCategoriesCodes(), false);
         // 收入税种种类名称
         taxPreferenceDO.setTaxCategoriesNames(taxCategories.getNames());
         taxPreferenceDO.setTaxCategoriesCodes(taxCategories.getCodes());
         // taxpayer_register_type_name-纳税人登记注册类型名称
         taxPreferenceDO.setTaxpayerRegisterTypeName(
-                sysCodeService.getSysCodeName(SysCodeType.TAXPAYER_REGISTER_TYPE,taxPreferenceDTO.getTaxpayerRegisterTypeCode()));
+                sysCodeService.getSysCodeName(SysCodeType.TAXPAYER_REGISTER_TYPE, taxPreferenceDTO.getTaxpayerRegisterTypeCode()));
         // 纳税人类型名称-taxpayer_type_name
         taxPreferenceDO.setTaxpayerTypeName(
-                sysCodeService.getSysCodeName(SysCodeType.TAXPAYER_TYPE,taxPreferenceDTO.getTaxpayerTypeCode()));
+                sysCodeService.getSysCodeName(SysCodeType.TAXPAYER_TYPE, taxPreferenceDTO.getTaxpayerTypeCode()));
         // 行业code
         taxPreferenceDO.setIndustryCodes(industries.getCodes());
         // 适用企业类型
-        taxPreferenceDO.setEnterpriseTypeCodes(enterprises.getCodes());
+        // taxPreferenceDO.setEnterpriseTypeCodes(enterprises.getCodes());
         // 信用等级
-        taxPreferenceDO.setTaxpayerCreditRatings(
-                StringUtils.join(taxpayerCreditRatings.getCodes(), ","));
+        taxPreferenceDO.setTaxpayerCreditRatings(StringUtils.join(taxPreferenceDTO.getTaxpayerCreditRatings(), ","));
         // 设置标签
         taxPreferenceDO.setLabels(StringUtils.join(taxPreferenceDTO.getLabels(), ","));
         // 行业名称
         taxPreferenceDO.setIndustryNames(industries.getNames());
-        // 适用企业类型
-        taxPreferenceDO.setEnterpriseTypeNames(enterprises.getNames());
         log.info("taxPreferenceDO={}", taxPreferenceDO);
         return taxPreferenceDO;
     }
@@ -495,7 +514,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         Set<String> keySet = new HashSet<>();
         stringList.forEach(
                 industryCode -> {
-                    keySet.add(sysCodeService.getSysCodeName(SysCodeType.INDUSTRY,industryCode));
+                    keySet.add(sysCodeService.getSysCodeName(SysCodeType.INDUSTRY, industryCode));
                 });
         log.info("keySet={}", keySet);
         return StringUtils.join(keySet, ",");

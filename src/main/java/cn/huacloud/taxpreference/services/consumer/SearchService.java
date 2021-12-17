@@ -389,7 +389,7 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
                 // 集合
                 Collection<?> collection = (Collection<?>) value;
                 // 空集合直接返回
-                if (collection.isEmpty()) {
+                if (CollectionUtils.isEmpty(collection)) {
                     return;
                 }
                 // 是否包含叶子节点码值
