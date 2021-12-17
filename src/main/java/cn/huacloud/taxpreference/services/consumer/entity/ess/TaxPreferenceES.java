@@ -39,7 +39,7 @@ public class TaxPreferenceES extends AbstractCombinePlainContent<Long> {
     /**
      * 所属税种
      */
-    private SysCodeSimpleVO taxCategories;
+    private List<SysCodeSimpleVO> taxCategories;
 
     /**
      * 纳税人登记注册类型
