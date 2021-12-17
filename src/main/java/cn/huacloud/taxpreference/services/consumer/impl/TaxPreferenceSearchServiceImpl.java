@@ -107,10 +107,10 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
     public PageVO<DocSearchSimpleVO> latestTaxPreference(LatestTaxPreferenceSearchQueryDTO pageQuery) throws Exception {
         // 构建查询条件
         QueryBuilder queryBuilder;
-        if (pageQuery.getTaxCategoriesCodes() == null) {
+        if (pageQuery.getTaxCategoriesCode() == null) {
             queryBuilder = matchAllQuery();
         } else {
-            queryBuilder = termsQuery("taxCategories.codeValue", pageQuery.getTaxCategoriesCodes());
+            queryBuilder = matchQuery("taxCategories.codeValue", pageQuery.getTaxCategoriesCode());
         }
         // 执行查询
         SearchResponse response = simplePageSearch(getIndex(),

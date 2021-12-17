@@ -1,6 +1,7 @@
 package cn.huacloud.taxpreference.services.common.impl;
 
 import cn.huacloud.taxpreference.common.enums.SysParamStatus;
+import cn.huacloud.taxpreference.common.utils.SpringUtil;
 import cn.huacloud.taxpreference.services.common.SysParamService;
 import cn.huacloud.taxpreference.services.common.entity.dos.SysParamDO;
 import cn.huacloud.taxpreference.services.common.handler.param.SysParamHandler;
@@ -41,8 +42,6 @@ public class SysParamServiceImpl implements SysParamService {
     private final Cache<String, List<SysParamDO>> sysParamTypeCache = CacheBuilder.newBuilder()
             .expireAfterWrite(2, TimeUnit.HOURS)
             .build();
-
-    private final List<SysParamHandler<?, ?>> handlers;
 
     @Override
     public SysParamDO getSysParamDO(String paramType, String paramKey) {
@@ -132,20 +131,19 @@ public class SysParamServiceImpl implements SysParamService {
     }
 
     @Override
-    public <T, R> R getParamByHandler(Class<SysParamHandler<T, R>> handlerClass, T handlerParam, List<String> paramTypes) {
-        Optional<SysParamHandler<?, ?>> optional = handlers.stream()
-                .filter(handler -> handlerClass.isAssignableFrom(handler.getClass()))
-                .findFirst();
-        if (!optional.isPresent()) {
-            return null;
-        }
-        SysParamHandler<T, R> handler = (SysParamHandler<T, R>) optional.get();
+    public <T, R> R getParamByHandler(Class<? extends SysParamHandler<T, R>> handlerClass, T handlerParam, List<String> paramTypes) {
+        SysParamHandler<T, R> handler = SpringUtil.getBean(handlerClass);
         if (paramTypes.isEmpty()) {
             log.error("参数处理器的参数类型不能为空");
             return null;
         }
         List<SysParamDO> sysParamDOS = getCacheSysParamByTypes(paramTypes.toArray(new String[0]));
         return handler.handle(sysParamDOS, handlerParam);
+    }
+
+    @Override
+    public List<SysParamDO> getSysParamDOByTypes(String... paramTypes) {
+        return getCacheSysParamByTypes(paramTypes);
     }
 
 

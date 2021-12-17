@@ -21,4 +21,6 @@ public interface SysParamTypes {
     String SMS_VERIFICATION_CODE_EXPIRE_MINUTES = "sms.verificationCodeExpireMinutes";
     // 所属专题
     String POLICIES_SPECIAL_SUBJECT ="policies.specialSubject";
+    // 税收优惠条件
+    String TAX_PREFERENCE_CONDITION = "tax.preference.condition";
 }
