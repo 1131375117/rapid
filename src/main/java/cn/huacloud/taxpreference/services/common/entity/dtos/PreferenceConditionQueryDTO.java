@@ -10,7 +10,7 @@ import java.util.List;
  * @author wangkh
  */
 @Data
-public class ConditionQueryDTO {
+public class PreferenceConditionQueryDTO {
     @ApiModelProperty("收入种类代码")
     private List<String> taxCategoriesCodes;
     @ApiModelProperty("减免事项代码")

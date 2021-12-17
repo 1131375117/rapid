@@ -106,7 +106,6 @@ public interface SysCodeService extends CacheClear {
      * @param codeValue 系统码值
      * @return 码值视图
      */
-    @Deprecated
     SysCodeSimpleVO getSimpleVOByCode(SysCodeType sysCodeType, String codeValue);
 
     /**

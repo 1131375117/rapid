@@ -4,8 +4,9 @@ import cn.huacloud.taxpreference.common.enums.SysCodeType;
 import cn.huacloud.taxpreference.common.utils.CustomStringUtil;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
 import cn.huacloud.taxpreference.services.common.entity.dos.SysParamDO;
-import cn.huacloud.taxpreference.services.common.entity.dtos.ConditionQueryDTO;
-import cn.huacloud.taxpreference.services.common.entity.vos.ConditionGroupVO;
+import cn.huacloud.taxpreference.services.common.entity.dtos.PreferenceConditionQueryDTO;
+import cn.huacloud.taxpreference.services.common.entity.vos.PreferenceConditionVO;
+import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeSimpleVO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -25,15 +26,14 @@ import static java.util.stream.Collectors.toList;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class TaxPreferenceConditionParamHandler implements SysParamHandler<ConditionQueryDTO, ConditionGroupVO> {
+public class TaxPreferenceConditionParamHandler implements SysParamHandler<PreferenceConditionQueryDTO, List<PreferenceConditionVO>> {
 
     private final SysCodeService sysCodeService;
 
     @Override
-    public ConditionGroupVO handle(List<SysParamDO> sysParams, ConditionQueryDTO handlerParam) {
+    public List<PreferenceConditionVO> handle(List<SysParamDO> sysParams, PreferenceConditionQueryDTO handlerParam) {
         List<String> taxCategoriesCodes = handlerParam.getTaxCategoriesCodes();
         List<String> exemptMatterCodes = handlerParam.getExemptMatterCodes();
-
         // 合并过滤条件
         Set<String> taxCategoriesSet = new HashSet<>(taxCategoriesCodes);
         Set<String> personConditionSet = new HashSet<>();
@@ -71,7 +71,31 @@ public class TaxPreferenceConditionParamHandler implements SysParamHandler<Condi
                     }
                     return true;
                 }).collect(toList());
-        return null;
+        // 转换为视图对象
+        List<PreferenceConditionVO> conditionVOList = sysParamWrapperList.stream()
+                .sorted(Comparator.comparing(w -> w.getSysParamDO().getParamKey()))
+                .map(wrapper -> {
+                    SysParamDO sysParamDO = wrapper.getSysParamDO();
+                    List<SysCodeSimpleVO> list = CustomStringUtil.arrayStringToList(sysParamDO.getParamValue()).stream()
+                            .map(value -> new SysCodeSimpleVO()
+                                    .setCodeName(value)
+                                    .setCodeValue(value))
+                            .collect(toList());
+                    return new PreferenceConditionVO()
+                            .setName(sysParamDO.getParamName())
+                            .setValues(list);
+                }).collect(toList());
+        // 添加纳税人信用等级
+        List<SysCodeSimpleVO> creditRating = sysCodeService.getSysCodeDOByCodeType(SysCodeType.TAXPAYER_CREDIT_RATINGS).stream()
+                .map(sysCodeDO -> new SysCodeSimpleVO()
+                        .setCodeName(sysCodeDO.getCodeName())
+                        .setCodeValue(sysCodeDO.getCodeValue()))
+                .collect(toList());
+        PreferenceConditionVO preferenceConditionVO = new PreferenceConditionVO()
+                .setName(SysCodeType.TAXPAYER_CREDIT_RATINGS.name)
+                .setValues(creditRating);
+        conditionVOList.add(0, preferenceConditionVO);
+        return conditionVOList;
     }
 
     @AllArgsConstructor

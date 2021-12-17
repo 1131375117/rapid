@@ -22,7 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
@@ -201,8 +200,5 @@ public class PoliciesController {
 		List<PoliciesIndustryVO> policiesIndustryVO = policiesService.industryQuery(title);
 		return ResultVO.ok(policiesIndustryVO);
 	}
-
-
-
 
 }
