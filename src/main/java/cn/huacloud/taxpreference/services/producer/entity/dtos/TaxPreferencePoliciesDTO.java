@@ -47,7 +47,6 @@ public class TaxPreferencePoliciesDTO {
 	 * 政策法规关联具体条款
 	 */
 	@ApiModelProperty("政策法规关联具体条款")
-	@NotEmpty(message = "政策法规关联具体条款", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
 	private String policiesItems;
 
 
