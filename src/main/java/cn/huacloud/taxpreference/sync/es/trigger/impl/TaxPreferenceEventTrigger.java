@@ -8,8 +8,8 @@ import cn.huacloud.taxpreference.services.common.DocStatisticsService;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
 import cn.huacloud.taxpreference.services.common.entity.dos.DocStatisticsDO;
 import cn.huacloud.taxpreference.services.consumer.entity.ess.TaxPreferenceES;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.ConditionSearchVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesDigestSearchVO;
-import cn.huacloud.taxpreference.services.consumer.entity.vos.SubmitConditionSearchVO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.ProcessDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferenceDO;
 import cn.huacloud.taxpreference.services.producer.mapper.ProcessServiceMapper;
@@ -93,7 +93,6 @@ public class TaxPreferenceEventTrigger extends EventTrigger<Long, TaxPreferenceE
         taxPreferenceES.setTaxpayerRegisterType(sysCodeService.getSimpleVOByCode(SysCodeType.TAXPAYER_REGISTER_TYPE,taxPreferenceDO.getTaxpayerRegisterTypeCode()));
         taxPreferenceES.setTaxpayerType(sysCodeService.getSimpleVOByCode(SysCodeType.TAXPAYER_TYPE,taxPreferenceDO.getTaxpayerTypeCode()));
         taxPreferenceES.setIndustries(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.INDUSTRY,taxPreferenceDO.getIndustryCodes()));
-      //  taxPreferenceES.setEnterpriseTypes(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.ENTERPRISE_TYPE,taxPreferenceDO.getEnterpriseTypeCodes()));
         taxPreferenceES.setValidity(getEnumSysCode(taxPreferenceDO.getValidity()));
         taxPreferenceES.setLabels(split2List(taxPreferenceDO.getLabels()));
 
@@ -108,8 +107,10 @@ public class TaxPreferenceEventTrigger extends EventTrigger<Long, TaxPreferenceE
         taxPreferenceES.setPolicies(policiesDigestSearchVOList);
 
         // 设置申报条件
-        List<SubmitConditionSearchVO> submitConditions = submitConditionMapper.getSubmitConditions(taxPreferenceDO.getId()).stream()
-                .map(submitConditionDO -> CustomBeanUtil.copyProperties(submitConditionDO, SubmitConditionSearchVO.class))
+        List<ConditionSearchVO> submitConditions = submitConditionMapper.getSubmitConditions(taxPreferenceDO.getId()).stream()
+                .map(submitConditionDO -> new ConditionSearchVO()
+                        .setConditionName(submitConditionDO.getConditionName())
+                        .setConditionValue(submitConditionDO.getRequirement()))
                 .collect(Collectors.toList());
         taxPreferenceES.setSubmitConditions(submitConditions);
 

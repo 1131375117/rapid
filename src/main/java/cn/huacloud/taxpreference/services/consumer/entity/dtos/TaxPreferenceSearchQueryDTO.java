@@ -2,7 +2,7 @@ package cn.huacloud.taxpreference.services.consumer.entity.dtos;
 
 import cn.huacloud.taxpreference.common.annotations.FilterField;
 import cn.huacloud.taxpreference.config.ElasticsearchIndexConfig;
-import cn.huacloud.taxpreference.services.consumer.entity.vos.ConditionVO;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.ConditionSearchVO;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -40,7 +40,7 @@ public class TaxPreferenceSearchQueryDTO extends AbstractHighlightPageQueryDTO {
     private String taxpayerRegisterTypeCode;
 
     @ApiModelProperty("动态筛选条件")
-    private List<ConditionVO> conditions;
+    private List<ConditionSearchVO> conditions;
 
     @Override
     public String index(ElasticsearchIndexConfig config) {

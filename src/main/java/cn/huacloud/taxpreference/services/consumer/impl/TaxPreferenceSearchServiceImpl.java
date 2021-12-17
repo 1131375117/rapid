@@ -250,8 +250,8 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
     }
 
     @Override
-    public Class<TaxPreferenceSearchVO> getResultClass() {
-        return TaxPreferenceSearchVO.class;
+    public Class<TaxPreferenceSearchListVO> getResultClass() {
+        return TaxPreferenceSearchListVO.class;
     }
 
     private String getIndex() {

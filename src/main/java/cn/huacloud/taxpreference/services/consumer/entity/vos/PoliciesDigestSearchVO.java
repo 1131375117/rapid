@@ -43,4 +43,7 @@ public class PoliciesDigestSearchVO {
      */
     @ApiModelProperty("税收优惠摘要")
     private String digest;
+
+    @ApiModelProperty("具体条款")
+    private String policiesItems;
 }

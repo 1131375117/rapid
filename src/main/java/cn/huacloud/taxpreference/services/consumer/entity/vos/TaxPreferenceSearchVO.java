@@ -51,7 +51,7 @@ public class TaxPreferenceSearchVO {
     private List<PoliciesDigestSearchVO> policies;
 
     @ApiModelProperty("申报条件")
-    private List<SubmitConditionSearchVO> submitConditions;
+    private List<ConditionSearchVO> submitConditions;
 
     @ApiModelProperty("留存备查资料")
     private String keepQueryData;

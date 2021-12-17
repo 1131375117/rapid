@@ -6,10 +6,7 @@ import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.consumer.TaxPreferenceSearchService;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.LatestTaxPreferenceSearchQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.TaxPreferenceSearchQueryDTO;
-import cn.huacloud.taxpreference.services.consumer.entity.vos.DocSearchSimpleVO;
-import cn.huacloud.taxpreference.services.consumer.entity.vos.DynamicConditionVO;
-import cn.huacloud.taxpreference.services.consumer.entity.vos.HotLabelVO;
-import cn.huacloud.taxpreference.services.consumer.entity.vos.TaxPreferenceSearchVO;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -47,8 +44,8 @@ public class TaxPreferenceSearchController {
 
     @ApiOperation("税收优惠搜索")
     @PostMapping("/taxPreference")
-    public ResultVO<PageVO<TaxPreferenceSearchVO>> pageSearch(@RequestBody TaxPreferenceSearchQueryDTO pageQuery) throws Exception {
-        PageVO<TaxPreferenceSearchVO> pageVO = taxPreferenceSearchService.pageSearch(pageQuery);
+    public ResultVO<PageVO<TaxPreferenceSearchListVO>> pageSearch(@RequestBody TaxPreferenceSearchQueryDTO pageQuery) throws Exception {
+        PageVO<TaxPreferenceSearchListVO> pageVO = taxPreferenceSearchService.pageSearch(pageQuery);
         return ResultVO.ok(pageVO);
     }
 

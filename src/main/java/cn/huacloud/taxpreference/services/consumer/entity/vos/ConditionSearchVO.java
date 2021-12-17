@@ -3,13 +3,15 @@ package cn.huacloud.taxpreference.services.consumer.entity.vos;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 /**
  * @author wangkh
  */
+@Accessors(chain = true)
 @Getter
 @Setter
-public class SubmitConditionSearchVO {
+public class ConditionSearchVO {
     /**
      * 条件名称
      */
@@ -20,5 +22,5 @@ public class SubmitConditionSearchVO {
      * 具体要求
      */
     @ApiModelProperty("具体要求")
-    private String requirement;
+    private String conditionValue;
 }

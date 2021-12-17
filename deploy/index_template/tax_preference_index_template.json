@@ -70,17 +70,7 @@
             }
           }
         },
-        "enterpriseTypes": {
-          "properties": {
-            "codeName": {
-              "type": "keyword"
-            },
-            "codeValue": {
-              "type": "keyword"
-            }
-          }
-        },
-        "taxpayerCreditRatings": {
+        "enterpriseType": {
           "type": "keyword"
         },
         "taxPreferenceItem": {
@@ -122,12 +112,12 @@
             }
           }
         },
-        "submitConditions": {
+        "conditions": {
           "properties": {
             "conditionName": {
               "type": "keyword"
             },
-            "requirement": {
+            "conditionValue": {
               "type": "keyword"
             }
           }

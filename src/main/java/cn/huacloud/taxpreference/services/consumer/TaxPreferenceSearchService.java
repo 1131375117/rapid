@@ -4,10 +4,7 @@ import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.LatestTaxPreferenceSearchQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.TaxPreferenceSearchQueryDTO;
-import cn.huacloud.taxpreference.services.consumer.entity.vos.DocSearchSimpleVO;
-import cn.huacloud.taxpreference.services.consumer.entity.vos.DynamicConditionVO;
-import cn.huacloud.taxpreference.services.consumer.entity.vos.HotLabelVO;
-import cn.huacloud.taxpreference.services.consumer.entity.vos.TaxPreferenceSearchVO;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,7 +13,7 @@ import java.util.List;
  * 税收优惠检索服务
  * @author wangkh
  */
-public interface TaxPreferenceSearchService extends SearchService<TaxPreferenceSearchQueryDTO, TaxPreferenceSearchVO> {
+public interface TaxPreferenceSearchService extends SearchService<TaxPreferenceSearchQueryDTO, TaxPreferenceSearchListVO> {
     /**
      * 热门标签列表
      * @param size 数据大小

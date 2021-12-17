@@ -38,8 +38,8 @@ public class TaxPreferenceSearchListVO {
     @ApiModelProperty("适用行业")
     private List<SysCodeSimpleVO> industries;
 
-    @ApiModelProperty("适用企业类型")
-    private List<SysCodeSimpleVO> enterpriseTypes;
+    @ApiModelProperty("企业类型")
+    private String enterpriseType;
 
     @ApiModelProperty("纳税信用等级")
     private List<String> taxpayerCreditRatings;
@@ -54,7 +54,7 @@ public class TaxPreferenceSearchListVO {
     private List<PoliciesDigestSearchVO> policies;
 
     @ApiModelProperty("申报条件")
-    private List<SubmitConditionSearchVO> submitConditions;
+    private List<ConditionSearchVO> submitConditions;
 
     @ApiModelProperty("留存备查资料")
     private String keepQueryData;

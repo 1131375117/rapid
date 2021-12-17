@@ -3,8 +3,8 @@ package cn.huacloud.taxpreference.services.consumer.entity.ess;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeSimpleVO;
 import cn.huacloud.taxpreference.services.consumer.entity.AbstractCombinePlainContent;
 import cn.huacloud.taxpreference.services.consumer.entity.CombineText;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.ConditionSearchVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesDigestSearchVO;
-import cn.huacloud.taxpreference.services.consumer.entity.vos.SubmitConditionSearchVO;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -84,7 +84,7 @@ public class TaxPreferenceES extends AbstractCombinePlainContent<Long> {
     /**
      * 申报条件
      */
-    private List<SubmitConditionSearchVO> submitConditions;
+    private List<ConditionSearchVO> submitConditions;
 
     /**
      * 留存备查资料
