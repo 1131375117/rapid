@@ -223,6 +223,9 @@ public class SysCodeServiceImpl implements SysCodeService {
     public SysCodeSimpleVO getSimpleVOByCode(SysCodeType sysCodeType, String codeValue) {
         Map<String, SysCodeDO> codeMapByType = getCacheCodeMapByType(sysCodeType);
         SysCodeDO sysCodeDO = codeMapByType.get(codeValue);
+        if (sysCodeDO == null) {
+            return new SysCodeSimpleVO();
+        }
         return new SysCodeSimpleVO().setCodeName(sysCodeDO.getCodeName())
                 .setCodeValue(sysCodeDO.getCodeValue());
     }

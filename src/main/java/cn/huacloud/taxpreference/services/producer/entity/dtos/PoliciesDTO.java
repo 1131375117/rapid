@@ -2,6 +2,7 @@ package cn.huacloud.taxpreference.services.producer.entity.dtos;
 
 
 import cn.huacloud.taxpreference.common.constants.ValidationGroup;
+import cn.huacloud.taxpreference.services.producer.entity.enums.ValidityEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -24,35 +25,35 @@ public class PoliciesDTO {
 	private Long id;
 
 	@ApiModelProperty("标题")
-
+	@NotEmpty(message = "标题不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
 	private String title;
 
 	@ApiModelProperty("文号")
-	@NotEmpty(message = "文号不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+//	@NotEmpty(message = "文号不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
 	private String docCode;
 
 
 	@ApiModelProperty("所属区域码值")
-	@NotEmpty(message = "所属区域码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+//	@NotEmpty(message = "所属区域码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
 	private String areaCode;
 
 	@ApiModelProperty("来源")
-	@NotEmpty(message = "来源不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+//	@NotEmpty(message = "来源不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
 	private String docSource;
 
 
 	@ApiModelProperty("所属税种码值")
-	@NotEmpty(message = "所属税种码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+//	@NotEmpty(message = "所属税种码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
 	private String taxCategoriesCode;
 
 
 	@ApiModelProperty("纳税人资格认定类型码值")
-	@NotEmpty(message = "纳税人资格认定类型码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+//	@NotEmpty(message = "纳税人资格认定类型码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
 	private List<String> taxpayerIdentifyTypeCodes;
 
 
 	@ApiModelProperty("适用企业类型码值")
-	@NotEmpty(message = "适用企业类型码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+//	@NotEmpty(message = "适用企业类型码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
 	private List<String> enterpriseTypeCodes;
 
 
@@ -61,15 +62,15 @@ public class PoliciesDTO {
 	private List<String> industryCodes;
 
 	@ApiModelProperty("有效性")
-	@NotEmpty(message = "有效性不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
-	private String validity;
+//	@NotNull(message = "有效性不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+	private ValidityEnum validity;
 
 	@ApiModelProperty("发布日期")
-	@NotNull(message = "发布日期不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+//	@NotNull(message = "发布日期不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
 	private LocalDate releaseDate;
 
 	@ApiModelProperty("摘要")
-	@NotEmpty(message = "摘要不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+//	@NotEmpty(message = "摘要不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
 	private String digest;
 
 	@ApiModelProperty("正文")

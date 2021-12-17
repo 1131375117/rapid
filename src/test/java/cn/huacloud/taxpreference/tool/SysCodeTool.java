@@ -154,7 +154,6 @@ public class SysCodeTool extends BaseApplicationTest {
     /**
      * 征收项目代码表(DM_GY_ZSXM)码值
      */
-    @IgnoreProvider
     private SysCodeProvider DM_GY_ZSXMcsvIndustry = nextId -> {
         InputStream inputStream = new ClassPathResource("sys_code/征收项目代码表(DM_GY_ZSXM)码值.csv").getInputStream();
 
@@ -275,6 +274,17 @@ public class SysCodeTool extends BaseApplicationTest {
 
         Long currentPid = 0L;
         List<SysCodeDO> sysCodeDOList = new ArrayList<>();
+        // 添加不限码值
+        SysCodeDO unlimited = new SysCodeDO().setCodeName("不限")
+                .setCodeValue(SysCodeType.INDUSTRY.getValue() + "_" + "BX")
+                .setId(nextId)
+                .setPid(0L)
+                .setCodeType(SysCodeType.INDUSTRY)
+                .setCodeStatus(SysCodeStatus.VALID)
+                .setLeaf(true)
+                .setSort(nextId);
+        sysCodeDOList.add(unlimited);
+        nextId++;
 
         // 删除.csv第一行
         list.remove(0);
@@ -493,8 +503,9 @@ public class SysCodeTool extends BaseApplicationTest {
         // 删除.csv第一行,第二行
         list.remove(0);
         for (String line : list) {
-            String[] split = line.split(",");
-
+            line = line.replaceAll(",", " ");
+            String[] split = line.split(" ");
+            split = Arrays.copyOf(split, split.length + 1);
             String code = split[1];
             String name = split[3];
             String note = split[5];
@@ -565,9 +576,45 @@ public class SysCodeTool extends BaseApplicationTest {
         return sysCodeDOList;
 
     };
+
+    /**
+     * 登记注册类型代码表.csv
+     */
+    private SysCodeProvider TAXPAYER_REGISTER_TYPEcsvIndustry = nextId -> {
+        InputStream inputStream = new ClassPathResource("sys_code/登记注册类型代码表.csv").getInputStream();
+
+        List<String> list = IOUtils.readLines(inputStream, StandardCharsets.UTF_8);
+
+        Long currentPid = 0L;
+        List<SysCodeDO> sysCodeDOList = new ArrayList<>();
+        // 删除.csv第一行
+        list.remove(0);
+        for (String line : list) {
+            String[] split = line.split(",");
+
+            String code = split[0];
+            String name = split[1];
+
+            SysCodeDO sysCodeDO = new SysCodeDO()
+                    .setCodeName(name)
+                    .setId(nextId)
+                    .setPid(0L)
+                    .setCodeType(SysCodeType.TAXPAYER_REGISTER_TYPE)
+                    .setCodeStatus(SysCodeStatus.VALID)
+                    .setLeaf(true)
+                    .setCodeValue(code)
+                    .setSort(nextId);
+
+            nextId++;
+            sysCodeDOList.add(sysCodeDO);
+        }
+        return sysCodeDOList;
+
+    };
     /**
      * 登记注册类型代码表(DM_DJ_DJZCLX)码值
      */
+    @IgnoreProvider
     private SysCodeProvider DM_DJ_DJZCLX_csvIndustry = nextId -> {
         InputStream inputStream = new ClassPathResource("sys_code/登记注册类型代码表(DM_DJ_DJZCLX)码值.csv").getInputStream();
 
@@ -584,11 +631,12 @@ public class SysCodeTool extends BaseApplicationTest {
 
             String code = split[0];
             String name = split[1];
+            String dlbz = split[2];
             String validStatus = split[7];
 
             Long pid;
             boolean isLeaf;
-            if (code.length() == 0) {
+            if (dlbz.contains("Y")) {
                 pid = 0L;
                 currentPid = nextId;
                 isLeaf = false;
@@ -628,7 +676,6 @@ public class SysCodeTool extends BaseApplicationTest {
     /**
      * 纳税人登记注册类型
      */
-
 
     @IgnoreProvider
     private SysCodeProvider taxpayerRegisterType = nextId -> readSingleFile("纳税人登记注册类型.txt",

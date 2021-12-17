@@ -89,7 +89,7 @@ public class TaxPreferenceEventTrigger extends EventTrigger<Long, TaxPreferenceE
 
         // 类型转换属性设置
         taxPreferenceES.setTitle(taxPreferenceDO.getTaxPreferenceName());
-        taxPreferenceES.setTaxCategories(sysCodeService.getSimpleVOByCode(SysCodeType.TAX_CATEGORIES,taxPreferenceDO.getTaxCategoriesCodes()));
+        taxPreferenceES.setTaxCategories(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.TAX_CATEGORIES, taxPreferenceDO.getTaxCategoriesCodes()));
         taxPreferenceES.setTaxpayerRegisterType(sysCodeService.getSimpleVOByCode(SysCodeType.TAXPAYER_REGISTER_TYPE,taxPreferenceDO.getTaxpayerRegisterTypeCode()));
         taxPreferenceES.setTaxpayerType(sysCodeService.getSimpleVOByCode(SysCodeType.TAXPAYER_TYPE,taxPreferenceDO.getTaxpayerTypeCode()));
         taxPreferenceES.setIndustries(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.INDUSTRY,taxPreferenceDO.getIndustryCodes()));

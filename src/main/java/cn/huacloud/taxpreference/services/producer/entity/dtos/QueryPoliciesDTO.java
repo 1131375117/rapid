@@ -58,7 +58,7 @@ public class QueryPoliciesDTO extends KeywordPageQueryDTO {
 	private List<String> areaCode;
 
 	@ApiModelProperty("有效性")
-	private ValidityEnum validity;
+	private String validity;
 
 	@ApiModelProperty("发布日期")
 	private LocalDate releaseDate;

@@ -1,6 +1,7 @@
 package cn.huacloud.taxpreference.services.producer.entity.vos;
 
 
+import cn.huacloud.taxpreference.services.producer.entity.enums.ValidityEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -103,7 +104,7 @@ public class PoliciesDetailVO {
 	 * 有效性
 	 */
 	@ApiModelProperty("有效性")
-	private String validity;
+	private ValidityEnum validity;
 
 	/**
 	 * 发布日期

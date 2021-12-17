@@ -460,6 +460,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         SysCodeStringDTO industries = sysCodeService.getSysCodeStringDTO(SysCodeType.INDUSTRY,taxPreferenceDTO.getIndustryCodes(), false);
         SysCodeStringDTO enterprises = sysCodeService.getSysCodeStringDTO(SysCodeType.ENTERPRISE_TYPE,taxPreferenceDTO.getEnterpriseTypeCodes(), false);
         SysCodeStringDTO taxCategories = sysCodeService.getSysCodeStringDTO(SysCodeType.TAX_CATEGORIES,taxPreferenceDTO.getTaxCategoriesCodes(), false);
+        SysCodeStringDTO taxpayerCreditRatings = sysCodeService.getSysCodeStringDTO(SysCodeType.TAXPAYER_CREDIT_RATINGS,taxPreferenceDTO.getTaxpayerCreditRatings(), false);
         // 收入税种种类名称
         taxPreferenceDO.setTaxCategoriesNames(taxCategories.getNames());
         taxPreferenceDO.setTaxCategoriesCodes(taxCategories.getCodes());
@@ -475,7 +476,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         taxPreferenceDO.setEnterpriseTypeCodes(enterprises.getCodes());
         // 信用等级
         taxPreferenceDO.setTaxpayerCreditRatings(
-                StringUtils.join(taxPreferenceDTO.getTaxpayerCreditRatings(), ","));
+                StringUtils.join(taxpayerCreditRatings.getCodes(), ","));
         // 设置标签
         taxPreferenceDO.setLabels(StringUtils.join(taxPreferenceDTO.getLabels(), ","));
         // 行业名称

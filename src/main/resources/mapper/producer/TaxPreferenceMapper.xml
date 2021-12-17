@@ -38,7 +38,7 @@
                 and p.tax_preference_name like "%"#{queryTaxPreferencesDTO.keyword}"%"
             </if>
             <if test="queryTaxPreferencesDTO.taxCategoriesCodes != null and queryTaxPreferencesDTO.taxCategoriesCodes != '' ">
-                and p.tax_categories_code= #{queryTaxPreferencesDTO.taxCategoriesCodes}
+                and p.tax_categories_codes= #{queryTaxPreferencesDTO.taxCategoriesCodes}
             </if>
             <if test="queryTaxPreferencesDTO.taxpayerRegisterTypeCode != null and queryTaxPreferencesDTO.taxpayerRegisterTypeCode != '' ">
                 and p.taxpayer_register_type_code=#{queryTaxPreferencesDTO.taxpayerRegisterTypeCode}
