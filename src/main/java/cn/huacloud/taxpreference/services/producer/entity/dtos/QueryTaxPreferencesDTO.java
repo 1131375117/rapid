@@ -45,7 +45,7 @@ public class QueryTaxPreferencesDTO extends KeywordPageQueryDTO {
      * 适用企业类型码值
      */
     @ApiModelProperty("适用企业类型码值")
-    private List<String> enterpriseTypeCodes;
+    private String enterpriseType;
 
     /**
      * 纳税信用等级

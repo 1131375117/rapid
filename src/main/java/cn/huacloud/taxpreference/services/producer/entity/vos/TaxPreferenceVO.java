@@ -82,21 +82,9 @@ public class TaxPreferenceVO {
      */
     @ApiModelProperty("适用企业类型名称")
     @NotEmpty(message = "适用企业类型名称不能为空",groups = ValidationGroup.Manual.class)
-    private List<@Valid String> enterpriseTypeNames;
+    private String enterpriseType;
 
-    /**
-     * 适用企业类型码值
-     */
-    @ApiModelProperty("适用企业类型码值")
-    @NotEmpty(message = "适用企业类型码值不能为空",groups = ValidationGroup.Manual.class)
-    private List<@Valid String> enterpriseTypeCodes;
 
-    /**
-     * 纳税信用等级
-     */
-    @ApiModelProperty("纳税信用等级")
-    @NotEmpty(message = "纳税信用等级不能为空",groups = ValidationGroup.Manual.class)
-    private List<@Valid String> taxpayerCreditRatings;
 
     /**
      * 优惠事项名称
@@ -162,4 +150,12 @@ public class TaxPreferenceVO {
     @NotEmpty(message = "申报信息",groups = ValidationGroup.Manual.class)
     private List<@Valid SubmitConditionVO> submitConditionVOList;
 
+    @ApiModelProperty("是否年度获利")
+    private String annualProfit;
+
+    @ApiModelProperty("纳税信用等级")
+    private List<String> taxpayerCreditRatings;
+
+    @ApiModelProperty("增值税一般纳税人")
+    private String generalTaxpayer;
 }

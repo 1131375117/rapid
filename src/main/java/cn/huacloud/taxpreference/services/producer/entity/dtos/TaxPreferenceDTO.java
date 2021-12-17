@@ -68,16 +68,9 @@ public class TaxPreferenceDTO {
     /**
      * 适用企业类型码值
      */
-    @ApiModelProperty("适用企业类型码值")
+    @ApiModelProperty("适用企业类型")
     @NotEmpty(message = "适用企业类型码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
-    private List<String> enterpriseTypeCodes;
-
-    /**
-     * 纳税信用等级
-     */
-    @ApiModelProperty("纳税信用等级")
-    @NotEmpty(message = "适纳税信用等级不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
-    private List<String> taxpayerCreditRatings;
+    private String enterpriseType;
 
     /**
      * 优惠事项名称
@@ -138,5 +131,14 @@ public class TaxPreferenceDTO {
 
     @ApiModelProperty("SAVE-保存或者SUBMIT提交")
     private  TaxStatus status;
+
+    @ApiModelProperty("是否年度获利")
+    private String annualProfit;
+
+    @ApiModelProperty("纳税信用等级")
+    private List<String> taxpayerCreditRatings;
+
+    @ApiModelProperty("增值税一般纳税人")
+    private String generalTaxpayer;
 
 }

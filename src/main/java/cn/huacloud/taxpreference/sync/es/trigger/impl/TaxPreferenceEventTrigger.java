@@ -93,7 +93,7 @@ public class TaxPreferenceEventTrigger extends EventTrigger<Long, TaxPreferenceE
         taxPreferenceES.setTaxpayerRegisterType(sysCodeService.getSimpleVOByCode(SysCodeType.TAXPAYER_REGISTER_TYPE,taxPreferenceDO.getTaxpayerRegisterTypeCode()));
         taxPreferenceES.setTaxpayerType(sysCodeService.getSimpleVOByCode(SysCodeType.TAXPAYER_TYPE,taxPreferenceDO.getTaxpayerTypeCode()));
         taxPreferenceES.setIndustries(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.INDUSTRY,taxPreferenceDO.getIndustryCodes()));
-        taxPreferenceES.setEnterpriseTypes(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.ENTERPRISE_TYPE,taxPreferenceDO.getEnterpriseTypeCodes()));
+      //  taxPreferenceES.setEnterpriseTypes(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.ENTERPRISE_TYPE,taxPreferenceDO.getEnterpriseTypeCodes()));
         taxPreferenceES.setValidity(getEnumSysCode(taxPreferenceDO.getValidity()));
         taxPreferenceES.setLabels(split2List(taxPreferenceDO.getLabels()));
 
