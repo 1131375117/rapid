@@ -497,7 +497,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         // 适用企业类型
         // taxPreferenceDO.setEnterpriseTypeCodes(enterprises.getCodes());
         // 信用等级
-        taxPreferenceDO.setTaxpayerCreditRatings(StringUtils.join(taxPreferenceDTO.getTaxpayerCreditRatings(), ","));
+        //taxPreferenceDO.setTaxpayerCreditRatings(StringUtils.join(taxPreferenceDTO.getTaxpayerCreditRatings(), ","));
         // 设置标签
         taxPreferenceDO.setLabels(StringUtils.join(taxPreferenceDTO.getLabels(), ","));
         // 行业名称
