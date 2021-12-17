@@ -493,10 +493,13 @@ public class SysCodeTool extends BaseApplicationTest {
         // 删除.csv第一行,第二行
         list.remove(0);
         for (String line : list) {
-            String[] split = line.split(",");
+            line = line.replaceAll(",", " ");
+            String[] split = line.split(" ");
+            split = Arrays.copyOf(split, split.length + 1);
 
             String code = split[1];
             String name = split[3];
+            System.out.println(line.length());
             String note = split[5];
             Boolean xtendsField1 = false;
             if (!StringUtils.isEmpty(note)) {
