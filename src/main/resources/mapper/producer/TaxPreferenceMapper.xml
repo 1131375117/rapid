@@ -99,9 +99,10 @@
         SELECT tp.id                  as id,
                tp.tax_preference_name as taxPreferenceName,
                tp.validity            as validity
-        FROM t_tax_preference_policies ttp
+        FROM t_tax_preference tp
+                 LEFT JOIN t_tax_preference_policies ttp ON ttp.tax_preference_id = tp.id
                  LEFT JOIN t_policies t ON t.id = ttp.policies_id
-                 LEFT JOIN t_tax_preference tp ON ttp.tax_preference_id = tp.id
+                 AND tp.deleted = 0
         WHERE t.id = #{policiesId}
     </select>
 
