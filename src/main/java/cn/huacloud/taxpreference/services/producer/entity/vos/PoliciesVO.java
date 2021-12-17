@@ -1,6 +1,7 @@
 package cn.huacloud.taxpreference.services.producer.entity.vos;
 
 
+import cn.huacloud.taxpreference.services.producer.entity.enums.ValidityEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -31,6 +32,6 @@ public class PoliciesVO extends PoliciesCommonListVO{
     @ApiModelProperty("所属区域名称")
     private String areaName;
     @ApiModelProperty("有效性")
-    private String validity;
+    private ValidityEnum validity;
 
 }
