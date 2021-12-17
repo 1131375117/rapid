@@ -1,15 +1,14 @@
 package cn.huacloud.taxpreference.controllers.common;
 
 import cn.huacloud.taxpreference.common.constants.SysParamTypes;
+import cn.huacloud.taxpreference.common.entity.vos.GroupVO;
 import cn.huacloud.taxpreference.common.utils.CustomStringUtil;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.common.SysParamService;
 import cn.huacloud.taxpreference.services.common.entity.dos.SysParamDO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.Accessors;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -37,47 +36,34 @@ public class PublicSysParamController {
         return ResultVO.ok(list);
     }
 
-    @ApiOperation("税收优惠和税种绑定的自定义标签")
+    @ApiOperation("税收优惠和税种绑定的自定义条件")
     @PostMapping("/sys/param/BasePreferenceCondition")
-    public ResultVO<List<Condition>> getBasePreferenceCondition(@RequestBody Set<String> taxCategoriesCode) {
-        List<Condition> conditions = sysParamService.getSysParamDOByTypes(SysParamTypes.TAX_PREFERENCE_CONDITION).stream()
-                .filter(sysParamDO -> "默认分组".equals(sysParamDO.getExtendsField2()))
+    public ResultVO<List<GroupVO<String>>> getBasePreferenceCondition(@RequestBody Set<String> taxCategoriesCode) {
+        List<GroupVO<String>> conditions = sysParamService.getSysParamDOByTypes(SysParamTypes.TAX_PREFERENCE_CONDITION).stream()
+                .filter(sysParamDO -> "其他筛选".equals(sysParamDO.getExtendsField2()))
                 .filter(sysParamDO -> CustomStringUtil.haveIntersection(sysParamDO.getExtendsField1(), taxCategoriesCode))
-                .map(sysParamDO -> new Condition().setName(sysParamDO.getParamName())
+                .map(sysParamDO -> new GroupVO<String>().setName(sysParamDO.getParamName())
                         .setValues(CustomStringUtil.arrayStringToList(sysParamDO.getParamValue())))
                 .collect(Collectors.toList());
         return ResultVO.ok(conditions);
     }
 
-    @ApiOperation("税收优惠自定义标签")
+    @ApiOperation("税收优惠自定义条件")
     @GetMapping("/sys/param/customPreferenceCondition")
-    public ResultVO<List<Group>> getCustomPreferenceCondition() {
-        List<Group> result = sysParamService.getSysParamDOByTypes(SysParamTypes.TAX_PREFERENCE_CONDITION).stream()
+    public ResultVO<List<GroupVO<GroupVO<String>>>> getCustomPreferenceCondition() {
+        List<GroupVO<GroupVO<String>>> result = sysParamService.getSysParamDOByTypes(SysParamTypes.TAX_PREFERENCE_CONDITION).stream()
                 .filter(sysParamDO -> "自定义条件".equals(sysParamDO.getExtendsField3()))
                 .sorted(Comparator.comparing(SysParamDO::getParamKey))
                 .collect(Collectors.groupingBy(SysParamDO::getExtendsField2, LinkedHashMap::new, Collectors.toList()))
                 .entrySet().stream()
                 .map(entry -> {
-                    List<Condition> conditions = entry.getValue().stream()
-                            .map(sysParamDO -> new Condition().setName(sysParamDO.getParamName())
+                    List<GroupVO<String>> conditions = entry.getValue().stream()
+                            .map(sysParamDO -> new GroupVO<String>().setName(sysParamDO.getParamName())
                                     .setValues(CustomStringUtil.arrayStringToList(sysParamDO.getParamValue())))
                             .collect(Collectors.toList());
-                    return new Group().setName(entry.getKey()).setConditions(conditions);
+                    return new GroupVO<GroupVO<String>>().setName(entry.getKey()).setValues(conditions);
                 }).collect(Collectors.toList());
         return ResultVO.ok(result);
     }
 
-    @Accessors(chain = true)
-    @Data
-    public static class Group {
-        private String name;
-        private List<Condition> conditions;
-    }
-
-    @Accessors(chain = true)
-    @Data
-    public static class Condition {
-        private String name;
-        private List<String> values;
-    }
 }

@@ -7,6 +7,7 @@ import cn.huacloud.taxpreference.services.consumer.TaxPreferenceSearchService;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.LatestTaxPreferenceSearchQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.TaxPreferenceSearchQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.DocSearchSimpleVO;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.DynamicConditionVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.HotLabelVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.TaxPreferenceSearchVO;
 import io.swagger.annotations.Api;
@@ -14,6 +15,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -62,5 +64,14 @@ public class TaxPreferenceSearchController {
     public ResultVO<List<HotLabelVO>> hotLabels(@RequestParam(value = "size", defaultValue = "30") Integer size) throws Exception {
         List<HotLabelVO> hotLabels = taxPreferenceSearchService.hotLabels(size);
         return ResultVO.ok(hotLabels);
+    }
+
+    @ApiOperation("根据条件参数动态获取筛选条件")
+    @PostMapping("/taxPreference/dynamicCondition")
+    public ResultVO<DynamicConditionVO> getDynamicCondition(@RequestBody TaxPreferenceSearchQueryDTO pageQuery) throws IOException {
+        pageQuery.setKeyword(null);
+        pageQuery.paramReasonable();
+        DynamicConditionVO dynamicConditionVO = taxPreferenceSearchService.getDynamicCondition(pageQuery);
+        return ResultVO.ok(dynamicConditionVO);
     }
 }

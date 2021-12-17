@@ -1,9 +1,8 @@
 package cn.huacloud.taxpreference.services.consumer.entity.dtos;
 
 import cn.huacloud.taxpreference.common.annotations.FilterField;
-import cn.huacloud.taxpreference.common.annotations.WithChildrenCodes;
-import cn.huacloud.taxpreference.common.enums.SysCodeType;
 import cn.huacloud.taxpreference.config.ElasticsearchIndexConfig;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.ConditionVO;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,36 +21,26 @@ import java.util.Set;
 public class TaxPreferenceSearchQueryDTO extends AbstractHighlightPageQueryDTO {
 
     @ApiModelProperty("是否使用推荐")
-    @Deprecated
     private Boolean useRecommend;
 
     @ApiModelProperty("所属税种")
     @FilterField("taxCategories.codeValue")
     private List<String> taxCategoriesCodes;
 
+    @ApiModelProperty("企业类型")
+    @FilterField("enterpriseType")
+    private String enterpriseType;
+
+    @ApiModelProperty("减免事项")
+    @FilterField("taxPreferenceItem")
+    private String taxPreferenceItem;
+
     @ApiModelProperty("纳税人登记注册类型码值")
     @FilterField("taxpayerRegisterType.codeValue")
     private String taxpayerRegisterTypeCode;
 
-    @ApiModelProperty("纳税人登记注册类型码值")
-    @FilterField("taxpayerType.codeValue")
-    private String taxpayerTypeCode;
-
-    @ApiModelProperty("适用行业码值")
-    @WithChildrenCodes(SysCodeType.INDUSTRY)
-    @FilterField(value = "industries.codeValue")
-    private List<String> industryCodes;
-
-    @ApiModelProperty("适用企业类型码值")
-    @FilterField("enterpriseTypes.codeValue")
-    private List<String> enterpriseTypesCodes;
-
-    @ApiModelProperty("纳税信用等级")
-    @FilterField("taxpayerCreditRatings")
-    private List<String> taxpayerCreditRatings;
-
-    @ApiModelProperty("标签")
-    private String label;
+    @ApiModelProperty("动态筛选条件")
+    private List<ConditionVO> conditions;
 
     @Override
     public String index(ElasticsearchIndexConfig config) {
