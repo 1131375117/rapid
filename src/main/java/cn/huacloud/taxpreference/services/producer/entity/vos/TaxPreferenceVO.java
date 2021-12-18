@@ -133,7 +133,7 @@ public class TaxPreferenceVO {
     private String submitDescription;
 
     @ApiModelProperty("有效性")
-    @NotNull(message = "有效性不能为空",groups = ValidationGroup.Manual.class)
+   // @NotNull(message = "有效性不能为空",groups = ValidationGroup.Manual.class)
     private PreferenceValidation validity;
 
     /**
