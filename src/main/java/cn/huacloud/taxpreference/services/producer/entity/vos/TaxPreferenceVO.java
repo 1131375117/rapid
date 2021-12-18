@@ -158,4 +158,7 @@ public class TaxPreferenceVO {
 
     @ApiModelProperty("增值税一般纳税人")
     private String generalTaxpayer;
+
+    @ApiModelProperty("资源类型")
+    private String resourceType;
 }

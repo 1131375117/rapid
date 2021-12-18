@@ -302,7 +302,10 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
                         taxPreferenceVO.setTaxpayerCreditRatings(Arrays.asList(submitConditionDO.getRequirement().split(",")));
                     } else if (ConditionType.ANNUAL_PROFIT.contains(submitConditionDO.getConditionName())) {
                         taxPreferenceVO.setAnnualProfit(submitConditionDO.getRequirement());
-                    } else {
+                    }
+                    else if (ConditionType.RESOURCE_TYPE.contains(submitConditionDO.getConditionName())) {
+                        taxPreferenceVO.setResourceType(submitConditionDO.getRequirement());
+                    }else {
                         SubmitConditionVO submitConditionVO = new SubmitConditionVO();
                         BeanUtils.copyProperties(submitConditionDO, submitConditionVO);
                         submitConditionVOList.add(submitConditionVO);
@@ -443,6 +446,15 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         if (!StringUtils.isEmpty(taxPreferenceDTO.getAnnualProfit())) {
             SubmitConditionDO submitConditionDO = new SubmitConditionDO();
             submitConditionDO.setConditionName(ConditionType.ANNUAL_PROFIT);
+            submitConditionDO.setTaxPreferenceId(taxPreferenceDO.getId());
+            submitConditionDO.setSort(sort);
+            submitConditionDO.setRequirement(taxPreferenceDTO.getAnnualProfit());
+            sort++;
+            submitConditionMapper.insert(submitConditionDO);
+        }
+        if (!StringUtils.isEmpty(taxPreferenceDTO.getResourceType())) {
+            SubmitConditionDO submitConditionDO = new SubmitConditionDO();
+            submitConditionDO.setConditionName(ConditionType.RESOURCE_TYPE);
             submitConditionDO.setTaxPreferenceId(taxPreferenceDO.getId());
             submitConditionDO.setSort(sort);
             submitConditionDO.setRequirement(taxPreferenceDTO.getAnnualProfit());
