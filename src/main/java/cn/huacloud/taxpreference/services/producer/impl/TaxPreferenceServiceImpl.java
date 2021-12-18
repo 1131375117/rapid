@@ -302,7 +302,10 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
                         taxPreferenceVO.setTaxpayerCreditRatings(Arrays.asList(submitConditionDO.getRequirement().split(",")));
                     } else if (ConditionType.ANNUAL_PROFIT.contains(submitConditionDO.getConditionName())) {
                         taxPreferenceVO.setAnnualProfit(submitConditionDO.getRequirement());
-                    } else {
+                    }
+                    else if (ConditionType.RESOURCE_TYPE.contains(submitConditionDO.getConditionName())) {
+                        taxPreferenceVO.setResourceType(submitConditionDO.getRequirement());
+                    }else {
                         SubmitConditionVO submitConditionVO = new SubmitConditionVO();
                         BeanUtils.copyProperties(submitConditionDO, submitConditionVO);
                         submitConditionVOList.add(submitConditionVO);
@@ -446,6 +449,15 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
             submitConditionDO.setTaxPreferenceId(taxPreferenceDO.getId());
             submitConditionDO.setSort(sort);
             submitConditionDO.setRequirement(taxPreferenceDTO.getAnnualProfit());
+            sort++;
+            submitConditionMapper.insert(submitConditionDO);
+        }
+        if (!StringUtils.isEmpty(taxPreferenceDTO.getResourceType())) {
+            SubmitConditionDO submitConditionDO = new SubmitConditionDO();
+            submitConditionDO.setConditionName(ConditionType.RESOURCE_TYPE);
+            submitConditionDO.setTaxPreferenceId(taxPreferenceDO.getId());
+            submitConditionDO.setSort(sort);
+            submitConditionDO.setRequirement(taxPreferenceDTO.getAnnualProfit());
             submitConditionMapper.insert(submitConditionDO);
         }
     }
@@ -497,7 +509,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         // 适用企业类型
         // taxPreferenceDO.setEnterpriseTypeCodes(enterprises.getCodes());
         // 信用等级
-        taxPreferenceDO.setTaxpayerCreditRatings(StringUtils.join(taxPreferenceDTO.getTaxpayerCreditRatings(), ","));
+        //taxPreferenceDO.setTaxpayerCreditRatings(StringUtils.join(taxPreferenceDTO.getTaxpayerCreditRatings(), ","));
         // 设置标签
         taxPreferenceDO.setLabels(StringUtils.join(taxPreferenceDTO.getLabels(), ","));
         // 行业名称
