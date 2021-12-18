@@ -150,12 +150,20 @@
         },
         "collections": {
           "type": "long"
+        },
+        "combinePoliciesTitle": {
+          "type": "text",
+          "analyzer": "ik_max_word"
+        },
+        "combinePoliciesDigest": {
+          "type": "text",
+          "analyzer": "ik_max_word"
         }
       }
     }
   },
   "priority": 500,
   "_meta": {
-    "description": "税收优惠索引模板，更新时间2021年12月13日"
+    "description": "税收优惠索引模板，更新时间2021年12月18日"
   }
 }

@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,6 +47,12 @@ public class TaxPreferenceSearchController {
     @PostMapping("/taxPreference")
     public ResultVO<PageVO<TaxPreferenceSearchListVO>> pageSearch(@RequestBody TaxPreferenceSearchQueryDTO pageQuery) throws Exception {
         PageVO<TaxPreferenceSearchListVO> pageVO = taxPreferenceSearchService.pageSearch(pageQuery);
+        // 添加序号
+        List<TaxPreferenceSearchListVO> records = pageVO.getRecords();
+        long startNum = (pageVO.getPageNum() - 1) * pageVO.getPageSize() + 1;
+        for (int i = 0; i < records.size(); i++) {
+            records.get(i).setNum(startNum + i);
+        }
         return ResultVO.ok(pageVO);
     }
 
@@ -67,6 +74,7 @@ public class TaxPreferenceSearchController {
     @PostMapping("/taxPreference/dynamicCondition")
     public ResultVO<DynamicConditionVO> getDynamicCondition(@RequestBody TaxPreferenceSearchQueryDTO pageQuery) throws IOException {
         pageQuery.setKeyword(null);
+        pageQuery.setConditions(new ArrayList<>());
         pageQuery.paramReasonable();
         DynamicConditionVO dynamicConditionVO = taxPreferenceSearchService.getDynamicCondition(pageQuery);
         return ResultVO.ok(dynamicConditionVO);

@@ -6,6 +6,7 @@ import cn.huacloud.taxpreference.services.consumer.entity.CombineText;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.ConditionSearchVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesDigestSearchVO;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -59,12 +60,7 @@ public class TaxPreferenceES extends AbstractCombinePlainContent<Long> {
     /**
      * 适用企业类型
      */
-    private List<SysCodeSimpleVO> enterpriseTypes;
-
-    /**
-     * 纳税信用等级
-     */
-    private List<String> taxpayerCreditRatings;
+    private String enterpriseType;
 
     /**
      * 减免事项
@@ -84,7 +80,7 @@ public class TaxPreferenceES extends AbstractCombinePlainContent<Long> {
     /**
      * 申报条件
      */
-    private List<ConditionSearchVO> submitConditions;
+    private List<ConditionSearchVO> conditions;
 
     /**
      * 留存备查资料
@@ -121,6 +117,48 @@ public class TaxPreferenceES extends AbstractCombinePlainContent<Long> {
      */
     private Long collections;
 
+    /**
+     * 合并政策名称
+     */
+    private String combinePoliciesTitle;
+    /**
+     * 合并政策摘要
+     */
+    private String combinePoliciesDigest;
+
+    private void initCombinePoliciesTitle() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < policies.size(); i++) {
+            PoliciesDigestSearchVO foo = this.policies.get(i);
+            if (this.policies.size() > 1) {
+                sb.append(i + 1).append(".");
+            }
+            if (StringUtils.isNotBlank(foo.getTitle())) {
+                sb.append("《").append(foo.getTitle()).append("》");
+            }
+            if (StringUtils.isNotBlank(foo.getDocCode())) {
+                sb.append(" ").append(foo.getDocCode());
+            }
+            if (StringUtils.isNotBlank(foo.getPoliciesItems())) {
+                sb.append(foo.getPoliciesItems());
+            }
+        }
+        combinePoliciesTitle = sb.toString();
+    }
+
+    private void initCombinePoliciesDigest() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < policies.size(); i++) {
+            PoliciesDigestSearchVO foo = policies.get(i);
+            if (this.policies.size() > 1) {
+                sb.append(i + 1).append(".");
+            }
+            if (StringUtils.isNotBlank(foo.getDigest())) {
+                sb.append(foo.getDigest());
+            }
+        }
+        combinePoliciesDigest = sb.toString();
+    }
 
     @Override
     public List<CombineText> combineTextList() {
@@ -134,5 +172,11 @@ public class TaxPreferenceES extends AbstractCombinePlainContent<Long> {
         list.add(CombineText.ofText(submitTaxData));
         list.add(CombineText.ofText(submitDescription));
         return list;
+    }
+
+    @Override
+    public void initialOtherCombineFields() {
+        initCombinePoliciesTitle();
+        initCombinePoliciesDigest();
     }
 }

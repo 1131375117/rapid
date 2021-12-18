@@ -112,7 +112,7 @@ public class TaxPreferenceEventTrigger extends EventTrigger<Long, TaxPreferenceE
                         .setConditionName(submitConditionDO.getConditionName())
                         .setConditionValue(submitConditionDO.getRequirement()))
                 .collect(Collectors.toList());
-        taxPreferenceES.setSubmitConditions(submitConditions);
+        taxPreferenceES.setConditions(submitConditions);
 
         return taxPreferenceES;
     }

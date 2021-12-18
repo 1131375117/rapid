@@ -64,12 +64,17 @@ public interface ElasticsearchConsumer<T extends IDGetter<?>> {
      * @param source ES数据实体
      */
     default void setCombinePlainText(T source) {
-        AbstractCombinePlainContent<?> combineTextSource;
-        if (source instanceof AbstractCombinePlainContent) {
-            combineTextSource = (AbstractCombinePlainContent<?>) source;
-        } else {
+        if (!(source instanceof AbstractCombinePlainContent)) {
             return;
         }
+
+        // 类型强制转换
+        AbstractCombinePlainContent<?> combineTextSource = (AbstractCombinePlainContent<?>) source;
+
+        // 初始化其他组合字段
+        combineTextSource.initialOtherCombineFields();
+
+        // 设置组合字段
         List<CombineText> combineTexts = combineTextSource.combineTextList();
         if (CollectionUtils.isEmpty(combineTexts)) {
             return;
