@@ -53,7 +53,7 @@ public class TaxPreferenceDTO {
      * 纳税人类型码值
      */
     @ApiModelProperty("纳税人类型码值")
-    @NotEmpty(message = "纳税人类型码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+   // @NotEmpty(message = "纳税人类型码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
     private String taxpayerTypeCode;
 
 
@@ -61,7 +61,7 @@ public class TaxPreferenceDTO {
      * 适用行业码值
      */
     @ApiModelProperty("适用行业码值")
-    @NotEmpty(message = "适用行业码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+  //  @NotEmpty(message = "适用行业码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
     private List<String> industryCodes;
 
 
