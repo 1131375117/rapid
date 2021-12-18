@@ -457,7 +457,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
             submitConditionDO.setConditionName(ConditionType.RESOURCE_TYPE);
             submitConditionDO.setTaxPreferenceId(taxPreferenceDO.getId());
             submitConditionDO.setSort(sort);
-            submitConditionDO.setRequirement(taxPreferenceDTO.getAnnualProfit());
+            submitConditionDO.setRequirement(taxPreferenceDTO.getResourceType());
             submitConditionMapper.insert(submitConditionDO);
         }
     }
