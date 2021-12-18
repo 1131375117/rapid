@@ -1,7 +1,6 @@
 package cn.huacloud.taxpreference.services.consumer.entity;
 
 import cn.huacloud.taxpreference.sync.es.consumer.IDGetter;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,4 +24,10 @@ public abstract class AbstractCombinePlainContent<T> implements IDGetter<T> {
      * @return 文本list
      */
     public abstract List<CombineText> combineTextList();
+
+    /**
+     * 初始化其他组合字段
+     */
+    public void initialOtherCombineFields() {
+    }
 }

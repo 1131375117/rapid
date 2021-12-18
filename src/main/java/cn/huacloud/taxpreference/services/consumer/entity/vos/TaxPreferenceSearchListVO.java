@@ -14,19 +14,19 @@ import java.util.List;
 @Data
 public class TaxPreferenceSearchListVO {
 
-    @ApiModelProperty("序号")
+    @ApiModelProperty("序号-列表用")
     private Long num;
 
-    @ApiModelProperty("主键ID")
+    @ApiModelProperty("主键ID-列表用")
     private Long id;
 
-    @ApiModelProperty("优惠事项名称")
+    @ApiModelProperty("优惠事项名称-列表用")
     private String taxPreferenceName;
 
     @ApiModelProperty("发文日期")
     private LocalDate releaseDate;
 
-    @ApiModelProperty("所属税种")
+    @ApiModelProperty("所属税种-列表用")
     private SysCodeSimpleVO taxCategories;
 
     @ApiModelProperty("纳税人登记注册类型")
@@ -40,9 +40,6 @@ public class TaxPreferenceSearchListVO {
 
     @ApiModelProperty("企业类型")
     private String enterpriseType;
-
-    @ApiModelProperty("纳税信用等级")
-    private List<String> taxpayerCreditRatings;
 
     @ApiModelProperty("减免事项")
     private String taxPreferenceItem;
@@ -79,4 +76,10 @@ public class TaxPreferenceSearchListVO {
 
     @ApiModelProperty("收藏量")
     private Long collections;
+
+    @ApiModelProperty("优惠政策（文件名/文号）-列表用")
+    private String combinePoliciesTitle;
+
+    @ApiModelProperty("摘要-列表用")
+    private String combinePoliciesDigest;
 }
