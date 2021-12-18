@@ -9,6 +9,7 @@ import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeCountVO;
 import cn.huacloud.taxpreference.services.consumer.CommonSearchService;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.GuessYouLikeQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.HotContentVO;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.SearchDataCountVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -19,13 +20,24 @@ import java.util.List;
 /**
  * @author wangkh
  */
-@Api(tags = "热点内容检索")
+@Api(tags = "公共检索")
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/search")
 @RestController
 public class CommonSearchController {
 
     private final CommonSearchService commonSearchService;
+
+    @ApiOperation("数据统计（首页）")
+    @GetMapping("/dataCount")
+    public ResultVO<SearchDataCountVO> getSearchDataCount() {
+        SearchDataCountVO searchDataCountVO = new SearchDataCountVO();
+        searchDataCountVO.setCentralPoliciesCount(6552L);
+        searchDataCountVO.setLocalPoliciesCount(26535L);
+        searchDataCountVO.setTaxPreferenceCount(5542L);
+        searchDataCountVO.setFaqCont(233L);
+        return ResultVO.ok(searchDataCountVO);
+    }
 
     @ApiOperation("高级搜索统计所有文档数")
     @PostMapping("/allDocCount")

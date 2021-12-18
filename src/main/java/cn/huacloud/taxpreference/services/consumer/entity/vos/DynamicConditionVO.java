@@ -3,6 +3,8 @@ package cn.huacloud.taxpreference.services.consumer.entity.vos;
 import cn.huacloud.taxpreference.common.entity.vos.GroupVO;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.util.List;
@@ -19,5 +21,13 @@ public class DynamicConditionVO {
     @ApiModelProperty("减免事项")
     private List<String> taxPreferenceItems;
     @ApiModelProperty("动态条件")
-    private List<GroupVO<GroupVO<String>>> conditions;
+    private List<GroupVO<Condition>> conditions;
+
+    @Accessors(chain = true)
+    @Getter
+    @Setter
+    public static class Condition extends GroupVO<String> {
+        @ApiModelProperty("是否多选")
+        private Boolean multipleChoice;
+    }
 }

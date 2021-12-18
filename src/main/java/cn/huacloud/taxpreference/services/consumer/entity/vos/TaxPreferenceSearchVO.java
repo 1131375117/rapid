@@ -24,7 +24,7 @@ public class TaxPreferenceSearchVO {
     private LocalDate releaseDate;
 
     @ApiModelProperty("所属税种")
-    private SysCodeSimpleVO taxCategories;
+    private List<SysCodeSimpleVO> taxCategories;
 
     @ApiModelProperty("纳税人登记注册类型")
     private SysCodeSimpleVO taxpayerRegisterType;
@@ -36,10 +36,7 @@ public class TaxPreferenceSearchVO {
     private List<SysCodeSimpleVO> industries;
 
     @ApiModelProperty("适用企业类型")
-    private List<SysCodeSimpleVO> enterpriseTypes;
-
-    @ApiModelProperty("纳税信用等级")
-    private List<String> taxpayerCreditRatings;
+    private String enterpriseType;
 
     @ApiModelProperty("减免事项")
     private String taxPreferenceItem;
@@ -51,7 +48,7 @@ public class TaxPreferenceSearchVO {
     private List<PoliciesDigestSearchVO> policies;
 
     @ApiModelProperty("申报条件")
-    private List<ConditionSearchVO> submitConditions;
+    private List<ConditionSearchVO> conditions;
 
     @ApiModelProperty("留存备查资料")
     private String keepQueryData;

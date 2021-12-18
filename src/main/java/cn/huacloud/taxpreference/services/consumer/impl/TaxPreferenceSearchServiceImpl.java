@@ -199,7 +199,7 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
         if (needConditions) {
             // 优惠条件
             TermsAggregationBuilder conditionsTerms = AggregationBuilders.terms(conditionsTermsName)
-                    .field("conditions")
+                    .field("conditions.conditionName")
                     .size(DEFAULT_TERMS_SIZE);
             searchSourceBuilder.aggregation(conditionsTerms);
         }
@@ -218,26 +218,33 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
                 .setEnterpriseTypes(enterpriseTypes)
                 .setTaxPreferenceItems(taxPreferenceItems);
 
-        List<String> conditionNames = getAggregationBucketKeys(response, conditionsTermsName);
-        Set<String> conditionNameSet = new HashSet<>(conditionNames);
         if (needConditions) {
-            List<GroupVO<GroupVO<String>>> conditions = sysParamService.getSysParamDOByTypes(SysParamTypes.TAX_PREFERENCE_CONDITION).stream()
+            List<String> conditionNames = getAggregationBucketKeys(response, conditionsTermsName);
+            Set<String> conditionNameSet = new HashSet<>(conditionNames);
+            List<GroupVO<DynamicConditionVO.Condition>> conditions = sysParamService.getSysParamDOByTypes(SysParamTypes.TAX_PREFERENCE_CONDITION).stream()
                     .filter(sysParamDO -> conditionNameSet.contains(sysParamDO.getParamName()))
                     .sorted(Comparator.comparing(SysParamDO::getParamKey))
                     .collect(Collectors.groupingBy(SysParamDO::getExtendsField2, LinkedHashMap::new, Collectors.toList()))
                     .entrySet().stream()
                     .map(entry -> {
-                        List<GroupVO<String>> values = entry.getValue().stream()
-                                .map(sysParamDO -> new GroupVO<String>().setName(sysParamDO.getParamName())
-                                        .setValues(CustomStringUtil.arrayStringToList(sysParamDO.getParamValue())))
+                        List<DynamicConditionVO.Condition> values = entry.getValue().stream()
+                                .map(sysParamDO -> {
+                                            DynamicConditionVO.Condition condition = new DynamicConditionVO.Condition();
+                                            condition.setMultipleChoice("多选".equals(sysParamDO.getExtendsField4()))
+                                                    .setName(sysParamDO.getParamName())
+                                                    .setValues(CustomStringUtil.arrayStringToList(sysParamDO.getParamValue()));
+                                            return condition;
+                                        }
+                                )
                                 .collect(Collectors.toList());
-                        return new GroupVO<GroupVO<String>>()
+                        return new GroupVO<DynamicConditionVO.Condition>()
                                 .setName(entry.getKey())
                                 .setValues(values);
                     }).collect(Collectors.toList());
             dynamicConditionVO.setConditions(conditions);
+        } else {
+            dynamicConditionVO.setConditions(new ArrayList<>());
         }
-
         return dynamicConditionVO;
     }
 

@@ -29,11 +29,11 @@ public class TaxPreferenceSearchQueryDTO extends AbstractHighlightPageQueryDTO {
 
     @ApiModelProperty("企业类型")
     @FilterField("enterpriseType")
-    private String enterpriseType;
+    private List<String> enterpriseTypes;
 
     @ApiModelProperty("减免事项")
     @FilterField("taxPreferenceItem")
-    private String taxPreferenceItem;
+    private List<String> taxPreferenceItems;
 
     @ApiModelProperty("纳税人登记注册类型码值")
     @FilterField("taxpayerRegisterType.codeValue")
@@ -53,7 +53,7 @@ public class TaxPreferenceSearchQueryDTO extends AbstractHighlightPageQueryDTO {
             case CONTENT:
                 return Collections.singletonList("combinePlainContent");
             case TITLE_AND_CONTENT:
-                return Arrays.asList("taxPreferenceName", "combinePlainContent");
+                return Arrays.asList("taxPreferenceName", "combinePlainContent", "combinePoliciesTitle", "combinePoliciesDigest");
             default:
                 return Collections.singletonList("taxPreferenceName");
         }

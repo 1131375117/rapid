@@ -27,7 +27,7 @@ public class TaxPreferenceSearchListVO {
     private LocalDate releaseDate;
 
     @ApiModelProperty("所属税种-列表用")
-    private SysCodeSimpleVO taxCategories;
+    private List<SysCodeSimpleVO> taxCategories;
 
     @ApiModelProperty("纳税人登记注册类型")
     private SysCodeSimpleVO taxpayerRegisterType;
