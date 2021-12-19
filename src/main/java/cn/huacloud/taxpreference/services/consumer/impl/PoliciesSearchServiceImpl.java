@@ -27,7 +27,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -82,12 +81,12 @@ public class PoliciesSearchServiceImpl implements PoliciesSearchService {
 
     @Override
     public PageVO<PoliciesSearchSimpleVO> latestCentralPolicies(PageQueryDTO pageQuery) throws Exception {
-        return latestAreaPolicies(pageQuery, Collections.singletonList("ZY"), null);
+        return latestAreaPolicies(pageQuery, Collections.singletonList("中央"), null);
     }
 
     @Override
     public PageVO<PoliciesSearchSimpleVO> latestLocalPolicies(PageQueryDTO pageQuery) throws Exception {
-        return latestAreaPolicies(pageQuery, null, Arrays.asList("ZY", "DF"));
+        return latestAreaPolicies(pageQuery, null, Collections.singletonList("中央"));
     }
 
     @Override

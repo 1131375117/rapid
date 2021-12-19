@@ -6,6 +6,7 @@ import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeCountVO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.GuessYouLikeQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.HotContentVO;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.SearchDataCountVO;
 
 import java.util.List;
 
@@ -35,4 +36,10 @@ public interface CommonSearchService {
      * @return 文档类型统计数
      */
     List<SysCodeCountVO> allDocCount(KeywordPageQueryDTO pageQuery) throws Exception;
+
+    /**
+     * 数据统计（首页）
+     * @return 数据统计结果
+     */
+    SearchDataCountVO getDataCount() throws Exception;
 }

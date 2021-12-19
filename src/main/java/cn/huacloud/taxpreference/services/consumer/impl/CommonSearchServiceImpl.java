@@ -9,6 +9,7 @@ import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeCountVO;
 import cn.huacloud.taxpreference.services.consumer.*;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.*;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.HotContentVO;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.SearchDataCountVO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.lucene.search.TotalHits;
@@ -16,6 +17,8 @@ import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.core.CountRequest;
+import org.elasticsearch.client.core.CountResponse;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.search.SearchHit;
@@ -213,6 +216,38 @@ public class CommonSearchServiceImpl implements CommonSearchService {
         }
 
         return sysCodeCountVOList;
+    }
+
+    @Override
+    public SearchDataCountVO getDataCount() throws Exception {
+        SearchDataCountVO searchDataCountVO = new SearchDataCountVO();
+        // 中央政策总数
+        Long central = docCountQuery(DocType.POLICIES, matchQuery("area.codeValue", "中央"));
+        searchDataCountVO.setCentralPoliciesCount(central);
+        // 地方政策总数
+        Long local = docCountQuery(DocType.POLICIES, boolQuery().mustNot(matchQuery("area.codeValue", "中央")));
+        searchDataCountVO.setLocalPoliciesCount(local);
+        // 税收优惠总数
+        Long taxPreference = docCountQuery(DocType.POLICIES, matchAllQuery());
+        searchDataCountVO.setTaxPreferenceCount(taxPreference);
+        // 官方问答总数
+        Long faq = docCountQuery(DocType.POLICIES, matchAllQuery());
+        searchDataCountVO.setFaqCont(faq);
+
+        return searchDataCountVO;
+    }
+
+    /**
+     * 查询文档数
+     * @param docType 文档类型
+     * @param queryBuilder 查询构建器
+     * @return 统计数
+     */
+    private Long docCountQuery(DocType docType, QueryBuilder queryBuilder) throws Exception {
+        CountRequest request = new CountRequest(docType.indexGetter.apply(indexConfig).getAlias())
+                .query(queryBuilder);
+        CountResponse countResponse = restHighLevelClient.count(request, RequestOptions.DEFAULT);
+        return countResponse.getCount();
     }
 
     /**

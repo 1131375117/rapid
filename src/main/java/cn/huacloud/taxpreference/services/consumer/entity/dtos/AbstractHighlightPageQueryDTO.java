@@ -8,7 +8,6 @@ import org.elasticsearch.search.sort.SortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 
-import java.lang.reflect.Field;
 import java.util.*;
 
 /**
@@ -64,24 +63,6 @@ public abstract class AbstractHighlightPageQueryDTO extends ExSearchQueryDTO {
     public void
     paramReasonable() {
         super.paramReasonable();
-        try {
-            for (Field field : this.getClass().getDeclaredFields()) {
-                field.setAccessible(true);
-                Object value = field.get(this);
-                // 空字符串处理
-                Class<?> type = field.getType();
-                if (type.isAssignableFrom(String.class)) {
-                    String str = (String) value;
-                    if (StringUtils.isBlank(str)) {
-                        field.set(this, null);
-                    } else {
-                        // 去除前后空格
-                        field.set(this, str.trim());
-                    }
-                }
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        stringParamNullOrTrim();
     }
 }
