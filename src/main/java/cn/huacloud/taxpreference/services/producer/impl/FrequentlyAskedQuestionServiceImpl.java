@@ -157,6 +157,7 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
 	 *
 	 * @param id 热门问答id
 	 */
+	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public void deleteFrequentlyAskedQuestion(Long id) {
 		FrequentlyAskedQuestionDO frequentlyAskedQuestionDO =
