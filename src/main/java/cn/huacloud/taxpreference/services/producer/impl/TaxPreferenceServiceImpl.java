@@ -1,6 +1,6 @@
 package cn.huacloud.taxpreference.services.producer.impl;
 
-import cn.huacloud.taxpreference.common.constants.ConditionType;
+import cn.huacloud.taxpreference.common.constants.ConditionName;
 import cn.huacloud.taxpreference.common.constants.TaxpayerTypeConstants;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.BizCode;
@@ -295,14 +295,14 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         List<SubmitConditionVO> submitConditionVOList = new ArrayList<>();
         submitConditionDOS.forEach(
                 submitConditionDO -> {
-                    if (ConditionType.GENERAL_TAXPAYER.contains(submitConditionDO.getConditionName())) {
+                    if (ConditionName.GENERAL_TAXPAYER.contains(submitConditionDO.getConditionName())) {
                         taxPreferenceVO.setGeneralTaxpayer(submitConditionDO.getRequirement());
 
-                    } else if (ConditionType.TAXPAYER_CREDIT_RATINGS.contains(submitConditionDO.getConditionName())) {
+                    } else if (ConditionName.TAXPAYER_CREDIT_RATINGS.contains(submitConditionDO.getConditionName())) {
                         taxPreferenceVO.setTaxpayerCreditRatings(Arrays.asList(submitConditionDO.getRequirement().split(",")));
-                    } else if (ConditionType.ANNUAL_PROFIT.contains(submitConditionDO.getConditionName())) {
+                    } else if (ConditionName.ANNUAL_PROFIT.contains(submitConditionDO.getConditionName())) {
                         taxPreferenceVO.setAnnualProfit(submitConditionDO.getRequirement());
-                    } else if (ConditionType.RESOURCE_TYPE.contains(submitConditionDO.getConditionName())) {
+                    } else if (ConditionName.RESOURCE_TYPE.contains(submitConditionDO.getConditionName())) {
                         taxPreferenceVO.setResourceType(submitConditionDO.getRequirement());
                     } else {
                         SubmitConditionVO submitConditionVO = new SubmitConditionVO();
@@ -424,7 +424,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         }
         if (!CollectionUtils.isEmpty(taxPreferenceDTO.getTaxpayerCreditRatings())) {
             SubmitConditionDO submitConditionDO = new SubmitConditionDO();
-            submitConditionDO.setConditionName(ConditionType.TAXPAYER_CREDIT_RATINGS);
+            submitConditionDO.setConditionName(ConditionName.TAXPAYER_CREDIT_RATINGS);
             submitConditionDO.setTaxPreferenceId(taxPreferenceDO.getId());
             submitConditionDO.setSort(sort);
             submitConditionDO.setRequirement(StringUtils.join(taxPreferenceDTO.getTaxpayerCreditRatings(), ","));
@@ -434,7 +434,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
 
         if (!StringUtils.isEmpty(taxPreferenceDTO.getGeneralTaxpayer())) {
             SubmitConditionDO submitConditionDO = new SubmitConditionDO();
-            submitConditionDO.setConditionName(ConditionType.GENERAL_TAXPAYER);
+            submitConditionDO.setConditionName(ConditionName.GENERAL_TAXPAYER);
             submitConditionDO.setTaxPreferenceId(taxPreferenceDO.getId());
             submitConditionDO.setSort(sort);
             submitConditionDO.setRequirement(taxPreferenceDTO.getGeneralTaxpayer());
@@ -444,7 +444,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
 
         if (!StringUtils.isEmpty(taxPreferenceDTO.getAnnualProfit())) {
             SubmitConditionDO submitConditionDO = new SubmitConditionDO();
-            submitConditionDO.setConditionName(ConditionType.ANNUAL_PROFIT);
+            submitConditionDO.setConditionName(ConditionName.ANNUAL_PROFIT);
             submitConditionDO.setTaxPreferenceId(taxPreferenceDO.getId());
             submitConditionDO.setSort(sort);
             submitConditionDO.setRequirement(taxPreferenceDTO.getAnnualProfit());
@@ -453,7 +453,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         }
         if (!StringUtils.isEmpty(taxPreferenceDTO.getResourceType())) {
             SubmitConditionDO submitConditionDO = new SubmitConditionDO();
-            submitConditionDO.setConditionName(ConditionType.RESOURCE_TYPE);
+            submitConditionDO.setConditionName(ConditionName.RESOURCE_TYPE);
             submitConditionDO.setTaxPreferenceId(taxPreferenceDO.getId());
             submitConditionDO.setSort(sort);
             submitConditionDO.setRequirement(taxPreferenceDTO.getResourceType());
