@@ -1,6 +1,6 @@
 package cn.huacloud.taxpreference.sync.es.trigger.impl;
 
-import cn.huacloud.taxpreference.common.constants.ConditionType;
+import cn.huacloud.taxpreference.common.constants.ConditionName;
 import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.common.enums.SysCodeType;
 import cn.huacloud.taxpreference.common.enums.taxpreference.TaxPreferenceStatus;
@@ -56,7 +56,7 @@ public class TaxPreferenceEventTrigger extends EventTrigger<Long, TaxPreferenceE
 
     private final DocStatisticsService statisticsService;
 
-    private static final Set<String> NEED_SPLIT_CONDITION = Sets.newHashSet(ConditionType.TAXPAYER_CREDIT_RATINGS);
+    private static final Set<String> NEED_SPLIT_CONDITION = Sets.newHashSet(ConditionName.TAXPAYER_CREDIT_RATINGS);
 
     @Bean
     public Supplier<Flux<TaxPreferenceES>> saveTaxPreferenceSuppler() {
