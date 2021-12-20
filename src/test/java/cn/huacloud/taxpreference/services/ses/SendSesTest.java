@@ -44,7 +44,7 @@ public class SendSesTest {
 
 				Template template1 = new Template();
 				template1.setTemplateID(21717L);
-				template1.setTemplateData("{\"code\":\"牛马姜\"}");
+				template1.setTemplateData("{\"code\":\"哈哈哈\"}");
 				req.setTemplate(template1);
 
 				req.setSubject("测试");

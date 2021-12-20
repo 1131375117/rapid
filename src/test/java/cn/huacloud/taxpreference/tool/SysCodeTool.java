@@ -5,7 +5,6 @@ import cn.huacloud.taxpreference.common.enums.SysCodeStatus;
 import cn.huacloud.taxpreference.common.enums.SysCodeType;
 import cn.huacloud.taxpreference.services.common.entity.dos.SysCodeDO;
 import cn.huacloud.taxpreference.services.common.mapper.SysCodeMapper;
-import cn.huacloud.taxpreference.tool.SysCodeTool.IgnoreProvider;
 import cn.hutool.core.convert.Convert;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
