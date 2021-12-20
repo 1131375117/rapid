@@ -141,7 +141,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
                             processServiceMapper.selectByTaxPreferenceId(queryTaxPreferencesVO.getId());
                     queryTaxPreferencesVO.setProcessStatus(processStatus == null ? "无" : processStatus);
                 });
-        PageVO<QueryTaxPreferencesVO> pageVO = PageVO.createPageVO(iPage, iPage.getRecords());
+        PageVO<QueryTaxPreferencesVO> pageVO = PageVO.createPageVO(iPage, records);
         return ResultVO.ok(pageVO);
     }
 
@@ -302,10 +302,9 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
                         taxPreferenceVO.setTaxpayerCreditRatings(Arrays.asList(submitConditionDO.getRequirement().split(",")));
                     } else if (ConditionType.ANNUAL_PROFIT.contains(submitConditionDO.getConditionName())) {
                         taxPreferenceVO.setAnnualProfit(submitConditionDO.getRequirement());
-                    }
-                    else if (ConditionType.RESOURCE_TYPE.contains(submitConditionDO.getConditionName())) {
+                    } else if (ConditionType.RESOURCE_TYPE.contains(submitConditionDO.getConditionName())) {
                         taxPreferenceVO.setResourceType(submitConditionDO.getRequirement());
-                    }else {
+                    } else {
                         SubmitConditionVO submitConditionVO = new SubmitConditionVO();
                         BeanUtils.copyProperties(submitConditionDO, submitConditionVO);
                         submitConditionVOList.add(submitConditionVO);
