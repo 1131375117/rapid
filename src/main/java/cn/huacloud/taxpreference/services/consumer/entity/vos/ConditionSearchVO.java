@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import java.util.List;
+
 /**
  * @author wangkh
  */
@@ -22,5 +24,5 @@ public class ConditionSearchVO {
      * 具体要求
      */
     @ApiModelProperty("具体要求")
-    private String conditionValue;
+    private List<String> conditionValues;
 }

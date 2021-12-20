@@ -73,6 +73,9 @@ public class ExSearchQueryDTO extends KeywordPageQueryDTO {
                 sb.append(ch);
             }
         }
+        if (sb.length() > 0) {
+            keywordSplit.add(sb.toString());
+        }
         if (keywordSplit.isEmpty()) {
             return null;
         }

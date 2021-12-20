@@ -118,7 +118,7 @@
             "conditionName": {
               "type": "keyword"
             },
-            "conditionValue": {
+            "conditionValues": {
               "type": "keyword"
             }
           }

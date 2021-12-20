@@ -103,7 +103,7 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
                 conditionsQuery.must(boolQuery()
                         .should(boolQuery().must(nestedQuery("conditions", boolQuery()
                                 .must(termQuery("conditions.conditionName", condition.getConditionName()))
-                                .must(termsQuery("conditions.conditionValue", condition.getConditionValues())), ScoreMode.Avg)))
+                                .must(termsQuery("conditions.conditionValues", condition.getConditionValues())), ScoreMode.Avg)))
                         .should(boolQuery().mustNot(nestedQuery("conditions", termQuery("conditions.conditionName", condition.getConditionName()), ScoreMode.Avg))));
             }
             queryBuilder.must(conditionsQuery);

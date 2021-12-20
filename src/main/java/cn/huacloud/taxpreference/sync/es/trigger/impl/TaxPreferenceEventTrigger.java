@@ -1,9 +1,11 @@
 package cn.huacloud.taxpreference.sync.es.trigger.impl;
 
+import cn.huacloud.taxpreference.common.constants.ConditionType;
 import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.common.enums.SysCodeType;
 import cn.huacloud.taxpreference.common.enums.taxpreference.TaxPreferenceStatus;
 import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
+import cn.huacloud.taxpreference.common.utils.CustomStringUtil;
 import cn.huacloud.taxpreference.services.common.DocStatisticsService;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
 import cn.huacloud.taxpreference.services.common.entity.dos.DocStatisticsDO;
@@ -21,12 +23,15 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.common.collect.Sets;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -50,6 +55,8 @@ public class TaxPreferenceEventTrigger extends EventTrigger<Long, TaxPreferenceE
     private final SysCodeService sysCodeService;
 
     private final DocStatisticsService statisticsService;
+
+    private static final Set<String> NEED_SPLIT_CONDITION = Sets.newHashSet(ConditionType.TAXPAYER_CREDIT_RATINGS);
 
     @Bean
     public Supplier<Flux<TaxPreferenceES>> saveTaxPreferenceSuppler() {
@@ -108,9 +115,17 @@ public class TaxPreferenceEventTrigger extends EventTrigger<Long, TaxPreferenceE
 
         // 设置申报条件
         List<ConditionSearchVO> submitConditions = submitConditionMapper.getSubmitConditions(taxPreferenceDO.getId()).stream()
-                .map(submitConditionDO -> new ConditionSearchVO()
-                        .setConditionName(submitConditionDO.getConditionName())
-                        .setConditionValue(submitConditionDO.getRequirement()))
+                .map(submitConditionDO -> {
+                    String conditionName = submitConditionDO.getConditionName();
+                    ConditionSearchVO conditionSearchVO = new ConditionSearchVO()
+                            .setConditionName(conditionName);
+                    if (NEED_SPLIT_CONDITION.contains(conditionName)) {
+                        conditionSearchVO.setConditionValues(CustomStringUtil.spiltStringToList(submitConditionDO.getRequirement()));
+                    } else {
+                        conditionSearchVO.setConditionValues(Collections.singletonList(submitConditionDO.getRequirement()));
+                    }
+                    return conditionSearchVO;
+                })
                 .collect(Collectors.toList());
         taxPreferenceES.setConditions(submitConditions);
 
