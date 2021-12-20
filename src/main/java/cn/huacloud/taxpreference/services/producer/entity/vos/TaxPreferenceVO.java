@@ -98,21 +98,21 @@ public class TaxPreferenceVO {
      * 留存备查资料
      */
     @ApiModelProperty("留存备查资料")
-    @NotEmpty(message = "留存备查资料不能为空",groups = ValidationGroup.Manual.class)
+   // @NotEmpty(message = "留存备查资料不能为空",groups = ValidationGroup.Manual.class)
     private String keepQueryData;
 
     /**
      * 提交税务机关资料
      */
     @ApiModelProperty("提交税务机关资料")
-    @NotEmpty(message = "提交税务机关资料不能为空",groups = ValidationGroup.Manual.class)
+   // @NotEmpty(message = "提交税务机关资料不能为空",groups = ValidationGroup.Manual.class)
     private String submitTaxData;
 
     /**
      * 资料报送时限
      */
     @ApiModelProperty("资料报送时限")
-    @NotEmpty(message = "资料报送时限不能为空",groups = ValidationGroup.Manual.class)
+   // @NotEmpty(message = "资料报送时限不能为空",groups = ValidationGroup.Manual.class)
     private String submitTimeLimit;
 
     /**
@@ -147,8 +147,8 @@ public class TaxPreferenceVO {
      * 申报信息
      */
     @ApiModelProperty("申报信息")
-    @NotEmpty(message = "申报信息",groups = ValidationGroup.Manual.class)
-    private List<@Valid SubmitConditionVO> submitConditionVOList;
+   // @NotEmpty(message = "申报信息",groups = ValidationGroup.Manual.class)
+    private List<SubmitConditionVO> submitConditionVOList;
 
     @ApiModelProperty("是否年度获利")
     private String annualProfit;

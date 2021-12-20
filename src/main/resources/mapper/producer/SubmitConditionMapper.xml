@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.huacloud.taxpreference.services.producer.mapper.SubmitConditionMapper">
+
+    <select id="selectByTaxPreferenceId"
+            resultType="string">
+        select requirement from t_submit_condition
+        <where>
+            tax_preference_id =#{id}
+            and condition_name='纳税信用等级'
+            <if test="taxpayerCreditRatings!=null and taxpayerCreditRatings.size>0">
+                and (1!=1
+                <foreach collection="taxpayerCreditRatings" item="taxpayerCreditRating">
+                   or FIND_IN_SET(#{taxpayerCreditRating},requirement)
+                </foreach>
+                )
+            </if>
+        </where>
+    </select>
+</mapper>

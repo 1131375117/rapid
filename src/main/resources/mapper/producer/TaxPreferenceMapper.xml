@@ -31,19 +31,19 @@
         p.validity,p.create_time as createTime,
         p.taxpayer_register_type_name as taxpayerRegisterTypeName,
         p.tax_preference_status as taxPreferenceStatus,
-        t.requirement as taxpayerCreditRatings
-        from t_tax_preference p,t_submit_condition t
+        tsc.requirement as taxpayerCreditRatings
+        from t_tax_preference p left join t_submit_condition tsc
+        on p.id=tsc.tax_preference_id and p.deleted=0 and tsc.condition_name='纳税信用等级'
         <where>
-            and p.deleted=0
             <if test="queryTaxPreferencesDTO.keyword!=null and queryTaxPreferencesDTO.keyword!= ''">
                 and p.tax_preference_name like "%"#{queryTaxPreferencesDTO.keyword}"%"
             </if>
             <if test="queryTaxPreferencesDTO.enterpriseType!=null and queryTaxPreferencesDTO.enterpriseType!=''">
                 and p.enterprise_type like "%"#{queryTaxPreferencesDTO.enterpriseType}"%"
             </if>
-            <if test="queryTaxPreferencesDTO.taxCategoriesCodes != null and queryTaxPreferencesDTO.taxCategoriesCodes != '' ">
+        <!--    <if test="queryTaxPreferencesDTO.taxCategoriesCodes != null and queryTaxPreferencesDTO.taxCategoriesCodes != '' ">
                 and p.tax_categories_codes= #{queryTaxPreferencesDTO.taxCategoriesCodes}
-            </if>
+            </if>-->
             <if test="queryTaxPreferencesDTO.taxpayerRegisterTypeCode != null and queryTaxPreferencesDTO.taxpayerRegisterTypeCode != '' ">
                 and p.taxpayer_register_type_code=#{queryTaxPreferencesDTO.taxpayerRegisterTypeCode}
             </if>
@@ -66,15 +66,15 @@
             <if test="queryTaxPreferencesDTO.taxpayerCreditRatings!=null and queryTaxPreferencesDTO.taxpayerCreditRatings.size>0 ">
                 and (1!=1
                 <foreach collection="queryTaxPreferencesDTO.taxpayerCreditRatings" item="credit">
-                    or FIND_IN_SET(#{credit},t.requirement)
+                    or FIND_IN_SET(#{credit},tsc.requirement)
                 </foreach>
                 )
-                and t.condition_name='纳税信用等级'
+
             </if>
             <if test="queryTaxPreferencesDTO.taxCategoriesCodes!=null and queryTaxPreferencesDTO.taxCategoriesCodes.size>0 ">
                 and (1!=1
                 <foreach collection="queryTaxPreferencesDTO.taxCategoriesCodes" item="taxCategories">
-                    or FIND_IN_SET(#{taxCategories},p.taxCategoriesCode)
+                    or FIND_IN_SET(#{taxCategories},p.tax_categories_codes)
                 </foreach>
                 )
             </if>
