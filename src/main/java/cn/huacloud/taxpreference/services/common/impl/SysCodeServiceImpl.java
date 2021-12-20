@@ -23,6 +23,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -75,6 +76,25 @@ public class SysCodeServiceImpl implements SysCodeService {
 
         List<SysCodeTreeVO> sysCodeTreeVOList = sysCodeDOList.stream()
                 .filter(this::isSysCodeDOValid)
+                .map(sysCodeDO -> {
+                    SysCodeTreeVO sysCodeTreeVO = new SysCodeTreeVO();
+                    BeanUtils.copyProperties(sysCodeDO, sysCodeTreeVO);
+                    return sysCodeTreeVO;
+                }).collect(Collectors.toList());
+
+        return TreeVO.getTree(sysCodeTreeVOList);
+    }
+
+    @Override
+    public List<SysCodeTreeVO> getSysCodeTreeVO(SysCodeType sysCodeType, Predicate<SysCodeDO> filter) {
+        List<SysCodeDO> sysCodeDOList = getSysCodeTypeMapCache().get(sysCodeType);
+        if (sysCodeDOList == null) {
+            return new ArrayList<>();
+        }
+
+        List<SysCodeTreeVO> sysCodeTreeVOList = sysCodeDOList.stream()
+                .filter(this::isSysCodeDOValid)
+                .filter(filter)
                 .map(sysCodeDO -> {
                     SysCodeTreeVO sysCodeTreeVO = new SysCodeTreeVO();
                     BeanUtils.copyProperties(sysCodeDO, sysCodeTreeVO);

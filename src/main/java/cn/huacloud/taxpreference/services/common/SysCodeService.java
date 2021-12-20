@@ -10,6 +10,7 @@ import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeVO;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * @author wangkh
@@ -22,6 +23,14 @@ public interface SysCodeService extends CacheClear {
      * @return 系统码值
      */
     List<SysCodeTreeVO> getSysCodeTreeVO(SysCodeType sysCodeType);
+
+    /**
+     * 根据系统码值类型获取系统码值
+     * @param sysCodeType 系统码值类型
+     * @param filter 过滤器
+     * @return 系统码值
+     */
+    List<SysCodeTreeVO> getSysCodeTreeVO(SysCodeType sysCodeType, Predicate<SysCodeDO> filter);
 
     /**
      * 根据码值代码获取码值名称（包括失效的系统码值，兼顾旧数据）

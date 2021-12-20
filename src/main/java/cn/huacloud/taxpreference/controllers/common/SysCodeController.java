@@ -35,6 +35,20 @@ public class SysCodeController {
         return ResultVO.ok(sysCodeVOList);
     }
 
+    @ApiOperation(value = "获取税收优惠的系统码值", notes = "参数 sysCodeType 是提供码值类型")
+    @GetMapping("/sys/codes/taxPreference")
+    public ResultVO<List<SysCodeTreeVO>> getTaxPreferenceSysCodes(@RequestParam("sysCodeType") SysCodeType sysCodeType) {
+        List<SysCodeTreeVO> sysCodeVOList;
+        // 税收优惠的税种范围不一样
+        if (SysCodeType.TAX_CATEGORIES == sysCodeType) {
+            sysCodeVOList = sysCodeService.getSysCodeTreeVO(sysCodeType,
+                    sysCodeDO -> "true".equals(sysCodeDO.getExtendsField1()));
+        } else {
+            sysCodeVOList = sysCodeService.getSysCodeTreeVO(sysCodeType);
+        }
+        return ResultVO.ok(sysCodeVOList);
+    }
+
     @ApiOperation(value = "懒加载获取系统码值，通过pid逐级获取系统码值")
     @PostMapping("/sys/codes/lazy")
     public ResultVO<List<SysCodeTreeVO>> getSysCodesLazy(@RequestBody SysCodeQueryDTO sysCodeQueryDTO) {
