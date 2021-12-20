@@ -147,8 +147,8 @@ public class TaxPreferenceVO {
      * 申报信息
      */
     @ApiModelProperty("申报信息")
-    @NotEmpty(message = "申报信息",groups = ValidationGroup.Manual.class)
-    private List<@Valid SubmitConditionVO> submitConditionVOList;
+   // @NotEmpty(message = "申报信息",groups = ValidationGroup.Manual.class)
+    private List<SubmitConditionVO> submitConditionVOList;
 
     @ApiModelProperty("是否年度获利")
     private String annualProfit;
