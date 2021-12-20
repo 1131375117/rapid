@@ -228,10 +228,10 @@ public class CommonSearchServiceImpl implements CommonSearchService {
         Long local = docCountQuery(DocType.POLICIES, boolQuery().mustNot(matchQuery("area.codeValue", "中央")));
         searchDataCountVO.setLocalPoliciesCount(local);
         // 税收优惠总数
-        Long taxPreference = docCountQuery(DocType.POLICIES, matchAllQuery());
+        Long taxPreference = docCountQuery(DocType.TAX_PREFERENCE, matchAllQuery());
         searchDataCountVO.setTaxPreferenceCount(taxPreference);
         // 官方问答总数
-        Long faq = docCountQuery(DocType.POLICIES, matchAllQuery());
+        Long faq = docCountQuery(DocType.FREQUENTLY_ASKED_QUESTION, matchAllQuery());
         searchDataCountVO.setFaqCont(faq);
 
         return searchDataCountVO;
