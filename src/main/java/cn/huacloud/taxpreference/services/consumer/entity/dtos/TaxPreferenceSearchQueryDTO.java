@@ -2,15 +2,15 @@ package cn.huacloud.taxpreference.services.consumer.entity.dtos;
 
 import cn.huacloud.taxpreference.common.annotations.FilterField;
 import cn.huacloud.taxpreference.config.ElasticsearchIndexConfig;
-import cn.huacloud.taxpreference.services.consumer.entity.vos.ConditionSearchVO;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 税收优惠分页检索对象
@@ -40,7 +40,7 @@ public class TaxPreferenceSearchQueryDTO extends AbstractHighlightPageQueryDTO {
     private String taxpayerRegisterTypeCode;
 
     @ApiModelProperty("动态筛选条件")
-    private List<ConditionSearchVO> conditions;
+    private List<ConditionQuery> conditions;
 
     @Override
     public String index(ElasticsearchIndexConfig config) {
@@ -70,6 +70,58 @@ public class TaxPreferenceSearchQueryDTO extends AbstractHighlightPageQueryDTO {
         if (useRecommend == null) {
             // 默认不使用推荐
             useRecommend = false;
+        }
+        if (CollectionUtils.isEmpty(conditions)) {
+            conditions = null;
+        } else {
+            conditions = conditions.stream()
+                    .filter(Objects::nonNull)
+                    .filter(conditionQuery -> StringUtils.isNotBlank(conditionQuery.getConditionName()))
+                    .distinct()
+                    .filter(conditionQuery -> {
+                        // 过滤处理为空值的条件
+                        List<String> conditionValues = conditionQuery.getConditionValues();
+                        if (CollectionUtils.isEmpty(conditionValues)) {
+                            return false;
+                        }
+                        List<String> collect = conditionValues.stream()
+                                .filter(Objects::nonNull)
+                                .distinct()
+                                .filter(StringUtils::isNotBlank)
+                                .collect(Collectors.toList());
+                        if (collect.isEmpty()) {
+                            return false;
+                        }
+                        conditionQuery.setConditionValues(collect);
+                        return true;
+                    })
+                    .collect(Collectors.toList());
+            if (CollectionUtils.isEmpty(conditions)) {
+                conditions = null;
+            }
+        }
+    }
+
+    @Data
+    public static class ConditionQuery {
+        /**
+         * 条件名称
+         */
+        @ApiModelProperty("条件名称")
+        private String conditionName;
+
+        /**
+         * 具体要求
+         */
+        @ApiModelProperty("具体要求集合")
+        private List<String> conditionValues;
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof ConditionQuery) || conditionName == null) {
+                return false;
+            }
+            return conditionName.equals(((ConditionQuery) obj).getConditionName());
         }
     }
 }

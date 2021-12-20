@@ -30,12 +30,8 @@ public class CommonSearchController {
 
     @ApiOperation("数据统计（首页）")
     @GetMapping("/dataCount")
-    public ResultVO<SearchDataCountVO> getSearchDataCount() {
-        SearchDataCountVO searchDataCountVO = new SearchDataCountVO();
-        searchDataCountVO.setCentralPoliciesCount(6552L);
-        searchDataCountVO.setLocalPoliciesCount(26535L);
-        searchDataCountVO.setTaxPreferenceCount(5542L);
-        searchDataCountVO.setFaqCont(233L);
+    public ResultVO<SearchDataCountVO> getDataCount() throws Exception {
+        SearchDataCountVO searchDataCountVO = commonSearchService.getDataCount();
         return ResultVO.ok(searchDataCountVO);
     }
 

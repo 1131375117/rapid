@@ -39,7 +39,7 @@ public class KeywordPageQueryDTO extends PageQueryDTO {
             BeanInfo beanInfo = Introspector.getBeanInfo(this.getClass());
             PropertyDescriptor[] pds = beanInfo.getPropertyDescriptors();
             for (PropertyDescriptor pd : pds) {
-                if (!pd.getPropertyType().isAssignableFrom(String.class)) {
+                if (!String.class.isAssignableFrom(pd.getPropertyType())) {
                     continue;
                 }
                 String value = (String) pd.getReadMethod().invoke(this);

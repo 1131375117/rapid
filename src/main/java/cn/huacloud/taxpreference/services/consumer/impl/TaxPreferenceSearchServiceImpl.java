@@ -15,6 +15,7 @@ import cn.huacloud.taxpreference.services.consumer.entity.vos.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.search.SearchRequest;
@@ -28,7 +29,11 @@ import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.MultiBucketsAggregation;
+import org.elasticsearch.search.aggregations.bucket.nested.NestedAggregationBuilder;
+import org.elasticsearch.search.aggregations.bucket.nested.ParsedNested;
 import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
+import org.elasticsearch.search.aggregations.bucket.terms.ParsedTerms;
+import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
@@ -40,8 +45,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.elasticsearch.index.query.QueryBuilders.matchAllQuery;
-import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * @author wangkh
@@ -91,6 +95,19 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
         if (label != null) {
             queryBuilder.must(wildcardQuery("labels", formatWildcardValue(label)));
         }*/
+
+        // 动态筛选条件过滤
+        if (pageQuery.getConditions() != null) {
+            BoolQueryBuilder conditionsQuery = boolQuery();
+            for (TaxPreferenceSearchQueryDTO.ConditionQuery condition : pageQuery.getConditions()) {
+                conditionsQuery.must(boolQuery()
+                        .should(boolQuery().must(nestedQuery("conditions", boolQuery()
+                                .must(termQuery("conditions.conditionName", condition.getConditionName()))
+                                .must(termsQuery("conditions.conditionValue", condition.getConditionValues())), ScoreMode.Avg)))
+                        .should(boolQuery().mustNot(nestedQuery("conditions", termQuery("conditions.conditionName", condition.getConditionName()), ScoreMode.Avg))));
+            }
+            queryBuilder.must(conditionsQuery);
+        }
 
         return queryBuilder;
     }
@@ -172,19 +189,22 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
     public DynamicConditionVO getDynamicCondition(TaxPreferenceSearchQueryDTO pageQuery) throws IOException {
         QueryBuilder queryBuilder = getQueryBuilder(pageQuery);
 
-        String enterpriseTypeTermsName = "enterpriseType";
-        String taxPreferenceItemTermsName = "taxPreferenceItem";
-        String conditionsTermsName = "conditions";
+        String enterpriseTypeTermsAggregationName = "enterpriseTypeTermsAggregation";
+
+        String taxPreferenceItemTermsAggregationName = "taxPreferenceItemTermsAggregation";
+
+        String conditionsNestedAggregationName = "conditionsNestedAggregation";
+        String conditionsTermsAggregationName = "conditionsTermsAggregation";
 
         boolean needConditions = !CollectionUtils.isEmpty(pageQuery.getTaxCategoriesCodes());
 
         // term aggregation
         // 企业类型
-        TermsAggregationBuilder enterpriseTypeTerms = AggregationBuilders.terms(enterpriseTypeTermsName)
+        TermsAggregationBuilder enterpriseTypeTermsAggregation = AggregationBuilders.terms(enterpriseTypeTermsAggregationName)
                 .field("enterpriseType")
                 .size(DEFAULT_TERMS_SIZE);
         // 减免事项
-        TermsAggregationBuilder taxPreferenceItemTerms = AggregationBuilders.terms(taxPreferenceItemTermsName)
+        TermsAggregationBuilder taxPreferenceItemTermsAggregation = AggregationBuilders.terms(taxPreferenceItemTermsAggregationName)
                 .field("taxPreferenceItem")
                 .size(DEFAULT_TERMS_SIZE);
 
@@ -192,16 +212,15 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
         // source builder
         SearchSourceBuilder searchSourceBuilder = SearchSourceBuilder.searchSource()
                 .query(queryBuilder)
-                .aggregation(enterpriseTypeTerms)
-                .aggregation(taxPreferenceItemTerms)
+                .aggregation(enterpriseTypeTermsAggregation)
+                .aggregation(taxPreferenceItemTermsAggregation)
                 .size(0);
 
         if (needConditions) {
             // 优惠条件
-            TermsAggregationBuilder conditionsTerms = AggregationBuilders.terms(conditionsTermsName)
-                    .field("conditions.conditionName")
-                    .size(DEFAULT_TERMS_SIZE);
-            searchSourceBuilder.aggregation(conditionsTerms);
+            NestedAggregationBuilder conditionsNestedAggregation = AggregationBuilders.nested(conditionsNestedAggregationName, "conditions")
+                    .subAggregation(AggregationBuilders.terms(conditionsTermsAggregationName).field("conditions.conditionName").size(DEFAULT_TERMS_SIZE));
+            searchSourceBuilder.aggregation(conditionsNestedAggregation);
         }
 
         // search request
@@ -210,17 +229,20 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
         // do search
         SearchResponse response = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
         // data mapping
-        List<String> enterpriseTypes = getAggregationBucketKeys(response, enterpriseTypeTermsName);
+        List<String> enterpriseTypes = getTermsAggregationBucketKeys(response, enterpriseTypeTermsAggregationName);
 
-        List<String> taxPreferenceItems = getAggregationBucketKeys(response, taxPreferenceItemTermsName);
+        List<String> taxPreferenceItems = getTermsAggregationBucketKeys(response, taxPreferenceItemTermsAggregationName);
 
         DynamicConditionVO dynamicConditionVO = new DynamicConditionVO()
                 .setEnterpriseTypes(enterpriseTypes)
                 .setTaxPreferenceItems(taxPreferenceItems);
 
+        // 动态筛选条件
         if (needConditions) {
-            List<String> conditionNames = getAggregationBucketKeys(response, conditionsTermsName);
+            // nested terms 获取所有条件名称
+            List<String> conditionNames = getNestedAggregationBucketKeys(response, conditionsNestedAggregationName, conditionsTermsAggregationName);
             Set<String> conditionNameSet = new HashSet<>(conditionNames);
+            // 数据映射
             List<GroupVO<DynamicConditionVO.Condition>> conditions = sysParamService.getSysParamDOByTypes(SysParamTypes.TAX_PREFERENCE_CONDITION).stream()
                     .filter(sysParamDO -> conditionNameSet.contains(sysParamDO.getParamName()))
                     .sorted(Comparator.comparing(SysParamDO::getParamKey))
@@ -248,12 +270,25 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
         return dynamicConditionVO;
     }
 
-    private List<String> getAggregationBucketKeys(SearchResponse response, String name) {
+    /**
+     * 获取terms aggregation key集合
+     */
+    private List<String> getTermsAggregationBucketKeys(SearchResponse response, String name) {
         Aggregations aggregations = response.getAggregations();
         ParsedStringTerms parsedStringTerms = aggregations.get(name);
         return parsedStringTerms.getBuckets().stream()
                 .map(MultiBucketsAggregation.Bucket::getKeyAsString)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     *  获取nested aggregation key集合
+     */
+    private List<String> getNestedAggregationBucketKeys(SearchResponse searchResponse,String nestedName, String targetName) {
+        ParsedNested nestedAggregation = searchResponse.getAggregations().get(nestedName);
+        ParsedTerms termsAggregation = nestedAggregation.getAggregations().get(targetName);
+        List<? extends Terms.Bucket> buckets = termsAggregation.getBuckets();
+        return buckets.stream().map(MultiBucketsAggregation.Bucket::getKeyAsString).collect(Collectors.toList());
     }
 
     @Override

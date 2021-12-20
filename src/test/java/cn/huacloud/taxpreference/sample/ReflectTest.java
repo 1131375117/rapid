@@ -14,10 +14,13 @@ public class ReflectTest {
 
     @Test
     public void testAssignableFrom() {
+        // true
         boolean one = Fruit.class.isAssignableFrom(Apple.class);
+        // false
         boolean two = Apple.class.isAssignableFrom(Fruit.class);
+        // true
         boolean three = Apple.class.isAssignableFrom(Apple.class);
-        log.info("one:{}, two:{}, three{}", one, two, three);
+        log.info("one:{}, two:{}, three:{}", one, two, three);
     }
 
     static class Fruit {
