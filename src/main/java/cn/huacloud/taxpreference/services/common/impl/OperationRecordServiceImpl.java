@@ -12,7 +12,6 @@ import cn.huacloud.taxpreference.services.common.entity.dtos.DocStatisticsPlus;
 import cn.huacloud.taxpreference.services.common.entity.dtos.OperationRecordDTO;
 import cn.huacloud.taxpreference.services.common.mapper.OperationRecordMapper;
 import cn.huacloud.taxpreference.services.common.watch.WatcherViewService;
-import cn.huacloud.taxpreference.services.user.entity.vos.ConsumerLoginUserVO;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +45,7 @@ public class OperationRecordServiceImpl implements OperationRecordService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void operationRecord(OperationRecordDTO operationRecordDTO, ConsumerLoginUserVO currentUser) {
+    public void operationRecord(OperationRecordDTO operationRecordDTO, Long consumerUserId) {
 
         OperationRecordDO operationRecordDO = new OperationRecordDO();
         BeanUtils.copyProperties(operationRecordDTO, operationRecordDO);
@@ -69,7 +68,7 @@ public class OperationRecordServiceImpl implements OperationRecordService {
          * 插入操作记录表
          * */
         if (count == 0) {
-            operationRecordDO.setConsumerUserId(1L);
+            operationRecordDO.setConsumerUserId(consumerUserId);
             operationRecordDO.setCreateTime(LocalDateTime.now());
             operationRecordMapper.insert(operationRecordDO);
         }

@@ -34,8 +34,11 @@ public class OperationRecordController {
     @ApiOperation("操作记录接口")
     @PostMapping("/operationRecord")
     public ResultVO<Void> operationRecord(@RequestBody @Validated OperationRecordDTO operationRecordDTO) {
-        ConsumerLoginUserVO currentUser = ConsumerUserUtil.getCurrentUser();
-        operationRecord.operationRecord(operationRecordDTO,currentUser);
+        if (ConsumerUserUtil.isLogin()) {
+            ConsumerLoginUserVO currentUser = ConsumerUserUtil.getCurrentUser();
+            Long consumerUserId = ConsumerUserUtil.getCurrentUserId();
+            operationRecord.operationRecord(operationRecordDTO, consumerUserId);
+        }
         return ResultVO.ok();
     }
 }
