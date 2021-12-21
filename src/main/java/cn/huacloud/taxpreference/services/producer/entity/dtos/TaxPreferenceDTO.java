@@ -84,14 +84,14 @@ public class TaxPreferenceDTO {
      * 留存备查资料
      */
     @ApiModelProperty("留存备查资料")
-    @NotEmpty(message = "留存备查资料不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+  //  @NotEmpty(message = "留存备查资料不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
     private String keepQueryData;
 
     /**
      * 提交税务机关资料
      */
     @ApiModelProperty("提交税务机关资料")
-    @NotEmpty(message = "提交税务机关资料不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+   // @NotEmpty(message = "提交税务机关资料不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
     private String submitTaxData;
 
     /**
@@ -112,11 +112,11 @@ public class TaxPreferenceDTO {
      * 资料报送时限
      */
     @ApiModelProperty("资料报送时限")
-    @NotEmpty(message = "提资料报送时限不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+   // @NotEmpty(message = "提资料报送时限不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
     private String submitTimeLimit;
 
     @ApiModelProperty("申报表填写简要说明")
-    @NotEmpty(message = "申报表填写简要说明不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+ //   @NotEmpty(message = "申报表填写简要说明不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
     private String submitDescription;
 
     @ApiModelProperty("政策法规关联信息")
@@ -126,7 +126,7 @@ public class TaxPreferenceDTO {
      * 申报信息
      */
     @ApiModelProperty("申报信息")
-    @NotEmpty(message = "申报信息不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+  //  @NotEmpty(message = "申报信息不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
     private List<SubmitConditionDTO> submitConditionDTOList;
 
     @ApiModelProperty("SAVE-保存或者SUBMIT提交")

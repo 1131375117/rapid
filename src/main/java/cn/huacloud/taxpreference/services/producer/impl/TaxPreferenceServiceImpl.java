@@ -429,6 +429,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         }
         if (!CollectionUtils.isEmpty(taxPreferenceDTO.getConditionList())) {
             for (ConditionDO conditionDO : taxPreferenceDTO.getConditionList()) {
+                sort++;
                 SubmitConditionDO submitConditionDO = new SubmitConditionDO();
                 submitConditionDO.setConditionName(conditionDO.getConditionName());
                 submitConditionDO.setTaxPreferenceId(taxPreferenceDO.getId());
@@ -436,7 +437,6 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
                 if (!CollectionUtils.isEmpty(conditionDO.getRequirement())) {
                     submitConditionDO.setRequirement(StringUtils.join(conditionDO.getRequirement(), ","));
                 }
-                sort++;
                 submitConditionMapper.insert(submitConditionDO);
             }
         }
