@@ -5,6 +5,7 @@ import cn.huacloud.taxpreference.common.enums.SysCodeStatus;
 import cn.huacloud.taxpreference.common.enums.SysCodeType;
 import cn.huacloud.taxpreference.services.common.entity.dos.SysCodeDO;
 import cn.huacloud.taxpreference.services.common.mapper.SysCodeMapper;
+import cn.huacloud.taxpreference.tool.SysCodeTool.IgnoreProvider;
 import cn.hutool.core.convert.Convert;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -173,9 +174,9 @@ public class SysCodeTool extends BaseApplicationTest {
 
             Long pid;
             boolean isLeaf;
+            currentPid = nextId;
             if (code.length() == 0) {
                 pid = 0L;
-                currentPid = nextId;
                 isLeaf = false;
             } else {
                 pid = currentPid;
@@ -239,7 +240,7 @@ public class SysCodeTool extends BaseApplicationTest {
         for (Area area : areas) {
 
             SysCodeDO sysCodeDO = new SysCodeDO();
-//            String codeValue = area.getCode() == null ? null : SysCodeType.AREA.getValue() + "_" + area.getCode();
+            // String codeValue = area.getCode() == null ? null : SysCodeType.AREA.getValue() + "_" + area.getCode();
             String codeValue = area.getCode() == null ? null : area.getName();
             sysCodeDO.setCodeName(area.getName())
                     .setCodeValue(codeValue)
@@ -271,7 +272,7 @@ public class SysCodeTool extends BaseApplicationTest {
         // 使用指定的字符编码以字符串列表的形式获取InputStream的内容，每行一个条目
         List<String> list = IOUtils.readLines(inputStream, StandardCharsets.UTF_8);
 
-        Long currentPid = 0L;
+
         List<SysCodeDO> sysCodeDOList = new ArrayList<>();
         // 添加不限码值
         SysCodeDO unlimited = new SysCodeDO().setCodeName("不限")
@@ -301,15 +302,17 @@ public class SysCodeTool extends BaseApplicationTest {
                 continue;
             }
             Long pid;
+            Long currentPid = 0L;
             boolean isLeaf;
-            if (parentCode.length() == 1) {
+            currentPid =  nextId;
+            if (code.length() == 1) {
                 pid = 0L;
-                currentPid = nextId;
                 isLeaf = false;
             } else {
                 pid = currentPid;
                 isLeaf = true;
             }
+
 
             SysCodeDO sysCodeDO = new SysCodeDO();
             if (validStatus.contains("Y")) {
@@ -331,6 +334,8 @@ public class SysCodeTool extends BaseApplicationTest {
         return sysCodeDOList;
 
     };
+
+
 
     @IgnoreProvider
     private SysCodeProvider csvIndustry = nextId -> {
@@ -365,9 +370,9 @@ public class SysCodeTool extends BaseApplicationTest {
 
             Long pid;
             boolean isLeaf;
+            currentPid = nextId;
             if (code.length() == 1) {
                 pid = 0L;
-                currentPid = nextId;
                 isLeaf = false;
             } else {
                 pid = currentPid;
@@ -762,5 +767,15 @@ public class SysCodeTool extends BaseApplicationTest {
         private String code;
         private String name;
         private List<Area> cityList;
+    }
+
+    @Accessors(chain = true)
+    @Data
+    public static class Industry {
+        private Long id;
+        private Long pid;
+        private String code;
+        private String name;
+        private List<Industry> industryList;
     }
 }
