@@ -245,6 +245,13 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
             // 数据映射
             List<GroupVO<DynamicConditionVO.Condition>> conditions = sysParamService.getSysParamDOByTypes(SysParamTypes.TAX_PREFERENCE_CONDITION).stream()
                     .filter(sysParamDO -> conditionNameSet.contains(sysParamDO.getParamName()))
+                    .filter(sysParamDO -> {
+                        // 增加业务规则，在没有选中减免事项的时候，仅展示 其他筛选条件
+                        if (CollectionUtils.isEmpty(pageQuery.getTaxPreferenceItems())) {
+                            return "其他筛选".equals(sysParamDO.getExtendsField2());
+                        }
+                        return true;
+                    })
                     .sorted(Comparator.comparing(SysParamDO::getParamKey))
                     .collect(Collectors.groupingBy(SysParamDO::getExtendsField2, LinkedHashMap::new, Collectors.toList()))
                     .entrySet().stream()
