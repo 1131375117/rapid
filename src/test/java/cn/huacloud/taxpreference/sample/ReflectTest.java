@@ -1,6 +1,9 @@
 package cn.huacloud.taxpreference.sample;
 
+import cn.huacloud.taxpreference.common.utils.ConsumerUserUtil;
 import cn.huacloud.taxpreference.services.consumer.impl.FrequentlyAskedQuestionSearchServiceImpl;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
@@ -11,6 +14,26 @@ import org.junit.Test;
 @Slf4j
 public class ReflectTest {
 
+
+    ObjectMapper objectMapper = new ObjectMapper();
+
+    @Test
+    public void testLogin() {
+        boolean login = ConsumerUserUtil.isLogin();
+    }
+
+    @Test
+    public void testUUIDGetter() throws Exception {
+        Fruit fruit = new Fruit();
+        String str = objectMapper.writeValueAsString(fruit);
+        log.info(str);
+    }
+
+    interface UUIDGetter {
+        default String getUUID() {
+            return IdWorker.get32UUID();
+        }
+    }
 
     @Test
     public void testAssignableFrom() {
@@ -23,7 +46,7 @@ public class ReflectTest {
         log.info("one:{}, two:{}, three:{}", one, two, three);
     }
 
-    static class Fruit {
+    static class Fruit implements UUIDGetter {
 
     }
 

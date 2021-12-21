@@ -2,6 +2,7 @@ package cn.huacloud.taxpreference.controllers.consumer;
 
 import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
+import cn.huacloud.taxpreference.common.enums.CollectionType;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.consumer.FrequentlyAskedQuestionSearchService;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.FAQSearchQueryDTO;
@@ -41,6 +42,7 @@ public class FrequentlyAskedQuestionSearchController {
     @GetMapping("/faq/{id}")
     public ResultVO<FAQSearchVO> getFAQDetails(@PathVariable("id") Long id) throws Exception {
         FAQSearchVO faqSearchVO = frequentlyAskedQuestionSearchService.getFAQDetails(id);
+        faqSearchVO.initUserCollectionInfo(CollectionType.FREQUENTLY_ASKED_QUESTION);
         return ResultVO.ok(faqSearchVO);
     }
 

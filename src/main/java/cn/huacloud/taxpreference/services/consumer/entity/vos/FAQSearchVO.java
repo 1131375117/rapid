@@ -9,7 +9,7 @@ import java.time.LocalDate;
  * @author wangkh
  */
 @Data
-public class FAQSearchVO {
+public class FAQSearchVO extends UserCollectionInfo {
 
     @ApiModelProperty("主键ID")
     private Long id;

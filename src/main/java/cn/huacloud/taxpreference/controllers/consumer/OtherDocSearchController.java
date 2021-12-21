@@ -2,6 +2,7 @@ package cn.huacloud.taxpreference.controllers.consumer;
 
 import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
+import cn.huacloud.taxpreference.common.enums.CollectionType;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.consumer.OtherDocSearchService;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.OtherDocQueryDTO;
@@ -44,6 +45,7 @@ public class OtherDocSearchController {
     @GetMapping("/otherDoc/{id}")
     public ResultVO<OtherDocVO> pageSearch(@PathVariable("id") Long id) throws Exception {
         OtherDocVO otherDocVO = otherDocSearchService.getTaxOtherDocDetails(id);
+        otherDocVO.initUserCollectionInfo(CollectionType.CASE_ANALYSIS);
         return ResultVO.ok(otherDocVO);
     }
 }
