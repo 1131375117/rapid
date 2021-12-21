@@ -4,7 +4,6 @@ import cn.huacloud.taxpreference.common.utils.ConsumerUserUtil;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.common.OperationRecordService;
 import cn.huacloud.taxpreference.services.common.entity.dtos.OperationRecordDTO;
-import cn.huacloud.taxpreference.services.user.entity.vos.ConsumerLoginUserVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -35,9 +34,8 @@ public class OperationRecordController {
     @PostMapping("/operationRecord")
     public ResultVO<Void> operationRecord(@RequestBody @Validated OperationRecordDTO operationRecordDTO) {
         if (ConsumerUserUtil.isLogin()) {
-            ConsumerLoginUserVO currentUser = ConsumerUserUtil.getCurrentUser();
             Long consumerUserId = ConsumerUserUtil.getCurrentUserId();
-            operationRecord.operationRecord(operationRecordDTO, consumerUserId);
+            operationRecord.saveOperationRecord(operationRecordDTO, consumerUserId);
         }
         return ResultVO.ok();
     }

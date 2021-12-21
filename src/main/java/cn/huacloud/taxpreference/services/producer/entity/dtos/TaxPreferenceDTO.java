@@ -144,4 +144,6 @@ public class TaxPreferenceDTO {
     @ApiModelProperty("资源类型")
     private String resourceType;
 
+    @ApiModelProperty("纳税人资格类型")
+    private String typesTaxpayerEligibility;
 }

@@ -13,5 +13,5 @@ public interface OperationRecordService {
      * @param operationRecordDTO
      * @param consumerUserId
      */
-    void operationRecord(OperationRecordDTO operationRecordDTO, Long consumerUserId);
+    void saveOperationRecord(OperationRecordDTO operationRecordDTO, Long consumerUserId);
 }

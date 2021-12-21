@@ -12,8 +12,6 @@ import cn.huacloud.taxpreference.services.common.entity.dtos.DocStatisticsPlus;
 import cn.huacloud.taxpreference.services.common.entity.dtos.OperationRecordDTO;
 import cn.huacloud.taxpreference.services.common.mapper.OperationRecordMapper;
 import cn.huacloud.taxpreference.services.common.watch.WatcherViewService;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +43,7 @@ public class OperationRecordServiceImpl implements OperationRecordService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void operationRecord(OperationRecordDTO operationRecordDTO, Long consumerUserId) {
+    public void saveOperationRecord(OperationRecordDTO operationRecordDTO, Long consumerUserId) {
 
         OperationRecordDO operationRecordDO = new OperationRecordDO();
         BeanUtils.copyProperties(operationRecordDTO, operationRecordDO);
@@ -57,21 +55,12 @@ public class OperationRecordServiceImpl implements OperationRecordService {
         if (sysParamDO == null) {
             throw BizCode._4501.exception();
         }
-
-        //查询操作记录表是否存在该条数据，不存在则插入
-        LambdaQueryWrapper<OperationRecordDO> queryWrapper = Wrappers.lambdaQuery(OperationRecordDO.class);
-        queryWrapper.eq(OperationRecordDO::getOperationType, operationRecordDTO.getOperationType());
-        queryWrapper.eq(OperationRecordDO::getOperationParam, operationRecordDTO.getOperationParam());
-        Long count = operationRecordMapper.selectCount(queryWrapper);
-
         /*
          * 插入操作记录表
          * */
-        if (count == 0) {
-            operationRecordDO.setConsumerUserId(consumerUserId);
-            operationRecordDO.setCreateTime(LocalDateTime.now());
-            operationRecordMapper.insert(operationRecordDO);
-        }
+        operationRecordDO.setConsumerUserId(consumerUserId);
+        operationRecordDO.setCreateTime(LocalDateTime.now());
+        operationRecordMapper.insert(operationRecordDO);
 
         /*
          * 插入统计表

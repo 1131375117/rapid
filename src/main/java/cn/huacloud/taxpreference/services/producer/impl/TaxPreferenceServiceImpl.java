@@ -304,6 +304,8 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
                         taxPreferenceVO.setAnnualProfit(submitConditionDO.getRequirement());
                     } else if (ConditionName.RESOURCE_TYPE.contains(submitConditionDO.getConditionName())) {
                         taxPreferenceVO.setResourceType(submitConditionDO.getRequirement());
+                    }else if (ConditionName.TYPES_TAXPAYER_ELIGIBILITY.contains(submitConditionDO.getConditionName())) {
+                        taxPreferenceVO.setTypesTaxpayerEligibility(submitConditionDO.getRequirement());
                     } else {
                         SubmitConditionVO submitConditionVO = new SubmitConditionVO();
                         BeanUtils.copyProperties(submitConditionDO, submitConditionVO);
@@ -438,6 +440,16 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
             submitConditionDO.setTaxPreferenceId(taxPreferenceDO.getId());
             submitConditionDO.setSort(sort);
             submitConditionDO.setRequirement(taxPreferenceDTO.getGeneralTaxpayer());
+            sort++;
+            submitConditionMapper.insert(submitConditionDO);
+        }
+
+        if (!StringUtils.isEmpty(taxPreferenceDTO.getTypesTaxpayerEligibility())) {
+            SubmitConditionDO submitConditionDO = new SubmitConditionDO();
+            submitConditionDO.setConditionName(ConditionName.TYPES_TAXPAYER_ELIGIBILITY);
+            submitConditionDO.setTaxPreferenceId(taxPreferenceDO.getId());
+            submitConditionDO.setSort(sort);
+            submitConditionDO.setRequirement(taxPreferenceDTO.getTypesTaxpayerEligibility());
             sort++;
             submitConditionMapper.insert(submitConditionDO);
         }
