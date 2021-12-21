@@ -2,6 +2,7 @@ package cn.huacloud.taxpreference.controllers.consumer;
 
 import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
+import cn.huacloud.taxpreference.common.enums.CollectionType;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.consumer.TaxPreferenceSearchService;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.LatestTaxPreferenceSearchQueryDTO;
@@ -60,6 +61,7 @@ public class TaxPreferenceSearchController {
     @GetMapping("/taxPreference/{id}")
     public ResultVO<TaxPreferenceSearchVO> getTaxPreferenceDetails(@PathVariable("id") Long id) throws Exception {
         TaxPreferenceSearchVO taxPreferenceSearchVO = taxPreferenceSearchService.getTaxPreferenceDetails(id);
+        taxPreferenceSearchVO.initUserCollectionInfo(CollectionType.TAX_PREFERENCE);
         return ResultVO.ok(taxPreferenceSearchVO);
     }
 

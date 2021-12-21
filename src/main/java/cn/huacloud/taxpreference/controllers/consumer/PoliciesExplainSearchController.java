@@ -2,6 +2,7 @@ package cn.huacloud.taxpreference.controllers.consumer;
 
 import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
+import cn.huacloud.taxpreference.common.enums.CollectionType;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.consumer.PoliciesExplainSearchService;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.PoliciesExplainSearchQueryDTO;
@@ -51,7 +52,8 @@ public class PoliciesExplainSearchController {
     @ApiOperation("政策解读详情")
     @GetMapping("/policiesExplain/{id}")
     public ResultVO<PoliciesExplainSearchVO> pageSearch(@PathVariable("id") Long id) throws Exception {
-        PoliciesExplainSearchVO pageVO = policiesExplainSearchService.getPoliciesExplainDetails(id);
-        return ResultVO.ok(pageVO);
+        PoliciesExplainSearchVO policiesExplainSearchVO = policiesExplainSearchService.getPoliciesExplainDetails(id);
+        policiesExplainSearchVO.initUserCollectionInfo(CollectionType.POLICIES_EXPLAIN);
+        return ResultVO.ok(policiesExplainSearchVO);
     }
 }

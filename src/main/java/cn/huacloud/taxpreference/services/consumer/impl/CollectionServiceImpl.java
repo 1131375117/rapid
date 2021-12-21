@@ -2,6 +2,7 @@ package cn.huacloud.taxpreference.services.consumer.impl;
 
 import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
+import cn.huacloud.taxpreference.common.enums.CollectionType;
 import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.services.common.DocStatisticsService;
 import cn.huacloud.taxpreference.services.common.SysParamService;
@@ -83,6 +84,16 @@ public class CollectionServiceImpl implements CollectionService {
                 }).collect(Collectors.toList());
 
         return PageVO.createPageVO(collectionDOIPage, collectionVOList);
+    }
+
+    @Override
+    public Boolean isUserCollection(Long consumerUserId, CollectionType collectionType, Long sourceId) {
+        LambdaQueryWrapper<CollectionDO> queryWrapper = Wrappers.lambdaQuery(CollectionDO.class)
+                .eq(CollectionDO::getConsumerUserId, consumerUserId)
+                .eq(CollectionDO::getCollectionType, collectionType)
+                .eq(CollectionDO::getSourceId, sourceId);
+        Long count = collectionMapper.selectCount(queryWrapper);
+        return count > 0;
     }
 
     /**

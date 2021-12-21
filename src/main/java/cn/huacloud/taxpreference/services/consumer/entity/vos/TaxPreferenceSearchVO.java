@@ -12,7 +12,7 @@ import java.util.List;
  * @author wangkh
  */
 @Data
-public class TaxPreferenceSearchVO {
+public class TaxPreferenceSearchVO extends UserCollectionInfo {
 
     @ApiModelProperty("主键ID")
     private Long id;

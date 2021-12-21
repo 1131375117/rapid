@@ -16,7 +16,7 @@ import java.time.LocalDate;
  **/
 @Data
 @Accessors(chain = true)
-public class OtherDocVO {
+public class OtherDocVO extends UserCollectionInfo {
     private Long id;
     /**
      * 文档类型：CASE_ANALYSIS-案例分析
