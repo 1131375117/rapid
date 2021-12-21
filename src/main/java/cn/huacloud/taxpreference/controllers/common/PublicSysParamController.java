@@ -40,7 +40,7 @@ public class PublicSysParamController {
     @PostMapping("/sys/param/BasePreferenceCondition")
     public ResultVO<List<GroupVO<String>>> getBasePreferenceCondition(@RequestBody Set<String> taxCategoriesCode) {
         List<GroupVO<String>> conditions = sysParamService.getSysParamDOByTypes(SysParamTypes.TAX_PREFERENCE_CONDITION).stream()
-                .filter(sysParamDO -> "其他筛选".equals(sysParamDO.getExtendsField2()))
+                .filter(sysParamDO -> !"自定义条件".equals(sysParamDO.getExtendsField3()))
                 .filter(sysParamDO -> CustomStringUtil.haveIntersection(sysParamDO.getExtendsField1(), taxCategoriesCode))
                 .map(sysParamDO -> new GroupVO<String>().setName(sysParamDO.getParamName())
                         .setValues(CustomStringUtil.arrayStringToList(sysParamDO.getParamValue())))
