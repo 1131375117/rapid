@@ -2,6 +2,7 @@ package cn.huacloud.taxpreference.services.producer.entity.vos;
 
 import cn.huacloud.taxpreference.common.constants.ValidationGroup;
 import cn.huacloud.taxpreference.common.enums.taxpreference.PreferenceValidation;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.ConditionDO;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -150,18 +151,6 @@ public class TaxPreferenceVO {
    // @NotEmpty(message = "申报信息",groups = ValidationGroup.Manual.class)
     private List<SubmitConditionVO> submitConditionVOList;
 
-    @ApiModelProperty("是否年度获利")
-    private String annualProfit;
-
-    @ApiModelProperty("纳税信用等级")
-    private List<String> taxpayerCreditRatings;
-
-    @ApiModelProperty("增值税一般纳税人")
-    private String generalTaxpayer;
-
-    @ApiModelProperty("资源类型")
-    private String resourceType;
-
-    @ApiModelProperty("纳税人资格类型")
-    private String typesTaxpayerEligibility;
+    @ApiModelProperty("固定条件信息")
+    private List<ConditionDO> conditionList;
 }

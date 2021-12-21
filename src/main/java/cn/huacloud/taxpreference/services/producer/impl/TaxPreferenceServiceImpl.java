@@ -1,6 +1,6 @@
 package cn.huacloud.taxpreference.services.producer.impl;
 
-import cn.huacloud.taxpreference.common.constants.ConditionName;
+import cn.huacloud.taxpreference.common.constants.SysParamTypes;
 import cn.huacloud.taxpreference.common.constants.TaxpayerTypeConstants;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.BizCode;
@@ -12,6 +12,8 @@ import cn.huacloud.taxpreference.common.enums.taxpreference.TaxStatus;
 import cn.huacloud.taxpreference.common.exception.TaxPreferenceException;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
+import cn.huacloud.taxpreference.services.common.SysParamService;
+import cn.huacloud.taxpreference.services.common.entity.dos.SysParamDO;
 import cn.huacloud.taxpreference.services.common.entity.dtos.SysCodeStringDTO;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeVO;
 import cn.huacloud.taxpreference.services.producer.ProcessService;
@@ -40,6 +42,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 优惠政策服务实现类
@@ -58,6 +61,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     private ProcessService processService;
     private final PoliciesMapper policiesMapper;
     private final SysCodeService sysCodeService;
+    private final SysParamService sysParamService;
     private final TaxPreferenceEventTrigger taxPreferenceEventTrigger;
     static final String TAX_PREFERENCE_ID = "tax_preference_id";
     static HashSet<String> keyProperties = new HashSet<>();
@@ -292,26 +296,25 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
      */
     private List<SubmitConditionVO> getSubmitConditionVOS(
             List<SubmitConditionDO> submitConditionDOS, TaxPreferenceVO taxPreferenceVO) {
+        List<SysParamDO> sysParamDOS = sysParamService.getSysParamDOByTypes(SysParamTypes.TAX_PREFERENCE_CONDITION).stream().filter(sysParamDO -> StringUtils.isEmpty(sysParamDO.getExtendsField3())).collect(Collectors.toList());
+        List<String> conditionNames = sysParamDOS.stream().map(SysParamDO::getParamName).collect(Collectors.toList());
+        List<ConditionDO> conditionDOList = new ArrayList<>();
         List<SubmitConditionVO> submitConditionVOList = new ArrayList<>();
         submitConditionDOS.forEach(
                 submitConditionDO -> {
-                    if (ConditionName.GENERAL_TAXPAYER.contains(submitConditionDO.getConditionName())) {
-                        taxPreferenceVO.setGeneralTaxpayer(submitConditionDO.getRequirement());
-
-                    } else if (ConditionName.TAXPAYER_CREDIT_RATINGS.contains(submitConditionDO.getConditionName())) {
-                        taxPreferenceVO.setTaxpayerCreditRatings(Arrays.asList(submitConditionDO.getRequirement().split(",")));
-                    } else if (ConditionName.ANNUAL_PROFIT.contains(submitConditionDO.getConditionName())) {
-                        taxPreferenceVO.setAnnualProfit(submitConditionDO.getRequirement());
-                    } else if (ConditionName.RESOURCE_TYPE.contains(submitConditionDO.getConditionName())) {
-                        taxPreferenceVO.setResourceType(submitConditionDO.getRequirement());
-                    }else if (ConditionName.TYPES_TAXPAYER_ELIGIBILITY.contains(submitConditionDO.getConditionName())) {
-                        taxPreferenceVO.setTypesTaxpayerEligibility(submitConditionDO.getRequirement());
+                    //获取系统参数
+                    if (conditionNames.contains(submitConditionDO.getConditionName())) {
+                        ConditionDO conditionDO = new ConditionDO();
+                        conditionDO.setConditionName(submitConditionDO.getConditionName());
+                        conditionDO.setRequirement(Arrays.asList(submitConditionDO.getRequirement().split(",")));
+                        conditionDOList.add(conditionDO);
                     } else {
                         SubmitConditionVO submitConditionVO = new SubmitConditionVO();
                         BeanUtils.copyProperties(submitConditionDO, submitConditionVO);
                         submitConditionVOList.add(submitConditionVO);
                     }
                 });
+        taxPreferenceVO.setConditionList(conditionDOList);
         log.info("申报信息结果:submitConditionVOList={}", submitConditionVOList);
         return submitConditionVOList;
     }
@@ -424,52 +427,18 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
                 submitConditionMapper.insert(submitConditionDO);
             }
         }
-        if (!CollectionUtils.isEmpty(taxPreferenceDTO.getTaxpayerCreditRatings())) {
-            SubmitConditionDO submitConditionDO = new SubmitConditionDO();
-            submitConditionDO.setConditionName(ConditionName.TAXPAYER_CREDIT_RATINGS);
-            submitConditionDO.setTaxPreferenceId(taxPreferenceDO.getId());
-            submitConditionDO.setSort(sort);
-            submitConditionDO.setRequirement(StringUtils.join(taxPreferenceDTO.getTaxpayerCreditRatings(), ","));
-            sort++;
-            submitConditionMapper.insert(submitConditionDO);
-        }
-
-        if (!StringUtils.isEmpty(taxPreferenceDTO.getGeneralTaxpayer())) {
-            SubmitConditionDO submitConditionDO = new SubmitConditionDO();
-            submitConditionDO.setConditionName(ConditionName.GENERAL_TAXPAYER);
-            submitConditionDO.setTaxPreferenceId(taxPreferenceDO.getId());
-            submitConditionDO.setSort(sort);
-            submitConditionDO.setRequirement(taxPreferenceDTO.getGeneralTaxpayer());
-            sort++;
-            submitConditionMapper.insert(submitConditionDO);
-        }
-
-        if (!StringUtils.isEmpty(taxPreferenceDTO.getTypesTaxpayerEligibility())) {
-            SubmitConditionDO submitConditionDO = new SubmitConditionDO();
-            submitConditionDO.setConditionName(ConditionName.TYPES_TAXPAYER_ELIGIBILITY);
-            submitConditionDO.setTaxPreferenceId(taxPreferenceDO.getId());
-            submitConditionDO.setSort(sort);
-            submitConditionDO.setRequirement(taxPreferenceDTO.getTypesTaxpayerEligibility());
-            sort++;
-            submitConditionMapper.insert(submitConditionDO);
-        }
-
-        if (!StringUtils.isEmpty(taxPreferenceDTO.getAnnualProfit())) {
-            SubmitConditionDO submitConditionDO = new SubmitConditionDO();
-            submitConditionDO.setConditionName(ConditionName.ANNUAL_PROFIT);
-            submitConditionDO.setTaxPreferenceId(taxPreferenceDO.getId());
-            submitConditionDO.setSort(sort);
-            submitConditionDO.setRequirement(taxPreferenceDTO.getAnnualProfit());
-            sort++;
-            submitConditionMapper.insert(submitConditionDO);
-        }
-        if (!StringUtils.isEmpty(taxPreferenceDTO.getResourceType())) {
-            SubmitConditionDO submitConditionDO = new SubmitConditionDO();
-            submitConditionDO.setConditionName(ConditionName.RESOURCE_TYPE);
-            submitConditionDO.setTaxPreferenceId(taxPreferenceDO.getId());
-            submitConditionDO.setSort(sort);
-            submitConditionDO.setRequirement(taxPreferenceDTO.getResourceType());
-            submitConditionMapper.insert(submitConditionDO);
+        if (!CollectionUtils.isEmpty(taxPreferenceDTO.getConditionList())) {
+            for (ConditionDO conditionDO : taxPreferenceDTO.getConditionList()) {
+                SubmitConditionDO submitConditionDO = new SubmitConditionDO();
+                submitConditionDO.setConditionName(conditionDO.getConditionName());
+                submitConditionDO.setTaxPreferenceId(taxPreferenceDO.getId());
+                submitConditionDO.setSort(sort);
+                if (!CollectionUtils.isEmpty(conditionDO.getRequirement())) {
+                    submitConditionDO.setRequirement(StringUtils.join(conditionDO.getRequirement(), ","));
+                }
+                sort++;
+                submitConditionMapper.insert(submitConditionDO);
+            }
         }
     }
 

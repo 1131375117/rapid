@@ -132,18 +132,8 @@ public class TaxPreferenceDTO {
     @ApiModelProperty("SAVE-保存或者SUBMIT提交")
     private  TaxStatus status;
 
-    @ApiModelProperty("是否年度获利")
-    private String annualProfit;
+    @ApiModelProperty("固定条件信息")
+    private List<ConditionDO> conditionList;
 
-    @ApiModelProperty("纳税信用等级")
-    private List<String> taxpayerCreditRatings;
 
-    @ApiModelProperty("增值税一般纳税人")
-    private String generalTaxpayer;
-
-    @ApiModelProperty("资源类型")
-    private String resourceType;
-
-    @ApiModelProperty("纳税人资格类型")
-    private String typesTaxpayerEligibility;
 }
