@@ -196,7 +196,14 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
         String conditionsNestedAggregationName = "conditionsNestedAggregation";
         String conditionsTermsAggregationName = "conditionsTermsAggregation";
 
-        boolean needConditions = !CollectionUtils.isEmpty(pageQuery.getTaxCategoriesCodes());
+        String taxCategoriesCodeTermsAggregationName = "taxCategoriesCodesAggregationName";
+
+        // 需要动态条件
+        boolean needConditions = !CollectionUtils.isEmpty(pageQuery.getTaxCategoriesCodes()) ||
+                !CollectionUtils.isEmpty(pageQuery.getTaxPreferenceItems());
+
+        // 需要扩展税种
+        boolean needTaxCategories = !CollectionUtils.isEmpty(pageQuery.getTaxPreferenceItems());
 
         // term aggregation
         // 企业类型
@@ -207,7 +214,6 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
         TermsAggregationBuilder taxPreferenceItemTermsAggregation = AggregationBuilders.terms(taxPreferenceItemTermsAggregationName)
                 .field("taxPreferenceItem")
                 .size(DEFAULT_TERMS_SIZE);
-
 
         // source builder
         SearchSourceBuilder searchSourceBuilder = SearchSourceBuilder.searchSource()
@@ -221,6 +227,14 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
             NestedAggregationBuilder conditionsNestedAggregation = AggregationBuilders.nested(conditionsNestedAggregationName, "conditions")
                     .subAggregation(AggregationBuilders.terms(conditionsTermsAggregationName).field("conditions.conditionName").size(DEFAULT_TERMS_SIZE));
             searchSourceBuilder.aggregation(conditionsNestedAggregation);
+        }
+
+        if (needTaxCategories) {
+            // 所属税种
+            TermsAggregationBuilder taxCategoriesCodeTermsAggregation = AggregationBuilders.terms(taxCategoriesCodeTermsAggregationName)
+                    .field("taxCategories.codeValue")
+                    .size(DEFAULT_TERMS_SIZE);
+            searchSourceBuilder.aggregation(taxCategoriesCodeTermsAggregation);
         }
 
         // search request
@@ -274,6 +288,14 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
         } else {
             dynamicConditionVO.setConditions(new ArrayList<>());
         }
+
+        if (needTaxCategories) {
+            List<String> termsAggregationBucketKeys = getTermsAggregationBucketKeys(response, taxCategoriesCodeTermsAggregationName);
+            dynamicConditionVO.setTaxCategoriesCodes(termsAggregationBucketKeys);
+        } else {
+            dynamicConditionVO.setTaxCategoriesCodes(pageQuery.getTaxCategoriesCodes());
+        }
+
         return dynamicConditionVO;
     }
 
