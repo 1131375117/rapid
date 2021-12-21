@@ -33,8 +33,9 @@
         p.tax_preference_status as taxPreferenceStatus,
         tsc.requirement as taxpayerCreditRatings
         from t_tax_preference p left join t_submit_condition tsc
-        on p.id=tsc.tax_preference_id and p.deleted=0 and tsc.condition_name='纳税信用等级'
+        on p.id=tsc.tax_preference_id
         <where>
+             p.deleted=0 and tsc.condition_name='纳税信用等级'
             <if test="queryTaxPreferencesDTO.keyword!=null and queryTaxPreferencesDTO.keyword!= ''">
                 and p.tax_preference_name like "%"#{queryTaxPreferencesDTO.keyword}"%"
             </if>
