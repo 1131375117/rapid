@@ -5,6 +5,7 @@ import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.CollectionType;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.consumer.TaxPreferenceSearchService;
+import cn.huacloud.taxpreference.services.consumer.entity.dtos.DynamicConditionQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.LatestTaxPreferenceSearchQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.TaxPreferenceSearchQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.*;
@@ -74,7 +75,7 @@ public class TaxPreferenceSearchController {
 
     @ApiOperation("根据条件参数动态获取筛选条件")
     @PostMapping("/taxPreference/dynamicCondition")
-    public ResultVO<DynamicConditionVO> getDynamicCondition(@RequestBody TaxPreferenceSearchQueryDTO pageQuery) throws IOException {
+    public ResultVO<DynamicConditionVO> getDynamicCondition(@RequestBody DynamicConditionQueryDTO pageQuery) throws IOException {
         pageQuery.setKeyword(null);
         pageQuery.setConditions(new ArrayList<>());
         pageQuery.paramReasonable();
