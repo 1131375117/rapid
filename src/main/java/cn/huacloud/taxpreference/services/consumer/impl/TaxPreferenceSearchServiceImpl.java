@@ -204,7 +204,7 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
                 !CollectionUtils.isEmpty(pageQuery.getTaxPreferenceItems());
 
         // 需要扩展税种
-        boolean needTaxCategories = !CollectionUtils.isEmpty(pageQuery.getTaxPreferenceItems()) && pageQuery.getTaxPreferenceItemChange() ;
+        boolean needTaxCategories = !CollectionUtils.isEmpty(pageQuery.getTaxPreferenceItems()) && pageQuery.getTaxPreferenceItemChange();
 
         // term aggregation
         // 企业类型

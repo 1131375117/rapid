@@ -230,8 +230,15 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
      */
     default BoolQueryBuilder generatorDefaultQueryBuilder(T pageQuery) {
         BoolQueryBuilder boolQueryBuilder = boolQuery();
-        Class<?> clazz = pageQuery.getClass();
-        List<FieldWrapper> fieldWrappers = Arrays.stream(clazz.getDeclaredFields())
+        // 获取所有父类类型
+        List<Class<?>> classList = new ArrayList<>();
+        Class<?> targetClass = pageQuery.getClass();
+        while (!targetClass.isAssignableFrom(Object.class)) {
+            classList.add(targetClass);
+            targetClass = targetClass.getSuperclass();
+        }
+        List<FieldWrapper> fieldWrappers = classList.stream()
+                .flatMap(clazz -> Arrays.stream(clazz.getDeclaredFields()))
                 .map(field -> {
                     try {
                         field.setAccessible(true);
