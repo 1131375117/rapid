@@ -117,13 +117,12 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         // 修改-税收优惠表t_tax_preference
         TaxPreferenceDO taxPreferenceDO = getTaxPreferenceDO(taxPreferenceDTO);
         taxPreferenceMapper.updateById(taxPreferenceDO);
-        isRequireReleased(taxPreferenceDTO, currentUser, taxPreferenceDO);
-
         // 修改政策法规
         updateTaxPreferencePolicy(taxPreferenceDTO, taxPreferenceDO);
-
         // 修改-申报条件表 t_submit_condition
         updateSubmitConditionByTaxPreferenceId(taxPreferenceDTO);
+
+        isRequireReleased(taxPreferenceDTO, currentUser, taxPreferenceDO);
 
         return ResultVO.ok();
     }
