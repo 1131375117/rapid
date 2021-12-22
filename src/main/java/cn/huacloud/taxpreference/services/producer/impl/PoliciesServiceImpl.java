@@ -322,7 +322,7 @@ public class PoliciesServiceImpl implements PoliciesService {
 			policiesCombinationDTO.setTaxCategoriesCodes(
 					Arrays.asList((policiesDO.getTaxCategoriesCodes()).split(",")));
 		} else {
-			policiesCombinationDTO.setTaxpayerIdentifyTypeCodes(list);
+			policiesCombinationDTO.setTaxCategoriesCodes(list);
 		}
 		// 设置标签
 		if (StringUtils.isNotBlank(policiesDO.getLabels())) {
@@ -616,7 +616,7 @@ public class PoliciesServiceImpl implements PoliciesService {
 		// 遍历删除政策法规关联关系
 		for (FrequentlyAskedQuestionDO frequentlyAskedQuestionId : frequentlyAskedQuestionIds) {
 			List<String> ids = Arrays.asList(frequentlyAskedQuestionId.getPoliciesIds().split(","));
-			ArrayList<String> list = new ArrayList<>(ids);
+			List<String> list = new ArrayList<>(ids);
 			list.remove(String.valueOf(policiesDO.getId()));
 			frequentlyAskedQuestionId.setPoliciesIds(StringUtils.join(list, ","));
 			frequentlyAskedQuestionMapper.updateById(frequentlyAskedQuestionId);
