@@ -290,15 +290,14 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
             dynamicConditionVO.setConditions(new ArrayList<>());
         }
 
+        // 所属税种
         if (needTaxCategories) {
             List<String> mergeList = new ArrayList<>();
-            List<String> termsAggregationBucketKeys = getTermsAggregationBucketKeys(response, taxCategoriesCodeTermsAggregationName);
             if (!CollectionUtils.isEmpty(pageQuery.getTaxCategoriesCodes())) {
-                mergeList.addAll(termsAggregationBucketKeys);
                 mergeList.addAll(pageQuery.getTaxCategoriesCodes());
-            } else {
-                mergeList.addAll(taxPreferenceItems);
             }
+            List<String> termsAggregationBucketKeys = getTermsAggregationBucketKeys(response, taxCategoriesCodeTermsAggregationName);
+            mergeList.addAll(termsAggregationBucketKeys);
             List<String> merge = mergeList.stream()
                     .filter(Objects::nonNull)
                     .distinct()
