@@ -1,11 +1,14 @@
 package cn.huacloud.taxpreference.sample;
 
-import cn.huacloud.taxpreference.common.utils.ConsumerUserUtil;
+import cn.huacloud.taxpreference.services.consumer.entity.dtos.DynamicConditionQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.impl.FrequentlyAskedQuestionSearchServiceImpl;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 反射测试工具类
@@ -18,8 +21,15 @@ public class ReflectTest {
     ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
-    public void testLogin() {
-        boolean login = ConsumerUserUtil.isLogin();
+    public void testGetSuperClass() {
+        Class<? super Fruit> superclass = Fruit.class.getSuperclass();
+        List<Class<?>> classList = new ArrayList<>();
+        Class<?> target = DynamicConditionQueryDTO.class;
+        while (!target.isAssignableFrom(Object.class)) {
+            classList.add(target);
+            target = target.getSuperclass();
+        }
+        log.info("{}", classList);
     }
 
     @Test

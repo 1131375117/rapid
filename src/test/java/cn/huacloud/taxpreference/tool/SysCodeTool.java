@@ -5,7 +5,6 @@ import cn.huacloud.taxpreference.common.enums.SysCodeStatus;
 import cn.huacloud.taxpreference.common.enums.SysCodeType;
 import cn.huacloud.taxpreference.services.common.entity.dos.SysCodeDO;
 import cn.huacloud.taxpreference.services.common.mapper.SysCodeMapper;
-import cn.huacloud.taxpreference.tool.SysCodeTool.IgnoreProvider;
 import cn.hutool.core.convert.Convert;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -154,6 +153,7 @@ public class SysCodeTool extends BaseApplicationTest {
     /**
      * 征收项目代码表(DM_GY_ZSXM)码值
      */
+    @IgnoreProvider
     private SysCodeProvider DM_GY_ZSXMcsvIndustry = nextId -> {
         InputStream inputStream = new ClassPathResource("sys_code/征收项目代码表(DM_GY_ZSXM)码值.csv").getInputStream();
 
@@ -266,15 +266,19 @@ public class SysCodeTool extends BaseApplicationTest {
     /**
      * 适用行业
      */
+    /**
+     * 适用行业
+     */
     private SysCodeProvider DM_GY_HYcsvIndustry = nextId -> {
+
         InputStream inputStream = new ClassPathResource("sys_code/行业代码（DM_GY_HY）.csv").getInputStream();
 
         // 使用指定的字符编码以字符串列表的形式获取InputStream的内容，每行一个条目
         List<String> list = IOUtils.readLines(inputStream, StandardCharsets.UTF_8);
 
-
         List<SysCodeDO> sysCodeDOList = new ArrayList<>();
-        // 添加不限码值
+        ArrayList<Industry> targetIndustry = new ArrayList<>();
+
         SysCodeDO unlimited = new SysCodeDO().setCodeName("不限")
                 .setCodeValue(SysCodeType.INDUSTRY.getValue() + "_" + "BX")
                 .setId(nextId)
@@ -289,6 +293,18 @@ public class SysCodeTool extends BaseApplicationTest {
         // 删除.csv第一行
         list.remove(0);
         list.remove(0);
+        long pid = 0L;
+        // 行业对象
+        Industry industry = new Industry();
+        forEachIndustry(nextId, list, sysCodeDOList,pid,industry);
+        return sysCodeDOList;
+
+    };
+
+    private Long forEachIndustry(Long nextId, List<String> list, List<SysCodeDO> sysCodeDOList,Long pid,Industry industry) {
+
+
+        ArrayList<Industry> industries = new ArrayList<>();
         for (String line : list) {
             String[] split = line.split(",");
 
@@ -301,20 +317,25 @@ public class SysCodeTool extends BaseApplicationTest {
             if (smallClassSign.contains("Y")) {
                 continue;
             }
-            Long pid;
-            Long currentPid = 0L;
-            boolean isLeaf;
-            currentPid =  nextId;
+            boolean isLeaf = false;
+            SysCodeDO sysCodeDO = new SysCodeDO();
+
+            // A B C D E .....
             if (code.length() == 1) {
-                pid = 0L;
-                isLeaf = false;
-            } else {
-                pid = currentPid;
-                isLeaf = true;
+                industry = new Industry();
+                industry.setPid(0L).setIndustryList(split);
+                industries.add(industry);
+                sysCodeDO.setCodeName(name)
+                        .setCodeValue(code)
+                        .setId(nextId)
+                        .setPid(0L)
+                        .setCodeType(SysCodeType.INDUSTRY)
+                        .setLeaf(false)
+                        .setSort(nextId);
+                return nextId;
             }
 
 
-            SysCodeDO sysCodeDO = new SysCodeDO();
             if (validStatus.contains("Y")) {
                 sysCodeDO.setCodeStatus(SysCodeStatus.VALID);
             } else if (validStatus.contains("N")) {
@@ -328,13 +349,43 @@ public class SysCodeTool extends BaseApplicationTest {
                     .setLeaf(isLeaf)
                     .setSort(nextId);
 
-            nextId++;
             sysCodeDOList.add(sysCodeDO);
+            nextId++;
+            String[] industryList = industry.getIndustryList();
+            if (industryList != null) {
+                sysCodeDO.setLeaf(false);
+                nextId = forEachIndustry(nextId, list, sysCodeDOList, sysCodeDO.getId(),industry);
+            } else {
+                sysCodeDO.setLeaf(true);
+            }
+
         }
-        return sysCodeDOList;
+        return nextId;
+    }
 
-    };
 
+//    private Long extracted(Long nextId, String code, String name, String parentCode, SysCodeDO sysCodeDO,
+//            Long currentPid) {
+//
+//        String codeValue = code == null ? name : code;
+//        sysCodeDO.setCodeName(name)
+//                .setCodeValue(codeValue)
+//                .setId(nextId)
+//                .setCodeType(SysCodeType.INDUSTRY)
+//                .setSort(nextId);
+//        // 不能在一行代码里面循环
+//        if (parentCode.length() == 0 && code.length() == 1) {//A,B,C,D,E,F,G
+//            sysCodeDO.setPid(0L);
+//            sysCodeDO.setLeaf(false);
+//            currentPid = nextId;
+//            nextId = extracted(nextId, code, name, parentCode, sysCodeDO, currentPid);
+//        } else {
+//            sysCodeDO.setPid(currentPid);// 现在 id = pid
+//            sysCodeDO.setLeaf(true);
+//        }
+//        return nextId;
+//
+//    }
 
 
     @IgnoreProvider
@@ -460,6 +511,7 @@ public class SysCodeTool extends BaseApplicationTest {
     /**
      * 减免税事项代码表 减免事项
      */
+    @IgnoreProvider
     private SysCodeProvider TAX_DEDUCTIONS_EXEMPTIONS_csvIndustry = nextId -> {
         InputStream inputStream = new ClassPathResource("sys_code/减免税事项代码表.csv").getInputStream();
 
@@ -470,11 +522,15 @@ public class SysCodeTool extends BaseApplicationTest {
         // 删除.csv第一行,第二行
         list.remove(0);
         for (String line : list) {
-            String[] split = line.split(",");
 
-            String code = split[1];
-            String name = split[2];
-            String ExtendsField1 = split[3];
+            String[] split = line.split(",");
+            split = Arrays.copyOf(split, split.length + 1);
+
+            String code = split[0];
+            String name = split[1];
+            String ExtendsField1 = split[2];
+            String ExtendsField2 = split[3];
+            String note = split[4];
 
             SysCodeDO sysCodeDO = new SysCodeDO();
             Long pid = 0L;
@@ -486,6 +542,8 @@ public class SysCodeTool extends BaseApplicationTest {
                     .setCodeStatus(SysCodeStatus.VALID)
                     .setCodeType(SysCodeType.EXEMPT_MATTER)
                     .setExtendsField1(ExtendsField1)
+                    .setExtendsField2(ExtendsField2)
+                    .setNote(note)
                     .setLeaf(isLeaf)
                     .setSort(nextId);
 
@@ -688,7 +746,7 @@ public class SysCodeTool extends BaseApplicationTest {
     /**
      * 纳税人类型
      */
-    @IgnoreProvider
+//    @IgnoreProvider
     private SysCodeProvider taxpayerType = nextId -> {
         List<SysCodeDO> sysCodeDOList = readSingleFile("纳税人类型.txt", SysCodeType.TAXPAYER_TYPE, nextId);
         // TAX_CATEGORIES_ZZS、TAX_CATEGORIES_QYSDS
@@ -772,10 +830,11 @@ public class SysCodeTool extends BaseApplicationTest {
     @Accessors(chain = true)
     @Data
     public static class Industry {
+
         private Long id;
         private Long pid;
         private String code;
         private String name;
-        private List<Industry> industryList;
+        private String[] industryList;
     }
 }
