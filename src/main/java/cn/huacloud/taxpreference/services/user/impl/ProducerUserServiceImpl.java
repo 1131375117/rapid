@@ -247,6 +247,7 @@ public class ProducerUserServiceImpl implements ProducerUserService {
         // 检查是否为管理员用户
         adminUserCheck(producerUserDO.getUserAccount());
 
+        // 获取所有角色码值
         Set<String> allRoleCodes = roleService.getAllRoleCodes(UserType.PRODUCER);
         Set<String> setRoleCodes = new HashSet<>(roleCodes);
 
