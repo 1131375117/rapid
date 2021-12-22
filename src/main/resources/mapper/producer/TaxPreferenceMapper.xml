@@ -40,7 +40,7 @@
                 and p.tax_preference_name like "%"#{queryTaxPreferencesDTO.keyword}"%"
             </if>
             <if test="queryTaxPreferencesDTO.enterpriseType!=null and queryTaxPreferencesDTO.enterpriseType!=''">
-                and p.enterprise_type like "%"#{queryTaxPreferencesDTO.enterpriseType}"%"
+                and p.enterprise_type like #{queryTaxPreferencesDTO.enterpriseType}
             </if>
         <!--    <if test="queryTaxPreferencesDTO.taxCategoriesCodes != null and queryTaxPreferencesDTO.taxCategoriesCodes != '' ">
                 and p.tax_categories_codes= #{queryTaxPreferencesDTO.taxCategoriesCodes}
