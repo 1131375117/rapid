@@ -40,7 +40,7 @@
                 and p.tax_preference_name like "%"#{queryTaxPreferencesDTO.keyword}"%"
             </if>
             <if test="queryTaxPreferencesDTO.enterpriseType!=null and queryTaxPreferencesDTO.enterpriseType!=''">
-                and p.enterprise_type like "%"#{queryTaxPreferencesDTO.enterpriseType}"%"
+                and p.enterprise_type like #{queryTaxPreferencesDTO.enterpriseType}
             </if>
         <!--    <if test="queryTaxPreferencesDTO.taxCategoriesCodes != null and queryTaxPreferencesDTO.taxCategoriesCodes != '' ">
                 and p.tax_categories_codes= #{queryTaxPreferencesDTO.taxCategoriesCodes}
@@ -117,5 +117,8 @@
               (SELECT tax_preference_id FROM t_tax_preference_policies WHERE policies_id = #{policiesId})
           and t.tax_preference_status = 'RELEASED'
         GROUP BY ttp.tax_preference_id
+    </select>
+    <select id="queryEnterpirse" resultType="java.lang.String">
+        select enterprise_type from t_tax_preference where enterprise_type is not null group by enterprise_type
     </select>
 </mapper>

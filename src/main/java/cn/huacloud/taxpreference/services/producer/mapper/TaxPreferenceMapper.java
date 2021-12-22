@@ -1,14 +1,11 @@
 package cn.huacloud.taxpreference.services.producer.mapper;
 
-import cn.huacloud.taxpreference.services.producer.entity.dos.SubmitConditionDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.TaxPreferenceDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryTaxPreferencesDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.QueryTaxPreferencesVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceCountVO;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -59,4 +56,5 @@ public interface TaxPreferenceMapper  extends BaseMapper<TaxPreferenceDO> {
      */
     List<TaxPreferenceCountVO> selectTaxPreferenceId(Long policiesId);
 
+    List<String> queryEnterpirse();
 }
