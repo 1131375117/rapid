@@ -9,6 +9,7 @@ import cn.huacloud.taxpreference.common.utils.CustomStringUtil;
 import cn.huacloud.taxpreference.services.common.SysParamService;
 import cn.huacloud.taxpreference.services.common.entity.dos.SysParamDO;
 import cn.huacloud.taxpreference.services.consumer.TaxPreferenceSearchService;
+import cn.huacloud.taxpreference.services.consumer.entity.dtos.DynamicConditionQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.LatestTaxPreferenceSearchQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.TaxPreferenceSearchQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.*;
@@ -186,7 +187,7 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
     private static final int DEFAULT_TERMS_SIZE = 1000;
 
     @Override
-    public DynamicConditionVO getDynamicCondition(TaxPreferenceSearchQueryDTO pageQuery) throws IOException {
+    public DynamicConditionVO getDynamicCondition(DynamicConditionQueryDTO pageQuery) throws IOException {
         QueryBuilder queryBuilder = getQueryBuilder(pageQuery);
 
         String enterpriseTypeTermsAggregationName = "enterpriseTypeTermsAggregation";
@@ -196,7 +197,14 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
         String conditionsNestedAggregationName = "conditionsNestedAggregation";
         String conditionsTermsAggregationName = "conditionsTermsAggregation";
 
-        boolean needConditions = !CollectionUtils.isEmpty(pageQuery.getTaxCategoriesCodes());
+        String taxCategoriesCodeTermsAggregationName = "taxCategoriesCodesAggregationName";
+
+        // 需要动态条件
+        boolean needConditions = !CollectionUtils.isEmpty(pageQuery.getTaxCategoriesCodes()) ||
+                !CollectionUtils.isEmpty(pageQuery.getTaxPreferenceItems());
+
+        // 需要扩展税种
+        boolean needTaxCategories = !CollectionUtils.isEmpty(pageQuery.getTaxPreferenceItems()) && pageQuery.getTaxPreferenceItemChange() ;
 
         // term aggregation
         // 企业类型
@@ -207,7 +215,6 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
         TermsAggregationBuilder taxPreferenceItemTermsAggregation = AggregationBuilders.terms(taxPreferenceItemTermsAggregationName)
                 .field("taxPreferenceItem")
                 .size(DEFAULT_TERMS_SIZE);
-
 
         // source builder
         SearchSourceBuilder searchSourceBuilder = SearchSourceBuilder.searchSource()
@@ -221,6 +228,14 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
             NestedAggregationBuilder conditionsNestedAggregation = AggregationBuilders.nested(conditionsNestedAggregationName, "conditions")
                     .subAggregation(AggregationBuilders.terms(conditionsTermsAggregationName).field("conditions.conditionName").size(DEFAULT_TERMS_SIZE));
             searchSourceBuilder.aggregation(conditionsNestedAggregation);
+        }
+
+        if (needTaxCategories) {
+            // 所属税种
+            TermsAggregationBuilder taxCategoriesCodeTermsAggregation = AggregationBuilders.terms(taxCategoriesCodeTermsAggregationName)
+                    .field("taxCategories.codeValue")
+                    .size(DEFAULT_TERMS_SIZE);
+            searchSourceBuilder.aggregation(taxCategoriesCodeTermsAggregation);
         }
 
         // search request
@@ -274,6 +289,25 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
         } else {
             dynamicConditionVO.setConditions(new ArrayList<>());
         }
+
+        if (needTaxCategories) {
+            List<String> mergeList = new ArrayList<>();
+            List<String> termsAggregationBucketKeys = getTermsAggregationBucketKeys(response, taxCategoriesCodeTermsAggregationName);
+            if (!CollectionUtils.isEmpty(pageQuery.getTaxCategoriesCodes())) {
+                mergeList.addAll(termsAggregationBucketKeys);
+                mergeList.addAll(pageQuery.getTaxCategoriesCodes());
+            } else {
+                mergeList.addAll(taxPreferenceItems);
+            }
+            List<String> merge = mergeList.stream()
+                    .filter(Objects::nonNull)
+                    .distinct()
+                    .collect(Collectors.toList());
+            dynamicConditionVO.setTaxCategoriesCodes(merge);
+        } else {
+            dynamicConditionVO.setTaxCategoriesCodes(pageQuery.getTaxCategoriesCodes());
+        }
+
         return dynamicConditionVO;
     }
 

@@ -2,6 +2,7 @@ package cn.huacloud.taxpreference.services.consumer;
 
 import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
+import cn.huacloud.taxpreference.services.consumer.entity.dtos.DynamicConditionQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.LatestTaxPreferenceSearchQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.TaxPreferenceSearchQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.*;
@@ -47,5 +48,5 @@ public interface TaxPreferenceSearchService extends SearchService<TaxPreferenceS
      * @param pageQuery 分页查询条件
      * @return
      */
-    DynamicConditionVO getDynamicCondition(TaxPreferenceSearchQueryDTO pageQuery) throws IOException;
+    DynamicConditionVO getDynamicCondition(DynamicConditionQueryDTO pageQuery) throws IOException;
 }

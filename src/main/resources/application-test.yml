@@ -40,17 +40,17 @@ tax-preference:
     secret-key: "tax_preference_test"
   index:
     policies:
-      index: policies_index_2021-11-25_test
+      index: policies_index_2021-12-21_test
       alias: policies_test
     policies-explain:
-      index: policies_explain_index_2021-11-25_test
+      index: policies_explain_index_2021-12-21_test
       alias: policies_explain_test
     frequently-asked-question:
-      index: frequently_asked_question_index_2021-11-25_test
+      index: frequently_asked_question_index_2021-12-21_test
       alias: frequently_asked_question_test
     tax-preference:
-      index: tax_preference_index_2021-11-25_test
+      index: tax_preference_index_22021-12-21_test
       alias: tax_preference_test
     other-doc:
-      index: other_doc_index_2021-11-24_test
+      index: other_doc_index_2021-12-21_test
       alias: other_doc_test

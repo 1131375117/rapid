@@ -6,6 +6,8 @@ import cn.huacloud.taxpreference.services.consumer.entity.dtos.FAQSearchQueryDTO
 import cn.huacloud.taxpreference.services.consumer.entity.vos.FAQSearchSimpleVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.FAQSearchVO;
 
+import java.util.List;
+
 /**
  * 热点问答检索服务
  * @author wangkh
@@ -30,7 +32,14 @@ public interface FrequentlyAskedQuestionSearchService extends SearchService<FAQS
      * 根据政策ID查询相关热点问答
      * @param policiesId 政策法规ID
      * @param pageQuery 分页参数
-     * @return
+     * @return 分页数据
      */
     PageVO<FAQSearchVO> policiesRelatedFAQ(Long policiesId, PageQueryDTO pageQuery) throws Exception;
+
+    /**
+     * 获取所有热门问答来源
+     * @param size 一次获取多少数据
+     * @return docSourceList
+     */
+    List<String> getFaqDocSource(Integer size) throws Exception;
 }

@@ -13,11 +13,16 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
+import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.bucket.MultiBucketsAggregation;
+import org.elasticsearch.search.aggregations.bucket.terms.ParsedTerms;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.stereotype.Service;
@@ -25,6 +30,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.QueryBuilders.matchAllQuery;
 import static org.elasticsearch.index.query.QueryBuilders.termsQuery;
@@ -105,8 +111,30 @@ public class FrequentlyAskedQuestionSearchServiceImpl implements FrequentlyAsked
                 .setRecords(records);
     }
 
+    @Override
+    public List<String> getFaqDocSource(Integer size) throws Exception {
+        // name
+        String aggregationName = "docSourceTerms";
+        // search request
+        SearchRequest searchRequest = new SearchRequest(getIndex())
+                .source(SearchSourceBuilder.searchSource()
+                        .size(0)
+                        .aggregation(AggregationBuilders.terms(aggregationName)
+                                .field("docSource")
+                                .size(size)));
+        // do search
+        SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+        // get terms
+        ParsedTerms parsedTerms = searchResponse.getAggregations().get(aggregationName);
+        // mapping return
+        return parsedTerms.getBuckets().stream()
+                .map(MultiBucketsAggregation.Bucket::getKeyAsString)
+                .collect(Collectors.toList());
+    }
+
     /**
      * 获取ES索引名称（其实是别名）
+     *
      * @return ES索引名称
      */
     private String getIndex() {

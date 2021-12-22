@@ -9,9 +9,12 @@ import cn.huacloud.taxpreference.services.consumer.entity.dtos.FAQSearchQueryDTO
 import cn.huacloud.taxpreference.services.consumer.entity.vos.FAQSearchSimpleVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.FAQSearchVO;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author wangkh
@@ -36,6 +39,16 @@ public class FrequentlyAskedQuestionSearchController {
     public ResultVO<PageVO<FAQSearchVO>> pageSearch(@RequestBody FAQSearchQueryDTO pageQuery) throws Exception {
         PageVO<FAQSearchVO> pageVO = frequentlyAskedQuestionSearchService.pageSearch(pageQuery);
         return ResultVO.ok(pageVO);
+    }
+
+    @ApiModelProperty("获取所有热门问答来源")
+    @GetMapping("/faq/docSource")
+    public ResultVO<List<String>> getFaqDocSource(@RequestParam(value = "size", defaultValue = "200") Integer size) throws Exception {
+        if (size <= 0) {
+            size = 200;
+        }
+        List<String> docSourceList = frequentlyAskedQuestionSearchService.getFaqDocSource(size);
+        return ResultVO.ok(docSourceList);
     }
 
     @ApiOperation("热点问答详情")

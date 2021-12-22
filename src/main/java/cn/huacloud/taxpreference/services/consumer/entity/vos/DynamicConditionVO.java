@@ -22,6 +22,8 @@ public class DynamicConditionVO {
     private List<String> taxPreferenceItems;
     @ApiModelProperty("动态条件")
     private List<GroupVO<Condition>> conditions;
+    @ApiModelProperty("勾选的税种码值")
+    private List<String> taxCategoriesCodes;
 
     @Accessors(chain = true)
     @Getter
