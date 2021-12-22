@@ -9,10 +9,6 @@ import cn.hutool.core.convert.Convert;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
@@ -22,13 +18,18 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Ignore;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -38,7 +39,7 @@ import java.util.stream.Collectors;
  *
  * @author wangkh
  */
-@Ignore
+//@Ignore
 @Slf4j
 public class SysCodeTool extends BaseApplicationTest {
 
@@ -70,19 +71,29 @@ public class SysCodeTool extends BaseApplicationTest {
         }
 
         // 统一设置码值
-        Map<String, SysCodeDO> map = new LinkedHashMap<>();
-        for (SysCodeDO sysCodeDO : allSysCodes) {
-            if (sysCodeDO.getCodeValue() != null) {
-                continue;
-            }
-            // 首字母拼音
-//            String codeValue = sysCodeDO.getCodeType().getValue() + "_" + toFistLetterPinyin(sysCodeDO.getCodeName());
-            String codeValue = sysCodeDO.getCodeName();
-            sysCodeDO.setCodeValue(codeValue);
-            if (map.containsKey(codeValue)) {
-                log.error("系统码值重复：{} <-> {} {}", map.get(codeValue).getCodeName(), sysCodeDO.getCodeName(), codeValue);
-            } else {
-                map.put(codeValue, sysCodeDO);
+        Map<SysCodeType, List<SysCodeDO>> typedMap = allSysCodes.stream().collect(Collectors.groupingBy(SysCodeDO::getCodeType));
+
+        // 设置补充码值并且检查同类型中的码值是否重复
+        for (Map.Entry<SysCodeType, List<SysCodeDO>> entry : typedMap.entrySet()) {
+            Set<String> codeValueCheckSet = new HashSet<>();
+            for (SysCodeDO sysCodeDO : entry.getValue()) {
+                // 首字母拼音
+                // String codeValue = sysCodeDO.getCodeType().getValue() + "_" + toFistLetterPinyin(sysCodeDO.getCodeName());
+                // 首字母拼写替换为直接使用中文名称，不自己定义新的码值
+                if (StringUtils.isBlank(sysCodeDO.getCodeValue())) {
+                    String codeValue;
+                    if ("不限".equals(sysCodeDO.getCodeName())) {
+                        codeValue = sysCodeDO.getCodeName();
+                    } else {
+                        codeValue = toFistLetterPinyin(sysCodeDO.getCodeName());
+                    }
+                    sysCodeDO.setCodeValue(codeValue);
+                }
+                if (codeValueCheckSet.contains(sysCodeDO.getCodeValue())) {
+                    throw new IllegalArgumentException("系统码值重复");
+                } else {
+                    codeValueCheckSet.add(sysCodeDO.getCodeValue());
+                }
             }
         }
 
@@ -114,8 +125,8 @@ public class SysCodeTool extends BaseApplicationTest {
     /**
      * 纳税信用等级码表
      */
-    private SysCodeProvider TAXPAYER_CREDIT_RATINGScsvIndustry = nextId -> {
-        InputStream inputStream = new ClassPathResource("sys_code/纳税信用等级码表.csv").getInputStream();
+    private SysCodeProvider taxpayerCreditRating = nextId -> {
+        InputStream inputStream = new ClassPathResource("sys_code/csv/纳税信用等级码表.csv").getInputStream();
 
         // 使用指定的字符编码以字符串列表的形式获取InputStream的内容，每行一个条目
         List<String> list = IOUtils.readLines(inputStream, StandardCharsets.UTF_8);
@@ -154,8 +165,8 @@ public class SysCodeTool extends BaseApplicationTest {
      * 征收项目代码表(DM_GY_ZSXM)码值
      */
     @IgnoreProvider
-    private SysCodeProvider DM_GY_ZSXMcsvIndustry = nextId -> {
-        InputStream inputStream = new ClassPathResource("sys_code/征收项目代码表(DM_GY_ZSXM)码值.csv").getInputStream();
+    private SysCodeProvider zsxm = nextId -> {
+        InputStream inputStream = new ClassPathResource("sys_code/csv/征收项目代码表(DM_GY_ZSXM)码值.csv").getInputStream();
 
         // 使用指定的字符编码以字符串列表的形式获取InputStream的内容，每行一个条目
         List<String> list = IOUtils.readLines(inputStream, StandardCharsets.UTF_8);
@@ -220,8 +231,10 @@ public class SysCodeTool extends BaseApplicationTest {
                 });
         List<Area> targetArea = new ArrayList<>();
         Area zy = new Area().setName("中央")
+                .setCode("中央")
                 .setPid(0L);
         Area df = new Area().setName("地方")
+                .setCode("地方")
                 .setPid(0L)
                 .setCityList(standardAreas);
         targetArea.add(zy);
@@ -264,23 +277,43 @@ public class SysCodeTool extends BaseApplicationTest {
 
 
     /**
-     * 适用行业
+     * 适用行业CSV版本
      */
-    /**
-     * 适用行业
-     */
-    private SysCodeProvider DM_GY_HYcsvIndustry = nextId -> {
+    private SysCodeProvider industryFromCsv = nextId -> {
 
-        InputStream inputStream = new ClassPathResource("sys_code/行业代码（DM_GY_HY）.csv").getInputStream();
+        InputStream inputStream = new ClassPathResource("sys_code/csv/行业代码（DM_GY_HY）.csv").getInputStream();
 
         // 使用指定的字符编码以字符串列表的形式获取InputStream的内容，每行一个条目
         List<String> list = IOUtils.readLines(inputStream, StandardCharsets.UTF_8);
+        // 删除.csv第一行和第二行
+        list.remove(0);
+        list.remove(0);
+
+        // 把行数据映射为对象
+        Field[] declaredFields = IndustryCsv.class.getDeclaredFields();
+
+        List<IndustryCsv> industryCsvList = list.stream()
+                .map(line -> {
+                    String[] split = line.split(",");
+                    IndustryCsv industryCsv = new IndustryCsv();
+                    for (int i = 0; i < declaredFields.length; i++) {
+                        declaredFields[i].setAccessible(true);
+                        try {
+                            declaredFields[i].set(industryCsv, split[i]);
+                        } catch (IllegalAccessException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                    return industryCsv;
+                }).collect(Collectors.toList());
+
+        // 码值进行排序
+        industryCsvList.sort(IndustryCsv::compareTo);
 
         List<SysCodeDO> sysCodeDOList = new ArrayList<>();
-        ArrayList<Industry> targetIndustry = new ArrayList<>();
 
+        // 添加不限代码
         SysCodeDO unlimited = new SysCodeDO().setCodeName("不限")
-                .setCodeValue(SysCodeType.INDUSTRY.getValue() + "_" + "BX")
                 .setId(nextId)
                 .setPid(0L)
                 .setCodeType(SysCodeType.INDUSTRY)
@@ -290,107 +323,91 @@ public class SysCodeTool extends BaseApplicationTest {
         sysCodeDOList.add(unlimited);
         nextId++;
 
-        // 删除.csv第一行
-        list.remove(0);
-        list.remove(0);
-        long pid = 0L;
-        // 行业对象
-        Industry industry = new Industry();
-        forEachIndustry(nextId, list, sysCodeDOList,pid,industry);
-        return sysCodeDOList;
+        // 映射为系统码值对象
 
-    };
+        // PID map
+        Map<String, List<IndustryCsv>> pCodeMap = industryCsvList.stream().collect(Collectors.groupingBy(IndustryCsv::getSjhyDm));
 
-    private Long forEachIndustry(Long nextId, List<String> list, List<SysCodeDO> sysCodeDOList,Long pid,Industry industry) {
+        Map<Long, IndustryCsv> idIndustryCsvMap = new HashMap<>();
 
-
-        ArrayList<Industry> industries = new ArrayList<>();
-        for (String line : list) {
-            String[] split = line.split(",");
-
-            String code = split[0];
-            String name = split[1];
-            String validStatus = split[8];
-            String parentCode = split[6];
-            // 小类Y 不要。
-            String smallClassSign = split[5];
-            if (smallClassSign.contains("Y")) {
-                continue;
+        for (IndustryCsv industryCsv : industryCsvList) {
+            SysCodeStatus sysCodeStatus;
+            // 选用Y -> VALID 选用N 有效Y -> hidden; 其余 -> DISABLE
+            if (industryCsv.getXybz().contains("Y")) {
+                // 中类以下都隐藏
+                if (industryCsv.getXlbz().contains("Y")) {
+                    sysCodeStatus = SysCodeStatus.HIDDEN;
+                } else {
+                    sysCodeStatus = SysCodeStatus.VALID;
+                }
+            } else if (industryCsv.getXybz().contains("N") && industryCsv.getYxbz().contains("Y")) {
+                sysCodeStatus = SysCodeStatus.HIDDEN;
+            } else {
+                sysCodeStatus = SysCodeStatus.DISABLE;
             }
-            boolean isLeaf = false;
-            SysCodeDO sysCodeDO = new SysCodeDO();
-
-            // A B C D E .....
-            if (code.length() == 1) {
-                industry = new Industry();
-                industry.setPid(0L).setIndustryList(split);
-                industries.add(industry);
-                sysCodeDO.setCodeName(name)
-                        .setCodeValue(code)
-                        .setId(nextId)
-                        .setPid(0L)
-                        .setCodeType(SysCodeType.INDUSTRY)
-                        .setLeaf(false)
-                        .setSort(nextId);
-                return nextId;
-            }
-
-
-            if (validStatus.contains("Y")) {
-                sysCodeDO.setCodeStatus(SysCodeStatus.VALID);
-            } else if (validStatus.contains("N")) {
-                sysCodeDO.setCodeStatus(SysCodeStatus.HIDDEN);
-            }
-            sysCodeDO.setCodeName(name)
-                    .setCodeValue(code)
+            //
+            SysCodeDO sysCodeDO = new SysCodeDO()
                     .setId(nextId)
-                    .setPid(pid)
+                    .setCodeName(industryCsv.getHymc())
+                    .setCodeValue(industryCsv.getHyDm())
                     .setCodeType(SysCodeType.INDUSTRY)
-                    .setLeaf(isLeaf)
+                    .setCodeStatus(sysCodeStatus)
+                    .setLeaf(!pCodeMap.containsKey(industryCsv.getHyDm()))
                     .setSort(nextId);
 
             sysCodeDOList.add(sysCodeDO);
+            idIndustryCsvMap.put(sysCodeDO.getId(), industryCsv);
             nextId++;
-            String[] industryList = industry.getIndustryList();
-            if (industryList != null) {
-                sysCodeDO.setLeaf(false);
-                nextId = forEachIndustry(nextId, list, sysCodeDOList, sysCodeDO.getId(),industry);
-            } else {
-                sysCodeDO.setLeaf(true);
-            }
-
         }
-        return nextId;
+
+        Map<String, Long> codeValueIdMap = sysCodeDOList.stream().collect(Collectors.toMap(SysCodeDO::getCodeValue, SysCodeDO::getId));
+
+        // 设置PID
+        for (SysCodeDO sysCodeDO : sysCodeDOList) {
+            IndustryCsv industryCsv = idIndustryCsvMap.get(sysCodeDO.getId());
+            if (industryCsv == null) {
+                continue;
+            }
+            Long pid = codeValueIdMap.get(industryCsv.getSjhyDm());
+            if (pid == null) {
+                pid = 0L;
+            }
+            sysCodeDO.setPid(pid);
+        }
+        return sysCodeDOList;
+    };
+
+    @Accessors(chain = true)
+    @Data
+    static class IndustryCsv implements Comparable<IndustryCsv> {
+        private String hyDm;
+        private String hymc;
+        private String mlbz;
+        private String dlbz;
+        private String zlbz;
+        private String xlbz;
+        private String sjhyDm;
+        private String xybz;
+        private String yxbz;
+
+        private int getSort(String target) {
+            try {
+                int num = Integer.parseInt(target);
+                return num + 1000;
+            } catch (NumberFormatException e) {
+                return target.charAt(0);
+            }
+        }
+
+        @Override
+        public int compareTo(@NotNull IndustryCsv o) {
+            return Integer.compare(getSort(this.getHyDm()), getSort(o.getHyDm()));
+        }
     }
-
-
-//    private Long extracted(Long nextId, String code, String name, String parentCode, SysCodeDO sysCodeDO,
-//            Long currentPid) {
-//
-//        String codeValue = code == null ? name : code;
-//        sysCodeDO.setCodeName(name)
-//                .setCodeValue(codeValue)
-//                .setId(nextId)
-//                .setCodeType(SysCodeType.INDUSTRY)
-//                .setSort(nextId);
-//        // 不能在一行代码里面循环
-//        if (parentCode.length() == 0 && code.length() == 1) {//A,B,C,D,E,F,G
-//            sysCodeDO.setPid(0L);
-//            sysCodeDO.setLeaf(false);
-//            currentPid = nextId;
-//            nextId = extracted(nextId, code, name, parentCode, sysCodeDO, currentPid);
-//        } else {
-//            sysCodeDO.setPid(currentPid);// 现在 id = pid
-//            sysCodeDO.setLeaf(true);
-//        }
-//        return nextId;
-//
-//    }
-
 
     @IgnoreProvider
     private SysCodeProvider csvIndustry = nextId -> {
-        InputStream inputStream = new ClassPathResource("sys_code/行业代码.csv").getInputStream();
+        InputStream inputStream = new ClassPathResource("sys_code/csv/行业代码.csv").getInputStream();
 
         // 使用指定的字符编码以字符串列表的形式获取InputStream的内容，每行一个条目
         List<String> list = IOUtils.readLines(inputStream, StandardCharsets.UTF_8);
@@ -400,7 +417,6 @@ public class SysCodeTool extends BaseApplicationTest {
 
         // 添加不限码值
         SysCodeDO unlimited = new SysCodeDO().setCodeName("不限")
-                .setCodeValue(SysCodeType.INDUSTRY.getValue() + "_" + "BX")
                 .setId(nextId)
                 .setPid(0L)
                 .setCodeType(SysCodeType.INDUSTRY)
@@ -460,7 +476,6 @@ public class SysCodeTool extends BaseApplicationTest {
         List<SysCodeDO> sysCodeDOList = new ArrayList<>();
         // 添加不限码值
         SysCodeDO unlimited = new SysCodeDO().setCodeName("不限")
-                .setCodeValue(SysCodeType.INDUSTRY.getValue() + "_" + "BX")
                 .setId(nextId)
                 .setPid(0L)
                 .setCodeType(SysCodeType.INDUSTRY)
@@ -512,8 +527,8 @@ public class SysCodeTool extends BaseApplicationTest {
      * 减免税事项代码表 减免事项
      */
     @IgnoreProvider
-    private SysCodeProvider TAX_DEDUCTIONS_EXEMPTIONS_csvIndustry = nextId -> {
-        InputStream inputStream = new ClassPathResource("sys_code/减免税事项代码表.csv").getInputStream();
+    private SysCodeProvider exemptMatter = nextId -> {
+        InputStream inputStream = new ClassPathResource("sys_code/csv/减免税事项代码表.csv").getInputStream();
 
         // 使用指定的字符编码以字符串列表的形式获取InputStream的内容，每行一个条目
         List<String> list = IOUtils.readLines(inputStream, StandardCharsets.UTF_8);
@@ -556,8 +571,8 @@ public class SysCodeTool extends BaseApplicationTest {
     /**
      * 收入种类代码表 所属税种
      */
-    private SysCodeProvider TYPE_OF_INCOME_csvIndustry = nextId -> {
-        InputStream inputStream = new ClassPathResource("sys_code/收入种类代码（2021-12-14new）.csv").getInputStream();
+    private SysCodeProvider taxCategoriesCsv = nextId -> {
+        InputStream inputStream = new ClassPathResource("sys_code/csv/收入种类代码（2021-12-14new）.csv").getInputStream();
 
         List<String> list = IOUtils.readLines(inputStream, StandardCharsets.UTF_8);
 
@@ -599,8 +614,8 @@ public class SysCodeTool extends BaseApplicationTest {
     /**
      * 企业类型代码表
      */
-    private SysCodeProvider TYPE_OF_ENTERPRISE_csvIndustry = nextId -> {
-        InputStream inputStream = new ClassPathResource("sys_code/企业类型代码表（2021-12-14new）.csv").getInputStream();
+    private SysCodeProvider enterpriseTypeCsv = nextId -> {
+        InputStream inputStream = new ClassPathResource("sys_code/csv/企业类型代码表（2021-12-14）.csv").getInputStream();
 
         // 使用指定的字符编码以字符串列表的形式获取InputStream的内容，每行一个条目
         List<String> list = IOUtils.readLines(inputStream, StandardCharsets.UTF_8);
@@ -642,8 +657,8 @@ public class SysCodeTool extends BaseApplicationTest {
     /**
      * 登记注册类型代码表.csv
      */
-    private SysCodeProvider TAXPAYER_REGISTER_TYPEcsvIndustry = nextId -> {
-        InputStream inputStream = new ClassPathResource("sys_code/登记注册类型代码表.csv").getInputStream();
+    private SysCodeProvider taxpayerRegisterTypeCsv = nextId -> {
+        InputStream inputStream = new ClassPathResource("sys_code/csv/登记注册类型代码表.csv").getInputStream();
 
         List<String> list = IOUtils.readLines(inputStream, StandardCharsets.UTF_8);
 
@@ -677,8 +692,8 @@ public class SysCodeTool extends BaseApplicationTest {
      * 登记注册类型代码表(DM_DJ_DJZCLX)码值
      */
     @IgnoreProvider
-    private SysCodeProvider DM_DJ_DJZCLX_csvIndustry = nextId -> {
-        InputStream inputStream = new ClassPathResource("sys_code/登记注册类型代码表(DM_DJ_DJZCLX)码值.csv").getInputStream();
+    private SysCodeProvider djzclx = nextId -> {
+        InputStream inputStream = new ClassPathResource("sys_code/csv/登记注册类型代码表(DM_DJ_DJZCLX)码值.csv").getInputStream();
 
         // 使用指定的字符编码以字符串列表的形式获取InputStream的内容，每行一个条目
         List<String> list = IOUtils.readLines(inputStream, StandardCharsets.UTF_8);
@@ -731,6 +746,7 @@ public class SysCodeTool extends BaseApplicationTest {
         return sysCodeDOList;
 
     };
+
     @IgnoreProvider
     private SysCodeProvider enterpriseType = nextId -> readSingleFile("适用企业类型.txt", SysCodeType.ENTERPRISE_TYPE,
             nextId);
@@ -746,7 +762,6 @@ public class SysCodeTool extends BaseApplicationTest {
     /**
      * 纳税人类型
      */
-//    @IgnoreProvider
     private SysCodeProvider taxpayerType = nextId -> {
         List<SysCodeDO> sysCodeDOList = readSingleFile("纳税人类型.txt", SysCodeType.TAXPAYER_TYPE, nextId);
         // TAX_CATEGORIES_ZZS、TAX_CATEGORIES_QYSDS
@@ -754,17 +769,17 @@ public class SysCodeTool extends BaseApplicationTest {
             String codeName = sysCodeDO.getCodeName();
             if (codeName.startsWith("增值税")) {
                 sysCodeDO.setCodeName(StringUtils.substringAfter(codeName, "-"));
-                sysCodeDO.setExtendsField1("TAX_CATEGORIES_ZZS");
+                sysCodeDO.setExtendsField1("10101");
                 sysCodeDO.setExtendsField2("增值税");
             } else if (codeName.startsWith("企业所得税")) {
                 sysCodeDO.setCodeName(StringUtils.substringAfter(codeName, "-"));
-                sysCodeDO.setExtendsField1("TAX_CATEGORIES_QYSDS");
+                sysCodeDO.setExtendsField1("10104");
                 sysCodeDO.setExtendsField2("企业所得税");
             } else if (codeName.equals("不限")) {
                 // do nothing
             } else if (codeName.startsWith("个人所得税")) {
                 sysCodeDO.setCodeName(StringUtils.substringAfter(codeName, "-"));
-                sysCodeDO.setExtendsField1("TAX_CATEGORIES_GRSDS");
+                sysCodeDO.setExtendsField1("10106");
                 sysCodeDO.setExtendsField2("个人所得税");
                 sysCodeDO.setCodeStatus(SysCodeStatus.HIDDEN);
             } else {
@@ -827,14 +842,4 @@ public class SysCodeTool extends BaseApplicationTest {
         private List<Area> cityList;
     }
 
-    @Accessors(chain = true)
-    @Data
-    public static class Industry {
-
-        private Long id;
-        private Long pid;
-        private String code;
-        private String name;
-        private String[] industryList;
-    }
 }
