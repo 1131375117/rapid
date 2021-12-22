@@ -118,4 +118,7 @@
           and t.tax_preference_status = 'RELEASED'
         GROUP BY ttp.tax_preference_id
     </select>
+    <select id="queryEnterpirse" resultType="java.lang.String">
+        select enterprise_type from t_tax_preference where enterprise_type is not null group by enterprise_type
+    </select>
 </mapper>

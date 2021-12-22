@@ -20,6 +20,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotEmpty;
+import java.util.List;
 
 /**
  * 优惠政策接口
@@ -109,6 +110,19 @@ public class TaxPreferenceController {
     @PutMapping("reTaxPreference/{id}")
     public ResultVO<Void> taxPreference(@Validated @NotEmpty(message = "id不能为空") @PathVariable Long id) {
         return taxPreferenceService.reTaxPreference(id);
+    }
+
+    /**
+     * 税收优惠事项内容撤回
+     * 删除条件:优惠事项idlist
+     */
+    @PermissionInfo(name = "税收优惠企业类型列表获取", group = PermissionGroup.TAX_PREFERENCE)
+    @SaCheckPermission("producer_taxPreference_enterprise")
+    @ApiOperation("企业类型获取")
+    @GetMapping("queryEnterprise")
+    public ResultVO<List<String>> queryEnterprise() {
+        List<String> enterpriseList = taxPreferenceService.queryEnterprise();
+        return ResultVO.ok(enterpriseList);
     }
 
 }

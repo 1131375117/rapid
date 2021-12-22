@@ -116,4 +116,10 @@ public interface TaxPreferenceService {
 	 * @param taxPreferenceDTO
 	 */
 	 void checkLabels(TaxPreferenceDTO taxPreferenceDTO) ;
+
+	/**
+	 * 查询企业类型
+	 * @return
+	 */
+	List<String> queryEnterprise();
 }
