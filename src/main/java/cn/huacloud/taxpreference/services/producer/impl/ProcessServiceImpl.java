@@ -27,6 +27,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -74,6 +75,8 @@ public class ProcessServiceImpl implements ProcessService {
             taxPreferenceService.judgeExists(taxPreferenceDTO);
             // 检测纳税人类型和标签管理
             taxPreferenceService.checkLabels(taxPreferenceDTO);
+            //检测留存备查资料、提交税务机关资料、报送时限
+            judgeDataResource(taxPreferenceVO);
             //税收优惠
             judgeProcessIng(taxPreferenceId);
             //新增先查询是否存在并更新流程状态
@@ -97,6 +100,8 @@ public class ProcessServiceImpl implements ProcessService {
         }
         return ResultVO.ok();
     }
+
+
 
     @Override
     public ResultVO<PageVO<ProcessListVO>> queryProcessList(ProcessListDTO processListDTO, Long userId) {
@@ -185,5 +190,17 @@ public class ProcessServiceImpl implements ProcessService {
         return taxPreferenceDO;
     }
 
+    /**
+     * 判断留存备查资料、提交税务机关资料、报送时限
+     * @param taxPreferenceVO
+     */
+    private void judgeDataResource(TaxPreferenceVO taxPreferenceVO) {
+        String keepQueryData = taxPreferenceVO.getKeepQueryData();
+        String submitTaxData = taxPreferenceVO.getSubmitTaxData();
+        String submitTimeLimit = taxPreferenceVO.getSubmitTimeLimit();
+        if(StringUtils.isEmpty(keepQueryData)&&StringUtils.isEmpty(submitTaxData)&&StringUtils.isEmpty(submitTimeLimit)){
+            throw BizCode._4315.exception();
+        }
+    }
 
 }
