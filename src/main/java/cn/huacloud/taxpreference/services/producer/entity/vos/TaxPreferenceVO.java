@@ -130,7 +130,7 @@ public class TaxPreferenceVO {
     private String taxPreferenceItem;
 
     @ApiModelProperty("申报简要说明")
-   // @NotEmpty(message = "申报简要说明不能为空",groups = ValidationGroup.Manual.class)
+    @NotEmpty(message = "申报表填写指导说明不能为空",groups = ValidationGroup.Manual.class)
     private String submitDescription;
 
     @ApiModelProperty("有效性")

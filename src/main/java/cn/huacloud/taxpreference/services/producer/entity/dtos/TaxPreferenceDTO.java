@@ -115,8 +115,8 @@ public class TaxPreferenceDTO {
    // @NotEmpty(message = "提资料报送时限不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
     private String submitTimeLimit;
 
-    @ApiModelProperty("申报表填写简要说明")
- //   @NotEmpty(message = "申报表填写简要说明不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+    @ApiModelProperty("申报表填写指导说明")
+    @NotEmpty(message = "申报表填写指导说明不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
     private String submitDescription;
 
     @ApiModelProperty("政策法规关联信息")

@@ -54,7 +54,7 @@ public class ProcessServiceImpl implements ProcessService {
 
     private final TaxPreferenceEventTrigger taxPreferenceEventTrigger;
 
-    private  TaxPreferenceService taxPreferenceService;
+    private TaxPreferenceService taxPreferenceService;
 
     @Autowired
     public void setTaxPreferenceService(TaxPreferenceService taxPreferenceService) {
@@ -68,9 +68,9 @@ public class ProcessServiceImpl implements ProcessService {
         for (Long taxPreferenceId : taxPreferenceIds) {
             //校验税收优惠是否存在必填未校验
             TaxPreferenceVO taxPreferenceVO = taxPreferenceService.queryTaxPreferenceInfo(taxPreferenceId).getData();
-                ValidationUtil.validate(taxPreferenceVO, ValidationGroup.Manual.class);
+            ValidationUtil.validate(taxPreferenceVO, ValidationGroup.Manual.class);
             TaxPreferenceDTO taxPreferenceDTO = new TaxPreferenceDTO();
-            BeanUtils.copyProperties(taxPreferenceVO,taxPreferenceDTO);
+            BeanUtils.copyProperties(taxPreferenceVO, taxPreferenceDTO);
             // 判断是否存在
             taxPreferenceService.judgeExists(taxPreferenceDTO);
             // 检测纳税人类型和标签管理
@@ -100,7 +100,6 @@ public class ProcessServiceImpl implements ProcessService {
         }
         return ResultVO.ok();
     }
-
 
 
     @Override
@@ -192,13 +191,14 @@ public class ProcessServiceImpl implements ProcessService {
 
     /**
      * 判断留存备查资料、提交税务机关资料、报送时限
+     *
      * @param taxPreferenceVO
      */
     private void judgeDataResource(TaxPreferenceVO taxPreferenceVO) {
         String keepQueryData = taxPreferenceVO.getKeepQueryData();
         String submitTaxData = taxPreferenceVO.getSubmitTaxData();
         String submitTimeLimit = taxPreferenceVO.getSubmitTimeLimit();
-        if(StringUtils.isEmpty(keepQueryData)&&StringUtils.isEmpty(submitTaxData)&&StringUtils.isEmpty(submitTimeLimit)){
+        if (StringUtils.isEmpty(keepQueryData) && StringUtils.isEmpty(submitTaxData) && StringUtils.isEmpty(submitTimeLimit)) {
             throw BizCode._4315.exception();
         }
     }
