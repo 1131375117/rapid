@@ -6,6 +6,7 @@ import cn.huacloud.taxpreference.common.entity.vos.GroupVO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.utils.CustomStringUtil;
+import cn.huacloud.taxpreference.common.utils.SpringUtil;
 import cn.huacloud.taxpreference.services.common.SysParamService;
 import cn.huacloud.taxpreference.services.common.entity.dos.SysParamDO;
 import cn.huacloud.taxpreference.services.consumer.TaxPreferenceSearchService;
@@ -42,7 +43,9 @@ import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.io.IOException;
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -187,77 +190,151 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
     private static final int DEFAULT_TERMS_SIZE = 1000;
 
     @Override
-    public DynamicConditionVO getDynamicCondition(DynamicConditionQueryDTO pageQuery) throws IOException {
-        QueryBuilder queryBuilder = getQueryBuilder(pageQuery);
-
-        String enterpriseTypeTermsAggregationName = "enterpriseTypeTermsAggregation";
-
-        String taxPreferenceItemTermsAggregationName = "taxPreferenceItemTermsAggregation";
-
-        String conditionsNestedAggregationName = "conditionsNestedAggregation";
-        String conditionsTermsAggregationName = "conditionsTermsAggregation";
-
-        String taxCategoriesCodeTermsAggregationName = "taxCategoriesCodesAggregationName";
-
-        // 需要动态条件
-        boolean needConditions = !CollectionUtils.isEmpty(pageQuery.getTaxCategoriesCodes()) ||
-                !CollectionUtils.isEmpty(pageQuery.getTaxPreferenceItems());
-
-        // 需要扩展税种
-        boolean needTaxCategories = !CollectionUtils.isEmpty(pageQuery.getTaxPreferenceItems()) && pageQuery.getTaxPreferenceItemChange();
-
-        // term aggregation
-        // 企业类型
-        TermsAggregationBuilder enterpriseTypeTermsAggregation = AggregationBuilders.terms(enterpriseTypeTermsAggregationName)
-                .field("enterpriseType")
-                .size(DEFAULT_TERMS_SIZE);
-        // 减免事项
-        TermsAggregationBuilder taxPreferenceItemTermsAggregation = AggregationBuilders.terms(taxPreferenceItemTermsAggregationName)
-                .field("taxPreferenceItem")
-                .size(DEFAULT_TERMS_SIZE);
-
+    public DynamicConditionVO getDynamicCondition(DynamicConditionQueryDTO pageQuery) throws Exception {
         // source builder
         SearchSourceBuilder searchSourceBuilder = SearchSourceBuilder.searchSource()
-                .query(queryBuilder)
-                .aggregation(enterpriseTypeTermsAggregation)
-                .aggregation(taxPreferenceItemTermsAggregation)
+                .query(getQueryBuilder(pageQuery))
                 .size(0);
 
-        if (needConditions) {
-            // 优惠条件
-            NestedAggregationBuilder conditionsNestedAggregation = AggregationBuilders.nested(conditionsNestedAggregationName, "conditions")
-                    .subAggregation(AggregationBuilders.terms(conditionsTermsAggregationName).field("conditions.conditionName").size(DEFAULT_TERMS_SIZE));
-            searchSourceBuilder.aggregation(conditionsNestedAggregation);
-        }
-
-        if (needTaxCategories) {
-            // 所属税种
-            TermsAggregationBuilder taxCategoriesCodeTermsAggregation = AggregationBuilders.terms(taxCategoriesCodeTermsAggregationName)
-                    .field("taxCategories.codeValue")
-                    .size(DEFAULT_TERMS_SIZE);
-            searchSourceBuilder.aggregation(taxCategoriesCodeTermsAggregation);
+        // 前置处理
+        for (DynamicConditionHandler dynamicConditionHandler : dynamicConditionHandlers) {
+            if (dynamicConditionHandler.ignore(pageQuery)) {
+                continue;
+            }
+            dynamicConditionHandler.beforeSearch(searchSourceBuilder, pageQuery, false);
         }
 
         // search request
         SearchRequest searchRequest = new SearchRequest(getIndex())
                 .source(searchSourceBuilder);
         // do search
-        SearchResponse response = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
-        // data mapping
-        List<String> enterpriseTypes = getTermsAggregationBucketKeys(response, enterpriseTypeTermsAggregationName);
+        SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
 
-        List<String> taxPreferenceItems = getTermsAggregationBucketKeys(response, taxPreferenceItemTermsAggregationName);
+        DynamicConditionVO dynamicConditionVO = new DynamicConditionVO();
 
-        DynamicConditionVO dynamicConditionVO = new DynamicConditionVO()
-                .setEnterpriseTypes(enterpriseTypes)
-                .setTaxPreferenceItems(taxPreferenceItems);
+        // 后置处理
+        for (DynamicConditionHandler dynamicConditionHandler : dynamicConditionHandlers) {
+            if (dynamicConditionHandler.ignore(pageQuery)) {
+                continue;
+            }
+            dynamicConditionHandler.afterSearch(searchResponse, dynamicConditionVO, false, pageQuery);
+        }
 
-        // 动态筛选条件
-        if (needConditions) {
+        Optional<DynamicConditionHandler> first = dynamicConditionHandlers.stream()
+                .filter(handler -> handler.getListenFiled().equals(pageQuery.getOnChangeField()))
+                .findFirst();
+
+        // 若修改的是当前条件，需要把条件置空，重新查询
+        if (first.isPresent()) {
+            DynamicConditionHandler dynamicConditionHandler = first.get();
+            BeanInfo beanInfo = Introspector.getBeanInfo(pageQuery.getClass());
+            PropertyDescriptor pd = new PropertyDescriptor(pageQuery.getOnChangeField(), pageQuery.getClass());
+            pd.getWriteMethod().invoke(pageQuery, (Object) null);
+            SearchSourceBuilder otherSearchSourceBuilder = SearchSourceBuilder.searchSource()
+                    .query(getQueryBuilder(pageQuery))
+                    .size(0);
+            dynamicConditionHandler.beforeSearch(otherSearchSourceBuilder, pageQuery, true);
+            // search request
+            SearchRequest otherSearchRequest = new SearchRequest(getIndex())
+                    .source(searchSourceBuilder);
+            // do search
+            SearchResponse otherSearchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+            dynamicConditionHandler.afterSearch(otherSearchResponse, dynamicConditionVO, true, pageQuery);
+        }
+
+        return dynamicConditionVO;
+    }
+
+    private List<DynamicConditionHandler> dynamicConditionHandlers = Arrays.asList(new EnterpriseTypeConditionHandler(),
+            new TaxPreferenceItemConditionHandler(),
+            new ConditionParamHandler(),
+            new TaxCategoriesCodeConditionHandler());
+
+    /**
+     * 动态参数处理器
+     */
+    interface DynamicConditionHandler {
+
+        default String getListenFiled() {
+            return "No listen field.";
+        }
+
+        default boolean ignore(DynamicConditionQueryDTO pageQuery) {
+            return false;
+        }
+
+        String getTermsFiled();
+
+        String getAggregationName();
+
+        default void beforeSearch(SearchSourceBuilder searchSourceBuilder, DynamicConditionQueryDTO pageQuery, boolean onChange) {
+            TermsAggregationBuilder aggregation = AggregationBuilders.terms(getAggregationName())
+                    .field(getTermsFiled())
+                    .size(DEFAULT_TERMS_SIZE);
+            searchSourceBuilder.aggregation(aggregation);
+        }
+
+        default void afterSearch(SearchResponse searchResponse, DynamicConditionVO dynamicConditionVO, boolean onChange, DynamicConditionQueryDTO pageQuery) {
+            List<String> keys = getTermsAggregationBucketKeys(searchResponse, getAggregationName());
+            dynamicConditionVO.setEnterpriseTypes(keys);
+        }
+    }
+
+    static class EnterpriseTypeConditionHandler implements DynamicConditionHandler {
+
+        public String getListenFiled() {
+            return "enterpriseTypes";
+        }
+
+        @Override
+        public String getTermsFiled() {
+            return "enterpriseType";
+        }
+
+        @Override
+        public String getAggregationName() {
+            return "enterpriseTypes";
+        }
+    }
+
+    static class TaxPreferenceItemConditionHandler implements DynamicConditionHandler {
+
+        @Override
+        public String getListenFiled() {
+            return "taxPreferenceItems";
+        }
+
+        @Override
+        public String getTermsFiled() {
+            return "taxPreferenceItem";
+        }
+
+        @Override
+        public String getAggregationName() {
+            return "taxPreferenceItems";
+        }
+    }
+
+    static class ConditionParamHandler implements DynamicConditionHandler {
+
+        private String nestedName = "nestedName";
+
+        private String termsName = "termsName";
+
+        @Override
+        public void beforeSearch(SearchSourceBuilder searchSourceBuilder, DynamicConditionQueryDTO pageQuery, boolean onChange) {
+            NestedAggregationBuilder aggregation = AggregationBuilders.nested(nestedName, "conditions")
+                    .subAggregation(AggregationBuilders.terms(termsName).field("conditions.conditionName").size(DEFAULT_TERMS_SIZE));
+            searchSourceBuilder.aggregation(aggregation);
+        }
+
+        @Override
+        public void afterSearch(SearchResponse searchResponse, DynamicConditionVO dynamicConditionVO, boolean onChange, DynamicConditionQueryDTO pageQuery) {
             // nested terms 获取所有条件名称
-            List<String> conditionNames = getNestedAggregationBucketKeys(response, conditionsNestedAggregationName, conditionsTermsAggregationName);
+            List<String> conditionNames = getNestedAggregationBucketKeys(searchResponse, nestedName, termsName);
             Set<String> conditionNameSet = new HashSet<>(conditionNames);
             // 数据映射
+            SysParamService sysParamService = SpringUtil.getBean(SysParamService.class);
             List<GroupVO<DynamicConditionVO.Condition>> conditions = sysParamService.getSysParamDOByTypes(SysParamTypes.TAX_PREFERENCE_CONDITION).stream()
                     .filter(sysParamDO -> conditionNameSet.contains(sysParamDO.getParamName()))
                     .filter(sysParamDO -> {
@@ -286,34 +363,41 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
                                 .setValues(values);
                     }).collect(Collectors.toList());
             dynamicConditionVO.setConditions(conditions);
-        } else {
-            dynamicConditionVO.setConditions(new ArrayList<>());
         }
 
-        // 所属税种
-        if (needTaxCategories) {
-            List<String> mergeList = new ArrayList<>();
-            if (!CollectionUtils.isEmpty(pageQuery.getTaxCategoriesCodes())) {
-                mergeList.addAll(pageQuery.getTaxCategoriesCodes());
-            }
-            List<String> termsAggregationBucketKeys = getTermsAggregationBucketKeys(response, taxCategoriesCodeTermsAggregationName);
-            mergeList.addAll(termsAggregationBucketKeys);
-            List<String> merge = mergeList.stream()
-                    .filter(Objects::nonNull)
-                    .distinct()
-                    .collect(Collectors.toList());
-            dynamicConditionVO.setTaxCategoriesCodes(merge);
-        } else {
-            dynamicConditionVO.setTaxCategoriesCodes(pageQuery.getTaxCategoriesCodes());
+        public boolean ignore(DynamicConditionQueryDTO pageQuery) {
+            return !CollectionUtils.isEmpty(pageQuery.getTaxCategoriesCodes()) ||
+                    !CollectionUtils.isEmpty(pageQuery.getTaxPreferenceItems());
         }
 
-        return dynamicConditionVO;
+        @Override
+        public String getTermsFiled() {
+            return null;
+        }
+
+        @Override
+        public String getAggregationName() {
+            return null;
+        }
+    }
+
+    static class TaxCategoriesCodeConditionHandler implements DynamicConditionHandler {
+
+        @Override
+        public String getTermsFiled() {
+            return "taxCategories.codeValue";
+        }
+
+        @Override
+        public String getAggregationName() {
+            return "taxCategoriesCodes";
+        }
     }
 
     /**
      * 获取terms aggregation key集合
      */
-    private List<String> getTermsAggregationBucketKeys(SearchResponse response, String name) {
+    private static List<String> getTermsAggregationBucketKeys(SearchResponse response, String name) {
         Aggregations aggregations = response.getAggregations();
         ParsedStringTerms parsedStringTerms = aggregations.get(name);
         return parsedStringTerms.getBuckets().stream()
@@ -324,7 +408,7 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
     /**
      *  获取nested aggregation key集合
      */
-    private List<String> getNestedAggregationBucketKeys(SearchResponse searchResponse,String nestedName, String targetName) {
+    private static List<String> getNestedAggregationBucketKeys(SearchResponse searchResponse,String nestedName, String targetName) {
         ParsedNested nestedAggregation = searchResponse.getAggregations().get(nestedName);
         ParsedTerms termsAggregation = nestedAggregation.getAggregations().get(targetName);
         List<? extends Terms.Bucket> buckets = termsAggregation.getBuckets();

@@ -7,7 +7,6 @@ import cn.huacloud.taxpreference.services.consumer.entity.dtos.LatestTaxPreferen
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.TaxPreferenceSearchQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.*;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -48,5 +47,5 @@ public interface TaxPreferenceSearchService extends SearchService<TaxPreferenceS
      * @param pageQuery 分页查询条件
      * @return
      */
-    DynamicConditionVO getDynamicCondition(DynamicConditionQueryDTO pageQuery) throws IOException;
+    DynamicConditionVO getDynamicCondition(DynamicConditionQueryDTO pageQuery) throws Exception;
 }

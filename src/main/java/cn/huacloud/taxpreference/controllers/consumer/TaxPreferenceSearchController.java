@@ -14,7 +14,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,7 +74,7 @@ public class TaxPreferenceSearchController {
 
     @ApiOperation("根据条件参数动态获取筛选条件")
     @PostMapping("/taxPreference/dynamicCondition")
-    public ResultVO<DynamicConditionVO> getDynamicCondition(@RequestBody DynamicConditionQueryDTO pageQuery) throws IOException {
+    public ResultVO<DynamicConditionVO> getDynamicCondition(@RequestBody DynamicConditionQueryDTO pageQuery) throws Exception {
         pageQuery.setKeyword(null);
         pageQuery.setConditions(new ArrayList<>());
         pageQuery.paramReasonable();
