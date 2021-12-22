@@ -19,6 +19,7 @@ import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombi
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -39,7 +40,7 @@ import java.util.stream.Collectors;
  *
  * @author wangkh
  */
-//@Ignore
+@Ignore
 @Slf4j
 public class SysCodeTool extends BaseApplicationTest {
 
@@ -77,6 +78,9 @@ public class SysCodeTool extends BaseApplicationTest {
         for (Map.Entry<SysCodeType, List<SysCodeDO>> entry : typedMap.entrySet()) {
             Set<String> codeValueCheckSet = new HashSet<>();
             for (SysCodeDO sysCodeDO : entry.getValue()) {
+                // name统一trim
+                sysCodeDO.setCodeName(sysCodeDO.getCodeName().trim());
+
                 // 首字母拼音
                 // String codeValue = sysCodeDO.getCodeType().getValue() + "_" + toFistLetterPinyin(sysCodeDO.getCodeName());
                 // 首字母拼写替换为直接使用中文名称，不自己定义新的码值
@@ -89,6 +93,9 @@ public class SysCodeTool extends BaseApplicationTest {
                     }
                     sysCodeDO.setCodeValue(codeValue);
                 }
+                // value统一trim
+                sysCodeDO.setCodeValue(sysCodeDO.getCodeValue().trim());
+
                 if (codeValueCheckSet.contains(sysCodeDO.getCodeValue())) {
                     throw new IllegalArgumentException("系统码值重复");
                 } else {
@@ -219,6 +226,7 @@ public class SysCodeTool extends BaseApplicationTest {
         return sysCodeDOList;
 
     };
+
     @IgnoreProvider
     private SysCodeProvider taxCategories = nextId -> readSingleFile("所属税种.txt", SysCodeType.TAX_CATEGORIES, nextId);
 
