@@ -175,7 +175,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 		if (policiesExplainDoS.size() > 1) {
 			throw BizCode._4308.exception();
 		}
-		if (policiesExplainDoS.size() == 1 && !policiesExplainDTO.getPoliciesId().equals(policiesExplainDoS.get(0).getPoliciesId())) {
+		if (policiesExplainDoS.size() == 1 && policiesExplainDTO.getPoliciesId().equals(policiesExplainDoS.get(0).getPoliciesId())) {
 			throw BizCode._4308.exception();
 		}
 	}
