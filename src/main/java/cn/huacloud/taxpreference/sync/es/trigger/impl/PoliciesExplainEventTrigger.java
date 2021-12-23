@@ -7,6 +7,7 @@ import cn.huacloud.taxpreference.services.common.DocStatisticsService;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
 import cn.huacloud.taxpreference.services.common.entity.dos.DocStatisticsDO;
 import cn.huacloud.taxpreference.services.consumer.entity.ess.PoliciesExplainES;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.DocSimpleVO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesExplainDO;
 import cn.huacloud.taxpreference.services.producer.mapper.PoliciesExplainMapper;
@@ -88,6 +89,12 @@ public class PoliciesExplainEventTrigger extends EventTrigger<Long, PoliciesExpl
         policiesExplainES.setTaxpayerIdentifyTypes(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.TAXPAYER_IDENTIFY_TYPE,policiesDO.getTaxpayerIdentifyTypeCodes()));
         policiesExplainES.setEnterpriseTypes(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.ENTERPRISE_TYPE,policiesDO.getEnterpriseTypeCodes()));
         policiesExplainES.setIndustries(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.INDUSTRY,policiesDO.getIndustryCodes()));
+
+        // 添加相关政策
+        DocSimpleVO docSimpleVO = new DocSimpleVO();
+        docSimpleVO.setId(policiesDO.getId());
+        docSimpleVO.setTitle(policiesDO.getTitle());
+        policiesExplainES.setPolicies(docSimpleVO);
 
         return policiesExplainES;
     }
