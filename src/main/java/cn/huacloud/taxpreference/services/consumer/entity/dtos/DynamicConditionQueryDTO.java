@@ -3,7 +3,6 @@ package cn.huacloud.taxpreference.services.consumer.entity.dtos;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author wangkh
@@ -17,7 +16,7 @@ public class DynamicConditionQueryDTO extends TaxPreferenceSearchQueryDTO {
     @Override
     public void paramReasonable() {
         super.paramReasonable();
-        if (StringUtils.isBlank(onChangeField)) {
+        if (!"enterpriseTypes".equals(onChangeField) && !"taxPreferenceItems".equals(onChangeField)) {
             onChangeField = null;
         }
     }

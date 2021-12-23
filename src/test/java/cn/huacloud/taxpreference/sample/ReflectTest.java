@@ -1,12 +1,15 @@
 package cn.huacloud.taxpreference.sample;
 
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.DynamicConditionQueryDTO;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.DynamicConditionVO;
 import cn.huacloud.taxpreference.services.consumer.impl.FrequentlyAskedQuestionSearchServiceImpl;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
+import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +22,15 @@ public class ReflectTest {
 
 
     ObjectMapper objectMapper = new ObjectMapper();
+
+    @Test
+    public void testPD() throws Exception {
+        DynamicConditionVO dynamicConditionVO = new DynamicConditionVO();
+        //                 setEnterpriseTypes
+        dynamicConditionVO.setEnterpriseTypes(null);
+        // PropertyDescriptor propertyDescriptor = new PropertyDescriptor("enterpriseTypes", DynamicConditionVO.class);
+        PropertyDescriptor pd = new PropertyDescriptor("name", Fruit.class);
+    }
 
     @Test
     public void testGetSuperClass() {
@@ -56,8 +68,9 @@ public class ReflectTest {
         log.info("one:{}, two:{}, three:{}", one, two, three);
     }
 
+    @Data
     static class Fruit implements UUIDGetter {
-
+        private String name;
     }
 
     static class Apple extends Fruit {

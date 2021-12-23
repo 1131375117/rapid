@@ -7,13 +7,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 动态条件视图对象
  * @author wangkh
  */
-@Accessors(chain = true)
 @Data
 public class DynamicConditionVO {
     @ApiModelProperty("企业类型")
@@ -31,5 +31,23 @@ public class DynamicConditionVO {
     public static class Condition extends GroupVO<String> {
         @ApiModelProperty("是否多选")
         private Boolean multipleChoice;
+    }
+
+    /**
+     * 视图美化
+     */
+    public void viewPretty() {
+        if (enterpriseTypes == null) {
+            enterpriseTypes = new ArrayList<>();
+        }
+        if (taxPreferenceItems == null) {
+            taxPreferenceItems = new ArrayList<>();
+        }
+        if (conditions == null) {
+            conditions = new ArrayList<>();
+        }
+        if (itemRelatedCodes == null) {
+            itemRelatedCodes = new ArrayList<>();
+        }
     }
 }
