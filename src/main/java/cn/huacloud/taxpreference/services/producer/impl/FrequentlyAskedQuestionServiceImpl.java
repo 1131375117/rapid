@@ -32,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * 热门问答服务实现类
@@ -222,6 +223,9 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
 			List<PoliciesTitleVO> list = new ArrayList<>();
 			for (String policiesId : policiesIdsList) {
 				PoliciesTitleVO policiesTitleVO = new PoliciesTitleVO();
+				if (!isInteger(policiesId)) {
+					throw BizCode._4100.exception();
+				}
 				Long aLong = Long.valueOf(policiesId);
 				PoliciesDO policies = policiesService.getPolicies(aLong);
 				BeanUtils.copyProperties(policies,policiesTitleVO);
@@ -232,5 +236,10 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
 		// 属性拷贝
 		BeanUtils.copyProperties(frequentlyAskedQuestionDO, frequentlyAskedQuestionDetailVO);
 		return frequentlyAskedQuestionDetailVO;
+	}
+	public boolean isInteger(String str) {
+		//判断当前字符串是否为数字类型
+		Pattern pattern = Pattern.compile("^[-\\\\+]?[\\d]*$");
+		return pattern.matcher(str).matches();
 	}
 }

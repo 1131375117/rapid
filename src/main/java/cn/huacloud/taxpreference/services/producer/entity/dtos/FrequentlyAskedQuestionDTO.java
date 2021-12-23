@@ -47,6 +47,10 @@ public class FrequentlyAskedQuestionDTO {
 	@ApiModelProperty("发布日期")
 	private LocalDate releaseDate;
 
+	@NotNull(message = "解答机构不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+	@ApiModelProperty("解答机构")
+	private String answerOrganization;
+
 	@ApiModelProperty(hidden = true, value = "用户id")
 	private Long inputUserId;
 

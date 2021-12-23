@@ -10,7 +10,8 @@
                title,
                content,
                doc_source,
-               release_date
+               release_date,
+               answer_organization
         FROM t_frequently_asked_question
         <where>
             <if test="queryPoliciesExplainDTO.title!=null">
@@ -27,6 +28,9 @@
             </if>
             <if test="queryPoliciesExplainDTO.endTime!=null ">
                 and release_date &lt;= #{queryPoliciesExplainDTO.endTime}
+            </if>
+            <if test="queryPoliciesExplainDTO.answerOrganization!=null ">
+                and answer_organization &lt;= #{queryPoliciesExplainDTO.answerOrganization}
             </if>
             <if test="queryPoliciesExplainDTO.policiesIds!=null and queryPoliciesExplainDTO.policiesIds.size>0 ">
                 <foreach collection="queryPoliciesExplainDTO.policiesIds" item="policiesId">

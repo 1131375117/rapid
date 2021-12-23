@@ -1,9 +1,11 @@
 package cn.huacloud.taxpreference.services.producer.entity.vos;
 
+import cn.huacloud.taxpreference.common.constants.ValidationGroup;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -31,6 +33,9 @@ public class FrequentlyAskedQuestionDetailVO extends PoliciesCommonListVO{
 
 	@ApiModelProperty("热门问答中政策id")
 	private List<String> policiesIds;
+
+	@ApiModelProperty("解答机构")
+	private String answerOrganization;
 
 	@ApiModelProperty("政策法规标题")
 	private List<PoliciesTitleVO> policies;

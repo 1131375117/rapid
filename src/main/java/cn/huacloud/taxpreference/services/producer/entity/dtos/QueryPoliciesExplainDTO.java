@@ -42,6 +42,9 @@ public class QueryPoliciesExplainDTO extends KeywordPageQueryDTO {
 	@ApiModelProperty("结束日期")
 	private LocalDate endTime;
 
+	@ApiModelProperty("解答机构")
+	private LocalDateTime answerOrganization;
+
 	@ApiModelProperty("更新日期")
 	private LocalDateTime updateTime;
 
