@@ -8,6 +8,8 @@ import cn.huacloud.taxpreference.services.common.SysCodeService;
 import cn.huacloud.taxpreference.services.common.entity.dos.DocStatisticsDO;
 import cn.huacloud.taxpreference.services.consumer.entity.ess.PoliciesES;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
+import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesExplainDO;
+import cn.huacloud.taxpreference.services.producer.mapper.PoliciesExplainMapper;
 import cn.huacloud.taxpreference.services.producer.mapper.PoliciesMapper;
 import cn.huacloud.taxpreference.sync.es.trigger.EventTrigger;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -19,6 +21,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 /**
@@ -36,6 +39,10 @@ public class PoliciesEventTrigger extends EventTrigger<Long, PoliciesES> {
 
     private final DocStatisticsService statisticsService;
 
+    private final PoliciesExplainEventTrigger policiesExplainEventTrigger;
+
+    private final PoliciesExplainMapper policiesExplainMapper;
+
     @Bean
     public Supplier<Flux<PoliciesES>> savePoliciesSuppler() {
         return saveMany::asFlux;
@@ -49,6 +56,22 @@ public class PoliciesEventTrigger extends EventTrigger<Long, PoliciesES> {
     @Override
     public DocType docType() {
         return DocType.POLICIES;
+    }
+
+    @Override
+    public void saveEvent(Long id) {
+        PoliciesES entity = getEntityById(id);
+        if (entity != null) {
+            saveMany.tryEmitNext(entity);
+        }
+        // 更新关联的政策解读
+        LambdaQueryWrapper<PoliciesExplainDO> queryWrapper = Wrappers.lambdaQuery(PoliciesExplainDO.class)
+                .eq(PoliciesExplainDO::getPoliciesId, id)
+                .eq(PoliciesExplainDO::getDeleted, false);
+        List<PoliciesExplainDO> policiesExplainDOS = policiesExplainMapper.selectList(queryWrapper);
+        for (PoliciesExplainDO policiesExplainDO : policiesExplainDOS) {
+            policiesExplainEventTrigger.saveEvent(policiesExplainDO.getId());
+        }
     }
 
     @Override

@@ -5,11 +5,11 @@ import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.GroupVO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.BizCode;
+import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
 import cn.huacloud.taxpreference.common.utils.CustomStringUtil;
 import cn.huacloud.taxpreference.services.common.SysParamService;
 import cn.huacloud.taxpreference.services.common.entity.dos.SysParamDO;
 import cn.huacloud.taxpreference.services.consumer.TaxPreferenceSearchService;
-import cn.huacloud.taxpreference.services.consumer.entity.dtos.DynamicConditionQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.LatestTaxPreferenceSearchQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.TaxPreferenceSearchQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.*;
@@ -45,6 +45,7 @@ import org.springframework.util.CollectionUtils;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
@@ -188,132 +189,97 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
     private static final int DEFAULT_TERMS_SIZE = 1000;
 
     @Override
-    public DynamicConditionVO getDynamicCondition(DynamicConditionQueryDTO pageQuery) throws Exception {
-        String[][] propertyFiledArray = {
-                {"enterpriseTypes", "enterpriseType"},
-                {"taxPreferenceItems", "taxPreferenceItem"}};
-
-        List<TermsAggregationHandler> termsAggregationHandlers = Arrays.stream(propertyFiledArray)
-                .map(array -> new TermsAggregationHandler(array[0], array[1], array[0]))
-                .collect(Collectors.toList());
-
-        TermsAggregationHandler conditionAggregationHandler = new TermsAggregationHandler("conditions", "conditions.conditionName", "conditions") {
-
-            private String subAggregationName = "subAggregation";
-
-            @Override
-            public AggregationBuilder getAggregationBuilder() {
-                return AggregationBuilders.nested(getAggregationName(), "conditions")
-                        .subAggregation(AggregationBuilders.terms(subAggregationName).field(getField()).size(DEFAULT_TERMS_SIZE));
-            }
-
-            @Override
-            public void setProperty(SearchResponse searchResponse, DynamicConditionVO dynamicConditionVO) throws Exception {
-                // nested terms 获取所有条件名称
-                List<String> conditionNames = getNestedAggregationBucketKeys(searchResponse, getAggregationName(), subAggregationName);
-                Set<String> conditionNameSet = new HashSet<>(conditionNames);
-                // 数据映射
-                List<GroupVO<DynamicConditionVO.Condition>> conditions = sysParamService.getSysParamDOByTypes(SysParamTypes.TAX_PREFERENCE_CONDITION).stream()
-                        .filter(sysParamDO -> conditionNameSet.contains(sysParamDO.getParamName()))
-                        .filter(sysParamDO -> {
-                            // 增加业务规则，在没有选中减免事项的时候，仅展示 其他筛选条件
-                            if (CollectionUtils.isEmpty(pageQuery.getTaxPreferenceItems())) {
-                                return "其他筛选".equals(sysParamDO.getExtendsField2());
-                            }
-                            return true;
-                        })
-                        .sorted(Comparator.comparing(SysParamDO::getParamKey))
-                        .collect(Collectors.groupingBy(SysParamDO::getExtendsField2, LinkedHashMap::new, Collectors.toList()))
-                        .entrySet().stream()
-                        .map(entry -> {
-                            List<DynamicConditionVO.Condition> values = entry.getValue().stream()
-                                    .map(sysParamDO -> {
-                                                DynamicConditionVO.Condition condition = new DynamicConditionVO.Condition();
-                                                condition.setMultipleChoice("多选".equals(sysParamDO.getExtendsField4()))
-                                                        .setName(sysParamDO.getParamName())
-                                                        .setValues(CustomStringUtil.arrayStringToList(sysParamDO.getParamValue()));
-                                                return condition;
-                                            }
-                                    )
-                                    .collect(Collectors.toList());
-                            return new GroupVO<DynamicConditionVO.Condition>()
-                                    .setName(entry.getKey())
-                                    .setValues(values);
-                        }).collect(Collectors.toList());
-                dynamicConditionVO.setConditions(conditions);
-            }
-        };
-
-        if (!CollectionUtils.isEmpty(pageQuery.getTaxCategoriesCodes()) || !CollectionUtils.isEmpty(pageQuery.getTaxPreferenceItems())) {
-            termsAggregationHandlers.add(conditionAggregationHandler);
-        }
-
-        // 被修改的字段，参数合理化后，只保留了 enterpriseTypes 和 taxPreferenceItems
-        String onChangeField = pageQuery.getOnChangeField();
-
-        List<TermsAggregationHandler> fullHandlers = termsAggregationHandlers.stream()
-                .filter(termsAggregationHandler -> !termsAggregationHandler.getTargetProperty().equals(onChangeField))
-                .collect(Collectors.toList());
-
-        SearchSourceBuilder searchSourceBuilder = SearchSourceBuilder.searchSource()
-                .query(getQueryBuilder(pageQuery))
-                .size(0);
-        // 设置aggregation
-        for (TermsAggregationHandler fullHandler : fullHandlers) {
-            searchSourceBuilder.aggregation(fullHandler.getAggregationBuilder());
-        }
-
-        // 执行查询
-        SearchRequest searchRequest = new SearchRequest(getIndex())
-                .source(searchSourceBuilder);
-        SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
-
+    public DynamicConditionVO getDynamicCondition(TaxPreferenceSearchQueryDTO pageQuery) throws Exception {
         // 动态条件视图
         DynamicConditionVO dynamicConditionVO = new DynamicConditionVO();
 
-        // 设置聚合结果到动态条件视图
-        for (TermsAggregationHandler fullHandler : fullHandlers) {
-            fullHandler.setProperty(searchResponse, dynamicConditionVO);
+        // 企业类型
+        {
+            TermsAggregationHandler handler = new TermsAggregationHandler("enterpriseTypes", "enterpriseType", "enterpriseTypes");
+            SearchResponse searchResponse = handler.doSearch(pageQuery, this::getQueryBuilder, restHighLevelClient, getIndex());
+            handler.setProperty(searchResponse, dynamicConditionVO);
         }
 
-        // 查询减免事项关联的税种
-        if (!CollectionUtils.isEmpty(pageQuery.getTaxPreferenceItems())) {
-            // 单独查询减免事项光联的税种
-            TermsAggregationHandler handler = new TermsAggregationHandler("itemRelatedCodes", "taxCategories.codeValue", "itemRelatedCodes");
-            DynamicConditionQueryDTO singleQuery = new DynamicConditionQueryDTO();
-            singleQuery.setTaxPreferenceItems(pageQuery.getTaxPreferenceItems());
-            SearchRequest request = new SearchRequest(getIndex())
-                    .source(SearchSourceBuilder.searchSource()
-                            .query(getQueryBuilder(singleQuery))
-                            .size(0)
-                            .aggregation(handler.getAggregationBuilder()));
-            SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
-            handler.setProperty(response, dynamicConditionVO);
+        // 减免事项
+        {
+            TermsAggregationHandler handler = new TermsAggregationHandler("taxPreferenceItems", "taxPreferenceItem", "taxPreferenceItems");
+            SearchResponse searchResponse = handler.doSearch(pageQuery, this::getQueryBuilder, restHighLevelClient, getIndex());
+            handler.setProperty(searchResponse, dynamicConditionVO);
         }
 
-        // 当前修改处理器
-        Optional<TermsAggregationHandler> emptyOptional = termsAggregationHandlers.stream()
-                .filter(termsAggregationHandler -> termsAggregationHandler.getTargetProperty().equals(onChangeField))
-                .findFirst();
+        // 动态条件
+        if (!CollectionUtils.isEmpty(pageQuery.getTaxCategoriesCodes()) || !CollectionUtils.isEmpty(pageQuery.getTaxPreferenceItems())) {
+            TermsAggregationHandler handler = new TermsAggregationHandler("conditions", "conditions.conditionName", "conditions") {
 
-        // 查询被修改字段的范围
-        if (emptyOptional.isPresent()) {
-            TermsAggregationHandler handler = emptyOptional.get();
-            PropertyDescriptor propertyDescriptor = new PropertyDescriptor(handler.getTargetProperty(), DynamicConditionQueryDTO.class);
-            // 当前修改字段处理器需要把自身查询条件情况
-            propertyDescriptor.getWriteMethod().invoke(pageQuery, (Object) null);
-            SearchRequest request = new SearchRequest(getIndex())
-                    .source(SearchSourceBuilder.searchSource()
-                            .query(getQueryBuilder(pageQuery))
-                            .size(0)
-                            .aggregation(handler.getAggregationBuilder()));
-            SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
-            handler.setProperty(response, dynamicConditionVO);
+                private String subAggregationName = "subAggregation";
+
+                @Override
+                public AggregationBuilder getAggregationBuilder() {
+                    return AggregationBuilders.nested(getAggregationName(), "conditions")
+                            .subAggregation(AggregationBuilders.terms(subAggregationName).field(getField()).size(DEFAULT_TERMS_SIZE));
+                }
+
+                @Override
+                public void setProperty(SearchResponse searchResponse, DynamicConditionVO dynamicConditionVO) throws Exception {
+                    // nested terms 获取所有条件名称
+                    List<String> conditionNames = getNestedAggregationBucketKeys(searchResponse, getAggregationName(), subAggregationName);
+                    Set<String> conditionNameSet = new HashSet<>(conditionNames);
+                    // 数据映射
+                    List<GroupVO<DynamicConditionVO.Condition>> conditions = sysParamService.getSysParamDOByTypes(SysParamTypes.TAX_PREFERENCE_CONDITION).stream()
+                            .filter(sysParamDO -> conditionNameSet.contains(sysParamDO.getParamName()))
+                            .filter(sysParamDO -> {
+                                // 增加业务规则，在没有选中减免事项的时候，仅展示 其他筛选条件
+                                if (CollectionUtils.isEmpty(pageQuery.getTaxPreferenceItems())) {
+                                    return "其他筛选".equals(sysParamDO.getExtendsField2());
+                                }
+                                return true;
+                            })
+                            .sorted(Comparator.comparing(SysParamDO::getParamKey))
+                            .collect(Collectors.groupingBy(SysParamDO::getExtendsField2, LinkedHashMap::new, Collectors.toList()))
+                            .entrySet().stream()
+                            .map(entry -> {
+                                List<DynamicConditionVO.Condition> values = entry.getValue().stream()
+                                        .map(sysParamDO -> {
+                                                    DynamicConditionVO.Condition condition = new DynamicConditionVO.Condition();
+                                                    condition.setMultipleChoice("多选".equals(sysParamDO.getExtendsField4()))
+                                                            .setName(sysParamDO.getParamName())
+                                                            .setValues(CustomStringUtil.arrayStringToList(sysParamDO.getParamValue()));
+                                                    return condition;
+                                                }
+                                        )
+                                        .collect(Collectors.toList());
+                                return new GroupVO<DynamicConditionVO.Condition>()
+                                        .setName(entry.getKey())
+                                        .setValues(values);
+                            }).collect(Collectors.toList());
+                    dynamicConditionVO.setConditions(conditions);
+                }
+            };
+            SearchResponse searchResponse = handler.doSearch(pageQuery, this::getQueryBuilder, restHighLevelClient, getIndex());
+            handler.setProperty(searchResponse, dynamicConditionVO);
         }
         // 视图美化
         dynamicConditionVO.viewPretty();
         return dynamicConditionVO;
     }
+
+    @Override
+    public List<String> getItemRelatedCodes(List<String> taxPreferenceItems) throws Exception {
+        if (CollectionUtils.isEmpty(taxPreferenceItems)) {
+            return new ArrayList<>();
+        }
+        String itemRelatedCodes = "itemRelatedCodes";
+        SearchRequest searchRequest = new SearchRequest(getIndex())
+                .source(SearchSourceBuilder.searchSource()
+                        .query(termsQuery("taxPreferenceItem", taxPreferenceItems))
+                        .size(0)
+                        .aggregation(AggregationBuilders.terms(itemRelatedCodes)
+                                .size(DEFAULT_TERMS_SIZE)
+                                .field("taxCategories.codeValue")));
+        SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+        return getTermsAggregationBucketKeys(searchResponse, itemRelatedCodes);
+    }
+
 
     @Getter
     static class TermsAggregationHandler {
@@ -337,6 +303,19 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
             return AggregationBuilders.terms(aggregationName)
                     .field(field)
                     .size(DEFAULT_TERMS_SIZE);
+        }
+
+        public SearchResponse doSearch(TaxPreferenceSearchQueryDTO pageQuery, Function<TaxPreferenceSearchQueryDTO, QueryBuilder> function, RestHighLevelClient restHighLevelClient, String index) throws Exception {
+            TaxPreferenceSearchQueryDTO query = CustomBeanUtil.copyProperties(pageQuery, TaxPreferenceSearchQueryDTO.class);
+            PropertyDescriptor pd = new PropertyDescriptor(targetProperty, TaxPreferenceSearchQueryDTO.class);
+            pd.getWriteMethod().invoke(query, (Object) null);
+            SearchSourceBuilder searchSourceBuilder = SearchSourceBuilder.searchSource()
+                    .query(function.apply(query))
+                    .aggregation(getAggregationBuilder())
+                    .size(0);
+            SearchRequest searchRequest = new SearchRequest(index)
+                    .source(searchSourceBuilder);
+            return restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
         }
 
         public void setProperty(SearchResponse searchResponse, DynamicConditionVO dynamicConditionVO) throws Exception {

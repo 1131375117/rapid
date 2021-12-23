@@ -112,15 +112,15 @@ public class FrequentlyAskedQuestionSearchServiceImpl implements FrequentlyAsked
     }
 
     @Override
-    public List<String> getFaqDocSource(Integer size) throws Exception {
+    public List<String> getFaqAnswerOrganization(Integer size) throws Exception {
         // name
-        String aggregationName = "docSourceTerms";
+        String aggregationName = "answerOrganizationTerms";
         // search request
         SearchRequest searchRequest = new SearchRequest(getIndex())
                 .source(SearchSourceBuilder.searchSource()
                         .size(0)
                         .aggregation(AggregationBuilders.terms(aggregationName)
-                                .field("docSource")
+                                .field("answerOrganization")
                                 .size(size)));
         // do search
         SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);

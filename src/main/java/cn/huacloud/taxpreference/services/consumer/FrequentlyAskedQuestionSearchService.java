@@ -41,5 +41,5 @@ public interface FrequentlyAskedQuestionSearchService extends SearchService<FAQS
      * @param size 一次获取多少数据
      * @return docSourceList
      */
-    List<String> getFaqDocSource(Integer size) throws Exception;
+    List<String> getFaqAnswerOrganization(Integer size) throws Exception;
 }

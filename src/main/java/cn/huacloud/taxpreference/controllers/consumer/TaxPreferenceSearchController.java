@@ -5,7 +5,6 @@ import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.CollectionType;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.consumer.TaxPreferenceSearchService;
-import cn.huacloud.taxpreference.services.consumer.entity.dtos.DynamicConditionQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.LatestTaxPreferenceSearchQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.TaxPreferenceSearchQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.*;
@@ -74,11 +73,18 @@ public class TaxPreferenceSearchController {
 
     @ApiOperation("根据条件参数动态获取筛选条件")
     @PostMapping("/taxPreference/dynamicCondition")
-    public ResultVO<DynamicConditionVO> getDynamicCondition(@RequestBody DynamicConditionQueryDTO pageQuery) throws Exception {
+    public ResultVO<DynamicConditionVO> getDynamicCondition(@RequestBody TaxPreferenceSearchQueryDTO pageQuery) throws Exception {
         pageQuery.setKeyword(null);
         pageQuery.setConditions(new ArrayList<>());
         pageQuery.paramReasonable();
         DynamicConditionVO dynamicConditionVO = taxPreferenceSearchService.getDynamicCondition(pageQuery);
         return ResultVO.ok(dynamicConditionVO);
+    }
+
+    @ApiOperation("获取减免事项关联的税种码值")
+    @PostMapping("/taxPreference/itemRelatedCodes")
+    public ResultVO<List<String>> getItemRelatedCodes(@RequestBody List<String> taxPreferenceItems) throws Exception {
+        List<String> itemRelatedCodes = taxPreferenceSearchService.getItemRelatedCodes(taxPreferenceItems);
+        return ResultVO.ok(itemRelatedCodes);
     }
 }

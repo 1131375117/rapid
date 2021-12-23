@@ -3,6 +3,7 @@ package cn.huacloud.taxpreference.services.consumer.entity.ess;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeSimpleVO;
 import cn.huacloud.taxpreference.services.consumer.entity.AbstractCombinePlainContent;
 import cn.huacloud.taxpreference.services.consumer.entity.CombineText;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.DocSimpleVO;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -70,6 +71,10 @@ public class PoliciesExplainES extends AbstractCombinePlainContent<Long> {
      * 收藏量
      */
     private Long collections;
+    /**
+     * 被解读的政策
+     */
+    private DocSimpleVO policies;
 
     @Override
     public List<CombineText> combineTextList() {

@@ -95,12 +95,23 @@
         },
         "collections": {
           "type": "long"
+        },
+        "policies": {
+          "properties": {
+            "id": {
+              "type": "long"
+            },
+            "title": {
+              "type": "text",
+              "analyzer": "ik_max_word"
+            }
+          }
         }
       }
     }
   },
   "priority": 500,
   "_meta": {
-    "description": "政策解读索引模板，更新时间2021年12月13日"
+    "description": "政策解读索引模板，更新时间2021年12月23日"
   }
 }

@@ -426,6 +426,8 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
                 } else {
                     boolQueryBuilder.must(matchQuery(name, value));
                 }
+            } else if (value instanceof Number) {
+                boolQueryBuilder.must(matchQuery(name, value));
             } else {
                 throw new RuntimeException("未支持的数据类型：" + value.getClass().getName());
             }

@@ -36,7 +36,7 @@ public class ExSearchQueryDTO extends KeywordPageQueryDTO {
             searchScope = SearchScope.TITLE;
         }
         if (preciseQuery == null) {
-            preciseQuery = false;
+            preciseQuery = true;
         }
         keywordSplit = splitByBlank(getKeyword());
     }

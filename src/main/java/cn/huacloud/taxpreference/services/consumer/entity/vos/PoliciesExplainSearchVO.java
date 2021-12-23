@@ -51,4 +51,7 @@ public class PoliciesExplainSearchVO extends UserCollectionInfo {
 
     @ApiModelProperty("收藏量")
     private Long collections;
+
+    @ApiModelProperty("被解读政策")
+    private DocSimpleVO policies;
 }
