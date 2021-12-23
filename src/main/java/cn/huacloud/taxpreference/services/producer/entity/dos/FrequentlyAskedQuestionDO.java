@@ -1,11 +1,14 @@
 package cn.huacloud.taxpreference.services.producer.entity.dos;
 
+import cn.huacloud.taxpreference.common.constants.ValidationGroup;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -48,6 +51,11 @@ public class FrequentlyAskedQuestionDO {
 	 */
 	private LocalDate releaseDate;
 
+
+	/**
+	 * 解答机构
+	 */
+	private String answerOrganization;
 	/**
 	 * 录入人用户id
 	 */
