@@ -42,13 +42,13 @@ public class FrequentlyAskedQuestionSearchController {
     }
 
     @ApiModelProperty("获取所有热门问答来源")
-    @GetMapping("/faq/docSource")
-    public ResultVO<List<String>> getFaqDocSource(@RequestParam(value = "size", defaultValue = "200") Integer size) throws Exception {
+    @GetMapping("/faq/answerOrganization")
+    public ResultVO<List<String>> getFaqAnswerOrganization(@RequestParam(value = "size", defaultValue = "200") Integer size) throws Exception {
         if (size <= 0) {
             size = 200;
         }
-        List<String> docSourceList = frequentlyAskedQuestionSearchService.getFaqDocSource(size);
-        return ResultVO.ok(docSourceList);
+        List<String> answerOrganizationList = frequentlyAskedQuestionSearchService.getFaqAnswerOrganization(size);
+        return ResultVO.ok(answerOrganizationList);
     }
 
     @ApiOperation("热点问答详情")

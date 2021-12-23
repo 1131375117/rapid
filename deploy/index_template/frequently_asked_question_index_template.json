@@ -45,12 +45,15 @@
         },
         "collections": {
           "type": "long"
+        },
+        "answerOrganization": {
+          "type": "keyword"
         }
       }
     }
   },
   "priority": 500,
   "_meta": {
-    "description": "热点问答索引模板，更新时间2021年12月13日"
+    "description": "热点问答索引模板，更新时间2021年12月23日"
   }
 }

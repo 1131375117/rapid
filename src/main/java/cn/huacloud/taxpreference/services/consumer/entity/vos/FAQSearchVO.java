@@ -38,4 +38,6 @@ public class FAQSearchVO extends UserCollectionInfo {
     @ApiModelProperty("收藏量")
     private Long collections;
 
+    @ApiModelProperty("解答机构")
+    private String answerOrganization;
 }
