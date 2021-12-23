@@ -13,10 +13,10 @@ import lombok.Setter;
 public class FAQSearchQueryDTO extends AbstractHighlightPageQueryDTO {
 
     /**
-     * 热门问答来源
+     * 解答机构
      */
-    @FilterField("docSource")
-    private String docSource;
+    @FilterField("answerOrganization")
+    private String answerOrganization;
 
     @Override
     public String index(ElasticsearchIndexConfig config) {
