@@ -103,6 +103,22 @@ public class PoliciesController {
 	}
 
 	/**
+	 * 修改政策法规
+	 *
+	 * @param policiesCombinationDTO 政策法规条件组合
+	 */
+	@PermissionInfo(name = "数据加工", group = PermissionGroup.POLICIES)
+	@SaCheckPermission("producer_policies_updateDataProcessing")
+	@ApiOperation(value = "数据加工")
+	@PutMapping(value = "/policies/updateDataProcessing")
+	public ResultVO<Void> dataProcessing(
+			@Validated(ValidationGroup.Update.class) @RequestBody
+					PoliciesCombinationDTO policiesCombinationDTO) {
+		policiesCombinationDTO.setInputUserId(ProducerUserUtil.getCurrentUser().getId());
+		policiesService.updateSource(policiesCombinationDTO);
+		return ResultVO.ok();
+	}
+	/**
 	 * 政策法规废止
 	 *
 	 * @param queryAbolishDTO 政策法规废止条件

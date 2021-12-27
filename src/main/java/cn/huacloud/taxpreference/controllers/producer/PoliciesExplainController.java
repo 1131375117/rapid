@@ -8,6 +8,7 @@ import cn.huacloud.taxpreference.common.enums.PermissionGroup;
 import cn.huacloud.taxpreference.common.utils.ProducerUserUtil;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.producer.PoliciesExplainService;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesCombinationDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesExplainDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesExplainDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainDetailVO;
@@ -91,6 +92,21 @@ public class PoliciesExplainController {
 		policiesExplainService.updatePolicesExplain(policiesExplainDTO);
 		return ResultVO.ok();
 
+	}
+
+	/**
+	 * 修改政策解读
+	 * 政策解读id
+	 */
+	@PermissionInfo(name = "政策解读数据加工", group = PermissionGroup.POLICIES_EXPLAIN)
+	@SaCheckPermission("producer_policiesExplain_updateDataProcessing")
+	@ApiOperation(value = "政策解读数据加工")
+	@PutMapping(value = "/policesExplain/updateDataProcessing")
+	public ResultVO<Void> updateDataProcessing(
+			@Validated(ValidationGroup.Update.class) @RequestBody
+					PoliciesExplainDTO policiesExplainDTO) {
+		policiesExplainService.updateSource(policiesExplainDTO);
+		return ResultVO.ok();
 	}
 
 	/**

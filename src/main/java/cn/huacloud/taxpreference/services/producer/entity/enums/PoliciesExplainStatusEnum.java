@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.annotation.IEnum;
 
 
 /**
- * 政策解读废止状态
+ * 政策解读状态
  *
  * @author wuxin
  */

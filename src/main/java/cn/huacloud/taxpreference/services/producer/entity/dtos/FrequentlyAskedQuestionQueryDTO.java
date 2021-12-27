@@ -11,18 +11,16 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * 政策解读VO
+ * 热门问答
  *
  * @author wuxin
  */
 @Data
 @ApiModel
-public class QueryPoliciesExplainDTO extends KeywordPageQueryDTO {
+public class FrequentlyAskedQuestionQueryDTO extends KeywordPageQueryDTO {
 
-	@ApiModelProperty("政策解读id")
+	@ApiModelProperty("热门问答id")
 	private Long id;
-	@ApiModelProperty("政策解读关联政策id")
-	private Long policiesId;
 
 	@ApiModelProperty("热门问答关联政策id")
 	private List<String> policiesIds;
@@ -37,7 +35,7 @@ public class QueryPoliciesExplainDTO extends KeywordPageQueryDTO {
 	private LocalDate releaseDate;
 
 	@ApiModelProperty(value = "数据类型",notes = "REPTILE_SYNCHRONIZATION:爬虫数据，PUBLISHED:录入数据")
-	private String policiesExplainStatus;
+	private String frequentlyAskedQuestionStatus;
 
 	@ApiModelProperty("开始日期")
 	private LocalDate startTime;

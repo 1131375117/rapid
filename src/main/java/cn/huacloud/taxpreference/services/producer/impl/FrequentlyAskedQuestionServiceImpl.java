@@ -10,8 +10,10 @@ import cn.huacloud.taxpreference.services.producer.PoliciesService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.FrequentlyAskedQuestionDTO;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.FrequentlyAskedQuestionQueryDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesExplainDTO;
+import cn.huacloud.taxpreference.services.producer.entity.enums.FrequentlyAskedQuestionStatusEnum;
 import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesSortType;
 import cn.huacloud.taxpreference.services.producer.entity.vos.FrequentlyAskedQuestionDetailVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.FrequentlyAskedQuestionVO;
@@ -60,16 +62,16 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
 	/**
 	 * 热门问答列表查询
 	 *
-	 * @param queryPoliciesExplainDTO 查询条件
+	 * @param frequentlyAskedQuestionQueryDTO 查询条件
 	 * @return 返回
 	 */
 	@Override
 	public PageVO<FrequentlyAskedQuestionVO> getFrequentlyAskedQuestionList(
-			QueryPoliciesExplainDTO queryPoliciesExplainDTO) {
-		log.info("热门问答查询列表条件dto={}", queryPoliciesExplainDTO);
+			FrequentlyAskedQuestionQueryDTO frequentlyAskedQuestionQueryDTO) {
+		log.info("热门问答查询列表条件dto={}", frequentlyAskedQuestionQueryDTO);
 
-		String sort = getSort(queryPoliciesExplainDTO);
-		IPage<FrequentlyAskedQuestionVO> frequentlyAskedQuestionDoPage=frequentlyAskedQuestionMapper.selectPageList(queryPoliciesExplainDTO.createQueryPage(),sort,queryPoliciesExplainDTO);
+		String sort = getSort(frequentlyAskedQuestionQueryDTO);
+		IPage<FrequentlyAskedQuestionVO> frequentlyAskedQuestionDoPage=frequentlyAskedQuestionMapper.selectPageList(frequentlyAskedQuestionQueryDTO.createQueryPage(),sort,frequentlyAskedQuestionQueryDTO);
 		log.info("热门问答查询列表对象={}", frequentlyAskedQuestionDoPage);
 		return PageVO.createPageVO(frequentlyAskedQuestionDoPage,frequentlyAskedQuestionDoPage.getRecords());
 	}
@@ -77,10 +79,10 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
 	/**
 	 * 获取排序字段
 	 */
-	private String getSort(QueryPoliciesExplainDTO queryPoliciesExplainDTO) {
+	private String getSort(FrequentlyAskedQuestionQueryDTO frequentlyAskedQuestionQueryDTO) {
 		String sort = PoliciesSortType.RELEASE_DATE.getValue();
 		// 判断是否为更新时间
-		if (PoliciesSortType.UPDATE_TIME.equals(queryPoliciesExplainDTO.getSortField())) {
+		if (PoliciesSortType.UPDATE_TIME.equals(frequentlyAskedQuestionQueryDTO.getSortField())) {
 			sort = SortType.UPDATE_TIME.name();
 		}
 		log.info("排序字段sort:{}", sort);
@@ -241,5 +243,23 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
 		//判断当前字符串是否为数字类型
 		Pattern pattern = Pattern.compile("^[-\\\\+]?[\\d]*$");
 		return pattern.matcher(str).matches();
+	}
+
+	@Override
+	public void updateDataProcessing(FrequentlyAskedQuestionDTO frequentlyAskedQuestionDto) {
+		// 查询热门问答
+		FrequentlyAskedQuestionDO frequentlyAskedQuestionDO =
+				frequentlyAskedQuestionMapper.selectById(frequentlyAskedQuestionDto.getId());
+		// 参数校验
+		if (frequentlyAskedQuestionDO != null) {
+			BeanUtils.copyProperties(frequentlyAskedQuestionDto, frequentlyAskedQuestionDO);
+			frequentlyAskedQuestionDO.setUpdateTime(LocalDateTime.now());
+			frequentlyAskedQuestionDO.setFrequentlyAskedQuestionStatus(FrequentlyAskedQuestionStatusEnum.PUBLISHED);
+			frequentlyAskedQuestionDO.setPoliciesIds(StringUtils.join(frequentlyAskedQuestionDto.getPoliciesIds(), ","));
+			// 属性拷贝
+			log.info("修改热门问答对象={}", frequentlyAskedQuestionDO);
+			// 修改热门问答
+			frequentlyAskedQuestionMapper.updateById(frequentlyAskedQuestionDO);
+		}
 	}
 }

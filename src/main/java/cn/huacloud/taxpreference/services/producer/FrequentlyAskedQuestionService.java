@@ -3,6 +3,7 @@ package cn.huacloud.taxpreference.services.producer;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.FrequentlyAskedQuestionDTO;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.FrequentlyAskedQuestionQueryDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesExplainDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.FrequentlyAskedQuestionDetailVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.FrequentlyAskedQuestionVO;
@@ -35,10 +36,10 @@ public interface FrequentlyAskedQuestionService {
 	/**
 	 * 热门问答列表查询
 	 *
-	 * @param queryPoliciesExplainDTO 查询条件
+	 * @param frequentlyAskedQuestionQueryDTO 查询条件
 	 * @return 返回
 	 */
-	PageVO<FrequentlyAskedQuestionVO> getFrequentlyAskedQuestionList(QueryPoliciesExplainDTO queryPoliciesExplainDTO);
+	PageVO<FrequentlyAskedQuestionVO> getFrequentlyAskedQuestionList(FrequentlyAskedQuestionQueryDTO frequentlyAskedQuestionQueryDTO);
 
 	/**
 	 * 删除热门问答
@@ -62,4 +63,6 @@ public interface FrequentlyAskedQuestionService {
 	 * @return 返回
 	 */
 	FrequentlyAskedQuestionDetailVO getFrequentlyAskedQuestionById(Long id);
+
+	void updateDataProcessing(FrequentlyAskedQuestionDTO frequentlyAskedQuestionDto);
 }

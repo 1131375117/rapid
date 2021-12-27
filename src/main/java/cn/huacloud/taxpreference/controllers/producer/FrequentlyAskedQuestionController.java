@@ -9,6 +9,7 @@ import cn.huacloud.taxpreference.common.utils.ProducerUserUtil;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.producer.FrequentlyAskedQuestionService;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.FrequentlyAskedQuestionDTO;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.FrequentlyAskedQuestionQueryDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesExplainDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.FrequentlyAskedQuestionDetailVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.FrequentlyAskedQuestionVO;
@@ -38,10 +39,10 @@ public class FrequentlyAskedQuestionController {
 	@ApiOperation("热门问答分页列表")
 	@PostMapping(value = "/getFrequentlyAskedQuestionList/query")
 	public ResultVO<PageVO<FrequentlyAskedQuestionVO>> getFrequentlyAskedQuestionList(
-			@RequestBody QueryPoliciesExplainDTO queryPoliciesExplainDTO) {
-		queryPoliciesExplainDTO.paramReasonable();
+			@RequestBody FrequentlyAskedQuestionQueryDTO frequentlyAskedQuestionQueryDTO) {
+		frequentlyAskedQuestionQueryDTO.paramReasonable();
 		PageVO<FrequentlyAskedQuestionVO> frequentlyAskedQuestionPageVO =
-				frequentlyAskedQuestionService.getFrequentlyAskedQuestionList(queryPoliciesExplainDTO);
+				frequentlyAskedQuestionService.getFrequentlyAskedQuestionList(frequentlyAskedQuestionQueryDTO);
 		return ResultVO.ok(frequentlyAskedQuestionPageVO);
 	}
 
@@ -77,6 +78,17 @@ public class FrequentlyAskedQuestionController {
 			@Validated(ValidationGroup.Update.class) @RequestBody
 					FrequentlyAskedQuestionDTO frequentlyAskedQuestionDto) {
 		frequentlyAskedQuestionService.updateFrequentlyAskedQuestion(frequentlyAskedQuestionDto);
+		return ResultVO.ok();
+	}
+
+	@PermissionInfo(name = "热门问答数据加工", group = PermissionGroup.FREQUENTLY_ASKED_QUESTION)
+	@SaCheckPermission("producer_frequentlyAskedQuestion_updateDataProcessing")
+	@ApiOperation("热门问答数据加工")
+	@PutMapping(value = "/frequentlyAskedQuestion/updateDataProcessing")
+	public ResultVO<Void> updateDataProcessing(
+			@Validated(ValidationGroup.Update.class) @RequestBody
+					FrequentlyAskedQuestionDTO frequentlyAskedQuestionDto) {
+		frequentlyAskedQuestionService.updateDataProcessing(frequentlyAskedQuestionDto);
 		return ResultVO.ok();
 	}
 

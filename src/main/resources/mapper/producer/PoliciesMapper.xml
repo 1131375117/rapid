@@ -30,6 +30,9 @@
                     and tp.area_code=#{area}
                 </foreach>
             </if>
+            <if test="queryPoliciesDTO.policiesStatus != null and queryPoliciesDTO.policiesStatus!='' ">
+                and tp.policies_status=#{queryPoliciesDTO.policiesStatus}
+            </if>
             <if test="queryPoliciesDTO.validity!=null and queryPoliciesDTO.validity!='' ">
                 and tp.validity=#{queryPoliciesDTO.validity}
             </if>

@@ -5,11 +5,11 @@ import com.baomidou.mybatisplus.annotation.IEnum;
 
 
 /**
- * 政策法规状态
+ * 热门问答状态
  *
  * @author wuxin
  */
-public enum PoliciesStatusEnum implements IEnum<String> {
+public enum FrequentlyAskedQuestionStatusEnum implements IEnum<String> {
 
 	/**
 	 * REPTILE_SYNCHRONIZATION 爬虫同步
@@ -20,7 +20,7 @@ public enum PoliciesStatusEnum implements IEnum<String> {
 
 	private final String name;
 
-	PoliciesStatusEnum(String name) {
+	FrequentlyAskedQuestionStatusEnum(String name) {
 		this.name = name;
 	}
 

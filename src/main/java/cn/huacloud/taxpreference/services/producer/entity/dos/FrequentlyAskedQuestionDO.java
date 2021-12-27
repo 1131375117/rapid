@@ -1,6 +1,7 @@
 package cn.huacloud.taxpreference.services.producer.entity.dos;
 
 import cn.huacloud.taxpreference.common.constants.ValidationGroup;
+import cn.huacloud.taxpreference.services.producer.entity.enums.FrequentlyAskedQuestionStatusEnum;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -51,6 +52,10 @@ public class FrequentlyAskedQuestionDO {
 	 */
 	private LocalDate releaseDate;
 
+	/**
+	 * 热门问答状态
+	 */
+	private FrequentlyAskedQuestionStatusEnum frequentlyAskedQuestionStatus;
 
 	/**
 	 * 解答机构

@@ -72,4 +72,6 @@ public interface PoliciesExplainService {
 	 * @return 返回
 	 */
 	PoliciesExplainDTO getPoliciesByPoliciesId(Long policiesId);
+
+	void updateSource(PoliciesExplainDTO policiesExplainDTO);
 }

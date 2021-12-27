@@ -1,6 +1,7 @@
 package cn.huacloud.taxpreference.services.producer.mapper;
 
 import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO;
+import cn.huacloud.taxpreference.services.producer.entity.dtos.FrequentlyAskedQuestionQueryDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesExplainDTO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.FrequentlyAskedQuestionVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainDetailVO;
@@ -24,8 +25,8 @@ public interface FrequentlyAskedQuestionMapper extends BaseMapper<FrequentlyAske
 	 * 热门问答分页列表查询
 	 * @param page 查询对象
 	 * @param sort 排序字段
-	 * @param queryPoliciesExplainDTO 返回视图对象
+	 * @param frequentlyAskedQuestionQueryDTO 返回视图对象
 	 * @return 返回值
 	 */
-	IPage<FrequentlyAskedQuestionVO> selectPageList(@Param("page") IPage<PoliciesExplainDetailVO> page, @Param("sort") String sort, @Param("queryPoliciesExplainDTO") QueryPoliciesExplainDTO queryPoliciesExplainDTO);
+	IPage<FrequentlyAskedQuestionVO> selectPageList(@Param("page") IPage<PoliciesExplainDetailVO> page, @Param("sort") String sort, @Param("frequentlyAskedQuestionQueryDTO") FrequentlyAskedQuestionQueryDTO frequentlyAskedQuestionQueryDTO);
 }

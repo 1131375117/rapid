@@ -115,4 +115,5 @@ public interface PoliciesService {
 	 */
 	List<PoliciesIndustryVO> industryQuery(String title);
 
+	void updateSource(PoliciesCombinationDTO policiesCombinationDTO);
 }

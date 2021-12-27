@@ -6,34 +6,38 @@
     <select id="selectPageList"
             resultType="cn.huacloud.taxpreference.services.producer.entity.vos.FrequentlyAskedQuestionVO">
         SELECT id,
-               policies_ids,
-               title,
-               content,
-               doc_source,
-               release_date,
-               answer_organization
+        policies_ids,
+        title,
+        content,
+        doc_source,
+        release_date,
+        frequently_asked_question_status,
+        answer_organization
         FROM t_frequently_asked_question
         <where>
-            <if test="queryPoliciesExplainDTO.title!=null">
-                and title like "%"#{queryPoliciesExplainDTO.title}"%"
+            <if test="frequentlyAskedQuestionQueryDTO.title!=null">
+                and title like "%"#{frequentlyAskedQuestionQueryDTO.title}"%"
             </if>
-            <if test="queryPoliciesExplainDTO.docSource!=null">
-                and doc_source like "%"#{queryPoliciesExplainDTO.docSource}"%"
+            <if test="frequentlyAskedQuestionQueryDTO.docSource!=null">
+                and doc_source like "%"#{frequentlyAskedQuestionQueryDTO.docSource}"%"
             </if>
-            <if test="queryPoliciesExplainDTO.keyword!=null and queryPoliciesExplainDTO.keyword!=''">
-                and title like "%"#{queryPoliciesExplainDTO.keyword}"%"
+            <if test="frequentlyAskedQuestionQueryDTO.keyword!=null and frequentlyAskedQuestionQueryDTO.keyword!=''">
+                and title like "%"#{frequentlyAskedQuestionQueryDTO.keyword}"%"
             </if>
-            <if test="queryPoliciesExplainDTO.startTime!=null ">
-                and release_date >= #{queryPoliciesExplainDTO.startTime}
+            <if test="frequentlyAskedQuestionQueryDTO.frequentlyAskedQuestionStatus!=null and frequentlyAskedQuestionQueryDTO.frequentlyAskedQuestionStatus!=''">
+                and frequently_asked_question_status=#{frequentlyAskedQuestionQueryDTO.frequentlyAskedQuestionStatus}
             </if>
-            <if test="queryPoliciesExplainDTO.endTime!=null ">
-                and release_date &lt;= #{queryPoliciesExplainDTO.endTime}
+            <if test="frequentlyAskedQuestionQueryDTO.startTime!=null ">
+                and release_date >= #{frequentlyAskedQuestionQueryDTO.startTime}
             </if>
-            <if test="queryPoliciesExplainDTO.answerOrganization!=null ">
-                and answer_organization &lt;= #{queryPoliciesExplainDTO.answerOrganization}
+            <if test="frequentlyAskedQuestionQueryDTO.endTime!=null ">
+                and release_date &lt;= #{frequentlyAskedQuestionQueryDTO.endTime}
             </if>
-            <if test="queryPoliciesExplainDTO.policiesIds!=null and queryPoliciesExplainDTO.policiesIds.size>0 ">
-                <foreach collection="queryPoliciesExplainDTO.policiesIds" item="policiesId">
+            <if test="frequentlyAskedQuestionQueryDTO.answerOrganization!=null ">
+                and answer_organization &lt;= #{frequentlyAskedQuestionQueryDTO.answerOrganization}
+            </if>
+            <if test="frequentlyAskedQuestionQueryDTO.policiesIds!=null and frequentlyAskedQuestionQueryDTO.policiesIds.size>0 ">
+                <foreach collection="frequentlyAskedQuestionQueryDTO.policiesIds" item="policiesId">
                     and FIND_IN_SET(#{policiesId},policiesIds)
                 </foreach>
             </if>
