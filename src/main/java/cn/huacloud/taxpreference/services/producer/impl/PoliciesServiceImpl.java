@@ -734,18 +734,6 @@ public class PoliciesServiceImpl implements PoliciesService {
 		return pageVO;
 	}
 
-	@Override
-	public List<PoliciesIndustryVO> industryQuery(String title) {
-		LambdaQueryWrapper<PoliciesDO> wrapper = Wrappers.lambdaQuery(PoliciesDO.class)
-				.like(StringUtils.isNotBlank(title), PoliciesDO::getIndustryNames, title);
-		List<PoliciesDO> policiesDOList = policiesMapper.selectList(wrapper);
-		List<PoliciesIndustryVO> collect = policiesDOList.stream().map(policiesDO -> {
-			PoliciesIndustryVO policiesIndustryVO = new PoliciesIndustryVO();
-			BeanUtils.copyProperties(policiesDO, policiesIndustryVO);
-			return policiesIndustryVO;
-		}).collect(Collectors.toList());
-		return collect;
-	}
 
 	@Transactional(rollbackFor = Exception.class)
 	@Override
@@ -757,6 +745,9 @@ public class PoliciesServiceImpl implements PoliciesService {
 		// 参数校验
 		if (policiesDO == null) {
 			throw BizCode._4100.exception();
+		}
+		if(policiesDO.getDocNumCode().equals(0)&&policiesDO.getDocWordCode()==null&&policiesDO.getDocYearCode().equals(0)){
+			throw BizCode._4316.exception();
 		}
 		updateSource(policiesCombinationDTO, policiesDO);
 		log.info("修改政策法规对象={}", policiesDO);

@@ -73,5 +73,9 @@ public interface PoliciesExplainService {
 	 */
 	PoliciesExplainDTO getPoliciesByPoliciesId(Long policiesId);
 
+	/**
+	 * 政策解读数据加工
+	 * @param policiesExplainDTO
+	 */
 	void updateSource(PoliciesExplainDTO policiesExplainDTO);
 }

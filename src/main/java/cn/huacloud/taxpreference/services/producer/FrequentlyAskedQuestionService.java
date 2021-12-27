@@ -64,5 +64,9 @@ public interface FrequentlyAskedQuestionService {
 	 */
 	FrequentlyAskedQuestionDetailVO getFrequentlyAskedQuestionById(Long id);
 
+	/**
+	 * 热门问答数据加工
+	 * @param frequentlyAskedQuestionDto
+	 */
 	void updateDataProcessing(FrequentlyAskedQuestionDTO frequentlyAskedQuestionDto);
 }

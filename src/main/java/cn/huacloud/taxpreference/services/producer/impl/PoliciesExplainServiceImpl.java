@@ -285,6 +285,7 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 		return policiesExplainDTO;
 	}
 
+	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public void updateSource(PoliciesExplainDTO policiesExplainDTO) {
 		checkAssociation(policiesExplainDTO);

@@ -105,6 +105,8 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
 		frequentlyAskedQuestionDO.setReleaseDate(frequentlyAskedQuestionDto.getReleaseDate());
 		// 设置用户id
 		frequentlyAskedQuestionDO.setInputUserId(userId);
+		//设置数据状态
+		frequentlyAskedQuestionDO.setFrequentlyAskedQuestionStatus(FrequentlyAskedQuestionStatusEnum.PUBLISHED);
 		// 设置创建时间
 		frequentlyAskedQuestionDO.setCreateTime(LocalDateTime.now());
 		// 设置更新时间
@@ -245,6 +247,7 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
 		return pattern.matcher(str).matches();
 	}
 
+	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public void updateDataProcessing(FrequentlyAskedQuestionDTO frequentlyAskedQuestionDto) {
 		// 查询热门问答

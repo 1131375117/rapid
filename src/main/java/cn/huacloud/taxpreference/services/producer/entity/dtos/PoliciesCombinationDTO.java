@@ -10,6 +10,7 @@ import lombok.Data;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -42,35 +43,35 @@ public class PoliciesCombinationDTO {
 	private Integer docNumCode;
 
 	@ApiModelProperty("所属区域码值")
-//	@NotEmpty(message = "所属区域码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+	@NotEmpty(message = "所属区域码值不能为空", groups = {ValidationGroup.Manual.class})
 	private String areaCode;
 
 	@ApiModelProperty("来源")
-//	@NotEmpty(message = "来源不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+	@NotEmpty(message = "来源不能为空", groups = {ValidationGroup.Manual.class})
 	private String docSource;
 
 	@ApiModelProperty("所属税种码值")
-//	@NotEmpty(message = "所属税种码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+	@NotEmpty(message = "所属税种码值不能为空", groups = {ValidationGroup.Manual.class})
 	private List<String> taxCategoriesCodes;
 
 	@ApiModelProperty("纳税人资格认定类型码值")
-//	@NotEmpty(message = "纳税人资格认定类型码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+//	@NotEmpty(message = "纳税人资格认定类型码值不能为空", groups = {ValidationGroup.Manual.class})
 	private List<String> taxpayerIdentifyTypeCodes;
 
 	@ApiModelProperty("适用企业类型码值")
-//	@NotEmpty(message = "适用企业类型码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+//	@NotEmpty(message = "适用企业类型码值不能为空", groups = {ValidationGroup.Manual.class})
 	private List<String> enterpriseTypeCodes;
 
 	@ApiModelProperty("适用行业码值")
-//	@NotEmpty(message = "适用行业码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+	@NotEmpty(message = "适用行业码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
 	private List<String> industryCodes;
 
 	@ApiModelProperty("有效性")
-//	@NotNull(message = "有效性不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+	@NotNull(message = "有效性不能为空", groups = {ValidationGroup.Manual.class})
 	private ValidityEnum validity;
 
 	@ApiModelProperty("发布日期")
-//	@NotNull(message = "发布日期不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+	@NotNull(message = "发布日期不能为空", groups = {ValidationGroup.Manual.class})
 	private LocalDate releaseDate;
 
 	@ApiModelProperty("所属专题")
@@ -81,7 +82,7 @@ public class PoliciesCombinationDTO {
 	private String digest;
 
 	@ApiModelProperty("正文")
-	@NotEmpty(message = "正文不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+	@NotEmpty(message = "正文不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class , ValidationGroup.Manual.class})
 	private String content;
 
 	@ApiModelProperty("标签管理")

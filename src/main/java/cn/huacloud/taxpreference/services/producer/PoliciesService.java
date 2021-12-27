@@ -107,13 +107,9 @@ public interface PoliciesService {
 	PageVO<PoliciesTitleVO> fuzzyQuery(KeywordPageQueryDTO keywordPageQueryDTO);
 
 
-
 	/**
-	 * 模糊查询所属税种
-	 * @param title
-	 * @return
+	 * 政策法规数据加工
+	 * @param policiesCombinationDTO
 	 */
-	List<PoliciesIndustryVO> industryQuery(String title);
-
 	void updateSource(PoliciesCombinationDTO policiesCombinationDTO);
 }

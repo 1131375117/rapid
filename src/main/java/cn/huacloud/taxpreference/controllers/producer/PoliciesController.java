@@ -112,7 +112,7 @@ public class PoliciesController {
 	@ApiOperation(value = "数据加工")
 	@PutMapping(value = "/policies/updateDataProcessing")
 	public ResultVO<Void> dataProcessing(
-			@Validated(ValidationGroup.Update.class) @RequestBody
+			@Validated(ValidationGroup.Manual.class) @RequestBody
 					PoliciesCombinationDTO policiesCombinationDTO) {
 		policiesCombinationDTO.setInputUserId(ProducerUserUtil.getCurrentUser().getId());
 		policiesService.updateSource(policiesCombinationDTO);
@@ -204,17 +204,4 @@ public class PoliciesController {
 		PageVO<PoliciesTitleVO> pageVO = policiesService.fuzzyQuery(keywordPageQueryDTO);
 		return ResultVO.ok(pageVO);
 	}
-
-	/**
-	 * 所属行业查询（模糊查询，政策法规）
-	 */
-	@PermissionInfo(name = "所属行业查询", group = PermissionGroup.POLICIES)
-	@SaCheckPermission("producer_relatedPolicies_query")
-	@ApiOperation("所属行业查询")
-	@PostMapping("/policies/industry/query")
-	public ResultVO<List<PoliciesIndustryVO>> industry(@RequestParam(value = "title") String title) {
-		List<PoliciesIndustryVO> policiesIndustryVO = policiesService.industryQuery(title);
-		return ResultVO.ok(policiesIndustryVO);
-	}
-
 }
