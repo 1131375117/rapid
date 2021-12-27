@@ -79,7 +79,7 @@ public class QueryPoliciesDTO extends KeywordPageQueryDTO {
 	@ApiModelProperty("查询条件类型,TITLE:按照标题查询,DOC_CODE:按照文号查询")
 	private KeywordType keywordType;
 
-	@ApiModelProperty(value = "数据类型",notes = "REPTILE_SYNCHRONIZATION:爬虫数据，PUBLISHED:录入数据")
+	@ApiModelProperty(value = "数据类型,REPTILE_SYNCHRONIZATION:爬虫数据，PUBLISHED:录入数据")
 	private String policiesStatus;
 
 	@Override

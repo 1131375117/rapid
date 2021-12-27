@@ -34,7 +34,7 @@ public class FrequentlyAskedQuestionQueryDTO extends KeywordPageQueryDTO {
 	@ApiModelProperty("发布日期")
 	private LocalDate releaseDate;
 
-	@ApiModelProperty(value = "数据类型",notes = "REPTILE_SYNCHRONIZATION:爬虫数据，PUBLISHED:录入数据")
+	@ApiModelProperty(value = "数据类型,REPTILE_SYNCHRONIZATION:爬虫数据,PUBLISHED:录入数据")
 	private String frequentlyAskedQuestionStatus;
 
 	@ApiModelProperty("开始日期")

@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.producer.entity.vos;
 
+import cn.huacloud.taxpreference.services.producer.entity.enums.FrequentlyAskedQuestionStatusEnum;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -38,6 +39,11 @@ public class FrequentlyAskedQuestionVO extends PoliciesCommonListVO{
 	private String content;
 
 
+	/**
+	 * 热门问答状态
+	 */
+	@ApiModelProperty("热门问答状态")
+	private FrequentlyAskedQuestionStatusEnum frequentlyAskedQuestionStatus;
 
 
 }

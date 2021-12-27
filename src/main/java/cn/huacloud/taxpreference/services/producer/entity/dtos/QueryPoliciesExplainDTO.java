@@ -36,7 +36,7 @@ public class QueryPoliciesExplainDTO extends KeywordPageQueryDTO {
 	@ApiModelProperty("发布日期")
 	private LocalDate releaseDate;
 
-	@ApiModelProperty(value = "数据类型",notes = "REPTILE_SYNCHRONIZATION:爬虫数据，PUBLISHED:录入数据")
+	@ApiModelProperty(value = "数据类型,REPTILE_SYNCHRONIZATION:爬虫数据，PUBLISHED:录入数据")
 	private String policiesExplainStatus;
 
 	@ApiModelProperty("开始日期")
@@ -51,7 +51,7 @@ public class QueryPoliciesExplainDTO extends KeywordPageQueryDTO {
 	@ApiModelProperty("更新日期")
 	private LocalDateTime updateTime;
 
-	@ApiModelProperty(value = "排序", notes = "RELEASE_DATE:发布时间,UPDATE_TIME:更新时间")
+	@ApiModelProperty(value = "排序,RELEASE_DATE:发布时间,UPDATE_TIME:更新时间")
 	private PoliciesSortType sortField;
 
 	@Override
