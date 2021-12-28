@@ -16,13 +16,53 @@ import org.springframework.stereotype.Repository;
  **/
 @Repository
 public interface CollectionMapper extends BaseMapper<CollectionDO> {
-    IPage<CollectionVO> selectPoliciesByCollectionType(@Param("page") Page<CollectionVO> pageQueryDTO,@Param("collectionType") CollectionType policies, @Param("userId") Long userId);
+    /**
+     * 查询政策法规收藏
+     *
+     * @param pageQueryDTO   查询条件
+     * @param collectionType 类型
+     * @param userId         用户id
+     * @return 我的收藏集合
+     */
+    IPage<CollectionVO> selectPoliciesByCollectionType(@Param("page") Page<CollectionVO> pageQueryDTO, @Param("collectionType") CollectionType collectionType, @Param("userId") Long userId);
 
-    IPage<CollectionVO> selectCaseAnalysisByCollectionType(@Param("page") Page<CollectionVO> pageQueryDTO,@Param("collectionType") CollectionType collectionType, @Param("userId") Long userId);
+    /**
+     * 查询案例分析收藏
+     *
+     * @param pageQueryDTO   查询条件
+     * @param collectionType 类型
+     * @param userId         用户id
+     * @return 我的收藏集合
+     */
+    IPage<CollectionVO> selectCaseAnalysisByCollectionType(@Param("page") Page<CollectionVO> pageQueryDTO, @Param("collectionType") CollectionType collectionType, @Param("userId") Long userId);
 
-    IPage<CollectionVO> selectFrequentlyAskedQuestionByCollectionType(@Param("page") Page<CollectionVO> pageQueryDTO,@Param("collectionType") CollectionType frequentlyAskedQuestion, @Param("userId") Long userId);
+    /**
+     * 查询热门问答收藏
+     *
+     * @param pageQueryDTO   查询条件
+     * @param collectionType 类型
+     * @param userId         用户id
+     * @return 我的收藏集合
+     */
+    IPage<CollectionVO> selectFrequentlyAskedQuestionByCollectionType(@Param("page") Page<CollectionVO> pageQueryDTO, @Param("collectionType") CollectionType collectionType, @Param("userId") Long userId);
 
-    IPage<CollectionVO> selectPoliciesExplainByCollectionType(@Param("page") Page<CollectionVO> pageQueryDTO,@Param("collectionType") CollectionType policiesExplain, @Param("userId") Long userId);
+    /**
+     * 查询政策解读收藏
+     *
+     * @param pageQueryDTO   查询条件
+     * @param collectionType 类型
+     * @param userId         用户id
+     * @return 我的收藏集合
+     */
+    IPage<CollectionVO> selectPoliciesExplainByCollectionType(@Param("page") Page<CollectionVO> pageQueryDTO, @Param("collectionType") CollectionType collectionType, @Param("userId") Long userId);
 
-    IPage<CollectionVO> selectTaxPreferenceByCollectionType(@Param("page") Page<CollectionVO> pageQueryDTO,@Param("collectionType") CollectionType taxPreference, @Param("userId") Long userId);
+    /**
+     * 查询税收优惠收藏
+     *
+     * @param pageQueryDTO   查询条件
+     * @param collectionType 类型
+     * @param userId         用户id
+     * @return 我的收藏集合
+     */
+    IPage<CollectionVO> selectTaxPreferenceByCollectionType(@Param("page") Page<CollectionVO> pageQueryDTO, @Param("collectionType") CollectionType collectionType, @Param("userId") Long userId);
 }

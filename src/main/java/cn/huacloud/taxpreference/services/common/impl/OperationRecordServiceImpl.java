@@ -96,9 +96,9 @@ public class OperationRecordServiceImpl implements OperationRecordService {
         } else if (ViewType.POLICIES_EXPLAIN.equals(pageQueryDTO.getViewType())) {
             operationRecordVOIPage = operationRecordMapper.selectPoliciesExplainByDocType(page, ViewType.POLICIES_EXPLAIN.name, userId);
         } else if (ViewType.TAX_PREFERENCE.equals(pageQueryDTO.getViewType())) {
-            operationRecordVOIPage = operationRecordMapper.selectTaxPreferenceByDocType(page,ViewType.TAX_PREFERENCE.name, userId);
+            operationRecordVOIPage = operationRecordMapper.selectTaxPreferenceByDocType(page, ViewType.TAX_PREFERENCE.name, userId);
         } else {
-            operationRecordVOIPage = operationRecordMapper.selectPoliciesByDocType(page,ViewType.POLICIES.name, userId);
+            operationRecordVOIPage = operationRecordMapper.selectPoliciesByDocType(page, ViewType.POLICIES.name, userId);
         }
         if (operationRecordVOIPage.getTotal() > 500) {
             operationRecordVOIPage.setTotal(500);

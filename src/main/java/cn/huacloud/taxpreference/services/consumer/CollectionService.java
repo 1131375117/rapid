@@ -19,12 +19,12 @@ public interface CollectionService {
     Boolean saveOrCancelCollection(CollectionDTO collectionDTO);
 
     /**
-     * 展示我的收藏
-     *
-     * @param pageQueryDTO
-     * @param id
+     * 我的收藏
+     * @param pageQueryDTO 查询条件
+     * @param userId 用户id
+     * @return 收藏集合
      */
-    PageVO<CollectionVO> queryCollection(CollectionQueryDTO pageQueryDTO, Long id);
+    PageVO<CollectionVO> queryCollection(CollectionQueryDTO pageQueryDTO, Long userId);
 
     /**
      * 用户是否收藏
