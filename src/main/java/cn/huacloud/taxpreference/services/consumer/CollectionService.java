@@ -1,8 +1,8 @@
 package cn.huacloud.taxpreference.services.consumer;
 
-import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.CollectionType;
+import cn.huacloud.taxpreference.services.common.entity.dtos.CollectionQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.CollectionDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.CollectionVO;
 
@@ -24,7 +24,7 @@ public interface CollectionService {
      * @param pageQueryDTO
      * @param id
      */
-    PageVO<CollectionVO> queryCollection(PageQueryDTO pageQueryDTO, Long id);
+    PageVO<CollectionVO> queryCollection(CollectionQueryDTO pageQueryDTO, Long id);
 
     /**
      * 用户是否收藏

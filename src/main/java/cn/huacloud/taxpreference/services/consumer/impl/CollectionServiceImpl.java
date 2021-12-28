@@ -1,11 +1,11 @@
 package cn.huacloud.taxpreference.services.consumer.impl;
 
-import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.CollectionType;
 import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.services.common.DocStatisticsService;
 import cn.huacloud.taxpreference.services.common.SysParamService;
+import cn.huacloud.taxpreference.services.common.entity.dtos.CollectionQueryDTO;
 import cn.huacloud.taxpreference.services.common.entity.dtos.DocStatisticsPlus;
 import cn.huacloud.taxpreference.services.common.watch.WatcherViewService;
 import cn.huacloud.taxpreference.services.consumer.CollectionService;
@@ -16,13 +16,13 @@ import cn.huacloud.taxpreference.services.consumer.mapper.CollectionMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import static cn.huacloud.taxpreference.services.common.watch.WatcherOperation.TYPE_TRIGGER_MAP;
@@ -70,20 +70,26 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     @Override
-    public PageVO<CollectionVO> queryCollection(PageQueryDTO pageQueryDTO, Long userId) {
-        pageQueryDTO.paramReasonable();
-        LambdaQueryWrapper<CollectionDO> collectionDOLambdaQueryWrapper = Wrappers.lambdaQuery(CollectionDO.class);
-        collectionDOLambdaQueryWrapper.eq(CollectionDO::getConsumerUserId, userId);
-        IPage<CollectionDO> queryPage = pageQueryDTO.createQueryPage();
-        IPage<CollectionDO> collectionDOIPage = collectionMapper.selectPage(queryPage, collectionDOLambdaQueryWrapper);
-        List<CollectionVO> collectionVOList = collectionDOIPage
-                .getRecords().stream().map(collectionDO -> {
-                    CollectionVO collectionVO = new CollectionVO();
-                    BeanUtils.copyProperties(collectionDO, collectionVO);
-                    return collectionVO;
-                }).collect(Collectors.toList());
+    public PageVO<CollectionVO> queryCollection(CollectionQueryDTO pageQueryDTO, Long userId) {
 
-        return PageVO.createPageVO(collectionDOIPage, collectionVOList);
+        //根据操作类型查询不同的收藏记录
+        Page<CollectionVO> page = new Page<>(pageQueryDTO.getPageNum(), pageQueryDTO.getPageSize());
+        IPage<CollectionVO> collectionDOIPage;
+        if (CollectionType.CASE_ANALYSIS.equals(pageQueryDTO.getCollectionType())) {
+            collectionDOIPage = collectionMapper.selectCaseAnalysisByCollectionType(page, CollectionType.CASE_ANALYSIS, userId);
+        } else if (CollectionType.FREQUENTLY_ASKED_QUESTION.equals(pageQueryDTO.getCollectionType())) {
+            collectionDOIPage = collectionMapper.selectFrequentlyAskedQuestionByCollectionType(page, CollectionType.FREQUENTLY_ASKED_QUESTION, userId);
+        } else if (CollectionType.POLICIES_EXPLAIN.equals(pageQueryDTO.getCollectionType())) {
+            collectionDOIPage = collectionMapper.selectPoliciesExplainByCollectionType(page, CollectionType.POLICIES_EXPLAIN, userId);
+        } else if (CollectionType.TAX_PREFERENCE.equals(pageQueryDTO.getCollectionType())) {
+            collectionDOIPage = collectionMapper.selectTaxPreferenceByCollectionType(page, CollectionType.TAX_PREFERENCE, userId);
+        } else {
+            collectionDOIPage = collectionMapper.selectPoliciesByCollectionType(page, CollectionType.POLICIES, userId);
+        }
+        if (collectionDOIPage.getTotal() > 200) {
+            collectionDOIPage.setTotal(200);
+        }
+        return PageVO.createPageVO(collectionDOIPage, collectionDOIPage.getRecords().stream().limit(200).collect(Collectors.toList()));
     }
 
     @Override
