@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.time.LocalDate;
+
 /**
  * 收藏DTO
  *
@@ -26,5 +28,11 @@ public class CollectionVO {
      */
     @ApiModelProperty("数据源id")
     private Long sourceId;
+
+    @ApiModelProperty("数据标题")
+    private String title;
+
+    @ApiModelProperty("收藏时间")
+    private LocalDate collectionTime;
 
 }

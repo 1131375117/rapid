@@ -1,18 +1,18 @@
 package cn.huacloud.taxpreference.controllers.consumer;
 
 import cn.huacloud.taxpreference.common.annotations.ConsumerUserCheckLogin;
+import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.utils.ConsumerUserUtil;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
+import cn.huacloud.taxpreference.services.common.entity.dtos.CollectionQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.CollectionService;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.CollectionDTO;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.CollectionVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 收藏功能
@@ -44,10 +44,11 @@ public class CollectionController {
      * 收藏展示功能:
      * 参数列表：无
      */
-    /*@ApiOperation("我的收藏展示")
+    @ApiOperation("我的收藏展示")
     @PostMapping("/queryCollection")
-    public ResultVO<PageVO<CollectionVO>> queryCollection(PageQueryDTO pageQueryDTO) {
+    public ResultVO<PageVO<CollectionVO>> queryCollection(@RequestBody CollectionQueryDTO pageQueryDTO) {
+        pageQueryDTO.paramReasonable();
         PageVO<CollectionVO> pageVO = collectionService.queryCollection(pageQueryDTO, ConsumerUserUtil.getCurrentUser().getId());
         return ResultVO.ok(pageVO);
-    }*/
+    }
 }

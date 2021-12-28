@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.huacloud.taxpreference.services.consumer.mapper.CollectionMapper">
+
+
+    <select id="selectPoliciesByCollectionType"
+            resultType="cn.huacloud.taxpreference.services.consumer.entity.vos.CollectionVO">
+        select tp.title,
+               tc.source_id       as sourceId,
+               tc.create_time     as collectionTime,
+               tc.collection_type as collectionType
+        from t_collection tc
+                 left join t_policies tp on tc.source_id = tp.id
+        where tc.consumer_user_id = #{userId} and tc.collection_type=#{collectionType}
+        order by tc.create_time desc
+
+    </select>
+    <select id="selectCaseAnalysisByCollectionType"
+            resultType="cn.huacloud.taxpreference.services.consumer.entity.vos.CollectionVO">
+        select tod.title, tc.source_id as id, tc.create_time as collectionTime, tc.collection_type as collectionType
+        from t_collection tc
+                 left join t_other_doc tod on tc.source_id = tod.id
+        where tc.consumer_user_id = #{userId} and tc.collection_type=#{collectionType}
+        order by tc.create_time desc
+    </select>
+    <select id="selectFrequentlyAskedQuestionByCollectionType"
+            resultType="cn.huacloud.taxpreference.services.consumer.entity.vos.CollectionVO">
+        select tfaq.title, tc.source_id as id, tc.create_time as collectionTime, tc.collection_type as collectionType
+        from t_collection tc
+                 left join t_frequently_asked_question tfaq on tc.source_id = tfaq.id
+        where tc.consumer_user_id = #{userId} and tc.collection_type=#{collectionType}
+        order by tc.create_time desc
+
+    </select>
+    <select id="selectPoliciesExplainByCollectionType"
+            resultType="cn.huacloud.taxpreference.services.consumer.entity.vos.CollectionVO">
+        select tpe.title, tc.source_id as id, tc.create_time as collectionTime, tc.collection_type as collectionType
+        from t_collection tc
+                 left join t_policies_explain tpe on tc.source_id = tpe.id
+        where tc.consumer_user_id = #{userId} and tc.collection_type=#{collectionType}
+        order by tc.create_time desc
+    </select>
+    <select id="selectTaxPreferenceByCollectionType"
+            resultType="cn.huacloud.taxpreference.services.consumer.entity.vos.CollectionVO">
+
+        select ttp.tax_preference_name as title,
+               tc.source_id            as id,
+               tc.create_time          as collectionTime,
+               tc.collection_type      as collectionType
+        from t_collection tc
+                 left join t_tax_preference ttp on tc.source_id = ttp.id
+        where tc.consumer_user_id = #{userId} and tc.collection_type=#{collectionType}
+        order by tc.create_time desc
+    </select>
+
+</mapper>

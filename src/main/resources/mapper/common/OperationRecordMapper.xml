@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.huacloud.taxpreference.services.common.mapper.OperationRecordMapper">
+
+
+    <select id="selectPoliciesByDocType"
+            resultType="cn.huacloud.taxpreference.services.common.entity.vos.OperationRecordVO">
+        select tp.title,
+               tor.operation_param as sourceId,
+               tor.create_time     as viewTime
+        from t_operation_record tor
+                 left join t_policies tp on tor.operation_param = tp.id
+        where tor.consumer_user_id = #{userId}
+          and tor.operation_type = #{type}
+        order by tor.create_time desc
+
+    </select>
+    <select id="selectCaseAnalysisByDocType"
+            resultType="cn.huacloud.taxpreference.services.common.entity.vos.OperationRecordVO">
+        select tod.title, tor.operation_param as sourceId, tor.create_time as viewTime
+        from t_operation_record tor
+                 left join t_other_doc tod on tor.operation_param = tod.id
+        where tor.consumer_user_id = #{userId}
+          and tor.operation_type = #{type}
+        order by tor.create_time desc
+    </select>
+    <select id="selectFrequentlyAskedQuestionByDocType"
+            resultType="cn.huacloud.taxpreference.services.common.entity.vos.OperationRecordVO">
+        select tfaq.title, tor.operation_param as sourceId, tor.create_time as viewTime
+        from t_operation_record tor
+                 left join t_frequently_asked_question tfaq on tor.operation_param = tfaq.id
+        where tor.consumer_user_id = #{userId}
+          and tor.operation_type = #{type}
+        order by tor.create_time desc
+
+    </select>
+    <select id="selectPoliciesExplainByDocType"
+            resultType="cn.huacloud.taxpreference.services.common.entity.vos.OperationRecordVO">
+        select tpe.title, tor.operation_param as sourceId, tor.create_time as viewTime
+        from t_operation_record tor
+                 left join t_policies_explain tpe on tor.operation_param = tpe.id
+        where tor.consumer_user_id = #{userId}
+          and tor.operation_type = #{type}
+        order by tor.create_time desc
+    </select>
+    <select id="selectTaxPreferenceByDocType"
+            resultType="cn.huacloud.taxpreference.services.common.entity.vos.OperationRecordVO">
+
+        select ttp.tax_preference_name as title,
+               tor.operation_param     as sourceId,
+               tor.create_time         as viewTime
+        from t_operation_record tor
+                 left join t_tax_preference ttp on tor.operation_param = ttp.id
+        where tor.consumer_user_id = #{userId}
+          and tor.operation_type = #{type}
+        order by tor.create_time desc
+    </select>
+
+</mapper>
