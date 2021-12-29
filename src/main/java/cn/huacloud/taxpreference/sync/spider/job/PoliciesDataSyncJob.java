@@ -8,7 +8,6 @@ import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesStatusEn
 import cn.huacloud.taxpreference.services.producer.entity.enums.ValidityEnum;
 import cn.huacloud.taxpreference.services.producer.entity.vos.DocCodeVO;
 import cn.huacloud.taxpreference.services.producer.mapper.PoliciesMapper;
-import cn.huacloud.taxpreference.services.sync.entity.dos.SpiderDataSyncDO;
 import cn.huacloud.taxpreference.sync.spider.DataSyncJob;
 import cn.huacloud.taxpreference.sync.spider.entity.dos.SpiderPolicyAttachmentDO;
 import cn.huacloud.taxpreference.sync.spider.entity.dos.SpiderPolicyDataDO;
@@ -119,21 +118,22 @@ public class PoliciesDataSyncJob implements DataSyncJob<SpiderPolicyCombineDTO, 
     }
 
     @Override
-    public Long saveProcessData(SpiderDataSyncDO spiderDataSyncDO, PoliciesCombineDTO processData) {
-        // TODO 不要模仿这里的保存逻辑，还需要修改
-        Long docId = spiderDataSyncDO.getDocId();
+    public boolean isDocExist(Long docId) {
+        return policiesMapper.selectCount(Wrappers.lambdaQuery(PoliciesDO.class).eq(PoliciesDO::getId, docId)) > 0;
+    }
+
+
+    @Override
+    public Long saveProcessData(PoliciesCombineDTO processData) {
         PoliciesDO policiesDO = processData.getPoliciesDO();
-        if (docId != null) {
-            Long count = policiesMapper.selectCount(Wrappers.lambdaQuery(PoliciesDO.class).eq(PoliciesDO::getId, docId));
-            if (count > 0) {
-                policiesDO.setId(docId);
-                policiesMapper.updateById(policiesDO);
-            } else {
-                policiesMapper.insert(policiesDO);
-            }
-        } else {
-            policiesMapper.insert(policiesDO);
-        }
+        policiesMapper.insert(policiesDO);
         return policiesDO.getId();
+    }
+
+    @Override
+    public void updateProcessData(Long docId, PoliciesCombineDTO processData) {
+        PoliciesDO policiesDO = processData.getPoliciesDO();
+        policiesDO.setId(docId);
+        policiesMapper.updateById(policiesDO);
     }
 }

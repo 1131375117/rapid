@@ -17,13 +17,24 @@ public interface DataSyncJob<T, R> {
 
     /**
      * 执行同步
-     * @param sourceId 数据同步id
+     * @param spiderDataSyncDO 数据同步记录
      * @return docId
      */
     default Long doSync(SpiderDataSyncDO spiderDataSyncDO, JdbcTemplate jdbcTemplate) {
+        // 获取原始数据
         T sourceData = getSourceData(spiderDataSyncDO.getSpiderDataId(), jdbcTemplate);
+        // 数据处理
         R processData = process(sourceData);
-        return saveProcessData(spiderDataSyncDO, processData);
+        // 数据持久化
+        Long docId = spiderDataSyncDO.getDocId();
+        if (docId != null && isDocExist(docId)) {
+            // 执行更新方法
+            updateProcessData(docId, processData);
+            return docId;
+        } else {
+            // 执行保存方法
+            return saveProcessData(processData);
+        }
     }
 
     /**
@@ -60,12 +71,25 @@ public interface DataSyncJob<T, R> {
     R process(T sourceData);
 
     /**
+     * 文档数据是否已经存在
+     * @param docId 文档ID
+     * @return 数据是否已经存在
+     */
+    boolean isDocExist(Long docId);
+
+    /**
      * 保存处理好的数据
      *
-     * @param spiderDataSyncDO
      * @param processData 处理好的数据
      * @return 数据记录主键ID
      */
-    Long saveProcessData(SpiderDataSyncDO spiderDataSyncDO, R processData);
+    Long saveProcessData(R processData);
+
+    /**
+     * 更新处理好的数据
+     * @param docId 文档ID
+     * @param processData 处理好的数据
+     */
+    void updateProcessData(Long docId, R processData);
 
 }
