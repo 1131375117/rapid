@@ -4,7 +4,6 @@ import cn.huacloud.taxpreference.common.enums.AttachmentType;
 import cn.huacloud.taxpreference.services.common.entity.vos.AttachmentVO;
 
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.List;
 
 /**
@@ -47,7 +46,7 @@ public interface AttachmentService {
      * @param path
      * @return
      */
-    default String getUrl(String path) {
+    static String getUrl(String path) {
         return "/api/v1/attachment/download/" + path;
     }
 

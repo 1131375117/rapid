@@ -81,7 +81,7 @@ public class AttachmentServiceImpl implements AttachmentService {
         // 属性拷贝
         AttachmentVO attachmentVO = new AttachmentVO();
         BeanUtils.copyProperties(attachmentDO, attachmentVO);
-        attachmentVO.setUrl(getUrl(attachmentDO.getPath()));
+        attachmentVO.setUrl(AttachmentService.getUrl(attachmentDO.getPath()));
 
         return attachmentVO;
     }
@@ -170,7 +170,7 @@ public class AttachmentServiceImpl implements AttachmentService {
         return attachmentDOList.stream().map(attachmentDO -> {
             AttachmentVO attachmentVO = new AttachmentVO();
             BeanUtils.copyProperties(attachmentDO, attachmentVO);
-            attachmentVO.setUrl(getUrl(attachmentDO.getPath()));
+            attachmentVO.setUrl(AttachmentService.getUrl(attachmentDO.getPath()));
             return attachmentVO;
         }).collect(Collectors.toList());
     }
