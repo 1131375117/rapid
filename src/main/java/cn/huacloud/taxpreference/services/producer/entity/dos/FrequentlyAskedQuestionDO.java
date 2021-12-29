@@ -1,17 +1,14 @@
 package cn.huacloud.taxpreference.services.producer.entity.dos;
 
-import cn.huacloud.taxpreference.common.constants.ValidationGroup;
 import cn.huacloud.taxpreference.services.producer.entity.enums.FrequentlyAskedQuestionStatusEnum;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * 热点问答实体
@@ -20,6 +17,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @TableName("t_frequently_asked_question")
+@Accessors(chain = true)
 public class FrequentlyAskedQuestionDO {
 	/**
 	 * 主键ID
