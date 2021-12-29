@@ -57,6 +57,7 @@ public class AttachmentController {
         InputStream inputStream = attachmentService.downloadAttachment(path);
         InputStreamResource resource = new InputStreamResource(inputStream);
 
+        // TODO 需用从数据库中获取
         String fileName = StringUtils.substringAfter(path, "_");
         // 设置响应头
         HttpHeaders headers = new HttpHeaders();

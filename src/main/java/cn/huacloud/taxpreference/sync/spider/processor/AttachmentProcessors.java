@@ -112,6 +112,7 @@ public class AttachmentProcessors implements CommandLineRunner {
             Headers headers = object.headers();
             Long contentLength = Long.parseLong(Objects.requireNonNull(headers.get("Content-Length")));
             minioClient.putObject(PutObjectArgs.builder()
+                    .bucket(minioConfig.getBucket())
                     .object(targetPath)
                     .stream(object, contentLength, -1)
                     .build());
