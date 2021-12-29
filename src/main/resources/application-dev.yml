@@ -54,4 +54,11 @@ tax-preference:
     other-doc:
       index: other_doc_index_2021-12-13_dev
       alias: other_doc_dev
-
+# 爬虫数据同步
+spider-sync:
+  enabled: true
+  data-source:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: "jdbc:mysql://172.16.122.17:3306/dataWEB?useUnicode=true&characterEncoding=UTF-8&useSSL=false"
+    username: tax_preference
+    password: tax_preference

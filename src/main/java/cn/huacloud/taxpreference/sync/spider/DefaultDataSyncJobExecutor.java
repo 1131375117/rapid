@@ -41,8 +41,12 @@ public class DefaultDataSyncJobExecutor {
             try {
                 // 前置处理
                 spiderDataSyncDO = preHandle(dataSyncJob, spiderDataId);
+                // 跳过已经完成的任务
+                if (spiderDataSyncDO.getSyncStatus() == SyncStatus.COMPLETED) {
+                    continue;
+                }
                 // 执行同步
-                Long docId = dataSyncJob.doSync(spiderDataId);
+                Long docId = dataSyncJob.doSync(spiderDataSyncDO, jdbcTemplate);
                 // 后置处理
                 afterHandle(spiderDataSyncDO, docId);
             } catch (Exception e) {
@@ -81,7 +85,11 @@ public class DefaultDataSyncJobExecutor {
     }
 
     private void afterHandle(SpiderDataSyncDO spiderDataSyncDO, Long docId) {
-
+        spiderDataSyncDO.setDocId(docId)
+                .setSyncStatus(SyncStatus.COMPLETED)
+                .setUpdateTime(LocalDateTime.now());
+        setSyncHistory(spiderDataSyncDO);
+        spiderDataSyncMapper.updateById(spiderDataSyncDO);
     }
 
     private void setSyncHistory(SpiderDataSyncDO spiderDataSyncDO) {

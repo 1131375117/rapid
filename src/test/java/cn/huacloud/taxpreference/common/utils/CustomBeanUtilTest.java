@@ -7,10 +7,34 @@ import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 @Slf4j
 public class CustomBeanUtilTest {
+
+    @Test
+    public void testCopy() {
+        Bar bar = CustomBeanUtil.copyProperties(new Foo().setName("AA"), Bar.class);
+        log.info("{}", bar);
+    }
+
+    @Test
+    public void testPd() {
+
+    }
+
+    @Accessors(chain = true)
+    @Data
+    public static class Foo {
+        private String name;
+
+        private String foo;
+    }
+
+    @Accessors(chain = true)
+    @Data
+    public static class Bar {
+        private String name;
+        private String bar;
+    }
 
     @Test
     public void copyProperties() {

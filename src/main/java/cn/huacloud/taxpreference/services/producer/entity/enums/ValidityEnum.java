@@ -61,4 +61,18 @@ public enum ValidityEnum implements IEnum<String>, SysCodeGetter {
 		return new SysCodeSimpleVO().setCodeName(getName())
 				.setCodeValue(name());
 	}
+
+	/**
+	 * 通过名称匹配获取枚举
+	 * @param name 名称
+	 * @return 枚举
+	 */
+	public static ValidityEnum getByName(String name) {
+		for (ValidityEnum value : values()) {
+			if (value.getName().equals(name)) {
+				return value;
+			}
+		}
+		return ValidityEnum.UNKNOWN;
+	}
 }

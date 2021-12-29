@@ -6,17 +6,18 @@ import cn.huacloud.taxpreference.sync.es.trigger.impl.*;
 import cn.huacloud.taxpreference.sync.spider.DataSyncJobParam;
 import cn.huacloud.taxpreference.sync.spider.SpiderDataSyncScheduler;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.slf4j.helpers.MessageFormatter;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
 
 /**
  * @author wangkh
  */
-@Api(tags = "ES数据同步")
+@Api(tags = "数据同步")
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
 @RestController
@@ -76,14 +77,18 @@ public class DataSyncController {
         return ResultVO.ok().setMsg(MessageFormatter.format("成功同步数据{}条", total).getMessage());
     }
 
-    @ApiOperation("同步所有案例数据")
+    @ApiOperation("同步爬虫数据")
     @PostMapping("/sync/spiderData")
-    public ResultVO<Void> syncSpiderData(String password, LocalDateTime from, @RequestParam(defaultValue = "9999-12-31T23:59:59") LocalDateTime to) {
-        sysConfig.checkSysPassword(password);
-        DataSyncJobParam param = new DataSyncJobParam();
-        param.setFrom(from);
-        param.setTo(to);
-        spiderDataSyncScheduler.executeJobs(param);
+    public ResultVO<Void> syncSpiderData(@RequestBody JobParam jobParam) {
+        sysConfig.checkSysPassword(jobParam.getPassword());
+        spiderDataSyncScheduler.executeJobs(jobParam);
         return ResultVO.ok();
+    }
+
+    @Getter
+    @Setter
+    public static class JobParam extends DataSyncJobParam {
+        @ApiModelProperty(example = "12345678Aa")
+        private String password;
     }
 }

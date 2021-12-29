@@ -17,6 +17,7 @@ public class SpiderPolicyDataDO {
     private String title;
     private String titleMd5;
     private String documentNumber;
+    private String publishDate;
     private String contentIsValid;
     private String content;
     private String contentMd5;

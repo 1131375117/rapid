@@ -1,6 +1,8 @@
 package cn.huacloud.taxpreference.sync.spider;
 
 import cn.huacloud.taxpreference.common.enums.DocType;
+import cn.huacloud.taxpreference.services.sync.entity.dos.SpiderDataSyncDO;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  * 数据同步作业
@@ -18,10 +20,10 @@ public interface DataSyncJob<T, R> {
      * @param sourceId 数据同步id
      * @return docId
      */
-    default Long doSync(String sourceId) {
-        T sourceData = getSourceData(sourceId);
+    default Long doSync(SpiderDataSyncDO spiderDataSyncDO, JdbcTemplate jdbcTemplate) {
+        T sourceData = getSourceData(spiderDataSyncDO.getSpiderDataId(), jdbcTemplate);
         R processData = process(sourceData);
-        return saveProcessData(processData);
+        return saveProcessData(spiderDataSyncDO, processData);
     }
 
     /**
@@ -48,7 +50,7 @@ public interface DataSyncJob<T, R> {
      * @param sourceId 原始ID
      * @return 原始数据
      */
-    T getSourceData(String sourceId);
+    T getSourceData(String sourceId, JdbcTemplate jdbcTemplate);
 
     /**
      * 处理原始数据，生成处理数据
@@ -59,9 +61,11 @@ public interface DataSyncJob<T, R> {
 
     /**
      * 保存处理好的数据
+     *
+     * @param spiderDataSyncDO
      * @param processData 处理好的数据
      * @return 数据记录主键ID
      */
-    Long saveProcessData(R processData);
+    Long saveProcessData(SpiderDataSyncDO spiderDataSyncDO, R processData);
 
 }
