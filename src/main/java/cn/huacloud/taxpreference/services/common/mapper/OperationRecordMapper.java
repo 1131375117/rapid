@@ -26,7 +26,7 @@ public interface OperationRecordMapper extends BaseMapper<OperationRecordDO> {
     IPage<OperationRecordVO> selectCaseAnalysisByDocType(@Param("page") Page<OperationRecordVO> page, @Param("type") String name, @Param("userId") Long userId);
 
     /**
-     * 查询案例分析操作记录
+     * 查询热门问答操作记录
      *
      * @param page   页码
      * @param name   类型
