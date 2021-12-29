@@ -3,13 +3,15 @@ package cn.huacloud.taxpreference.controllers.tool;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.config.SysConfig;
 import cn.huacloud.taxpreference.sync.es.trigger.impl.*;
+import cn.huacloud.taxpreference.sync.spider.DataSyncJobParam;
+import cn.huacloud.taxpreference.sync.spider.SpiderDataSyncScheduler;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.helpers.MessageFormatter;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 
 /**
  * @author wangkh
@@ -31,6 +33,8 @@ public class DataSyncController {
     private final TaxPreferenceEventTrigger taxPreferenceEventTrigger;
 
     private final OtherDocEventTrigger otherDocEventTrigger;
+
+    private final SpiderDataSyncScheduler spiderDataSyncScheduler;
 
     @ApiOperation("同步所有政策法规数据")
     @GetMapping("/sync/policies")
@@ -70,5 +74,16 @@ public class DataSyncController {
         sysConfig.checkSysPassword(password);
         long total = otherDocEventTrigger.syncAll();
         return ResultVO.ok().setMsg(MessageFormatter.format("成功同步数据{}条", total).getMessage());
+    }
+
+    @ApiOperation("同步所有案例数据")
+    @PostMapping("/sync/spiderData")
+    public ResultVO<Void> syncSpiderData(String password, LocalDateTime from, @RequestParam(defaultValue = "9999-12-31T23:59:59") LocalDateTime to) {
+        sysConfig.checkSysPassword(password);
+        DataSyncJobParam param = new DataSyncJobParam();
+        param.setFrom(from);
+        param.setTo(to);
+        spiderDataSyncScheduler.executeJobs(param);
+        return ResultVO.ok();
     }
 }
