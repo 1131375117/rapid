@@ -1,20 +1,31 @@
 package cn.huacloud.taxpreference.sync.spider.job;
 
+import cn.huacloud.taxpreference.common.enums.AttachmentType;
 import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.services.common.AttachmentService;
+import cn.huacloud.taxpreference.services.common.entity.dos.AttachmentDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO;
+import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
 import cn.huacloud.taxpreference.services.producer.entity.enums.FrequentlyAskedQuestionStatusEnum;
 import cn.huacloud.taxpreference.services.producer.mapper.FrequentlyAskedQuestionMapper;
 import cn.huacloud.taxpreference.sync.spider.DataSyncJob;
+import cn.huacloud.taxpreference.sync.spider.entity.dos.SpiderPolicyAttachmentDO;
 import cn.huacloud.taxpreference.sync.spider.entity.dos.SpiderPopularQaDataDO;
+import cn.huacloud.taxpreference.sync.spider.entity.dtos.FrequentlyAskedQuestionCombineDTO;
+import cn.huacloud.taxpreference.sync.spider.entity.dtos.SpiderPopularQaDataCombineDTO;
+import cn.huacloud.taxpreference.sync.spider.processor.AttachmentProcessors;
 import cn.huacloud.taxpreference.sync.spider.processor.DateProcessors;
+import cn.huacloud.taxpreference.sync.spider.processor.HtmlProcessors;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.jsoup.nodes.Document;
+import org.springframework.data.util.Pair;
 import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author zhaoqiankun
@@ -24,10 +35,16 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 @Component
 public class FrequentlyAskedQuestionDataSyncJob implements
-        DataSyncJob<SpiderPopularQaDataDO, FrequentlyAskedQuestionDO> {
+        DataSyncJob<SpiderPopularQaDataCombineDTO, FrequentlyAskedQuestionCombineDTO> {
 
 
     private final FrequentlyAskedQuestionMapper frequentlyAskedQuestionMapper;
+
+
+    private final AttachmentProcessors attachmentProcessors;
+
+    public static final int DIGEST_MAX_LENGTH = 200;
+
 
     private final AttachmentService attachmentService;
 
@@ -55,17 +72,24 @@ public class FrequentlyAskedQuestionDataSyncJob implements
     }
 
     @Override
-    public SpiderPopularQaDataDO getSourceData(String sourceId, JdbcTemplate jdbcTemplate) {
+    public SpiderPopularQaDataCombineDTO getSourceData(String sourceId, JdbcTemplate jdbcTemplate) {
         String popularQaSql = "SELECT * FROM popular_qa_data WHERE id = ?";
-        SpiderPopularQaDataDO spiderPolicyDataDO = jdbcTemplate.queryForObject(popularQaSql,
+        SpiderPopularQaDataDO spiderPopularQaDataDO = jdbcTemplate.queryForObject(popularQaSql,
                 DataClassRowMapper.newInstance(SpiderPopularQaDataDO.class), sourceId);
-        return spiderPolicyDataDO;
+        String attachmentSql = "SELECT * FROM policy_attachment WHERE doc_id = ? AND attachment_type = '热门回答'";
+        List<SpiderPolicyAttachmentDO> spiderPolicyAttachmentDOList = jdbcTemplate.query(attachmentSql,
+                DataClassRowMapper.newInstance(SpiderPolicyAttachmentDO.class), sourceId);
+
+        return new SpiderPopularQaDataCombineDTO()
+                .setSpiderPolicyAttachmentDOList(spiderPolicyAttachmentDOList)
+                .setSpiderPopularQaDataDO(spiderPopularQaDataDO);
+
     }
 
     @Override
-    public FrequentlyAskedQuestionDO process(SpiderPopularQaDataDO sourceData) {
+    public FrequentlyAskedQuestionCombineDTO process(SpiderPopularQaDataCombineDTO sourceData) {
         // 爬虫库 ，热门问答对象
-        SpiderPopularQaDataDO spiderPopularQaDataDO = sourceData;
+        SpiderPopularQaDataDO spiderPopularQaDataDO = sourceData.getSpiderPopularQaDataDO();
 
         LocalDateTime now = LocalDateTime.now();
 
@@ -87,21 +111,27 @@ public class FrequentlyAskedQuestionDataSyncJob implements
         frequentlyAskedQuestionDO.setReleaseDate(
                 DateProcessors.releaseDate.apply(spiderPopularQaDataDO.getPublishDate()));
 
-        // 关联附件信息
-        //        attachmentService.setAttachmentDocId(
-        //                frequentlyAskedQuestionDO.getId(),
-        //                AttachmentType.POLICIES,
-        //                frequentlyAskedQuestionDO.getContent());
-
         // 网站名称
         frequentlyAskedQuestionDO.setAnswerOrganization(spiderPopularQaDataDO.getSiteName());
 
         // 正文
-        // TODO
-        frequentlyAskedQuestionDO.setContent(spiderPopularQaDataDO.getContent());
+        String content = spiderPopularQaDataDO.getContent();
+        Document document = HtmlProcessors.content.apply(content);
 
-        return frequentlyAskedQuestionDO;
+        // 附件
+        List<SpiderPolicyAttachmentDO> spiderPolicyAttachmentDOList = sourceData.getSpiderPolicyAttachmentDOList();
+        Pair<Document, List<AttachmentDO>> pair = attachmentProcessors.processContentAndAttachment(document,
+                spiderPolicyAttachmentDOList, AttachmentType.FREQUENTLY_ASKED_QUESTION);
+
+        // 设置正文
+        frequentlyAskedQuestionDO.setContent(pair.getFirst().html());
+
+        return new FrequentlyAskedQuestionCombineDTO().setFrequentlyAskedQuestionDO(frequentlyAskedQuestionDO)
+                .setAttachmentDOList(pair.getSecond());
+
+
     }
+
 
     @Override
     public boolean isDocExist(Long docId) {
@@ -109,18 +139,28 @@ public class FrequentlyAskedQuestionDataSyncJob implements
                 Wrappers.lambdaQuery(FrequentlyAskedQuestionDO.class).eq(FrequentlyAskedQuestionDO::getId, docId)) > 0;
     }
 
+    @Transactional
     @Override
-    public Long saveProcessData(FrequentlyAskedQuestionDO processData) {
-        FrequentlyAskedQuestionDO frequentlyAskedQuestionDO = processData;
+    public Long saveProcessData(FrequentlyAskedQuestionCombineDTO processData) {
+        FrequentlyAskedQuestionDO frequentlyAskedQuestionDO = processData.getFrequentlyAskedQuestionDO();
         frequentlyAskedQuestionMapper.insert(frequentlyAskedQuestionDO);
-        return frequentlyAskedQuestionDO.getId();
+        // 保存附件
+        List<AttachmentDO> attachmentDOList = processData.getAttachmentDOList();
+        attachmentService.saveSpiderAttachmentList( frequentlyAskedQuestionDO.getId().longValue(), attachmentDOList);
+        return frequentlyAskedQuestionDO.getId().longValue();
+
+
     }
 
+    @Transactional
     @Override
-    public void updateProcessData(Long docId, FrequentlyAskedQuestionDO processData) {
-        FrequentlyAskedQuestionDO frequentlyAskedQuestionDO = processData;
+    public void updateProcessData(Long docId, FrequentlyAskedQuestionCombineDTO processData) {
+        FrequentlyAskedQuestionDO frequentlyAskedQuestionDO = processData.getFrequentlyAskedQuestionDO();
         frequentlyAskedQuestionDO.setId(docId);
         frequentlyAskedQuestionMapper.updateById(frequentlyAskedQuestionDO);
+        // 保存附件
+        List<AttachmentDO> attachmentDOList = processData.getAttachmentDOList();
+        attachmentService.saveSpiderAttachmentList(frequentlyAskedQuestionDO.getId(), attachmentDOList);
     }
 
 
