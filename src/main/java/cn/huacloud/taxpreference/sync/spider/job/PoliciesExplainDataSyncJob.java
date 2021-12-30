@@ -19,7 +19,6 @@ import cn.huacloud.taxpreference.sync.spider.processor.DateProcessors;
 import cn.huacloud.taxpreference.sync.spider.processor.HtmlProcessors;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.data.util.Pair;
 import org.springframework.jdbc.core.DataClassRowMapper;
@@ -27,7 +26,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -70,7 +68,7 @@ public class PoliciesExplainDataSyncJob implements DataSyncJob<SpiderPolicyExpla
 
 	@Override
 	public SpiderPolicyExplainCombineDTO getSourceData(String sourceId, JdbcTemplate jdbcTemplate) {
-		String policyExplainSql = "SELECT * FROM policy_data WHERE id = ? And related_interpretation_title !='' ";
+		String policyExplainSql = "SELECT * FROM policy_data WHERE id = ? AND related_interpretation_title !='' ";
 		SpiderPolicyExplainDataDO spiderPolicyExplainDataDO = jdbcTemplate.queryForObject(policyExplainSql, DataClassRowMapper.newInstance(SpiderPolicyExplainDataDO.class), sourceId);
 		String attachmentSql = "SELECT * FROM policy_attachment WHERE doc_id = ? AND attachment_type = '政策'";
 		List<SpiderPolicyAttachmentDO> spiderPolicyAttachmentDOList = jdbcTemplate.query(attachmentSql, DataClassRowMapper.newInstance(SpiderPolicyAttachmentDO.class), sourceId);

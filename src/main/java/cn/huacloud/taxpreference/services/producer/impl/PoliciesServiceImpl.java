@@ -129,7 +129,7 @@ public class PoliciesServiceImpl implements PoliciesService {
 	public void savePolicies(PoliciesCombinationDTO policiesCombinationDTO, Long userId) {
 		log.info("新增政策法规组合dto={}", policiesCombinationDTO);
 		// 校验标题是否存在
-		judgeExists(policiesCombinationDTO);
+//		judgeExists(policiesCombinationDTO);
 		// 新增政策法规
 		PoliciesDO policiesDO = new PoliciesDO();
 		// 填充属性值
@@ -351,7 +351,7 @@ public class PoliciesServiceImpl implements PoliciesService {
 	@Override
 	public void updatePolicies(PoliciesCombinationDTO policiesCombinationDTO) {
 		// 判断标题和文号是否重复
-		judgeExists(policiesCombinationDTO);
+//		judgeExists(policiesCombinationDTO);
 		// 修改政策法规
 		PoliciesDO policiesDO = policiesMapper.selectById(policiesCombinationDTO.getId());
 		// 参数校验
@@ -739,14 +739,14 @@ public class PoliciesServiceImpl implements PoliciesService {
 	@Override
 	public void updateSource(PoliciesCombinationDTO policiesCombinationDTO) {
 		// 判断标题和文号是否重复
-		judgeExists(policiesCombinationDTO);
+//		judgeExists(policiesCombinationDTO);
 		// 修改政策法规
 		PoliciesDO policiesDO = policiesMapper.selectById(policiesCombinationDTO.getId());
 		// 参数校验
 		if (policiesDO == null) {
 			throw BizCode._4100.exception();
 		}
-		if(policiesDO.getDocNumCode().equals(0)&&policiesDO.getDocWordCode()==null&&policiesDO.getDocYearCode().equals(0)){
+		if(policiesDO.getDocNumCode()==null&&policiesDO.getDocWordCode()==""&&policiesDO.getDocYearCode()==null){
 			throw BizCode._4316.exception();
 		}
 		updateSource(policiesCombinationDTO, policiesDO);
