@@ -23,6 +23,14 @@ public class SysCodeProcessors {
 
     public static final String BLANK_SPACE = " ";
 
+    public final Function<String, SysCodeVO> taxCategories = name -> {
+        SysCodeVO sysCodeVO = sysCodeService.getCodeVOByCodeName(SysCodeType.TAX_CATEGORIES, name);
+        if (sysCodeVO == null) {
+            return new SysCodeVO();
+        }
+        return sysCodeVO;
+    };
+
     /**
      * 区域码值处理器
      */
