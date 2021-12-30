@@ -19,7 +19,6 @@ import cn.huacloud.taxpreference.sync.spider.processor.DateProcessors;
 import cn.huacloud.taxpreference.sync.spider.processor.HtmlProcessors;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.data.util.Pair;
 import org.springframework.jdbc.core.DataClassRowMapper;
@@ -27,7 +26,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -49,7 +47,7 @@ public class PoliciesExplainDataSyncJob implements DataSyncJob<SpiderPolicyExpla
 
 	@Override
 	public int order() {
-		return 0;
+		return 1;
 	}
 
 	@Override

@@ -50,6 +50,7 @@ public interface DocCodeProcessors {
             while ((index = rawNumGroups.size() - num) >= 0) {
                 Group group1 = rawNumGroups.get(index);
                 Group group2 = rawNumGroups.get(index + 1);
+                // 只有两个文号距离超过1才进行截取
                 if (group2.getStart() - group1.getEnd() > 1) {
                     target = target.substring(group1.getEnd());
                     break;
@@ -76,7 +77,7 @@ public interface DocCodeProcessors {
             // 没有年号
             List<Group> rawNumGroups = getAllGroups(pattern04, target);
             if (rawNumGroups.isEmpty()) {
-                // 中文数字转换
+                // TODO 中文数字转换
                 wordCode = target;
             } else {
                 Group rawNumGroup = rawNumGroups.get(rawNumGroups.size() - 1);

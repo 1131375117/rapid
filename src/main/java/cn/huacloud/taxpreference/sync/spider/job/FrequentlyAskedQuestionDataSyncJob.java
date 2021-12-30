@@ -5,7 +5,6 @@ import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.services.common.AttachmentService;
 import cn.huacloud.taxpreference.services.common.entity.dos.AttachmentDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO;
-import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
 import cn.huacloud.taxpreference.services.producer.entity.enums.FrequentlyAskedQuestionStatusEnum;
 import cn.huacloud.taxpreference.services.producer.mapper.FrequentlyAskedQuestionMapper;
 import cn.huacloud.taxpreference.sync.spider.DataSyncJob;
@@ -17,8 +16,6 @@ import cn.huacloud.taxpreference.sync.spider.processor.AttachmentProcessors;
 import cn.huacloud.taxpreference.sync.spider.processor.DateProcessors;
 import cn.huacloud.taxpreference.sync.spider.processor.HtmlProcessors;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import java.time.LocalDateTime;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.nodes.Document;
 import org.springframework.data.util.Pair;
@@ -26,6 +23,9 @@ import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author zhaoqiankun
@@ -37,21 +37,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class FrequentlyAskedQuestionDataSyncJob implements
         DataSyncJob<SpiderPopularQaDataCombineDTO, FrequentlyAskedQuestionCombineDTO> {
 
-
     private final FrequentlyAskedQuestionMapper frequentlyAskedQuestionMapper;
-
 
     private final AttachmentProcessors attachmentProcessors;
 
-    public static final int DIGEST_MAX_LENGTH = 200;
-
-
     private final AttachmentService attachmentService;
-
 
     @Override
     public int order() {
-        return 0;
+        return 2;
     }
 
     @Override
