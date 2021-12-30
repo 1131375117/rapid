@@ -14,5 +14,5 @@ public class DocCodeVO {
     @ApiModelProperty("年号")
     private Integer docYearCode;
     @ApiModelProperty("序号")
-    private String docNumCode;
+    private Integer docNumCode;
 }

@@ -18,6 +18,9 @@ public interface HtmlProcessors {
 
     String CLASS_KEY = "class";
 
+    /**
+     * 正文内容处理器
+     */
     Function<String, Document> content = html -> {
         if (StringUtils.isBlank(html)) {
             return Jsoup.parse("");
@@ -30,18 +33,27 @@ public interface HtmlProcessors {
                 .findFirst().get();
     };
 
+    /**
+     * 去除html style样式
+     */
     Function<Document, Document> cleanStyle = document -> {
         document.getElementsByAttribute(STYLE_KEY)
                 .forEach(element -> element.removeAttr(STYLE_KEY));
         return document;
     };
 
+    /**
+     * 去除html class属性
+     */
     Function<Document, Document> cleanClass = document -> {
         document.getElementsByAttribute(CLASS_KEY)
                 .forEach(element -> element.removeAttr(CLASS_KEY));
         return document;
     };
 
+    /**
+     * 除去script标签
+     */
     Function<Document, Document> cleanScript = document -> {
         document.select("script").forEach(Node::remove);
         return document;

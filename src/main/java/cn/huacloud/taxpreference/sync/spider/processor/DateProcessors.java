@@ -12,10 +12,16 @@ import java.util.function.Function;
  */
 public interface DateProcessors {
 
+    /**
+     * 各类日期formatter集合
+     */
     DateTimeFormatter[] formatters = {
             DateTimeFormatter.ofPattern("yyyy-MM-dd")
     };
 
+    /**
+     * 发布日期处理器
+     */
     Function<String, LocalDate> releaseDate = text -> {
         if (StringUtils.isBlank(text)) {
             return null;

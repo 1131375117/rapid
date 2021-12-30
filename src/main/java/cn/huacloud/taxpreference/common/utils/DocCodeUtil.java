@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.common.utils;
 
+import cn.huacloud.taxpreference.services.producer.entity.vos.DocCodeVO;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -27,5 +28,9 @@ public class DocCodeUtil {
             sb.append(docNumCode).append("号");
         }
         return sb.toString();
+    }
+
+    public static String getDocCode(DocCodeVO docCodeVO) {
+        return getDocCode(docCodeVO.getDocWordCode(), docCodeVO.getDocYearCode(), docCodeVO.getDocNumCode());
     }
 }

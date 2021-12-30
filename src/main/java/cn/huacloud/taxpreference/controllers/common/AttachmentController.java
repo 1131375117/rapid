@@ -6,6 +6,7 @@ import cn.huacloud.taxpreference.common.enums.AttachmentType;
 import cn.huacloud.taxpreference.common.enums.PermissionGroup;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.common.AttachmentService;
+import cn.huacloud.taxpreference.services.common.entity.dtos.AttachmentDownloadDTO;
 import cn.huacloud.taxpreference.services.common.entity.vos.AttachmentVO;
 import cn.hutool.core.net.URLDecoder;
 import io.swagger.annotations.Api;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -54,16 +54,14 @@ public class AttachmentController {
         String uri = StringUtils.substringAfter(request.getRequestURI(), "/attachment/download/");
         String path = URLDecoder.decode(uri, StandardCharsets.UTF_8);
         // 获取文件流
-        InputStream inputStream = attachmentService.downloadAttachment(path);
-        InputStreamResource resource = new InputStreamResource(inputStream);
+        AttachmentDownloadDTO attachmentDownloadDTO = attachmentService.downloadAttachmentWithName(path);
+        InputStreamResource resource = new InputStreamResource(attachmentDownloadDTO.getInputStream());
 
-        // TODO 需用从数据库中获取
-        String fileName = StringUtils.substringAfter(path, "_");
         // 设置响应头
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         headers.setContentDisposition(ContentDisposition.builder("attachment")
-                .filename(fileName, StandardCharsets.UTF_8)
+                .filename(attachmentDownloadDTO.getAttachmentName(), StandardCharsets.UTF_8)
                 .build());
 
         return new ResponseEntity<>(resource, headers, HttpStatus.OK);

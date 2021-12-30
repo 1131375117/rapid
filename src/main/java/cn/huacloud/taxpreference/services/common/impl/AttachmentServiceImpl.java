@@ -5,11 +5,11 @@ import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.config.MinioConfig;
 import cn.huacloud.taxpreference.services.common.AttachmentService;
 import cn.huacloud.taxpreference.services.common.entity.dos.AttachmentDO;
+import cn.huacloud.taxpreference.services.common.entity.dtos.AttachmentDownloadDTO;
 import cn.huacloud.taxpreference.services.common.entity.vos.AttachmentVO;
 import cn.huacloud.taxpreference.services.common.mapper.AttachmentMapper;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
@@ -17,6 +17,7 @@ import io.minio.PutObjectArgs;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -158,6 +159,24 @@ public class AttachmentServiceImpl implements AttachmentService {
             log.error("附件下载失败", e);
             throw BizCode._4401.exception();
         }
+    }
+
+    @Override
+    public AttachmentDownloadDTO downloadAttachmentWithName(String path) {
+        InputStream inputStream = downloadAttachment(path);
+
+        String attachmentName = attachmentMapper.getLastAttachmentName(path);
+        if (attachmentName == null) {
+            attachmentName = StringUtils.substringAfterLast(path, "/");
+            // 处理自上传附件名称
+            if (attachmentName.contains("_")) {
+                attachmentName = StringUtils.substringAfterLast(attachmentName, "_");
+            }
+        }
+
+        return new AttachmentDownloadDTO()
+                .setAttachmentName(attachmentName)
+                .setInputStream(inputStream);
     }
 
     @Override
