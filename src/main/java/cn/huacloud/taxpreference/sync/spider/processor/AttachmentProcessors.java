@@ -54,18 +54,16 @@ public class AttachmentProcessors implements CommandLineRunner {
 
     /**
      * 处理正文（处理步骤参考 HtmlProcessors），替换正文中的附件链接地址，拷贝附件
-     * @param content
+     * @param document 解析后的content
      * @param spiderPolicyAttachmentDOList
      * @param attachmentType
      * @return
      */
-    public Pair<String, List<AttachmentDO>> processContentAndAttachment(String content, List<SpiderPolicyAttachmentDO> spiderPolicyAttachmentDOList, AttachmentType attachmentType) {
-
-        Document document = HtmlProcessors.content.apply(content);
+    public Pair<Document, List<AttachmentDO>> processContentAndAttachment(Document document, List<SpiderPolicyAttachmentDO> spiderPolicyAttachmentDOList, AttachmentType attachmentType) {
 
         // 附件列表为空不处理附件
         if (CollectionUtils.isEmpty(spiderPolicyAttachmentDOList)) {
-            return Pair.of(document.html(), new ArrayList<>());
+            return Pair.of(document, new ArrayList<>());
         }
 
         // 解析出来的pathUrl
@@ -102,7 +100,7 @@ public class AttachmentProcessors implements CommandLineRunner {
             return attachmentDO;
         }).collect(Collectors.toList());
         // 返回数据
-        return Pair.of(document.html(), attachmentDOList);
+        return Pair.of(document, attachmentDOList);
     }
 
     private void copyFile(String sourcePath, String targetPath) {
@@ -110,7 +108,7 @@ public class AttachmentProcessors implements CommandLineRunner {
         try {
             GetObjectResponse object = spiderMinioClient.getObject(GetObjectArgs.builder().bucket(bucket).object(sourcePath).build());
             Headers headers = object.headers();
-            Long contentLength = Long.parseLong(Objects.requireNonNull(headers.get("Content-Length")));
+            long contentLength = Long.parseLong(Objects.requireNonNull(headers.get("Content-Length")));
             minioClient.putObject(PutObjectArgs.builder()
                     .bucket(minioConfig.getBucket())
                     .object(targetPath)

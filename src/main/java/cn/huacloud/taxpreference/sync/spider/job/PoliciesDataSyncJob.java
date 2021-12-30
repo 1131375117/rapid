@@ -16,12 +16,10 @@ import cn.huacloud.taxpreference.sync.spider.entity.dos.SpiderPolicyAttachmentDO
 import cn.huacloud.taxpreference.sync.spider.entity.dos.SpiderPolicyDataDO;
 import cn.huacloud.taxpreference.sync.spider.entity.dtos.PoliciesCombineDTO;
 import cn.huacloud.taxpreference.sync.spider.entity.dtos.SpiderPolicyCombineDTO;
-import cn.huacloud.taxpreference.sync.spider.processor.AttachmentProcessors;
-import cn.huacloud.taxpreference.sync.spider.processor.DateProcessors;
-import cn.huacloud.taxpreference.sync.spider.processor.DocCodeProcessors;
-import cn.huacloud.taxpreference.sync.spider.processor.SysCodeProcessors;
+import cn.huacloud.taxpreference.sync.spider.processor.*;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
+import org.jsoup.nodes.Document;
 import org.springframework.data.util.Pair;
 import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -47,6 +45,8 @@ public class PoliciesDataSyncJob implements DataSyncJob<SpiderPolicyCombineDTO, 
     private final AttachmentProcessors attachmentProcessors;
 
     private final AttachmentService attachmentService;
+
+    public static final int DIGEST_MAX_LENGTH = 200;
 
     @Override
     public int order() {
@@ -113,16 +113,23 @@ public class PoliciesDataSyncJob implements DataSyncJob<SpiderPolicyCombineDTO, 
         // 发布日期
         policiesDO.setReleaseDate(DateProcessors.releaseDate.apply(policy.getPublishDate()));
 
-        // 正文 + 附件
+        // 正文
         String content = policy.getContent();
+        Document document = HtmlProcessors.content.apply(content);
 
-
+        // 附件
         List<SpiderPolicyAttachmentDO> spiderPolicyAttachmentDOList = sourceData.getSpiderPolicyAttachmentDOList();
-        Pair<String, List<AttachmentDO>> pair = attachmentProcessors.processContentAndAttachment(content, spiderPolicyAttachmentDOList, AttachmentType.POLICIES);
+        Pair<Document, List<AttachmentDO>> pair = attachmentProcessors.processContentAndAttachment(document, spiderPolicyAttachmentDOList, AttachmentType.POLICIES);
+
+        // 设置正文
+        policiesDO.setContent(pair.getFirst().html());
 
         // 设置摘要信息
-
-        policiesDO.setContent(pair.getFirst());
+        String digest = pair.getFirst().text();
+        if (digest.length() > DIGEST_MAX_LENGTH) {
+            digest = digest.substring(0, DIGEST_MAX_LENGTH);
+        }
+        policiesDO.setDigest(digest);
 
         return new PoliciesCombineDTO()
                 .setPoliciesDO(policiesDO)
