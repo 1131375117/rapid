@@ -2,6 +2,7 @@ package cn.huacloud.taxpreference.services.common;
 
 import cn.huacloud.taxpreference.common.enums.AttachmentType;
 import cn.huacloud.taxpreference.services.common.entity.dos.AttachmentDO;
+import cn.huacloud.taxpreference.services.common.entity.dtos.AttachmentDownloadDTO;
 import cn.huacloud.taxpreference.services.common.entity.vos.AttachmentVO;
 
 import java.io.InputStream;
@@ -57,6 +58,13 @@ public interface AttachmentService {
      * @return 文件流
      */
     InputStream downloadAttachment(String path);
+
+    /**
+     * 下载附件附带名称
+     * @param path 附件路径
+     * @return 文件流
+     */
+    AttachmentDownloadDTO downloadAttachmentWithName(String path);
 
     /**
      * 保存爬虫数据同步附件
