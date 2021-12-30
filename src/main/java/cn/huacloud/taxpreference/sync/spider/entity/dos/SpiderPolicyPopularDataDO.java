@@ -11,7 +11,7 @@ public class SpiderPolicyPopularDataDO {
     /**
      * 自增主键id
      */
-    private int id;
+    private Integer id;
     /**
      * 政策表-id
      */
