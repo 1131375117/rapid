@@ -54,3 +54,16 @@ tax-preference:
     other-doc:
       index: other_doc_index_2021-12-21_test
       alias: other_doc_test
+# 爬虫数据同步
+spider-sync:
+  enabled: true
+  data-source:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: "jdbc:mysql://172.16.18.28:3306/dataWEB?useUnicode=true&characterEncoding=UTF-8&useSSL=false"
+    username: crawler
+    password: 1234567Aa!
+  minio:
+    endpoint: "http://172.16.18.28:9000"
+    bucket: "data-spider"
+    access-key: "data_spider"
+    secret-key: "data_spider"

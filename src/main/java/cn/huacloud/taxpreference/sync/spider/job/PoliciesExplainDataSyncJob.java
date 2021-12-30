@@ -57,7 +57,7 @@ public class PoliciesExplainDataSyncJob implements DataSyncJob<SpiderPolicyExpla
 
 	@Override
 	public String getSyncIdsQuerySql() {
-		return "SELECT id FROM policy_data WHERE spider_time BETWEEN ? AND ?";
+		return "SELECT id FROM policy_data WHERE spider_time BETWEEN ? AND ?  AND related_interpretation_title != '' AND related_interpretation_title IS NOT NULL";
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class PoliciesExplainDataSyncJob implements DataSyncJob<SpiderPolicyExpla
 
 	@Override
 	public SpiderPolicyExplainCombineDTO getSourceData(String sourceId, JdbcTemplate jdbcTemplate) {
-		String policyExplainSql = "SELECT * FROM policy_data WHERE id = ? AND related_interpretation_title !='' ";
+		String policyExplainSql = "SELECT * FROM policy_data WHERE id = ?";
 		SpiderPolicyExplainDataDO spiderPolicyExplainDataDO = jdbcTemplate.queryForObject(policyExplainSql, DataClassRowMapper.newInstance(SpiderPolicyExplainDataDO.class), sourceId);
 		String attachmentSql = "SELECT * FROM policy_attachment WHERE doc_id = ? AND attachment_type = '政策'";
 		List<SpiderPolicyAttachmentDO> spiderPolicyAttachmentDOList = jdbcTemplate.query(attachmentSql, DataClassRowMapper.newInstance(SpiderPolicyAttachmentDO.class), sourceId);
