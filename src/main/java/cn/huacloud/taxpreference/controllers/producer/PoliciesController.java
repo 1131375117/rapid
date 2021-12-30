@@ -182,15 +182,15 @@ public class PoliciesController {
 	 * @param policiesCheckDTO
 	 * @return
 	 */
-	@PermissionInfo(name = "政策法规标题和文号校验", group = PermissionGroup.POLICIES)
-	@SaCheckPermission("producer_policies_checkTitleAndDocCode")
-	@ApiOperation("政策法规标题和文号校验")
-	@PostMapping(value = "/policies/checkTitleAndDocCode")
-	public ResultVO<Boolean> checkTitleAndDocCode(
-			@Validated @RequestBody PoliciesCheckDTO policiesCheckDTO) {
-		Boolean aBoolean = policiesService.checkTitleAndDocCode(policiesCheckDTO);
-		return ResultVO.ok(aBoolean);
-	}
+//	@PermissionInfo(name = "政策法规标题和文号校验", group = PermissionGroup.POLICIES)
+//	@SaCheckPermission("producer_policies_checkTitleAndDocCode")
+//	@ApiOperation("政策法规标题和文号校验")
+//	@PostMapping(value = "/policies/checkTitleAndDocCode")
+//	public ResultVO<Boolean> checkTitleAndDocCode(
+//			@Validated @RequestBody PoliciesCheckDTO policiesCheckDTO) {
+//		Boolean aBoolean = policiesService.checkTitleAndDocCode(policiesCheckDTO);
+//		return ResultVO.ok(aBoolean);
+//	}
 
 
 	/**
