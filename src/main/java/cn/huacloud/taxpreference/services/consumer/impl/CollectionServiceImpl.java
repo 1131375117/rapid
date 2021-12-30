@@ -41,6 +41,7 @@ public class CollectionServiceImpl implements CollectionService {
     private final SysParamService sysParamService;
     private final WatcherViewService watchViewService;
 
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Boolean saveOrCancelCollection(CollectionDTO collectionDTO) {
@@ -75,15 +76,23 @@ public class CollectionServiceImpl implements CollectionService {
         //根据操作类型查询不同的收藏记录
         Page<CollectionVO> page = new Page<>(pageQueryDTO.getPageNum(), pageQueryDTO.getPageSize());
         IPage<CollectionVO> collectionDOIPage;
-        if (CollectionType.CASE_ANALYSIS.equals(pageQueryDTO.getCollectionType())) {
+        //获取收藏类型
+        CollectionType collectionType = pageQueryDTO.getCollectionType();
+
+        if (CollectionType.CASE_ANALYSIS.equals(collectionType)) {
+            //案例分析
             collectionDOIPage = collectionMapper.selectCaseAnalysisByCollectionType(page, CollectionType.CASE_ANALYSIS, userId);
-        } else if (CollectionType.FREQUENTLY_ASKED_QUESTION.equals(pageQueryDTO.getCollectionType())) {
+        } else if (CollectionType.FREQUENTLY_ASKED_QUESTION.equals(collectionType)) {
+            //热门问答
             collectionDOIPage = collectionMapper.selectFrequentlyAskedQuestionByCollectionType(page, CollectionType.FREQUENTLY_ASKED_QUESTION, userId);
-        } else if (CollectionType.POLICIES_EXPLAIN.equals(pageQueryDTO.getCollectionType())) {
+        } else if (CollectionType.POLICIES_EXPLAIN.equals(collectionType)) {
+            //政策解读
             collectionDOIPage = collectionMapper.selectPoliciesExplainByCollectionType(page, CollectionType.POLICIES_EXPLAIN, userId);
-        } else if (CollectionType.TAX_PREFERENCE.equals(pageQueryDTO.getCollectionType())) {
+        } else if (CollectionType.TAX_PREFERENCE.equals(collectionType)) {
+            //税收优惠
             collectionDOIPage = collectionMapper.selectTaxPreferenceByCollectionType(page, CollectionType.TAX_PREFERENCE, userId);
         } else {
+            //政策法规
             collectionDOIPage = collectionMapper.selectPoliciesByCollectionType(page, CollectionType.POLICIES, userId);
         }
         if (collectionDOIPage.getTotal() > 200) {

@@ -89,15 +89,24 @@ public class OperationRecordServiceImpl implements OperationRecordService {
     public PageVO<OperationRecordVO> queryOperationRecord(ViewQueryDTO pageQueryDTO, Long userId) {
         Page<OperationRecordVO> page = new Page<>(pageQueryDTO.getPageNum(), pageQueryDTO.getPageSize());
         IPage<OperationRecordVO> operationRecordVOIPage;
-        if (ViewType.CASE_ANALYSIS.equals(pageQueryDTO.getViewType())) {
+
+        //浏览类型
+        ViewType viewType = pageQueryDTO.getViewType();
+
+        if (ViewType.CASE_ANALYSIS.equals(viewType)) {
+            //案例分析
             operationRecordVOIPage = operationRecordMapper.selectCaseAnalysisByDocType(page, ViewType.CASE_ANALYSIS.name, userId);
-        } else if (ViewType.FREQUENTLY_ASKED_QUESTION.equals(pageQueryDTO.getViewType())) {
+        } else if (ViewType.FREQUENTLY_ASKED_QUESTION.equals(viewType)) {
+            //热门问答
             operationRecordVOIPage = operationRecordMapper.selectFrequentlyAskedQuestionByDocType(page, ViewType.FREQUENTLY_ASKED_QUESTION.name, userId);
-        } else if (ViewType.POLICIES_EXPLAIN.equals(pageQueryDTO.getViewType())) {
+        } else if (ViewType.POLICIES_EXPLAIN.equals(viewType)) {
+            //政策解读
             operationRecordVOIPage = operationRecordMapper.selectPoliciesExplainByDocType(page, ViewType.POLICIES_EXPLAIN.name, userId);
-        } else if (ViewType.TAX_PREFERENCE.equals(pageQueryDTO.getViewType())) {
+        } else if (ViewType.TAX_PREFERENCE.equals(viewType)) {
+            //税收优惠
             operationRecordVOIPage = operationRecordMapper.selectTaxPreferenceByDocType(page, ViewType.TAX_PREFERENCE.name, userId);
         } else {
+            //政策法规
             operationRecordVOIPage = operationRecordMapper.selectPoliciesByDocType(page, ViewType.POLICIES.name, userId);
         }
         if (operationRecordVOIPage.getTotal() > 500) {
