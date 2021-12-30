@@ -62,3 +62,8 @@ spider-sync:
     url: "jdbc:mysql://172.16.122.17:3306/dataWEB?useUnicode=true&characterEncoding=UTF-8&useSSL=false"
     username: tax_preference
     password: tax_preference
+  minio:
+    endpoint: "http://172.16.18.28:9000"
+    bucket: "data-spider"
+    access-key: "data_spider"
+    secret-key: "data_spider"

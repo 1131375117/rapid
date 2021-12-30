@@ -262,7 +262,7 @@ public class SysCodeTool extends BaseApplicationTest {
 
             SysCodeDO sysCodeDO = new SysCodeDO();
             // String codeValue = area.getCode() == null ? null : SysCodeType.AREA.getValue() + "_" + area.getCode();
-            String codeValue = area.getCode() == null ? null : area.getName();
+            String codeValue = area.getCode();
             sysCodeDO.setCodeName(area.getName())
                     .setCodeValue(codeValue)
                     .setId(nextId)

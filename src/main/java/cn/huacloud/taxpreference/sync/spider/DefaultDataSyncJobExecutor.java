@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.SingleColumnRowMapper;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -92,6 +93,8 @@ public class DefaultDataSyncJobExecutor {
         spiderDataSyncMapper.updateById(spiderDataSyncDO);
     }
 
+    private DateTimeFormatter historyFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     private void setSyncHistory(SpiderDataSyncDO spiderDataSyncDO) {
         List<String> historyList = CustomStringUtil.spiltStringToList(spiderDataSyncDO.getSyncHistory());
 
@@ -99,7 +102,7 @@ public class DefaultDataSyncJobExecutor {
             historyList.remove(0);
         }
 
-        historyList.add(LocalDateTime.now().toString());
+        historyList.add(LocalDateTime.now().format(historyFormatter));
         String join = String.join(",", historyList);
         spiderDataSyncDO.setSyncHistory(join);
     }

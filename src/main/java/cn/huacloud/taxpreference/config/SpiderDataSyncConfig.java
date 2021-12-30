@@ -25,6 +25,10 @@ public class SpiderDataSyncConfig {
      * 爬虫库数据源
      */
     private DataSource dataSource;
+    /**
+     * minio
+     */
+    private Minio minio;
 
     @Data
     public static class DataSource {
@@ -44,5 +48,25 @@ public class SpiderDataSyncConfig {
          * Login password of the database.
          */
         private String password;
+    }
+
+    @Data
+    public static class Minio {
+        /**
+         * 服务地址
+         */
+        private String endpoint;
+        /**
+         * 客户端账号
+         */
+        private String accessKey;
+        /**
+         * 客户端秘钥
+         */
+        private String secretKey;
+        /**
+         * 存储桶
+         */
+        private String bucket = "tax-preference";
     }
 }

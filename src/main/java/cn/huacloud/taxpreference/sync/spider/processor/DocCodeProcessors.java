@@ -8,10 +8,9 @@ import java.util.function.Function;
  * 文号处理器
  * @author wangkh
  */
-public class DocCodeProcessors {
+public interface DocCodeProcessors {
 
-    public static Function<String, DocCodeVO> docCode = codeStr -> {
-
+    Function<String, DocCodeVO> docCode = codeStr -> {
         DocCodeVO docCodeVO = new DocCodeVO();
         return new DocCodeVO();
     };

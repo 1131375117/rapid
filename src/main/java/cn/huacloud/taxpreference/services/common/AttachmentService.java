@@ -1,10 +1,10 @@
 package cn.huacloud.taxpreference.services.common;
 
 import cn.huacloud.taxpreference.common.enums.AttachmentType;
+import cn.huacloud.taxpreference.services.common.entity.dos.AttachmentDO;
 import cn.huacloud.taxpreference.services.common.entity.vos.AttachmentVO;
 
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.List;
 
 /**
@@ -47,7 +47,7 @@ public interface AttachmentService {
      * @param path
      * @return
      */
-    default String getUrl(String path) {
+    static String getUrl(String path) {
         return "/api/v1/attachment/download/" + path;
     }
 
@@ -57,4 +57,11 @@ public interface AttachmentService {
      * @return 文件流
      */
     InputStream downloadAttachment(String path);
+
+    /**
+     * 保存爬虫数据同步附件
+     * @param docId 文档ID
+     * @param attachmentDOList 附件集合
+     */
+    void saveSpiderAttachmentList(Long docId, List<AttachmentDO> attachmentDOList);
 }

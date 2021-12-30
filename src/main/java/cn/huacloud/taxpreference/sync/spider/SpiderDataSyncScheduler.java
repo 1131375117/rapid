@@ -3,6 +3,9 @@ package cn.huacloud.taxpreference.sync.spider;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.config.SpiderDataSyncConfig;
 import cn.huacloud.taxpreference.services.sync.mapper.SpiderDataSyncMapper;
+import io.minio.BucketExistsArgs;
+import io.minio.MinioClient;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
@@ -37,6 +40,9 @@ public class SpiderDataSyncScheduler implements InitializingBean, SchedulingConf
 
     private DefaultDataSyncJobExecutor dataSyncJobExecutor;
 
+    @Getter
+    private MinioClient spiderMinioClient;
+
     public synchronized void executeJobs(DataSyncJobParam dataSyncJobParam) {
         if (!spiderDataSyncConfig.getEnabled()) {
             throw BizCode._4405.exception();
@@ -66,6 +72,22 @@ public class SpiderDataSyncScheduler implements InitializingBean, SchedulingConf
         dataSourceProperties.afterPropertiesSet();
         // 创建jdbcTemplate
         jdbcTemplate = new JdbcTemplate(dataSourceProperties.initializeDataSourceBuilder().build());
+
+        SpiderDataSyncConfig.Minio minio = spiderDataSyncConfig.getMinio();
+        if (minio == null) {
+            throw new IllegalArgumentException("开启爬虫数据同步，minio配置信息不能为空");
+        }
+        spiderMinioClient = MinioClient.builder()
+                .endpoint(minio.getEndpoint())
+                .credentials(minio.getAccessKey(), minio.getSecretKey())
+                .build();
+
+        // 检查存储桶是否已经创建，没有创建则自动创建
+        boolean bucketExists = spiderMinioClient.bucketExists(BucketExistsArgs.builder().bucket(minio.getBucket()).build());
+        if (!bucketExists) {
+            throw new RuntimeException("没有找到爬虫minio的存储桶：" + minio.getBucket());
+        }
+
         // 默认的任务执行器
         dataSyncJobExecutor = new DefaultDataSyncJobExecutor(jdbcTemplate, spiderDataSyncMapper);
         // 任务排序
