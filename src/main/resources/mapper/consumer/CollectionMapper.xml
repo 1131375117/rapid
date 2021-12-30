@@ -42,7 +42,7 @@
         order by tc.create_time desc
     </select>
     <select id="selectTaxPreferenceByCollectionType"
-            resultType="cn.huacloud.taxpreference.services.consumer.entity.vos.CollectionVO">
+            resultType="cn.huacloud.taxpreference.services.consumer.entity.vos.CollectionVO" >
 
         select ttp.tax_preference_name as title,
                tc.source_id            as sourceId,
