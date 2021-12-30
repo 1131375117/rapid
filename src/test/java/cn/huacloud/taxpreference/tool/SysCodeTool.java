@@ -585,7 +585,22 @@ public class SysCodeTool extends BaseApplicationTest {
         List<String> list = IOUtils.readLines(inputStream, StandardCharsets.UTF_8);
 
         List<SysCodeDO> sysCodeDOList = new ArrayList<>();
-        // 删除.csv第一行,第二行
+
+        // 添加不限
+        SysCodeDO unlimited = new SysCodeDO().setCodeName("不限")
+                .setId(nextId)
+                .setPid(0L)
+                .setCodeValue("不限")
+                .setCodeStatus(SysCodeStatus.VALID)
+                .setCodeType(SysCodeType.TAX_CATEGORIES)
+                .setNote(null)
+                .setExtendsField1(Boolean.FALSE.toString())
+                .setLeaf(true)
+                .setSort(nextId);
+        nextId++;
+        sysCodeDOList.add(unlimited);
+
+        // 删除csv第一行
         list.remove(0);
         for (String line : list) {
             line = line.replaceAll(",", " ");
@@ -594,23 +609,18 @@ public class SysCodeTool extends BaseApplicationTest {
             String code = split[1];
             String name = split[3];
             String note = split[5];
-            Boolean xtendsField1 = false;
-            if (!StringUtils.isEmpty(note)) {
-                xtendsField1 = true;
-            }
+            Boolean extendsField1 = "优惠政策涉及".equals(note);
 
             SysCodeDO sysCodeDO = new SysCodeDO();
-            Long pid = 0L;
-            Boolean isLeaf = true;
             sysCodeDO.setCodeName(name)
                     .setId(nextId)
-                    .setPid(pid)
+                    .setPid(0L)
                     .setCodeValue(code)
                     .setCodeStatus(SysCodeStatus.VALID)
                     .setCodeType(SysCodeType.TAX_CATEGORIES)
                     .setNote(note)
-                    .setExtendsField1(xtendsField1.toString())
-                    .setLeaf(isLeaf)
+                    .setExtendsField1(extendsField1.toString())
+                    .setLeaf(true)
                     .setSort(nextId);
 
             nextId++;
