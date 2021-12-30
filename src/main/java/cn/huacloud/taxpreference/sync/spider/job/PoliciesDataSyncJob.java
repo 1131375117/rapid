@@ -3,6 +3,7 @@ package cn.huacloud.taxpreference.sync.spider.job;
 import cn.huacloud.taxpreference.common.enums.AttachmentType;
 import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
+import cn.huacloud.taxpreference.common.utils.DocCodeUtil;
 import cn.huacloud.taxpreference.services.common.AttachmentService;
 import cn.huacloud.taxpreference.services.common.entity.dos.AttachmentDO;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeVO;
@@ -98,6 +99,7 @@ public class PoliciesDataSyncJob implements DataSyncJob<SpiderPolicyCombineDTO, 
         // 文号
         DocCodeVO docCodeVO = DocCodeProcessors.docCode.apply(policy.getDocumentNumber());
         CustomBeanUtil.copyProperties(docCodeVO, policiesDO);
+        policiesDO.setDocCode(DocCodeUtil.getDocCode(docCodeVO));
 
         // 所属区域
         SysCodeVO area = sysCodeProcessors.area.apply(policy.getRegion());

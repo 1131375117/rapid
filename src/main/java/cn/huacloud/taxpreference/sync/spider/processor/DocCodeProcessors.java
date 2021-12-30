@@ -15,6 +15,8 @@ public interface DocCodeProcessors {
      */
     Function<String, DocCodeVO> docCode = codeStr -> {
         DocCodeVO docCodeVO = new DocCodeVO();
-        return new DocCodeVO();
+        // TODO 目前充斥着各种异常文号，待需求确认
+        docCodeVO.setDocWordCode(codeStr);
+        return docCodeVO;
     };
 }
