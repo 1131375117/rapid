@@ -10,6 +10,9 @@ import java.util.function.Function;
  */
 public interface DocCodeProcessors {
 
+    /**
+     * 文号处理器
+     */
     Function<String, DocCodeVO> docCode = codeStr -> {
         DocCodeVO docCodeVO = new DocCodeVO();
         return new DocCodeVO();

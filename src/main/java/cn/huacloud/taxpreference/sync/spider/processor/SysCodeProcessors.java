@@ -23,6 +23,9 @@ public class SysCodeProcessors {
 
     public static final String BLANK_SPACE = " ";
 
+    /**
+     * 区域码值处理器
+     */
     public final Function<String, SysCodeVO> area = name -> {
         if (StringUtils.isNotBlank(name) && name.contains(BLANK_SPACE)) {
             name = StringUtils.substringAfterLast(name, BLANK_SPACE);
