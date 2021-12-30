@@ -16,6 +16,7 @@ import cn.huacloud.taxpreference.sync.spider.entity.dtos.PoliciesExplainCombineD
 import cn.huacloud.taxpreference.sync.spider.entity.dtos.SpiderPolicyExplainCombineDTO;
 import cn.huacloud.taxpreference.sync.spider.processor.AttachmentProcessors;
 import cn.huacloud.taxpreference.sync.spider.processor.DateProcessors;
+import cn.huacloud.taxpreference.sync.spider.processor.HtmlProcessors;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
@@ -102,14 +103,15 @@ public class PoliciesExplainDataSyncJob implements DataSyncJob<SpiderPolicyExpla
 		policiesExplainDO.setReleaseDate(DateProcessors.releaseDate.apply(policyExplain.getRelatedInterpretationDate()));
 
 		//正文
-		String relatedInterpretationContent = policyExplain.getRelatedInterpretationContent();
-		String text = Jsoup.parse(relatedInterpretationContent).text();
+		String content = policyExplain.getRelatedInterpretationContent();
+		Document document = HtmlProcessors.content.apply(content);
+
 
 		List<SpiderPolicyAttachmentDO> spiderPolicyAttachmentDOList = sourceData.getSpiderPolicyAttachmentDOList();
 
-		Pair<String, List<AttachmentDO>> pair = attachmentProcessors.processContentAndAttachment(text, spiderPolicyAttachmentDOList, AttachmentType.POLICIES);
+		Pair<Document, List<AttachmentDO>> pair = attachmentProcessors.processContentAndAttachment(document, spiderPolicyAttachmentDOList, AttachmentType.POLICIES);
 
-		policiesExplainDO.setContent(pair.getFirst());
+		policiesExplainDO.setContent(pair.getFirst().html());
 
 		return new PoliciesExplainCombineDTO()
 				.setPoliciesExplainDO(policiesExplainDO)

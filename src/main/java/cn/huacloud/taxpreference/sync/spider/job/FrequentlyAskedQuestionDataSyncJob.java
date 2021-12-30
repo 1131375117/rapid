@@ -34,7 +34,7 @@ public class FrequentlyAskedQuestionDataSyncJob implements
 
     @Override
     public int order() {
-        return 2;
+        return 0;
     }
 
     @Override
