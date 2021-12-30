@@ -1,6 +1,9 @@
 package cn.huacloud.taxpreference.sync.spider.job;
 
+import cn.huacloud.taxpreference.common.enums.AttachmentType;
 import cn.huacloud.taxpreference.common.enums.DocType;
+import cn.huacloud.taxpreference.services.common.AttachmentService;
+import cn.huacloud.taxpreference.services.common.entity.dos.AttachmentDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesExplainDO;
 import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesExplainStatusEnum;
 import cn.huacloud.taxpreference.services.producer.mapper.PoliciesExplainMapper;
@@ -11,9 +14,13 @@ import cn.huacloud.taxpreference.sync.spider.entity.dos.SpiderPolicyAttachmentDO
 import cn.huacloud.taxpreference.sync.spider.entity.dos.SpiderPolicyExplainDataDO;
 import cn.huacloud.taxpreference.sync.spider.entity.dtos.PoliciesExplainCombineDTO;
 import cn.huacloud.taxpreference.sync.spider.entity.dtos.SpiderPolicyExplainCombineDTO;
+import cn.huacloud.taxpreference.sync.spider.processor.AttachmentProcessors;
 import cn.huacloud.taxpreference.sync.spider.processor.DateProcessors;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.springframework.data.util.Pair;
 import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -34,9 +41,14 @@ public class PoliciesExplainDataSyncJob implements DataSyncJob<SpiderPolicyExpla
 	private final PoliciesExplainMapper policiesExplainMapper;
 
 	private final SpiderDataSyncMapper spiderDataSyncMapper;
+
+	private final AttachmentProcessors attachmentProcessors;
+
+	private final AttachmentService attachmentService;
+
 	@Override
 	public int order() {
-		return 1;
+		return 0;
 	}
 
 	@Override
@@ -90,15 +102,18 @@ public class PoliciesExplainDataSyncJob implements DataSyncJob<SpiderPolicyExpla
 		policiesExplainDO.setReleaseDate(DateProcessors.releaseDate.apply(policyExplain.getRelatedInterpretationDate()));
 
 		//正文
-		policiesExplainDO.setContent(policyExplain.getRelatedInterpretationContent());
+		String relatedInterpretationContent = policyExplain.getRelatedInterpretationContent();
+		String text = Jsoup.parse(relatedInterpretationContent).text();
 
-		// 附件
 		List<SpiderPolicyAttachmentDO> spiderPolicyAttachmentDOList = sourceData.getSpiderPolicyAttachmentDOList();
 
+		Pair<String, List<AttachmentDO>> pair = attachmentProcessors.processContentAndAttachment(text, spiderPolicyAttachmentDOList, AttachmentType.POLICIES);
+
+		policiesExplainDO.setContent(pair.getFirst());
 
 		return new PoliciesExplainCombineDTO()
 				.setPoliciesExplainDO(policiesExplainDO)
-				.setAttachmentDOList(new ArrayList<>());
+				.setAttachmentDOList(pair.getSecond());
 	}
 
 	@Override
@@ -110,6 +125,9 @@ public class PoliciesExplainDataSyncJob implements DataSyncJob<SpiderPolicyExpla
 	public Long saveProcessData(PoliciesExplainCombineDTO processData) {
 		PoliciesExplainDO policiesExplainDO = processData.getPoliciesExplainDO();
 		policiesExplainMapper.insert(policiesExplainDO);
+		// 保存附件
+		List<AttachmentDO> attachmentDOList = processData.getAttachmentDOList();
+		attachmentService.saveSpiderAttachmentList(policiesExplainDO.getId(), attachmentDOList);
 		return policiesExplainDO.getId();
 	}
 
@@ -118,5 +136,9 @@ public class PoliciesExplainDataSyncJob implements DataSyncJob<SpiderPolicyExpla
 		PoliciesExplainDO policiesExplainDO = processData.getPoliciesExplainDO();
 		policiesExplainDO.setId(docId);
 		policiesExplainMapper.updateById(policiesExplainDO);
+		// 保存附件
+		List<AttachmentDO> attachmentDOList = processData.getAttachmentDOList();
+		attachmentService.saveSpiderAttachmentList(policiesExplainDO.getId(), attachmentDOList);
+
 	}
 }

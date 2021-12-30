@@ -50,7 +50,7 @@ public class PoliciesDataSyncJob implements DataSyncJob<SpiderPolicyCombineDTO, 
 
     @Override
     public int order() {
-        return 0;
+        return 1;
     }
 
     @Override
