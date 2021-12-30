@@ -101,10 +101,15 @@ public class PoliciesDataSyncJob implements DataSyncJob<SpiderPolicyCombineDTO, 
         CustomBeanUtil.copyProperties(docCodeVO, policiesDO);
         policiesDO.setDocCode(DocCodeUtil.getDocCode(docCodeVO));
 
+        // 税种
+        SysCodeVO taxCategories = sysCodeProcessors.taxCategories.apply(policy.getTaxClassName());
+        policiesDO.setTaxCategoriesNames(taxCategories.getCodeName());
+        policiesDO.setTaxCategoriesCodes(taxCategories.getCodeValue());
+
         // 所属区域
         SysCodeVO area = sysCodeProcessors.area.apply(policy.getRegion());
         policiesDO.setAreaCode(area.getCodeValue());
-        policiesDO.setAreaName(area.getCodeValue());
+        policiesDO.setAreaName(area.getCodeName());
 
         // 来源
         policiesDO.setDocSource(policy.getContentSource());
