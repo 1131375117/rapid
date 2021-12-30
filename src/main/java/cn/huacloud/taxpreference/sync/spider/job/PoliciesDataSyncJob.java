@@ -1,7 +1,10 @@
 package cn.huacloud.taxpreference.sync.spider.job;
 
+import cn.huacloud.taxpreference.common.enums.AttachmentType;
 import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
+import cn.huacloud.taxpreference.services.common.AttachmentService;
+import cn.huacloud.taxpreference.services.common.entity.dos.AttachmentDO;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeVO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
 import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesStatusEnum;
@@ -13,17 +16,19 @@ import cn.huacloud.taxpreference.sync.spider.entity.dos.SpiderPolicyAttachmentDO
 import cn.huacloud.taxpreference.sync.spider.entity.dos.SpiderPolicyDataDO;
 import cn.huacloud.taxpreference.sync.spider.entity.dtos.PoliciesCombineDTO;
 import cn.huacloud.taxpreference.sync.spider.entity.dtos.SpiderPolicyCombineDTO;
+import cn.huacloud.taxpreference.sync.spider.processor.AttachmentProcessors;
 import cn.huacloud.taxpreference.sync.spider.processor.DateProcessors;
 import cn.huacloud.taxpreference.sync.spider.processor.DocCodeProcessors;
 import cn.huacloud.taxpreference.sync.spider.processor.SysCodeProcessors;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.util.Pair;
 import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,6 +43,10 @@ public class PoliciesDataSyncJob implements DataSyncJob<SpiderPolicyCombineDTO, 
     private final PoliciesMapper policiesMapper;
 
     private final SysCodeProcessors sysCodeProcessors;
+
+    private final AttachmentProcessors attachmentProcessors;
+
+    private final AttachmentService attachmentService;
 
     @Override
     public int order() {
@@ -104,17 +113,20 @@ public class PoliciesDataSyncJob implements DataSyncJob<SpiderPolicyCombineDTO, 
         // 发布日期
         policiesDO.setReleaseDate(DateProcessors.releaseDate.apply(policy.getPublishDate()));
 
-        // 正文
-        // TODO
-        policiesDO.setContent(policy.getContent());
+        // 正文 + 附件
+        String content = policy.getContent();
 
 
-        // 附件
         List<SpiderPolicyAttachmentDO> spiderPolicyAttachmentDOList = sourceData.getSpiderPolicyAttachmentDOList();
+        Pair<String, List<AttachmentDO>> pair = attachmentProcessors.processContentAndAttachment(content, spiderPolicyAttachmentDOList, AttachmentType.POLICIES);
+
+        // 设置摘要信息
+
+        policiesDO.setContent(pair.getFirst());
 
         return new PoliciesCombineDTO()
                 .setPoliciesDO(policiesDO)
-                .setAttachmentDOList(new ArrayList<>());
+                .setAttachmentDOList(pair.getSecond());
     }
 
     @Override
@@ -122,18 +134,25 @@ public class PoliciesDataSyncJob implements DataSyncJob<SpiderPolicyCombineDTO, 
         return policiesMapper.selectCount(Wrappers.lambdaQuery(PoliciesDO.class).eq(PoliciesDO::getId, docId)) > 0;
     }
 
-
+    @Transactional
     @Override
     public Long saveProcessData(PoliciesCombineDTO processData) {
         PoliciesDO policiesDO = processData.getPoliciesDO();
         policiesMapper.insert(policiesDO);
+        // 保存附件
+        List<AttachmentDO> attachmentDOList = processData.getAttachmentDOList();
+        attachmentService.saveSpiderAttachmentList(policiesDO.getId(), attachmentDOList);
         return policiesDO.getId();
     }
 
+    @Transactional
     @Override
     public void updateProcessData(Long docId, PoliciesCombineDTO processData) {
         PoliciesDO policiesDO = processData.getPoliciesDO();
         policiesDO.setId(docId);
         policiesMapper.updateById(policiesDO);
+        // 保存附件
+        List<AttachmentDO> attachmentDOList = processData.getAttachmentDOList();
+        attachmentService.saveSpiderAttachmentList(policiesDO.getId(), attachmentDOList);
     }
 }

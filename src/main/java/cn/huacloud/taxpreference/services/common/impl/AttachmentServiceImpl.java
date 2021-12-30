@@ -81,7 +81,7 @@ public class AttachmentServiceImpl implements AttachmentService {
         // 属性拷贝
         AttachmentVO attachmentVO = new AttachmentVO();
         BeanUtils.copyProperties(attachmentDO, attachmentVO);
-        attachmentVO.setUrl(getUrl(attachmentDO.getPath()));
+        attachmentVO.setUrl(AttachmentService.getUrl(attachmentDO.getPath()));
 
         return attachmentVO;
     }
@@ -160,6 +160,18 @@ public class AttachmentServiceImpl implements AttachmentService {
         }
     }
 
+    @Override
+    public void saveSpiderAttachmentList(Long docId, List<AttachmentDO> attachmentDOList) {
+        if (docId != null) {
+            attachmentMapper.delete(Wrappers.lambdaQuery(AttachmentDO.class).eq(AttachmentDO::getDocId, docId));
+        }
+
+        for (AttachmentDO attachmentDO : attachmentDOList) {
+            attachmentDO.setDocId(docId);
+            attachmentMapper.insert(attachmentDO);
+        }
+    }
+
     /**
      * 拷贝属性到AttachmentVO
      *
@@ -170,7 +182,7 @@ public class AttachmentServiceImpl implements AttachmentService {
         return attachmentDOList.stream().map(attachmentDO -> {
             AttachmentVO attachmentVO = new AttachmentVO();
             BeanUtils.copyProperties(attachmentDO, attachmentVO);
-            attachmentVO.setUrl(getUrl(attachmentDO.getPath()));
+            attachmentVO.setUrl(AttachmentService.getUrl(attachmentDO.getPath()));
             return attachmentVO;
         }).collect(Collectors.toList());
     }

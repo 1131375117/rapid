@@ -9,11 +9,12 @@ import cn.huacloud.taxpreference.sync.spider.DataSyncJob;
 import cn.huacloud.taxpreference.sync.spider.entity.dos.SpiderPopularQaDataDO;
 import cn.huacloud.taxpreference.sync.spider.processor.DateProcessors;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
 
 /**
  * @author zhaoqiankun
@@ -33,7 +34,7 @@ public class FrequentlyAskedQuestionDataSyncJob implements
 
     @Override
     public int order() {
-        return 0;
+        return 2;
     }
 
     @Override
