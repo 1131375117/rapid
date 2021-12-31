@@ -3,6 +3,7 @@ package cn.huacloud.taxpreference.services.producer.impl;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.AttachmentType;
 import cn.huacloud.taxpreference.common.enums.BizCode;
+import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.services.common.AttachmentService;
 import cn.huacloud.taxpreference.services.producer.PoliciesExplainService;
 import cn.huacloud.taxpreference.services.producer.PoliciesService;
@@ -16,6 +17,7 @@ import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainDet
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainListVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesTitleVO;
 import cn.huacloud.taxpreference.services.producer.mapper.PoliciesExplainMapper;
+import cn.huacloud.taxpreference.services.sync.mapper.SpiderDataSyncMapper;
 import cn.huacloud.taxpreference.sync.es.trigger.impl.PoliciesExplainEventTrigger;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -49,6 +51,8 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 	private PoliciesService policiesService;
 
 	private final PoliciesExplainEventTrigger policiesExplainEventTrigger;
+
+	private final SpiderDataSyncMapper spiderDataSyncMapper;
 
 	@Autowired
 	public void setPoliciesService(PoliciesService policiesService) {
@@ -227,8 +231,12 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 			BeanUtils.copyProperties(policies, policiesTitleVO);
 			policiesExplainDetailVO.setPolicies(policiesTitleVO);
 		}
+
 		// 属性拷贝
 		BeanUtils.copyProperties(policiesExplainDO, policiesExplainDetailVO);
+		//爬虫url
+		String spiderUrl = spiderDataSyncMapper.getSpiderUrl(DocType.POLICIES_EXPLAIN, policiesExplainDO.getId());
+		policiesExplainDetailVO.setSpiderUrl(spiderUrl);
 		log.info("政策解读对象详情={}", policiesExplainDO);
 		// 返回结果
 		return policiesExplainDetailVO;
@@ -278,6 +286,9 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 
 		// 判断是否为空
 		if (policiesExplainDO == null) {
+			return null;
+		}
+		if(policiesExplainDO.getPoliciesId()==null){
 			return null;
 		}
 		BeanUtils.copyProperties(policiesExplainDO, policiesExplainDTO);

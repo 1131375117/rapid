@@ -20,7 +20,7 @@ import java.util.Map;
  */
 @Data
 @ApiModel
-public class PoliciesExplainDetailVO extends PoliciesCommonListVO{
+public class PoliciesExplainDetailVO extends PoliciesCommonListVO {
 
 	/**
 	 * 主键Id
@@ -44,9 +44,12 @@ public class PoliciesExplainDetailVO extends PoliciesCommonListVO{
 	/**
 	 * 录入人用户Id
 	 */
-	@ApiModelProperty(hidden = true,value = "录入人用户Id")
+	@ApiModelProperty(hidden = true, value = "录入人用户Id")
 	private Long inputUserId;
 
 	@ApiModelProperty("政策法规对象")
 	private PoliciesTitleVO policies;
+
+	@ApiModelProperty("数据来源网站链接")
+	private String spiderUrl;
 }

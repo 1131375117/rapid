@@ -39,4 +39,8 @@ public class FrequentlyAskedQuestionDetailVO extends PoliciesCommonListVO{
 
 	@ApiModelProperty("政策法规标题")
 	private List<PoliciesTitleVO> policies;
+
+	@ApiModelProperty("数据来源网站链接")
+	private String spiderUrl;
 }
+

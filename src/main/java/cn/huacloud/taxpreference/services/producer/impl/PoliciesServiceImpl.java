@@ -4,6 +4,7 @@ import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.AttachmentType;
 import cn.huacloud.taxpreference.common.enums.BizCode;
+import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.common.enums.SysCodeType;
 import cn.huacloud.taxpreference.common.utils.DocCodeUtil;
 import cn.huacloud.taxpreference.services.common.AttachmentService;
@@ -23,6 +24,7 @@ import cn.huacloud.taxpreference.services.producer.entity.enums.ValidityEnum;
 import cn.huacloud.taxpreference.services.producer.entity.vos.*;
 import cn.huacloud.taxpreference.services.producer.mapper.FrequentlyAskedQuestionMapper;
 import cn.huacloud.taxpreference.services.producer.mapper.PoliciesMapper;
+import cn.huacloud.taxpreference.services.sync.mapper.SpiderDataSyncMapper;
 import cn.huacloud.taxpreference.sync.es.trigger.impl.PoliciesEventTrigger;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -37,6 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -65,6 +68,8 @@ public class PoliciesServiceImpl implements PoliciesService {
 	private final AttachmentService attachmentService;
 
 	private final PoliciesEventTrigger policiesEventTrigger;
+
+	private final SpiderDataSyncMapper spiderDataSyncMapper;
 
 
 	@Autowired
@@ -97,7 +102,6 @@ public class PoliciesServiceImpl implements PoliciesService {
 		// 返回结果
 		return PageVO.createPageVO(policiesDoPage, policiesDoPage.getRecords());
 	}
-
 
 
 	/**
@@ -330,10 +334,20 @@ public class PoliciesServiceImpl implements PoliciesService {
 		BeanUtils.copyProperties(policiesDO, policiesCombinationDTO);
 		// 设置政策解读对象
 		policiesCombinationDTO.setPoliciesExplainDTO(policiesExplainDTO);
+
 		//设置关联税收优惠
 		policiesCombinationDTO.setTaxPreferenceCountVOS(taxPreferenceCountVOS);
 		/*// 设置热门问答对象
 		policiesCombinationDTO.setFrequentlyAskedQuestionDTOList(frequentlyAskedQuestionDOList);*/
+		//设置爬虫url
+		String url = spiderDataSyncMapper.getSpiderUrl(DocType.POLICIES, policiesDO.getId());
+		policiesCombinationDTO.setSpiderUrl(url);
+
+		if (policiesExplainDTO == null) {
+			policiesCombinationDTO.setFlag(false);
+		} else {
+			policiesCombinationDTO.setFlag(true);
+		}
 		return policiesCombinationDTO;
 	}
 
@@ -729,7 +743,6 @@ public class PoliciesServiceImpl implements PoliciesService {
 		return pageVO;
 	}
 
-
 	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public void updateSource(PoliciesCombinationDTO policiesCombinationDTO) {
@@ -741,7 +754,7 @@ public class PoliciesServiceImpl implements PoliciesService {
 		if (policiesDO == null) {
 			throw BizCode._4100.exception();
 		}
-		if(policiesDO.getDocNumCode()==null&&policiesDO.getDocWordCode()==""&&policiesDO.getDocYearCode()==null){
+		if (policiesDO.getDocNumCode() == null && policiesDO.getDocWordCode() == "" && policiesDO.getDocYearCode() == null) {
 			throw BizCode._4316.exception();
 		}
 		updateSource(policiesCombinationDTO, policiesDO);
@@ -750,6 +763,7 @@ public class PoliciesServiceImpl implements PoliciesService {
 
 	/**
 	 * 修改数据
+	 *
 	 * @param policiesCombinationDTO
 	 * @param policiesDO
 	 */
@@ -778,6 +792,12 @@ public class PoliciesServiceImpl implements PoliciesService {
 		policiesDO.setValidity(policiesCombinationDTO.getValidity());
 		policiesDO.setPoliciesStatus(PoliciesStatusEnum.PUBLISHED);
 		policiesMapper.updateById(policiesDO);
+		PoliciesExplainDTO policiesExplainDTO = policiesCombinationDTO.getPoliciesExplainDTO();
+		if (policiesExplainDTO != null) {
+			//校验政策法规是否关联了其他解读
+			policiesExplainService.checkAssociation(policiesCombinationDTO.getPoliciesExplainDTO());
+			policiesExplainService.updateSource(policiesExplainDTO);
+		}
 		// 触发ES数同步事件
 		policiesEventTrigger.saveEvent(policiesDO.getId());
 	}

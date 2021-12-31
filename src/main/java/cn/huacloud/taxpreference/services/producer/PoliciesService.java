@@ -86,6 +86,7 @@ public interface PoliciesService {
 
 	/**
 	 * 校验标题和文号是否重复
+	 *
 	 * @param policiesCheckDTO 标题或文号
 	 * @return 返回 true 重复 false 不重复
 	 */
@@ -94,6 +95,7 @@ public interface PoliciesService {
 
 	/**
 	 * 根据政策法规id查询政策法规信息
+	 *
 	 * @param id 政策法规id
 	 * @return 返回政策法规对象
 	 */
@@ -101,6 +103,7 @@ public interface PoliciesService {
 
 	/**
 	 * 关联政策模糊查询
+	 *
 	 * @param keywordPageQueryDTO 分页条件
 	 * @return
 	 */
@@ -109,6 +112,7 @@ public interface PoliciesService {
 
 	/**
 	 * 政策法规数据加工
+	 *
 	 * @param policiesCombinationDTO
 	 */
 	void updateSource(PoliciesCombinationDTO policiesCombinationDTO);
