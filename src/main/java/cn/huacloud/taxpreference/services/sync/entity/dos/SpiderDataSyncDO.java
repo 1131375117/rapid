@@ -51,4 +51,9 @@ public class SpiderDataSyncDO {
      * 同步历史记录（保留最近10次）
      */
     private String syncHistory;
+
+    /**
+     * 爬虫数据连接地址
+     */
+    private String spiderUrl;
 }

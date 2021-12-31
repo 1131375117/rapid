@@ -5,6 +5,7 @@ import cn.huacloud.taxpreference.common.enums.sync.SyncStatus;
 import cn.huacloud.taxpreference.common.utils.CustomStringUtil;
 import cn.huacloud.taxpreference.services.sync.entity.dos.SpiderDataSyncDO;
 import cn.huacloud.taxpreference.services.sync.mapper.SpiderDataSyncMapper;
+import cn.huacloud.taxpreference.sync.spider.entity.dtos.DataSyncResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.SingleColumnRowMapper;
@@ -47,9 +48,9 @@ public class DefaultDataSyncJobExecutor {
                     continue;
                 }
                 // 执行同步
-                Long docId = dataSyncJob.doSync(spiderDataSyncDO, jdbcTemplate);
+                DataSyncResult dataSyncResult = dataSyncJob.doSync(spiderDataSyncDO, jdbcTemplate);
                 // 后置处理
-                afterHandle(spiderDataSyncDO, docId);
+                afterHandle(spiderDataSyncDO, dataSyncResult);
             } catch (Exception e) {
                 log.error("数据同步出错", e);
                 if (spiderDataSyncDO != null) {
@@ -85,8 +86,9 @@ public class DefaultDataSyncJobExecutor {
         return spiderDataSyncDO;
     }
 
-    private void afterHandle(SpiderDataSyncDO spiderDataSyncDO, Long docId) {
-        spiderDataSyncDO.setDocId(docId)
+    private void afterHandle(SpiderDataSyncDO spiderDataSyncDO, DataSyncResult dataSyncResult) {
+        spiderDataSyncDO.setDocId(dataSyncResult.getDocId())
+                .setSpiderUrl(dataSyncResult.getSpiderUrl())
                 .setSyncStatus(SyncStatus.COMPLETED)
                 .setUpdateTime(LocalDateTime.now());
         setSyncHistory(spiderDataSyncDO);

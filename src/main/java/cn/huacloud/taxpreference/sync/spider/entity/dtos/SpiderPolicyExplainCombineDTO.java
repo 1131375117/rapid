@@ -1,7 +1,6 @@
 package cn.huacloud.taxpreference.sync.spider.entity.dtos;
 
 import cn.huacloud.taxpreference.sync.spider.entity.dos.SpiderPolicyAttachmentDO;
-import cn.huacloud.taxpreference.sync.spider.entity.dos.SpiderPolicyDataDO;
 import cn.huacloud.taxpreference.sync.spider.entity.dos.SpiderPolicyExplainDataDO;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -13,7 +12,7 @@ import java.util.List;
  */
 @Accessors(chain = true)
 @Data
-public class SpiderPolicyExplainCombineDTO {
+public class SpiderPolicyExplainCombineDTO extends SpiderUrlHolder {
     private SpiderPolicyExplainDataDO spiderPolicyExplainDataDO;
     private List<SpiderPolicyAttachmentDO> spiderPolicyAttachmentDOList;
 }

@@ -74,10 +74,14 @@ public class FrequentlyAskedQuestionDataSyncJob implements
         List<SpiderPolicyAttachmentDO> spiderPolicyAttachmentDOList = jdbcTemplate.query(attachmentSql,
                 DataClassRowMapper.newInstance(SpiderPolicyAttachmentDO.class), sourceId);
 
-        return new SpiderPopularQaDataCombineDTO()
+        SpiderPopularQaDataCombineDTO spiderPopularQaDataCombineDTO = new SpiderPopularQaDataCombineDTO()
                 .setSpiderPolicyAttachmentDOList(spiderPolicyAttachmentDOList)
                 .setSpiderPopularQaDataDO(spiderPopularQaDataDO);
 
+        // 设置爬虫url
+        spiderPopularQaDataCombineDTO.setSpiderUrl(spiderPopularQaDataDO.getUrl());
+
+        return spiderPopularQaDataCombineDTO;
     }
 
     @Override

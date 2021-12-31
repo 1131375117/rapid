@@ -2,13 +2,15 @@ package cn.huacloud.taxpreference.sync.spider;
 
 import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.services.sync.entity.dos.SpiderDataSyncDO;
+import cn.huacloud.taxpreference.sync.spider.entity.dtos.DataSyncResult;
+import cn.huacloud.taxpreference.sync.spider.entity.dtos.SpiderUrlGetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  * 数据同步作业
  * @author wangkh
  */
-public interface DataSyncJob<T, R> {
+public interface DataSyncJob<T extends SpiderUrlGetter, R> {
     /**
      * 作业排序
      * @return 排序值
@@ -20,7 +22,7 @@ public interface DataSyncJob<T, R> {
      * @param spiderDataSyncDO 数据同步记录
      * @return docId
      */
-    default Long doSync(SpiderDataSyncDO spiderDataSyncDO, JdbcTemplate jdbcTemplate) {
+    default DataSyncResult doSync(SpiderDataSyncDO spiderDataSyncDO, JdbcTemplate jdbcTemplate) {
         // 获取原始数据
         T sourceData = getSourceData(spiderDataSyncDO.getSpiderDataId(), jdbcTemplate);
         // 数据处理
@@ -30,11 +32,12 @@ public interface DataSyncJob<T, R> {
         if (docId != null && isDocExist(docId)) {
             // 执行更新方法
             updateProcessData(docId, processData);
-            return docId;
         } else {
             // 执行保存方法
-            return saveProcessData(processData);
+            docId = saveProcessData(processData);
+
         }
+        return DataSyncResult.of(docId, sourceData.getSpiderUrl());
     }
 
     /**

@@ -76,9 +76,11 @@ public class PoliciesDataSyncJob implements DataSyncJob<SpiderPolicyCombineDTO, 
         SpiderPolicyDataDO spiderPolicyDataDO = jdbcTemplate.queryForObject(policySql, DataClassRowMapper.newInstance(SpiderPolicyDataDO.class), sourceId);
         String attachmentSql = "SELECT * FROM policy_attachment WHERE doc_id = ? AND attachment_type = '政策'";
         List<SpiderPolicyAttachmentDO> spiderPolicyAttachmentDOList = jdbcTemplate.query(attachmentSql, DataClassRowMapper.newInstance(SpiderPolicyAttachmentDO.class), sourceId);
-        return new SpiderPolicyCombineDTO()
+        SpiderPolicyCombineDTO spiderPolicyCombineDTO = new SpiderPolicyCombineDTO()
                 .setSpiderPolicyDataDO(spiderPolicyDataDO)
                 .setSpiderPolicyAttachmentDOList(spiderPolicyAttachmentDOList);
+        spiderPolicyCombineDTO.setSpiderUrl(spiderPolicyDataDO.getUrl());
+        return spiderPolicyCombineDTO;
     }
 
     @Override

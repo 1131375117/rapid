@@ -2,9 +2,10 @@ package cn.huacloud.taxpreference.sync.spider.entity.dtos;
 
 import cn.huacloud.taxpreference.sync.spider.entity.dos.SpiderPolicyAttachmentDO;
 import cn.huacloud.taxpreference.sync.spider.entity.dos.SpiderPopularQaDataDO;
-import java.util.List;
 import lombok.Data;
 import lombok.experimental.Accessors;
+
+import java.util.List;
 
 /**
  * @author zhaoqiankun
@@ -13,7 +14,7 @@ import lombok.experimental.Accessors;
  */
 @Accessors(chain = true)
 @Data
-public class SpiderPopularQaDataCombineDTO {
+public class SpiderPopularQaDataCombineDTO extends SpiderUrlHolder {
 
     /**
      * 爬虫库 热门回答对象

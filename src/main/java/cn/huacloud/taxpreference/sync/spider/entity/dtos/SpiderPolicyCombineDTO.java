@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Accessors(chain = true)
 @Data
-public class SpiderPolicyCombineDTO {
+public class SpiderPolicyCombineDTO extends SpiderUrlHolder {
     private SpiderPolicyDataDO spiderPolicyDataDO;
     private List<SpiderPolicyAttachmentDO> spiderPolicyAttachmentDOList;
 }
