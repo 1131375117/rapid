@@ -49,4 +49,7 @@ public class PoliciesExplainDetailVO extends PoliciesCommonListVO{
 
 	@ApiModelProperty("政策法规对象")
 	private PoliciesTitleVO policies;
+
+	@ApiModelProperty("数据来源网站链接")
+	private String spiderUrl;
 }

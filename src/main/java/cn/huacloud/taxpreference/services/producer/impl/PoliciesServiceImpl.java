@@ -4,6 +4,7 @@ import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.AttachmentType;
 import cn.huacloud.taxpreference.common.enums.BizCode;
+import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.common.enums.SysCodeType;
 import cn.huacloud.taxpreference.common.utils.DocCodeUtil;
 import cn.huacloud.taxpreference.services.common.AttachmentService;
@@ -23,6 +24,7 @@ import cn.huacloud.taxpreference.services.producer.entity.enums.ValidityEnum;
 import cn.huacloud.taxpreference.services.producer.entity.vos.*;
 import cn.huacloud.taxpreference.services.producer.mapper.FrequentlyAskedQuestionMapper;
 import cn.huacloud.taxpreference.services.producer.mapper.PoliciesMapper;
+import cn.huacloud.taxpreference.services.sync.mapper.SpiderDataSyncMapper;
 import cn.huacloud.taxpreference.sync.es.trigger.impl.PoliciesEventTrigger;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -65,6 +67,8 @@ public class PoliciesServiceImpl implements PoliciesService {
 	private final AttachmentService attachmentService;
 
 	private final PoliciesEventTrigger policiesEventTrigger;
+
+	private final SpiderDataSyncMapper spiderDataSyncMapper;
 
 
 	@Autowired
@@ -330,10 +334,14 @@ public class PoliciesServiceImpl implements PoliciesService {
 		BeanUtils.copyProperties(policiesDO, policiesCombinationDTO);
 		// 设置政策解读对象
 		policiesCombinationDTO.setPoliciesExplainDTO(policiesExplainDTO);
+
 		//设置关联税收优惠
 		policiesCombinationDTO.setTaxPreferenceCountVOS(taxPreferenceCountVOS);
 		/*// 设置热门问答对象
 		policiesCombinationDTO.setFrequentlyAskedQuestionDTOList(frequentlyAskedQuestionDOList);*/
+		//设置爬虫url
+		String url=spiderDataSyncMapper.getSpiderUrl(DocType.POLICIES,policiesDO.getId());
+		policiesCombinationDTO.setSpiderUrl(url);
 		return policiesCombinationDTO;
 	}
 

@@ -106,4 +106,7 @@ public class PoliciesCombinationDTO {
 	@ApiModelProperty("关联的税收优惠列表")
 	List<TaxPreferenceCountVO> taxPreferenceCountVOS;
 
+	@ApiModelProperty("数据来源网站链接")
+	private String spiderUrl;
+
 }

@@ -3,6 +3,7 @@ package cn.huacloud.taxpreference.services.producer.impl;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.AttachmentType;
 import cn.huacloud.taxpreference.common.enums.BizCode;
+import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.common.enums.taxpreference.SortType;
 import cn.huacloud.taxpreference.services.common.AttachmentService;
 import cn.huacloud.taxpreference.services.producer.FrequentlyAskedQuestionService;
@@ -17,6 +18,7 @@ import cn.huacloud.taxpreference.services.producer.entity.vos.FrequentlyAskedQue
 import cn.huacloud.taxpreference.services.producer.entity.vos.FrequentlyAskedQuestionVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesTitleVO;
 import cn.huacloud.taxpreference.services.producer.mapper.FrequentlyAskedQuestionMapper;
+import cn.huacloud.taxpreference.services.sync.mapper.SpiderDataSyncMapper;
 import cn.huacloud.taxpreference.sync.es.trigger.impl.FAQEventTrigger;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -51,6 +53,8 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
     private PoliciesService policiesService;
 
     private final FAQEventTrigger faqEventTrigger;
+
+    private final SpiderDataSyncMapper spiderDataSyncMapper;
 
     @Autowired
     public void setPoliciesService(PoliciesService policiesService) {
@@ -237,6 +241,9 @@ public class FrequentlyAskedQuestionServiceImpl implements FrequentlyAskedQuesti
         }
         // 属性拷贝
         BeanUtils.copyProperties(frequentlyAskedQuestionDO, frequentlyAskedQuestionDetailVO);
+        //爬虫url
+        String spiderUrl = spiderDataSyncMapper.getSpiderUrl(DocType.FREQUENTLY_ASKED_QUESTION, frequentlyAskedQuestionDO.getId());
+        frequentlyAskedQuestionDetailVO.setSpiderUrl(spiderUrl);
         return frequentlyAskedQuestionDetailVO;
     }
 
