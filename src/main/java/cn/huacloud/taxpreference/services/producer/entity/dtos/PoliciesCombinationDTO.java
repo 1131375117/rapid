@@ -109,4 +109,7 @@ public class PoliciesCombinationDTO {
 	@ApiModelProperty("数据来源网站链接")
 	private String spiderUrl;
 
+	@ApiModelProperty("是否关联解读")
+	private Boolean flag;
+
 }

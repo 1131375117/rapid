@@ -90,8 +90,7 @@ public class PoliciesExplainDataSyncJob implements DataSyncJob<SpiderPolicyExpla
 				.setUpdateTime(now)
 				.setInputUserId(-1L)
 				.setDeleted(false)
-				.setPoliciesId(spiderDataSyncDO.getDocId())
-				;
+				.setPoliciesId(spiderDataSyncDO.getDocId());
 
 		//标题
 		policiesExplainDO.setTitle(policyExplain.getRelatedInterpretationTitle());

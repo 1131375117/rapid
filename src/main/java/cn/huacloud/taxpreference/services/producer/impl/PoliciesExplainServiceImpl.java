@@ -288,6 +288,9 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 		if (policiesExplainDO == null) {
 			return null;
 		}
+		if(policiesExplainDO.getPoliciesId()==null){
+			return null;
+		}
 		BeanUtils.copyProperties(policiesExplainDO, policiesExplainDTO);
 		log.info("根据政策法规id查询政策解读信息={}", policiesExplainDTO);
 		return policiesExplainDTO;

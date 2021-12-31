@@ -43,7 +43,7 @@ public interface PoliciesExplainService {
 	 * @param id 政策解读id
 	 * @return 返回
 	 */
-	PoliciesExplainDetailVO getPoliciesById(Long id);
+	PoliciesExplainDetailVO  getPoliciesById(Long id);
 
 	/**
 	 * 政策解读列表

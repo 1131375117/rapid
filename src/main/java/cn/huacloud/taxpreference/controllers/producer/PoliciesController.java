@@ -118,6 +118,7 @@ public class PoliciesController {
 		policiesService.updateSource(policiesCombinationDTO);
 		return ResultVO.ok();
 	}
+
 	/**
 	 * 政策法规废止
 	 *

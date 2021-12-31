@@ -66,7 +66,6 @@ public class PoliciesExplainController {
 	}
 
 
-
 	/**
 	 * 根据ID获取政策解读详情
 	 * 政策解读id

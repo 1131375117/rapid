@@ -103,7 +103,6 @@ public class PoliciesServiceImpl implements PoliciesService {
 	}
 
 
-
 	/**
 	 * 获取排序字段
 	 */
@@ -340,8 +339,14 @@ public class PoliciesServiceImpl implements PoliciesService {
 		/*// 设置热门问答对象
 		policiesCombinationDTO.setFrequentlyAskedQuestionDTOList(frequentlyAskedQuestionDOList);*/
 		//设置爬虫url
-		String url=spiderDataSyncMapper.getSpiderUrl(DocType.POLICIES,policiesDO.getId());
+		String url = spiderDataSyncMapper.getSpiderUrl(DocType.POLICIES, policiesDO.getId());
 		policiesCombinationDTO.setSpiderUrl(url);
+
+		if (policiesExplainDTO == null) {
+			policiesCombinationDTO.setFlag(false);
+		} else {
+			policiesCombinationDTO.setFlag(true);
+		}
 		return policiesCombinationDTO;
 	}
 
@@ -737,7 +742,6 @@ public class PoliciesServiceImpl implements PoliciesService {
 		return pageVO;
 	}
 
-
 	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public void updateSource(PoliciesCombinationDTO policiesCombinationDTO) {
@@ -749,7 +753,7 @@ public class PoliciesServiceImpl implements PoliciesService {
 		if (policiesDO == null) {
 			throw BizCode._4100.exception();
 		}
-		if(policiesDO.getDocNumCode()==null&&policiesDO.getDocWordCode()==""&&policiesDO.getDocYearCode()==null){
+		if (policiesDO.getDocNumCode() == null && policiesDO.getDocWordCode() == "" && policiesDO.getDocYearCode() == null) {
 			throw BizCode._4316.exception();
 		}
 		updateSource(policiesCombinationDTO, policiesDO);
@@ -758,6 +762,7 @@ public class PoliciesServiceImpl implements PoliciesService {
 
 	/**
 	 * 修改数据
+	 *
 	 * @param policiesCombinationDTO
 	 * @param policiesDO
 	 */
