@@ -15,6 +15,12 @@ import java.util.List;
 @Slf4j
 public class DocCodeProcessorsTest {
 
+    /**
+     * 记录问题
+     * 1. 一篇文章有多个文号，意为多个单位联合发文，对应提出的多文号拆多篇文章的需求先记录；
+     * 2.
+     */
+
     @Test
     public void test() throws Exception {
         ClassPathResource resource = new ClassPathResource("tsv/source_doc_code.tsv");
@@ -48,5 +54,10 @@ public class DocCodeProcessorsTest {
         private String docCode;
         private DocCodeVO docCodeVO;
         private Exception exception;
+
+        @Override
+        public String toString() {
+            return docCodeVO.toString();
+        }
     }
 }

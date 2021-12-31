@@ -21,23 +21,45 @@ public interface DocCodeProcessors {
     Pattern pattern01 = Pattern.compile("[1-2]\\d{3}[年,-,' ']\\d{1,2}[月,-,' ']\\d{1,2}[日,-,' ']");
     Pattern pattern02 = Pattern.compile("[〔,\\[]*[1-2]\\d{3}[〕,\\]]*");
     Pattern pattern03 = Pattern.compile("[1-2]\\d{3}");
-    Pattern pattern04 = Pattern.compile("[、,第]*\\d+[号]");
+    Pattern pattern04 = Pattern.compile("[、,第,(,（]*\\d+[号][),）]*");
     Pattern pattern05 = Pattern.compile("\\d+");
+    // 匹配去除
+    Pattern pattern06 = Pattern.compile("[(,（]+\\d{4}[年,-]+\\d{4}[年,-]+[),）]+$");
+    Pattern pattern07 = Pattern.compile("^[(,（]+");
+
 
     /**
      * 文号处理器
      */
     Function<String, DocCodeVO> docCode = codeStr -> {
+
+        if (StringUtils.isBlank(codeStr) || codeStr.equals("\"\"")) {
+            return new DocCodeVO();
+        }
+
+        codeStr = codeStr.trim();
+
+
         // 分割预处理
-        String[] separators = {"，", ","};
         String target = null;
-        for (String separator : separators) {
-            if (codeStr.contains(separator)) {
-                String[] split = StringUtils.split(codeStr, separator);
-                target = split[split.length - 1];
-                break;
+        {
+            String[] separators = {"，", ","};
+            List<Integer> separatorIndex = new ArrayList<>();
+            for (String separator : separators) {
+                int index = codeStr.lastIndexOf(separator);
+                if (index != -1) {
+                    separatorIndex.add(index);
+                }
+            }
+            if (!separatorIndex.isEmpty()) {
+                separatorIndex.sort(Integer::compareTo);
+                Integer index = separatorIndex.get(separatorIndex.size() - 1);
+                if (index < codeStr.length() - 1) {
+                    target = codeStr.substring(index + 1);
+                }
             }
         }
+
         if (target == null) {
             target = codeStr;
         }
@@ -59,6 +81,10 @@ public interface DocCodeProcessors {
             }
         }
 
+        // 去除国定字符串
+        target = ReUtil.delAll(pattern06, target);
+        target = ReUtil.delAll(pattern07, target);
+
         target = target.trim();
 
         target = ReUtil.delFirst(pattern01, target);
@@ -77,7 +103,6 @@ public interface DocCodeProcessors {
             // 没有年号
             List<Group> rawNumGroups = getAllGroups(pattern04, target);
             if (rawNumGroups.isEmpty()) {
-                // TODO 中文数字转换
                 wordCode = target;
             } else {
                 Group rawNumGroup = rawNumGroups.get(rawNumGroups.size() - 1);
@@ -109,7 +134,6 @@ public interface DocCodeProcessors {
     static Integer getNum(String numTarget) {
         List<Group> allGroups = getAllGroups(pattern04, numTarget);
         if (allGroups.isEmpty()) {
-            // 中文数字转换
             return null;
         }
         String group = allGroups.get(allGroups.size() - 1).group;
