@@ -13,6 +13,7 @@ import cn.huacloud.taxpreference.services.producer.entity.dtos.PoliciesExplainDT
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryPoliciesExplainDTO;
 import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesExplainStatusEnum;
 import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesSortType;
+import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesStatusEnum;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainDetailVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesExplainListVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.PoliciesTitleVO;
@@ -303,6 +304,10 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 		// 查询政策解读
 		PoliciesExplainDO policiesExplainDO =
 				policiesExplainMapper.selectById(policiesExplainDTO.getId());
+		PoliciesDO policies = policiesService.getPolicies(policiesExplainDO.getPoliciesId());
+		if (PoliciesStatusEnum.REPTILE_SYNCHRONIZATION.equals(policies.getPoliciesStatus())) {
+			throw BizCode._4317.exception();
+		}
 		// 参数校验
 		if (policiesExplainDO != null) {
 			policiesExplainDO.setUpdateTime(LocalDateTime.now());

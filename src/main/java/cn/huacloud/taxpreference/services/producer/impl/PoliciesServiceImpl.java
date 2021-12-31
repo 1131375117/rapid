@@ -795,7 +795,7 @@ public class PoliciesServiceImpl implements PoliciesService {
 		PoliciesExplainDTO policiesExplainDTO = policiesCombinationDTO.getPoliciesExplainDTO();
 		if (policiesExplainDTO != null) {
 			//校验政策法规是否关联了其他解读
-			policiesExplainService.checkAssociation(policiesCombinationDTO.getPoliciesExplainDTO());
+//			policiesExplainService.checkAssociation(policiesCombinationDTO.getPoliciesExplainDTO());
 			policiesExplainService.updateSource(policiesExplainDTO);
 		}
 		// 触发ES数同步事件
