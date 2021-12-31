@@ -39,6 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -791,6 +792,12 @@ public class PoliciesServiceImpl implements PoliciesService {
 		policiesDO.setValidity(policiesCombinationDTO.getValidity());
 		policiesDO.setPoliciesStatus(PoliciesStatusEnum.PUBLISHED);
 		policiesMapper.updateById(policiesDO);
+		PoliciesExplainDTO policiesExplainDTO = policiesCombinationDTO.getPoliciesExplainDTO();
+		if (policiesExplainDTO != null) {
+			//校验政策法规是否关联了其他解读
+			policiesExplainService.checkAssociation(policiesCombinationDTO.getPoliciesExplainDTO());
+			policiesExplainService.updateSource(policiesExplainDTO);
+		}
 		// 触发ES数同步事件
 		policiesEventTrigger.saveEvent(policiesDO.getId());
 	}
