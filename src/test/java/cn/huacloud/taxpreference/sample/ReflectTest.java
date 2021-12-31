@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.sample;
 
+import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.DynamicConditionQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.DynamicConditionVO;
 import cn.huacloud.taxpreference.services.consumer.impl.FrequentlyAskedQuestionSearchServiceImpl;
@@ -11,6 +12,7 @@ import org.junit.Test;
 
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -22,6 +24,12 @@ public class ReflectTest {
 
 
     ObjectMapper objectMapper = new ObjectMapper();
+
+    @Test
+    public void testContains() {
+        List<DocType> docTypes = Arrays.asList(DocType.values());
+        boolean contains = docTypes.contains(DocType.POLICIES);
+    }
 
     @Test
     public void testPD() throws Exception {

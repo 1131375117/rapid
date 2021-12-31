@@ -61,7 +61,7 @@ public class DefaultDataSyncJobExecutor {
         }
     }
 
-    private SpiderDataSyncDO preHandle(DataSyncJob dataSyncJob, String spiderDataId) {
+    private SpiderDataSyncDO preHandle(DataSyncJob<?, ?> dataSyncJob, String spiderDataId) {
         DocType docType = dataSyncJob.getDocType();
         SpiderDataSyncDO spiderDataSyncDO = spiderDataSyncMapper.getSpiderDataSyncDO(docType, spiderDataId);
         LocalDateTime now = LocalDateTime.now();

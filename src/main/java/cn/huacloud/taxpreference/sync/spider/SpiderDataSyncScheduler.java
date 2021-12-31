@@ -1,6 +1,7 @@
 package cn.huacloud.taxpreference.sync.spider;
 
 import cn.huacloud.taxpreference.common.enums.BizCode;
+import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.config.SpiderDataSyncConfig;
 import cn.huacloud.taxpreference.services.sync.mapper.SpiderDataSyncMapper;
 import io.minio.BucketExistsArgs;
@@ -17,7 +18,9 @@ import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.config.CronTask;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -47,8 +50,14 @@ public class SpiderDataSyncScheduler implements InitializingBean, SchedulingConf
         if (!spiderDataSyncConfig.getEnabled()) {
             throw BizCode._4405.exception();
         }
+        List<DocType> docTypes = dataSyncJobParam.getDocTypes();
+        if (CollectionUtils.isEmpty(docTypes)) {
+            docTypes = Arrays.asList(DocType.values());
+        }
         for (DataSyncJob<?, ?> dataSyncJob : dataSyncJobs) {
-            dataSyncJobExecutor.execute(dataSyncJob, dataSyncJobParam);
+            if (docTypes.contains(dataSyncJob.getDocType())) {
+                dataSyncJobExecutor.execute(dataSyncJob, dataSyncJobParam);
+            }
         }
     }
 
