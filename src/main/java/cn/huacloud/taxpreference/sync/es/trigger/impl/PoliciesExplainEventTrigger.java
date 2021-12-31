@@ -10,6 +10,7 @@ import cn.huacloud.taxpreference.services.consumer.entity.ess.PoliciesExplainES;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.DocSimpleVO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesExplainDO;
+import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesExplainStatusEnum;
 import cn.huacloud.taxpreference.services.producer.mapper.PoliciesExplainMapper;
 import cn.huacloud.taxpreference.services.producer.mapper.PoliciesMapper;
 import cn.huacloud.taxpreference.sync.es.trigger.EventTrigger;
@@ -61,7 +62,7 @@ public class PoliciesExplainEventTrigger extends EventTrigger<Long, PoliciesExpl
         DocStatisticsDO docStatisticsDO = statisticsService.selectDocStatistics(id, docType());
         PoliciesExplainDO policiesExplainDO = policiesExplainMapper.selectById(id);
 
-        if (policiesExplainDO.getDeleted()) {
+        if (policiesExplainDO.getDeleted() || policiesExplainDO.getPoliciesExplainStatus() != PoliciesExplainStatusEnum.PUBLISHED) {
             return null;
         }
 

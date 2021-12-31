@@ -301,6 +301,8 @@ public class PoliciesExplainServiceImpl implements PoliciesExplainService {
 			log.info("修改政策解读对象={}", policiesExplainDO);
 			// 修改政策解读
 			policiesExplainMapper.updateById(policiesExplainDO);
+			// 触发ES数同步事件
+			policiesExplainEventTrigger.saveEvent(policiesExplainDO.getId());
 		}
 	}
 }

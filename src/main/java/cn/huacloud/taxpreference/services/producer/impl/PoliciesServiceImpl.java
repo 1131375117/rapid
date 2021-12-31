@@ -5,11 +5,9 @@ import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.AttachmentType;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.enums.SysCodeType;
-import cn.huacloud.taxpreference.common.enums.taxpreference.SortType;
 import cn.huacloud.taxpreference.common.utils.DocCodeUtil;
 import cn.huacloud.taxpreference.services.common.AttachmentService;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
-import cn.huacloud.taxpreference.services.common.SysParamService;
 import cn.huacloud.taxpreference.services.common.entity.dtos.SysCodeStringDTO;
 import cn.huacloud.taxpreference.services.producer.FrequentlyAskedQuestionService;
 import cn.huacloud.taxpreference.services.producer.PoliciesExplainService;
@@ -28,7 +26,6 @@ import cn.huacloud.taxpreference.services.producer.mapper.PoliciesMapper;
 import cn.huacloud.taxpreference.sync.es.trigger.impl.PoliciesEventTrigger;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,8 +39,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * 政策法规服务实现类
@@ -783,5 +778,7 @@ public class PoliciesServiceImpl implements PoliciesService {
 		policiesDO.setValidity(policiesCombinationDTO.getValidity());
 		policiesDO.setPoliciesStatus(PoliciesStatusEnum.PUBLISHED);
 		policiesMapper.updateById(policiesDO);
+		// 触发ES数同步事件
+		policiesEventTrigger.saveEvent(policiesDO.getId());
 	}
 }

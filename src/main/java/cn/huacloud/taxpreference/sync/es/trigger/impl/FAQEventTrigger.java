@@ -6,6 +6,7 @@ import cn.huacloud.taxpreference.services.common.DocStatisticsService;
 import cn.huacloud.taxpreference.services.common.entity.dos.DocStatisticsDO;
 import cn.huacloud.taxpreference.services.consumer.entity.ess.FrequentlyAskedQuestionES;
 import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO;
+import cn.huacloud.taxpreference.services.producer.entity.enums.FrequentlyAskedQuestionStatusEnum;
 import cn.huacloud.taxpreference.services.producer.mapper.FrequentlyAskedQuestionMapper;
 import cn.huacloud.taxpreference.sync.es.trigger.EventTrigger;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -52,7 +53,7 @@ public class FAQEventTrigger extends EventTrigger<Long, FrequentlyAskedQuestionE
     protected FrequentlyAskedQuestionES getEntityById(Long id) {
         FrequentlyAskedQuestionDO faqDO = frequentlyAskedQuestionMapper.selectById(id);
         DocStatisticsDO docStatisticsDO = docStatisticsService.selectDocStatistics(id, docType());
-        if (faqDO.getDeleted()) {
+        if (faqDO.getDeleted() || faqDO.getFrequentlyAskedQuestionStatus() != FrequentlyAskedQuestionStatusEnum.PUBLISHED) {
             return null;
         }
 
