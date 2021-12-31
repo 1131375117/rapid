@@ -265,6 +265,9 @@ public class SysCodeServiceImpl implements SysCodeService {
 
     @Override
     public List<String> withChildrenCodes(SysCodeType sysCodeType, Collection<?> target) {
+        if (CollectionUtils.isEmpty(target)) {
+            return new ArrayList<>();
+        }
         Map<String, SysCodeDO> sysCodeDOMap = getCacheCodeMapByType(sysCodeType);
         List<SysCodeDO> targetCodes = target.stream()
                 .map(sysCodeDOMap::get)

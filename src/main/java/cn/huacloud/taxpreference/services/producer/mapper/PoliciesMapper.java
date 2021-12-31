@@ -31,7 +31,10 @@ public interface PoliciesMapper extends BaseMapper<PoliciesDO> {
 	 * @param sort
 	 * @return
 	 */
-	IPage<PoliciesVO> queryPoliciesVOList(@Param("page") Page<PoliciesVO> page, @Param("queryPoliciesDTO") QueryPoliciesDTO queryPoliciesDTO, @Param("sort") String sort);
+	IPage<PoliciesVO> queryPoliciesVOList(@Param("page") Page<PoliciesVO> page,
+										  @Param("queryPoliciesDTO") QueryPoliciesDTO queryPoliciesDTO,
+										  @Param("sort") String sort,
+										  @Param("industryCodes") List<String> industryCodes);
 
 	/**
 	 * 根据政策法规id查询政策解读id

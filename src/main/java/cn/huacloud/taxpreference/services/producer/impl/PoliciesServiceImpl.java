@@ -95,9 +95,10 @@ public class PoliciesServiceImpl implements PoliciesService {
 				new Page<>(queryPoliciesDTO.getPageNum(), queryPoliciesDTO.getPageSize());
 		// 获取排序字段
 		String sort = getSort(queryPoliciesDTO);
+		List<String> industryCodes = sysCodeService.withChildrenCodes(SysCodeType.INDUSTRY, queryPoliciesDTO.getIndustryCodes());
 		// 列表查询
 		IPage<PoliciesVO> policiesDoPage =
-				policiesMapper.queryPoliciesVOList(page, queryPoliciesDTO, sort);
+				policiesMapper.queryPoliciesVOList(page, queryPoliciesDTO, sort,industryCodes);
 		log.info("政策法规列表查询对象={}", policiesDoPage);
 		// 返回结果
 		return PageVO.createPageVO(policiesDoPage, policiesDoPage.getRecords());
