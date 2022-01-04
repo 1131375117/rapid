@@ -95,10 +95,17 @@ public class CollectionServiceImpl implements CollectionService {
             //政策法规
             collectionDOIPage = collectionMapper.selectPoliciesByCollectionType(page, CollectionType.POLICIES, userId);
         }
-        if (collectionDOIPage.getTotal() > 200) {
-            collectionDOIPage.setTotal(200);
+        int maxSize = 200;
+        if (collectionDOIPage.getTotal() > maxSize) {
+            collectionDOIPage.setTotal(maxSize);
+            //获取page
+            int maxPage = maxSize % pageQueryDTO.getPageSize() == 0 ? maxSize / pageQueryDTO.getPageSize() : maxSize / pageQueryDTO.getPageSize() + 1;
+            if (maxPage == pageQueryDTO.getPageNum()) {
+                int lastPageSize = maxSize % pageQueryDTO.getPageSize();
+                collectionDOIPage.setRecords(collectionDOIPage.getRecords().stream().limit(lastPageSize).collect(Collectors.toList()));
+            }
         }
-        return PageVO.createPageVO(collectionDOIPage, collectionDOIPage.getRecords().stream().limit(200).collect(Collectors.toList()));
+        return PageVO.createPageVO(collectionDOIPage, collectionDOIPage.getRecords());
     }
 
     @Override
