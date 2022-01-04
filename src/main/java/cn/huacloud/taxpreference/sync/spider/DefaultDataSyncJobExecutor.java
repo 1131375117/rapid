@@ -15,15 +15,25 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
+ * 默认数据数据同步任务执行器
  * @author wangkh
  */
 @Slf4j
 public class DefaultDataSyncJobExecutor {
 
+    /**
+     * 历史记录最大容量
+     */
     private static final int MAX_HISTORY_SIZE = 10;
 
+    /**
+     * 爬虫库数据查询
+     */
     private JdbcTemplate jdbcTemplate;
 
+    /**
+     * 爬虫数据同步记录数据操作
+     */
     private SpiderDataSyncMapper spiderDataSyncMapper;
 
     public DefaultDataSyncJobExecutor(JdbcTemplate jdbcTemplate, SpiderDataSyncMapper spiderDataSyncMapper) {
@@ -31,6 +41,11 @@ public class DefaultDataSyncJobExecutor {
         this.spiderDataSyncMapper = spiderDataSyncMapper;
     }
 
+    /**
+     * 执行任务
+     * @param dataSyncJob 数据同步任务
+     * @param jobParam 任务参数
+     */
     public void execute(DataSyncJob<?, ?> dataSyncJob, DataSyncJobParam jobParam) {
 
         // 获取数据保存范围
@@ -61,6 +76,13 @@ public class DefaultDataSyncJobExecutor {
         }
     }
 
+    /**
+     * 前置处理
+     * 查询或创建数据同步记录并判断是否需要同步
+     * @param dataSyncJob 数据同步任务
+     * @param spiderDataId 爬虫数据ID
+     * @return 爬虫数据记录
+     */
     private SpiderDataSyncDO preHandle(DataSyncJob<?, ?> dataSyncJob, String spiderDataId) {
         DocType docType = dataSyncJob.getDocType();
         SpiderDataSyncDO spiderDataSyncDO = spiderDataSyncMapper.getSpiderDataSyncDO(docType, spiderDataId);
@@ -86,20 +108,32 @@ public class DefaultDataSyncJobExecutor {
         return spiderDataSyncDO;
     }
 
+    /**
+     * 后置处理
+     * @param spiderDataSyncDO 数据同步记录
+     * @param dataSyncResult 数据同步结果
+     */
     private void afterHandle(SpiderDataSyncDO spiderDataSyncDO, DataSyncResult dataSyncResult) {
         spiderDataSyncDO.setDocId(dataSyncResult.getDocId())
                 .setSpiderUrl(dataSyncResult.getSpiderUrl())
                 .setSyncStatus(SyncStatus.COMPLETED)
                 .setUpdateTime(LocalDateTime.now());
         setSyncHistory(spiderDataSyncDO);
+        // 设置数据同步历史
         spiderDataSyncMapper.updateById(spiderDataSyncDO);
     }
 
     private DateTimeFormatter historyFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
+    /**
+     * 设置数据同步历史
+     * @param spiderDataSyncDO 数据同步记录
+     */
     private void setSyncHistory(SpiderDataSyncDO spiderDataSyncDO) {
+        // 字符串转list
         List<String> historyList = CustomStringUtil.spiltStringToList(spiderDataSyncDO.getSyncHistory());
 
+        // 如果历史记录大于等于10次则移除最早一次
         if (historyList.size() >= MAX_HISTORY_SIZE - 1) {
             historyList.remove(0);
         }

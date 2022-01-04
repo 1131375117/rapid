@@ -48,12 +48,16 @@ public class SpiderDataSyncScheduler implements InitializingBean, SchedulingConf
 
     public synchronized void executeJobs(DataSyncJobParam dataSyncJobParam) {
         if (!spiderDataSyncConfig.getEnabled()) {
+            // 未开启爬虫数据同步直接抛出异常
             throw BizCode._4405.exception();
         }
+        // 获取指定同步的文档类型
         List<DocType> docTypes = dataSyncJobParam.getDocTypes();
         if (CollectionUtils.isEmpty(docTypes)) {
+            // 若果指定类型为空，默认同步所有文档
             docTypes = Arrays.asList(DocType.values());
         }
+        // 循环执行同步任务
         for (DataSyncJob<?, ?> dataSyncJob : dataSyncJobs) {
             if (docTypes.contains(dataSyncJob.getDocType())) {
                 dataSyncJobExecutor.execute(dataSyncJob, dataSyncJobParam);
@@ -111,8 +115,9 @@ public class SpiderDataSyncScheduler implements InitializingBean, SchedulingConf
         if (!spiderDataSyncConfig.getEnabled()) {
             return;
         }
+        // 自定义cron任务
         CronTask cronTask = new CronTask(() -> {
-
+            // TODO 未定义自动同步任务
         }, spiderDataSyncConfig.getCron());
         taskRegistrar.addCronTask(cronTask);
     }

@@ -68,7 +68,8 @@ public class AttachmentProcessors implements CommandLineRunner {
 
         // 解析出来的pathUrl
         // 同一url在一个页面可以被多次引用
-        Map<String, List<Wrapper>> pathUrlMap = Stream.concat(getTargetElementStream(document, "a", "href"),
+        Map<String, List<Wrapper>> pathUrlMap = Stream.concat(
+                getTargetElementStream(document, "a", "href"),
                 getTargetElementStream(document, "img", "src"))
                 .collect(Collectors.groupingBy(Wrapper::getPathUrl));
 
@@ -103,6 +104,11 @@ public class AttachmentProcessors implements CommandLineRunner {
         return Pair.of(document, attachmentDOList);
     }
 
+    /**
+     * 爬虫文件拷贝
+     * @param sourcePath 源文件路径
+     * @param targetPath 目标文件路径
+     */
     private void copyFile(String sourcePath, String targetPath) {
         String bucket = spiderDataSyncConfig.getMinio().getBucket();
         try {
@@ -119,6 +125,13 @@ public class AttachmentProcessors implements CommandLineRunner {
         }
     }
 
+    /**
+     * 解析文档中的指定元素
+     * @param document html文档
+     * @param label 标签名称
+     * @param attrKey 属性名称
+     * @return
+     */
     private Stream<Wrapper> getTargetElementStream(Document document, String label, String attrKey) {
         String cssQuery = label + "[" + attrKey + "]";
         return document.select(cssQuery).stream()
@@ -130,8 +143,17 @@ public class AttachmentProcessors implements CommandLineRunner {
     @Accessors(chain = true)
     @Data
     public static class Wrapper {
+        /**
+         * a标签、img标签中的路径值
+         */
         private String pathUrl;
+        /**
+         * 属性名称 url、src
+         */
         private String attrKey;
+        /**
+         * html元素
+         */
         private Element element;
     }
 
