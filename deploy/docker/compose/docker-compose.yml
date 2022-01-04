@@ -21,6 +21,18 @@ services:
     ports:
       - "9090:9090"
       - "5090:5005"
+  # tax-preference-server
+  tax-preference-web:
+    image: hai-registry:5000/tax-preference-web:0.0.1
+    container_name: tax-preference-web
+    logging: *default-logging
+    env_file:
+      - common.env
+      - server.env
+    networks:
+      - tax_preference_network
+    ports:
+      - "3000:3000"
 
 networks:
   tax_preference_network:

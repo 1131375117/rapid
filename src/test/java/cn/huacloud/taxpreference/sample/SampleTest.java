@@ -38,6 +38,14 @@ import java.util.regex.Pattern;
 public class SampleTest {
 
     @Test
+    public void printUUID() {
+        for (int i = 0; i < 10; i++) {
+            String uuid = IdWorker.get32UUID();
+            System.out.println(uuid);
+        }
+    }
+
+    @Test
     public void testStringBuilderDelete() {
         StringBuilder sb = new StringBuilder();
         sb.append("name01");
