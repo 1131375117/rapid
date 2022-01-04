@@ -15,6 +15,7 @@ public interface CollectionService {
      * 添加收藏或取消收藏
      *
      * @param collectionDTO
+     * @return 根据返回结果判断是否收藏
      */
     Boolean saveOrCancelCollection(CollectionDTO collectionDTO);
 

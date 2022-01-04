@@ -109,11 +109,18 @@ public class OperationRecordServiceImpl implements OperationRecordService {
             //政策法规
             operationRecordVOIPage = operationRecordMapper.selectPoliciesByDocType(page, ViewType.POLICIES.name, userId);
         }
-        if (operationRecordVOIPage.getTotal() > 500) {
-            operationRecordVOIPage.setTotal(500);
+        int maxSize = 500;
+        if (operationRecordVOIPage.getTotal() > maxSize) {
+            operationRecordVOIPage.setTotal(maxSize);
+            //获取page
+            int maxPage = maxSize % pageQueryDTO.getPageSize() == 0 ? maxSize / pageQueryDTO.getPageSize() : maxSize / pageQueryDTO.getPageSize() + 1;
+            if (maxPage == pageQueryDTO.getPageNum()) {
+                int lastPageSize = maxSize % pageQueryDTO.getPageSize();
+                operationRecordVOIPage.setRecords(operationRecordVOIPage.getRecords().stream().limit(lastPageSize).collect(Collectors.toList()));
+            }
         }
 
-        return PageVO.createPageVO(operationRecordVOIPage, operationRecordVOIPage.getRecords().stream().limit(500).collect(Collectors.toList()));
+        return PageVO.createPageVO(operationRecordVOIPage, operationRecordVOIPage.getRecords());
     }
 
 
