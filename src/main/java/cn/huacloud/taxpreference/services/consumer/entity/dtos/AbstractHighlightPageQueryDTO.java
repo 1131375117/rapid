@@ -54,7 +54,7 @@ public abstract class AbstractHighlightPageQueryDTO extends ExSearchQueryDTO {
      */
     public List<SortBuilder<?>> sortBuilders() {
         if (StringUtils.isBlank(getKeyword())) {
-            return Collections.singletonList(SortBuilders.fieldSort("_id").order(SortOrder.DESC));
+            return Collections.singletonList(SortBuilders.fieldSort("releaseDate").order(SortOrder.DESC));
         }
         return new ArrayList<>();
     }
