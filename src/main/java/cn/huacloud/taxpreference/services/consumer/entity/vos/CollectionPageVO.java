@@ -12,6 +12,12 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 public class CollectionPageVO<T> {
+    /**
+     * 日期
+     */
     private LocalDate date;
+    /**
+     * 分页数据
+     */
     private List<T> pageVOList;
 }
