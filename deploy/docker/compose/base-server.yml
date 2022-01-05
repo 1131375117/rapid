@@ -19,6 +19,7 @@ services:
       - tax_preference_network
     ports:
       - "80:80"
+      - "443:443"
       - "8080:8080"
     volumes:
       - ${PWD}/nginx/nginx.conf:/etc/nginx/nginx.conf
@@ -36,7 +37,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ${PWD}/mysql/data:/var/lib/mysql
+      - /data/docker/mysql/data:/var/lib/mysql
       - ${PWD}/mysql/conf:/etc/mysql/mysql.conf.d
     environment:
       - "MYSQL_ROOT_PASSWORD=root"
@@ -70,11 +71,50 @@ services:
       - "9000:9000"
       - "9001:9001"
     volumes:
-      - ${PWD}/minio:/data
+      - /data/docker/minio:/data
     environment:
       - "MINIO_ROOT_USER=root"
       - "MINIO_ROOT_PASSWORD=hcfAI123456"
     command: server /data --console-address ":9001"
+  # elasticsearch
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.1
+    container_name: elasticsearch
+    logging: *default-logging
+    env_file:
+      - common.env
+    environment:
+      - "discovery.type=single-node"
+    ports:
+      - "9200:9200"
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+        reservations:
+          memory: 2G
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+      - ${PWD}/elasticsearch/plugins:/usr/share/elasticsearch/plugins
+  # rabbitmq
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    logging: *default-logging
+    env_file:
+      - common.env
+    environment:
+      - "RABBITMQ_DEFAULT_USER=admin"
+      - "RABBITMQ_DEFAULT_PASS=12345678Aa"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - /data/docker/rabbitmq:/var/lib/rabbitmq
+
+volumes:
+  es_data:
+    driver: local
 
 networks:
   tax_preference_network:
