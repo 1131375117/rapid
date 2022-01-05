@@ -11,7 +11,9 @@ import cn.huacloud.taxpreference.services.common.watch.WatcherViewService;
 import cn.huacloud.taxpreference.services.consumer.CollectionService;
 import cn.huacloud.taxpreference.services.consumer.entity.dos.CollectionDO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.CollectionDTO;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.CollectionPageVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.CollectionVO;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.PageByCollectionVO;
 import cn.huacloud.taxpreference.services.consumer.mapper.CollectionMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -22,7 +24,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static cn.huacloud.taxpreference.services.common.watch.WatcherOperation.TYPE_TRIGGER_MAP;
@@ -71,7 +77,7 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     @Override
-    public PageVO<CollectionVO> queryCollection(CollectionQueryDTO pageQueryDTO, Long userId) {
+    public PageByCollectionVO queryCollection(CollectionQueryDTO pageQueryDTO, Long userId) {
 
         //根据操作类型查询不同的收藏记录
         Page<CollectionVO> page = new Page<>(pageQueryDTO.getPageNum(), pageQueryDTO.getPageSize());
@@ -105,7 +111,26 @@ public class CollectionServiceImpl implements CollectionService {
                 collectionDOIPage.setRecords(collectionDOIPage.getRecords().stream().limit(lastPageSize).collect(Collectors.toList()));
             }
         }
-        return PageVO.createPageVO(collectionDOIPage, collectionDOIPage.getRecords());
+        PageVO<CollectionVO> pageVO = PageVO.createPageVO(collectionDOIPage, collectionDOIPage.getRecords());
+        List<CollectionPageVO> collectionPageVOList = new ArrayList<>();
+        Set<LocalDate> dateSet = pageVO.getRecords().stream().map(CollectionVO::getCollectionTime).collect(Collectors.toSet());
+        dateSet.forEach(localDate -> {
+            //返回的vo对象
+            CollectionPageVO<CollectionVO> collectionPageVO = new CollectionPageVO();
+            List<CollectionVO> collectionVOList = new ArrayList<>();
+            collectionPageVO.setDate(localDate);
+            pageVO.getRecords().forEach(collectionVO -> {
+                if(collectionVO.getCollectionTime().isEqual(localDate)){
+                    collectionVOList.add(collectionVO);
+                }
+            });
+            collectionPageVO.setPageVOList(collectionVOList);
+            collectionPageVOList.add(collectionPageVO);
+        });
+        PageByCollectionVO pageByCollectionVO = new PageByCollectionVO();
+        BeanUtils.copyProperties(pageVO, pageByCollectionVO);
+        pageByCollectionVO.setList(collectionPageVOList);
+        return pageByCollectionVO;
     }
 
     @Override

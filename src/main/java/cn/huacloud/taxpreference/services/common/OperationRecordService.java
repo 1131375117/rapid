@@ -1,9 +1,8 @@
 package cn.huacloud.taxpreference.services.common;
 
-import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.services.common.entity.dtos.OperationRecordDTO;
 import cn.huacloud.taxpreference.services.common.entity.dtos.ViewQueryDTO;
-import cn.huacloud.taxpreference.services.common.entity.vos.OperationRecordVO;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.PageByOperationVO;
 
 /**
  * 操作记录服务
@@ -24,5 +23,5 @@ public interface OperationRecordService {
      * @param consumerUserId 用户id
      * @return 操作记录集合
      */
-    PageVO<OperationRecordVO> queryOperationRecord(ViewQueryDTO pageQueryDTO, Long consumerUserId);
+    PageByOperationVO queryOperationRecord(ViewQueryDTO pageQueryDTO, Long consumerUserId);
 }

@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -25,5 +26,5 @@ public class OperationRecordVO {
     private String title;
 
     @ApiModelProperty("浏览时间")
-    private LocalDateTime viewTime;
+    private LocalDate viewTime;
 }

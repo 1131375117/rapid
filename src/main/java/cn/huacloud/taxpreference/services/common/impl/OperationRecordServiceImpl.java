@@ -16,6 +16,7 @@ import cn.huacloud.taxpreference.services.common.entity.dtos.ViewQueryDTO;
 import cn.huacloud.taxpreference.services.common.entity.vos.OperationRecordVO;
 import cn.huacloud.taxpreference.services.common.mapper.OperationRecordMapper;
 import cn.huacloud.taxpreference.services.common.watch.WatcherViewService;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.*;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -86,7 +91,7 @@ public class OperationRecordServiceImpl implements OperationRecordService {
     }
 
     @Override
-    public PageVO<OperationRecordVO> queryOperationRecord(ViewQueryDTO pageQueryDTO, Long userId) {
+    public PageByOperationVO queryOperationRecord(ViewQueryDTO pageQueryDTO, Long userId) {
         Page<OperationRecordVO> page = new Page<>(pageQueryDTO.getPageNum(), pageQueryDTO.getPageSize());
         IPage<OperationRecordVO> operationRecordVOIPage;
 
@@ -119,8 +124,26 @@ public class OperationRecordServiceImpl implements OperationRecordService {
                 operationRecordVOIPage.setRecords(operationRecordVOIPage.getRecords().stream().limit(lastPageSize).collect(Collectors.toList()));
             }
         }
-
-        return PageVO.createPageVO(operationRecordVOIPage, operationRecordVOIPage.getRecords());
+        PageVO<OperationRecordVO> pageVO = PageVO.createPageVO(operationRecordVOIPage, operationRecordVOIPage.getRecords());
+        List<OperationPageVO> operationPageVOList = new ArrayList<>();
+        Set<LocalDate> dateSet = pageVO.getRecords().stream().map(OperationRecordVO::getViewTime).collect(Collectors.toSet());
+        dateSet.forEach(localDate -> {
+            //返回的vo对象
+            OperationPageVO<OperationRecordVO> operationPageVO = new OperationPageVO<>();
+            List<OperationRecordVO> operationRecordVOList = new ArrayList<>();
+            operationPageVO.setDate(localDate);
+            pageVO.getRecords().forEach(operationRecordVO -> {
+                if(operationRecordVO.getViewTime().isEqual(localDate)){
+                    operationRecordVOList.add(operationRecordVO);
+                }
+            });
+            operationPageVO.setPageVOList(operationRecordVOList);
+            operationPageVOList.add(operationPageVO);
+        });
+        PageByOperationVO pageByOperationVO = new PageByOperationVO();
+        BeanUtils.copyProperties(pageVO, pageByOperationVO);
+        pageByOperationVO.setList(operationPageVOList);
+        return pageByOperationVO;
     }
 
 

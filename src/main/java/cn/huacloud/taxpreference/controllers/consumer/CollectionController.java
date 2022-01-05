@@ -1,13 +1,12 @@
 package cn.huacloud.taxpreference.controllers.consumer;
 
 import cn.huacloud.taxpreference.common.annotations.ConsumerUserCheckLogin;
-import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.utils.ConsumerUserUtil;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.common.entity.dtos.CollectionQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.CollectionService;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.CollectionDTO;
-import cn.huacloud.taxpreference.services.consumer.entity.vos.CollectionVO;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.PageByCollectionVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -46,9 +45,9 @@ public class CollectionController {
      */
     @ApiOperation("我的收藏展示")
     @PostMapping("/queryCollection")
-    public ResultVO<PageVO<CollectionVO>> queryCollection(@RequestBody CollectionQueryDTO pageQueryDTO) {
+    public ResultVO<PageByCollectionVO> queryCollection(@RequestBody CollectionQueryDTO pageQueryDTO) {
         pageQueryDTO.paramReasonable();
-        PageVO<CollectionVO> pageVO = collectionService.queryCollection(pageQueryDTO, ConsumerUserUtil.getCurrentUser().getId());
+        PageByCollectionVO pageVO = collectionService.queryCollection(pageQueryDTO, ConsumerUserUtil.getCurrentUser().getId());
         return ResultVO.ok(pageVO);
     }
 }
