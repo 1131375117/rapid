@@ -45,7 +45,7 @@ public class TaxPreferenceDTO {
      * 纳税人登记注册类型码值
      */
     @ApiModelProperty("纳税人登记注册类型码值")
-    @NotEmpty(message = "纳税人登记注册类型码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
+    //@NotEmpty(message = "纳税人登记注册类型码值不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
     private String taxpayerRegisterTypeCode;
 
 
