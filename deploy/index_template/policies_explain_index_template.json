@@ -5,7 +5,8 @@
   "template": {
     "settings": {
       "number_of_shards": 1,
-      "number_of_replicas": 0
+      "number_of_replicas": 0,
+      "max_result_window" : "100000000"
     },
     "aliases": {
       "policies_explain": {}
@@ -112,6 +113,6 @@
   },
   "priority": 500,
   "_meta": {
-    "description": "政策解读索引模板，更新时间2021年12月23日"
+    "description": "政策解读索引模板，更新时间2022年1月6日"
   }
 }
