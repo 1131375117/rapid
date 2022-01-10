@@ -40,14 +40,14 @@ public class TaxPreferenceVO {
      * 纳税人登记注册类型名称
      */
     @ApiModelProperty("纳税人登记注册类型名称")
-    @NotEmpty(message = "纳税人登记注册类型名称不能为空", groups = ValidationGroup.Manual.class)
+   // @NotEmpty(message = "纳税人登记注册类型名称不能为空", groups = ValidationGroup.Manual.class)
     private String taxpayerRegisterTypeName;
 
     /**
      * 纳税人登记注册类型码值
      */
     @ApiModelProperty("纳税人登记注册类型码值")
-    @NotEmpty(message = "纳税人登记注册类型码值不能为空", groups = ValidationGroup.Manual.class)
+    //@NotEmpty(message = "纳税人登记注册类型码值不能为空", groups = ValidationGroup.Manual.class)
     private String taxpayerRegisterTypeCode;
 
     /**
