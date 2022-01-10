@@ -48,7 +48,7 @@ public class DefaultDataSyncJobExecutor {
      */
     public void execute(DataSyncJob<?, ?> dataSyncJob, DataSyncJobParam jobParam) {
 
-        // 获取数据保存范围
+        // 获取数据同步范围
         String syncIdsQuerySql = dataSyncJob.getSyncIdsQuerySql();
 
         List<String> spiderDataIds = jdbcTemplate.query(syncIdsQuerySql, SingleColumnRowMapper.newInstance(String.class), jobParam.getFrom(), jobParam.getTo());

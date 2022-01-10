@@ -7,6 +7,7 @@ import cn.huacloud.taxpreference.services.consumer.entity.vos.DocSearchSimpleVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.OtherDocVO;
 
 /**
+ * 其他文档检索
  * @author fuhua
  **/
 public interface OtherDocSearchService extends SearchService<OtherDocQueryDTO, OtherDocVO> {

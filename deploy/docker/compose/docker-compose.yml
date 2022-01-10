@@ -21,7 +21,7 @@ services:
     ports:
       - "9090:9090"
       - "5090:5005"
-  # tax-preference-server
+  # tax-preference-web
   tax-preference-web:
     image: hai-registry:5000/tax-preference-web:0.0.1
     container_name: tax-preference-web

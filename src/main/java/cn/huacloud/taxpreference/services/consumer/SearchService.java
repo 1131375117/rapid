@@ -106,7 +106,7 @@ public interface SearchService<T extends AbstractHighlightPageQueryDTO, R> {
     }
 
     /**
-     * 获取查询构造器
+     * 获取查询构造器，实现类用来重写用的
      *
      * @param pageQuery 分页检索条件
      * @return 查询构造器

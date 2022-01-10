@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 系统参数服务
  * @author fuhua
  */
 public interface SysParamService extends CacheClear {

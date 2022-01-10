@@ -8,7 +8,7 @@ import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesSearchSimp
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesSearchVO;
 
 /**
- * 正常法规检索服务
+ * 政策法规检索服务
  * @author wangkh
  */
 public interface PoliciesSearchService extends SearchService<PoliciesSearchQueryDTO, PoliciesSearchListVO> {

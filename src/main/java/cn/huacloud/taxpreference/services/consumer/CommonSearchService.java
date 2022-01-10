@@ -11,7 +11,7 @@ import cn.huacloud.taxpreference.services.consumer.entity.vos.SearchDataCountVO;
 import java.util.List;
 
 /**
- * 热点内容服务
+ * 公共检索服务
  * @author wangkh
  */
 public interface CommonSearchService {

@@ -39,8 +39,9 @@ public class SpiderDataSyncScheduler implements InitializingBean, SchedulingConf
 
     private final SpiderDataSyncMapper spiderDataSyncMapper;
 
+    // 初始化创建，不交由spring管理
     private JdbcTemplate jdbcTemplate;
-
+    // 初始化创建，不交由spring管理
     private DefaultDataSyncJobExecutor dataSyncJobExecutor;
 
     @Getter
@@ -95,7 +96,7 @@ public class SpiderDataSyncScheduler implements InitializingBean, SchedulingConf
                 .credentials(minio.getAccessKey(), minio.getSecretKey())
                 .build();
 
-        // 检查存储桶是否已经创建，没有创建则自动创建
+        // 检查存储桶是否已经创建，没有创建则抛出异常
         boolean bucketExists = spiderMinioClient.bucketExists(BucketExistsArgs.builder().bucket(minio.getBucket()).build());
         if (!bucketExists) {
             throw new RuntimeException("没有找到爬虫minio的存储桶：" + minio.getBucket());

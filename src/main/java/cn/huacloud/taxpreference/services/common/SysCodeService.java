@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 /**
+ * 系统码值服务
  * @author wangkh
  */
 public interface SysCodeService extends CacheClear {
