@@ -83,6 +83,8 @@ services:
     logging: *default-logging
     env_file:
       - common.env
+    networks:
+      - tax_preference_network
     environment:
       - "discovery.type=single-node"
     ports:
@@ -103,8 +105,11 @@ services:
     logging: *default-logging
     env_file:
       - common.env
+    networks:
+      - tax_preference_network
     environment:
-      - "RABBITMQ_DEFAULT_USER=admin"
+      - "RABBITMQ_DEFAULT_VHOST=tax_preference"
+      - "RABBITMQ_DEFAULT_USER=tax_preference"
       - "RABBITMQ_DEFAULT_PASS=12345678Aa"
     ports:
       - "5672:5672"

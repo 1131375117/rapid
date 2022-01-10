@@ -28,7 +28,6 @@ services:
     logging: *default-logging
     env_file:
       - common.env
-      - server.env
     networks:
       - tax_preference_network
     ports:
