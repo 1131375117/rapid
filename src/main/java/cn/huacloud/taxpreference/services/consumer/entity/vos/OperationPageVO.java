@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.consumer.entity.vos;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -20,4 +21,9 @@ public class OperationPageVO<T> {
      * 分页数据
      */
     private List<T> pageVOList;
+    /**
+     * 是否是当今日期
+     */
+    @ApiModelProperty("是否是今天")
+    private Boolean isToday;
 }

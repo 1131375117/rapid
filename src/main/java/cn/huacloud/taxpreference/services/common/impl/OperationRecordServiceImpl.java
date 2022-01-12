@@ -130,6 +130,11 @@ public class OperationRecordServiceImpl implements OperationRecordService {
         dateSet.forEach(localDate -> {
             //返回的vo对象
             OperationPageVO<OperationRecordVO> operationPageVO = new OperationPageVO<>();
+            if(localDate.isEqual(LocalDate.now())){
+                operationPageVO.setIsToday(true);
+            }else {
+                operationPageVO.setIsToday(false);
+            }
             List<OperationRecordVO> operationRecordVOList = new ArrayList<>();
             operationPageVO.setDate(localDate);
             pageVO.getRecords().forEach(operationRecordVO -> {

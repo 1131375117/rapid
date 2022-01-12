@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.consumer.entity.vos;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -20,4 +21,5 @@ public class CollectionPageVO<T> {
      * 分页数据
      */
     private List<T> pageVOList;
+
 }
