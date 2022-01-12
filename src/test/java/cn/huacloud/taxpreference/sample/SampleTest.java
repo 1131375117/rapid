@@ -127,7 +127,7 @@ public class SampleTest {
 
     @Test
     public void testMD5() {
-        String password = SaSecureUtil.md5("123456");
+        String password = SaSecureUtil.md5("Ssyh^22_01!");
         log.info(password);
     }
 

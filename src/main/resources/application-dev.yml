@@ -60,8 +60,8 @@ spider-sync:
   data-source:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: "jdbc:mysql://172.16.18.28:3306/dataWEB?useUnicode=true&characterEncoding=UTF-8&useSSL=false"
-    username: crawler
-    password: 1234567Aa!
+    username: "tencentcloud"
+    password: "oOSI-5QArNyH_rW9b--Xxbfax4k0"
   minio:
     endpoint: "http://172.16.18.28:9000"
     bucket: "data-spider"
