@@ -62,7 +62,7 @@ public class PoliciesExplainEventTrigger extends EventTrigger<Long, PoliciesExpl
         DocStatisticsDO docStatisticsDO = statisticsService.selectDocStatistics(id, docType());
         PoliciesExplainDO policiesExplainDO = policiesExplainMapper.selectById(id);
 
-        if (policiesExplainDO.getDeleted() || policiesExplainDO.getPoliciesExplainStatus() != PoliciesExplainStatusEnum.PUBLISHED) {
+        if (policiesExplainDO == null || policiesExplainDO.getDeleted() || policiesExplainDO.getPoliciesExplainStatus() != PoliciesExplainStatusEnum.PUBLISHED) {
             return null;
         }
 
@@ -85,11 +85,11 @@ public class PoliciesExplainEventTrigger extends EventTrigger<Long, PoliciesExpl
         }
 
         // 类型转换属性设置
-        policiesExplainES.setTaxCategories(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.TAX_CATEGORIES,policiesDO.getTaxCategoriesCodes()));
-        policiesExplainES.setArea(sysCodeService.getSimpleVOByCode(SysCodeType.AREA,policiesDO.getAreaCode()));
-        policiesExplainES.setTaxpayerIdentifyTypes(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.TAXPAYER_IDENTIFY_TYPE,policiesDO.getTaxpayerIdentifyTypeCodes()));
-        policiesExplainES.setEnterpriseTypes(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.ENTERPRISE_TYPE,policiesDO.getEnterpriseTypeCodes()));
-        policiesExplainES.setIndustries(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.INDUSTRY,policiesDO.getIndustryCodes()));
+        policiesExplainES.setTaxCategories(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.TAX_CATEGORIES, policiesDO.getTaxCategoriesCodes()));
+        policiesExplainES.setArea(sysCodeService.getSimpleVOByCode(SysCodeType.AREA, policiesDO.getAreaCode()));
+        policiesExplainES.setTaxpayerIdentifyTypes(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.TAXPAYER_IDENTIFY_TYPE, policiesDO.getTaxpayerIdentifyTypeCodes()));
+        policiesExplainES.setEnterpriseTypes(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.ENTERPRISE_TYPE, policiesDO.getEnterpriseTypeCodes()));
+        policiesExplainES.setIndustries(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.INDUSTRY, policiesDO.getIndustryCodes()));
 
         // 添加相关政策
         DocSimpleVO docSimpleVO = new DocSimpleVO();

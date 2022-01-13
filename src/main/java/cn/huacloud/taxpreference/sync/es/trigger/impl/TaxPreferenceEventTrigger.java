@@ -77,7 +77,7 @@ public class TaxPreferenceEventTrigger extends EventTrigger<Long, TaxPreferenceE
     protected TaxPreferenceES getEntityById(Long id) {
         DocStatisticsDO docStatisticsDO = statisticsService.selectDocStatistics(id, docType());
         TaxPreferenceDO taxPreferenceDO = taxPreferenceMapper.selectById(id);
-        if (taxPreferenceDO.getDeleted() || taxPreferenceDO.getTaxPreferenceStatus() != TaxPreferenceStatus.RELEASED) {
+        if (taxPreferenceDO == null || taxPreferenceDO.getDeleted() || taxPreferenceDO.getTaxPreferenceStatus() != TaxPreferenceStatus.RELEASED) {
             return null;
         }
 
@@ -97,9 +97,9 @@ public class TaxPreferenceEventTrigger extends EventTrigger<Long, TaxPreferenceE
         // 类型转换属性设置
         taxPreferenceES.setTitle(taxPreferenceDO.getTaxPreferenceName());
         taxPreferenceES.setTaxCategories(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.TAX_CATEGORIES, taxPreferenceDO.getTaxCategoriesCodes()));
-        taxPreferenceES.setTaxpayerRegisterType(sysCodeService.getSimpleVOByCode(SysCodeType.TAXPAYER_REGISTER_TYPE,taxPreferenceDO.getTaxpayerRegisterTypeCode()));
-        taxPreferenceES.setTaxpayerType(sysCodeService.getSimpleVOByCode(SysCodeType.TAXPAYER_TYPE,taxPreferenceDO.getTaxpayerTypeCode()));
-        taxPreferenceES.setIndustries(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.INDUSTRY,taxPreferenceDO.getIndustryCodes()));
+        taxPreferenceES.setTaxpayerRegisterType(sysCodeService.getSimpleVOByCode(SysCodeType.TAXPAYER_REGISTER_TYPE, taxPreferenceDO.getTaxpayerRegisterTypeCode()));
+        taxPreferenceES.setTaxpayerType(sysCodeService.getSimpleVOByCode(SysCodeType.TAXPAYER_TYPE, taxPreferenceDO.getTaxpayerTypeCode()));
+        taxPreferenceES.setIndustries(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.INDUSTRY, taxPreferenceDO.getIndustryCodes()));
         taxPreferenceES.setValidity(getEnumSysCode(taxPreferenceDO.getValidity()));
         taxPreferenceES.setLabels(split2List(taxPreferenceDO.getLabels()));
 

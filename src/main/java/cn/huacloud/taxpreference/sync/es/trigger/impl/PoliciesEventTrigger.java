@@ -79,7 +79,7 @@ public class PoliciesEventTrigger extends EventTrigger<Long, PoliciesES> {
     protected PoliciesES getEntityById(Long id) {
         DocStatisticsDO docStatisticsDO = statisticsService.selectDocStatistics(id, docType());
         PoliciesDO policiesDO = policiesMapper.selectById(id);
-        if (policiesDO.getDeleted() || policiesDO.getPoliciesStatus() != PoliciesStatusEnum.PUBLISHED) {
+        if (policiesDO == null || policiesDO.getDeleted() || policiesDO.getPoliciesStatus() != PoliciesStatusEnum.PUBLISHED) {
             return null;
         }
 
@@ -97,11 +97,11 @@ public class PoliciesEventTrigger extends EventTrigger<Long, PoliciesES> {
         }
 
         // 类型转换属性设置
-        policiesES.setArea(sysCodeService.getSimpleVOByCode(SysCodeType.AREA,policiesDO.getAreaCode()));
-        policiesES.setTaxCategories(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.TAX_CATEGORIES,policiesDO.getTaxCategoriesCodes()));
-        policiesES.setTaxpayerIdentifyTypes(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.TAXPAYER_IDENTIFY_TYPE,policiesDO.getTaxpayerIdentifyTypeCodes()));
-        policiesES.setEnterpriseTypes(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.ENTERPRISE_TYPE,policiesDO.getEnterpriseTypeCodes()));
-        policiesES.setIndustries(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.INDUSTRY,policiesDO.getIndustryCodes()));
+        policiesES.setArea(sysCodeService.getSimpleVOByCode(SysCodeType.AREA, policiesDO.getAreaCode()));
+        policiesES.setTaxCategories(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.TAX_CATEGORIES, policiesDO.getTaxCategoriesCodes()));
+        policiesES.setTaxpayerIdentifyTypes(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.TAXPAYER_IDENTIFY_TYPE, policiesDO.getTaxpayerIdentifyTypeCodes()));
+        policiesES.setEnterpriseTypes(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.ENTERPRISE_TYPE, policiesDO.getEnterpriseTypeCodes()));
+        policiesES.setIndustries(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.INDUSTRY, policiesDO.getIndustryCodes()));
         policiesES.setValidity(getEnumSysCode(policiesDO.getValidity()));
         policiesES.setLabels(split2List(policiesDO.getLabels()));
 

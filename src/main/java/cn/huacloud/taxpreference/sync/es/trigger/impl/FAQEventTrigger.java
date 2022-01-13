@@ -53,7 +53,7 @@ public class FAQEventTrigger extends EventTrigger<Long, FrequentlyAskedQuestionE
     protected FrequentlyAskedQuestionES getEntityById(Long id) {
         FrequentlyAskedQuestionDO faqDO = frequentlyAskedQuestionMapper.selectById(id);
         DocStatisticsDO docStatisticsDO = docStatisticsService.selectDocStatistics(id, docType());
-        if (faqDO.getDeleted() || faqDO.getFrequentlyAskedQuestionStatus() != FrequentlyAskedQuestionStatusEnum.PUBLISHED) {
+        if (docStatisticsDO == null || faqDO.getDeleted() || faqDO.getFrequentlyAskedQuestionStatus() != FrequentlyAskedQuestionStatusEnum.PUBLISHED) {
             return null;
         }
 
