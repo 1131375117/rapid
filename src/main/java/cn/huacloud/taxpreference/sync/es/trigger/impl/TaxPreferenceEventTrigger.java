@@ -86,13 +86,8 @@ public class TaxPreferenceEventTrigger extends EventTrigger<Long, TaxPreferenceE
         if (taxPreferenceES == null) {
             taxPreferenceES = new TaxPreferenceES();
         }
-        if (docStatisticsDO != null) {
-            taxPreferenceES.setCollections(docStatisticsDO.getCollections());
-            taxPreferenceES.setViews(docStatisticsDO.getViews());
-        } else {
-            taxPreferenceES.setCollections(0L);
-            taxPreferenceES.setViews(0L);
-        }
+        taxPreferenceES.setCollections(docStatisticsDO.getCollections());
+        taxPreferenceES.setViews(docStatisticsDO.getViews());
 
         // 类型转换属性设置
         taxPreferenceES.setTitle(taxPreferenceDO.getTaxPreferenceName());

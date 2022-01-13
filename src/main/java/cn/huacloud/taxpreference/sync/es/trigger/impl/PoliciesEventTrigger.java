@@ -88,13 +88,8 @@ public class PoliciesEventTrigger extends EventTrigger<Long, PoliciesES> {
         if (policiesES == null) {
             policiesES = new PoliciesES();
         }
-        if (docStatisticsDO != null) {
-            policiesES.setCollections(docStatisticsDO.getCollections());
-            policiesES.setViews(docStatisticsDO.getViews());
-        } else {
-            policiesES.setCollections(0L);
-            policiesES.setViews(0L);
-        }
+        policiesES.setCollections(docStatisticsDO.getCollections());
+        policiesES.setViews(docStatisticsDO.getViews());
 
         // 类型转换属性设置
         policiesES.setArea(sysCodeService.getSimpleVOByCode(SysCodeType.AREA, policiesDO.getAreaCode()));

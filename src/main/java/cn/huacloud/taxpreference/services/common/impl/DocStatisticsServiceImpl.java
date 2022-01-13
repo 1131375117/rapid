@@ -25,7 +25,15 @@ public class DocStatisticsServiceImpl implements DocStatisticsService {
         LambdaQueryWrapper<DocStatisticsDO> queryWrapper = Wrappers.lambdaQuery(DocStatisticsDO.class)
                 .eq(DocStatisticsDO::getDocType, docType)
                 .eq(DocStatisticsDO::getDocId, docId);
-        return docStatisticsMapper.selectOne(queryWrapper);
+        DocStatisticsDO docStatisticsDO = docStatisticsMapper.selectOne(queryWrapper);
+        if (docStatisticsDO == null) {
+            docStatisticsDO = new DocStatisticsDO()
+                    .setViews(0L)
+                    .setCollections(0L)
+                    .setDocType(docType)
+                    .setDocId(docId);
+        }
+        return docStatisticsDO;
     }
 
 
@@ -37,8 +45,8 @@ public class DocStatisticsServiceImpl implements DocStatisticsService {
         docStatisticsDO.setViews(docStatisticsPlus.getViewsPlus());
         docStatisticsDO.setDocId(docStatisticsPlus.getDocId());
         if (exists(docStatisticsDO)) {
-            docStatisticsDO.setViews(docStatisticsDO.getViews()==null?0L:docStatisticsDO.getViews());
-            docStatisticsDO.setCollections(docStatisticsDO.getCollections()==null?0L:docStatisticsDO.getCollections());
+            docStatisticsDO.setViews(docStatisticsDO.getViews() == null ? 0L : docStatisticsDO.getViews());
+            docStatisticsDO.setCollections(docStatisticsDO.getCollections() == null ? 0L : docStatisticsDO.getCollections());
             insertDocStatisticsService(docStatisticsDO);
         } else {
             updateDocStatisticsService(docStatisticsDO);

@@ -51,25 +51,22 @@ public class FAQEventTrigger extends EventTrigger<Long, FrequentlyAskedQuestionE
 
     @Override
     protected FrequentlyAskedQuestionES getEntityById(Long id) {
+
         FrequentlyAskedQuestionDO faqDO = frequentlyAskedQuestionMapper.selectById(id);
-        DocStatisticsDO docStatisticsDO = docStatisticsService.selectDocStatistics(id, docType());
-        if (docStatisticsDO == null || faqDO.getDeleted() || faqDO.getFrequentlyAskedQuestionStatus() != FrequentlyAskedQuestionStatusEnum.PUBLISHED) {
+
+        if (faqDO == null || faqDO.getDeleted() || faqDO.getFrequentlyAskedQuestionStatus() != FrequentlyAskedQuestionStatusEnum.PUBLISHED) {
             return null;
         }
 
+        DocStatisticsDO docStatisticsDO = docStatisticsService.selectDocStatistics(id, docType());
         // 属性拷贝
         FrequentlyAskedQuestionES faqES = CustomBeanUtil.copyProperties(faqDO, FrequentlyAskedQuestionES.class);
         if (faqES == null) {
             faqES = new FrequentlyAskedQuestionES();
         }
-        if (docStatisticsDO != null) {
-            faqES.setCollections(docStatisticsDO.getCollections());
-            faqES.setViews(docStatisticsDO.getViews());
-        } else {
-            faqES.setCollections(0L);
-            faqES.setViews(0L);
-        }
 
+        faqES.setCollections(docStatisticsDO.getCollections());
+        faqES.setViews(docStatisticsDO.getViews());
 
         // 属性转换
         faqES.setPoliciesIds(split2List(faqDO.getPoliciesIds()));

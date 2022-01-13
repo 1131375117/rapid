@@ -76,13 +76,9 @@ public class PoliciesExplainEventTrigger extends EventTrigger<Long, PoliciesExpl
         if (policiesExplainES == null) {
             policiesExplainES = new PoliciesExplainES();
         }
-        if (docStatisticsDO != null) {
-            policiesExplainES.setCollections(docStatisticsDO.getCollections());
-            policiesExplainES.setViews(docStatisticsDO.getViews());
-        } else {
-            policiesExplainES.setCollections(0L);
-            policiesExplainES.setViews(0L);
-        }
+
+        policiesExplainES.setCollections(docStatisticsDO.getCollections());
+        policiesExplainES.setViews(docStatisticsDO.getViews());
 
         // 类型转换属性设置
         policiesExplainES.setTaxCategories(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.TAX_CATEGORIES, policiesDO.getTaxCategoriesCodes()));
