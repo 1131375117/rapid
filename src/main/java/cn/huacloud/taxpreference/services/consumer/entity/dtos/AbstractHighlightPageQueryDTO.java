@@ -58,7 +58,7 @@ public abstract class AbstractHighlightPageQueryDTO extends ExSearchQueryDTO {
      * @return 排序构建器
      */
     public List<SortBuilder<?>> sortBuilders() {
-        return Collections.singletonList(SortBuilders.fieldSort("releaseDate").order(SortOrder.DESC));
+        return Arrays.asList(SortBuilders.fieldSort("releaseDate").order(SortOrder.DESC), SortBuilders.fieldSort("_id").order(SortOrder.DESC));
     }
 
     @Override
