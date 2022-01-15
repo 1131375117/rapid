@@ -18,6 +18,7 @@ import cn.hutool.db.Db;
 import cn.hutool.db.Entity;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.platform.commons.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ import java.util.List;
 /**
  * @author fuhua
  **/
+@Ignore
 @Slf4j
 public class PolicyBackupTool extends BaseApplicationTest {
     @Autowired

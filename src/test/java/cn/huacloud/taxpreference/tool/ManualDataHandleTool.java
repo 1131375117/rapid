@@ -8,6 +8,7 @@ import com.mysql.cj.jdbc.Driver;
 import lombok.Data;
 import org.apache.commons.io.FileUtils;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.platform.commons.util.StringUtils;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
@@ -29,6 +30,7 @@ import static java.util.stream.Collectors.toList;
 /**
  * @author wangkh
  */
+@Ignore
 public class ManualDataHandleTool {
 
     static JdbcTemplate jdbcTemplate;
