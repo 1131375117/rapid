@@ -1,6 +1,6 @@
 package cn.huacloud.taxpreference.services.consumer;
 
-import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
+import cn.huacloud.taxpreference.common.entity.dtos.ExSearchQueryDTO;
 import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeCountVO;
@@ -35,7 +35,7 @@ public interface CommonSearchService {
      * @param pageQuery 查询条件
      * @return 文档类型统计数
      */
-    List<SysCodeCountVO> allDocCount(KeywordPageQueryDTO pageQuery) throws Exception;
+    List<SysCodeCountVO> allDocCount(ExSearchQueryDTO pageQuery) throws Exception;
 
     /**
      * 数据统计（首页）

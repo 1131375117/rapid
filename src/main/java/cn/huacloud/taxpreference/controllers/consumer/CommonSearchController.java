@@ -1,6 +1,6 @@
 package cn.huacloud.taxpreference.controllers.consumer;
 
-import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
+import cn.huacloud.taxpreference.common.entity.dtos.ExSearchQueryDTO;
 import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.utils.ProducerUserUtil;
@@ -37,7 +37,7 @@ public class CommonSearchController {
 
     @ApiOperation("高级搜索统计所有文档数")
     @PostMapping("/allDocCount")
-    public ResultVO<List<SysCodeCountVO>> allDocCount(@RequestBody KeywordPageQueryDTO pageQuery) throws Exception {
+    public ResultVO<List<SysCodeCountVO>> allDocCount(@RequestBody ExSearchQueryDTO pageQuery) throws Exception {
         pageQuery.paramReasonable();
         List<SysCodeCountVO> sysCodeCountVOList = commonSearchService.allDocCount(pageQuery);
         return ResultVO.ok(sysCodeCountVOList);

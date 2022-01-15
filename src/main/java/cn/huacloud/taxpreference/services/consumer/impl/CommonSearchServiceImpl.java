@@ -1,6 +1,6 @@
 package cn.huacloud.taxpreference.services.consumer.impl;
 
-import cn.huacloud.taxpreference.common.entity.dtos.KeywordPageQueryDTO;
+import cn.huacloud.taxpreference.common.entity.dtos.ExSearchQueryDTO;
 import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.DocType;
@@ -25,6 +25,7 @@ import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.SortOrder;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -161,13 +162,13 @@ public class CommonSearchServiceImpl implements CommonSearchService {
     }
 
     @Override
-    public List<SysCodeCountVO> allDocCount(KeywordPageQueryDTO pageQuery) throws Exception {
+    public List<SysCodeCountVO> allDocCount(ExSearchQueryDTO pageQuery) throws Exception {
 
         List<SysCodeCountVO> sysCodeCountVOList = new ArrayList<>();
         // 政策法规
         {
             PoliciesSearchQueryDTO queryDTO = new PoliciesSearchQueryDTO();
-            queryDTO.setKeyword(pageQuery.getKeyword());
+            BeanUtils.copyProperties(pageQuery, queryDTO);
             queryDTO.paramReasonable();
             QueryBuilder queryBuilder = policiesSearchService.getQueryBuilder(queryDTO);
             SysCodeCountVO sysCodeCountVO = getDeclareDocTypeCount(DocType.POLICIES, queryBuilder);
@@ -177,7 +178,7 @@ public class CommonSearchServiceImpl implements CommonSearchService {
         // 政策解读
         {
             PoliciesExplainSearchQueryDTO queryDTO = new PoliciesExplainSearchQueryDTO();
-            queryDTO.setKeyword(pageQuery.getKeyword());
+            BeanUtils.copyProperties(pageQuery, queryDTO);
             queryDTO.paramReasonable();
             QueryBuilder queryBuilder = policiesExplainSearchService.getQueryBuilder(queryDTO);
             SysCodeCountVO sysCodeCountVO = getDeclareDocTypeCount(DocType.POLICIES_EXPLAIN, queryBuilder);
@@ -187,7 +188,7 @@ public class CommonSearchServiceImpl implements CommonSearchService {
         // 热门问答
         {
             FAQSearchQueryDTO queryDTO = new FAQSearchQueryDTO();
-            queryDTO.setKeyword(pageQuery.getKeyword());
+            BeanUtils.copyProperties(pageQuery, queryDTO);
             queryDTO.paramReasonable();
             QueryBuilder queryBuilder = frequentlyAskedQuestionSearchService.getQueryBuilder(queryDTO);
             SysCodeCountVO sysCodeCountVO = getDeclareDocTypeCount(DocType.FREQUENTLY_ASKED_QUESTION, queryBuilder);
@@ -197,7 +198,7 @@ public class CommonSearchServiceImpl implements CommonSearchService {
         // 税收优惠
         {
             TaxPreferenceSearchQueryDTO queryDTO = new TaxPreferenceSearchQueryDTO();
-            queryDTO.setKeyword(pageQuery.getKeyword());
+            BeanUtils.copyProperties(pageQuery, queryDTO);
             queryDTO.paramReasonable();
             QueryBuilder queryBuilder = taxPreferenceSearchService.getQueryBuilder(queryDTO);
             SysCodeCountVO sysCodeCountVO = getDeclareDocTypeCount(DocType.TAX_PREFERENCE, queryBuilder);
@@ -207,7 +208,7 @@ public class CommonSearchServiceImpl implements CommonSearchService {
         // 案例分析
         {
             OtherDocQueryDTO queryDTO = new OtherDocQueryDTO();
-            queryDTO.setKeyword(pageQuery.getKeyword());
+            BeanUtils.copyProperties(pageQuery, queryDTO);
             queryDTO.setDocType(DocType.CASE_ANALYSIS);
             queryDTO.paramReasonable();
             QueryBuilder queryBuilder = otherDocSearchService.getQueryBuilder(queryDTO);
