@@ -4,6 +4,7 @@ import cn.huacloud.taxpreference.common.entity.dtos.ExSearchQueryDTO;
 import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.DocType;
+import cn.huacloud.taxpreference.common.enums.consumer.SearchScope;
 import cn.huacloud.taxpreference.config.ElasticsearchIndexConfig;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeCountVO;
 import cn.huacloud.taxpreference.services.consumer.*;
@@ -199,6 +200,7 @@ public class CommonSearchServiceImpl implements CommonSearchService {
         {
             TaxPreferenceSearchQueryDTO queryDTO = new TaxPreferenceSearchQueryDTO();
             BeanUtils.copyProperties(pageQuery, queryDTO);
+            queryDTO.setSearchScope(SearchScope.TITLE_AND_CONTENT);
             queryDTO.paramReasonable();
             QueryBuilder queryBuilder = taxPreferenceSearchService.getQueryBuilder(queryDTO);
             SysCodeCountVO sysCodeCountVO = getDeclareDocTypeCount(DocType.TAX_PREFERENCE, queryBuilder);
