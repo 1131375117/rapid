@@ -2,6 +2,7 @@ package cn.huacloud.taxpreference.sync.spider.entity.dtos;
 
 import cn.huacloud.taxpreference.sync.spider.entity.dos.SpiderPolicyAttachmentDO;
 import cn.huacloud.taxpreference.sync.spider.entity.dos.SpiderPopularQaDataDO;
+import cn.huacloud.taxpreference.sync.spider.entity.dos.SpiderQaRealationDataDO;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -25,4 +26,10 @@ public class SpiderPopularQaDataCombineDTO extends SpiderUrlHolder {
      * 爬虫库 附件对象list
      */
     private List<SpiderPolicyAttachmentDO> spiderPolicyAttachmentDOList;
+
+    /**
+     * 热门问答关联对象
+     * */
+    private SpiderQaRealationDataDO realationDataDO;
+
 }

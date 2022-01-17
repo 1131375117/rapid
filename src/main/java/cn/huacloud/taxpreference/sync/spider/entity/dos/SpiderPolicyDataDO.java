@@ -28,4 +28,5 @@ public class SpiderPolicyDataDO {
     private LocalDateTime checkRepeatDate;
     private String repeatId;
     private String titleContentMd5;
+    private Boolean deleteMark;
 }

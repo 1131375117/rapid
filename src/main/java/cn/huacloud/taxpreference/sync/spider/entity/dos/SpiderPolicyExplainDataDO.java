@@ -2,8 +2,6 @@ package cn.huacloud.taxpreference.sync.spider.entity.dos;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 /**
  * @author wuxin
  */
@@ -16,4 +14,5 @@ public class SpiderPolicyExplainDataDO {
     private String relatedInterpretationSource;
     private String relatedInterpretationContent;
     private String relatedInterpretationHtml;
+    private Boolean deleteMark;
 }

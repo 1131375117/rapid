@@ -111,6 +111,7 @@ public class PoliciesExplainDataSyncJob implements DataSyncJob<SpiderPolicyExpla
 		Pair<Document, List<AttachmentDO>> pair = attachmentProcessors.processContentAndAttachment(document, spiderPolicyAttachmentDOList, AttachmentType.POLICIES);
 
 		policiesExplainDO.setContent(pair.getFirst().html());
+		policiesExplainDO.setDeleted(policyExplain.getDeleteMark());
 
 		return new PoliciesExplainCombineDTO()
 				.setPoliciesExplainDO(policiesExplainDO)
@@ -142,4 +143,5 @@ public class PoliciesExplainDataSyncJob implements DataSyncJob<SpiderPolicyExpla
 		attachmentService.saveSpiderAttachmentList(policiesExplainDO.getId(), attachmentDOList);
 
 	}
+
 }

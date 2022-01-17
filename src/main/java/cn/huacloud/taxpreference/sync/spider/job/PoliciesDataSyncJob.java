@@ -20,6 +20,7 @@ import cn.huacloud.taxpreference.sync.spider.entity.dtos.SpiderPolicyCombineDTO;
 import cn.huacloud.taxpreference.sync.spider.processor.*;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Document;
 import org.springframework.data.util.Pair;
 import org.springframework.jdbc.core.DataClassRowMapper;
@@ -28,7 +29,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 政策数据同步作业
@@ -61,7 +65,7 @@ public class PoliciesDataSyncJob implements DataSyncJob<SpiderPolicyCombineDTO, 
 
     @Override
     public String getSyncIdsQuerySql() {
-        return "SELECT id FROM policy_data WHERE spider_time BETWEEN ? AND ?";
+        return "SELECT id FROM policy_data WHERE spider_time BETWEEN ? AND ? limit 1000";
     }
 
     @Override
@@ -104,10 +108,18 @@ public class PoliciesDataSyncJob implements DataSyncJob<SpiderPolicyCombineDTO, 
         policiesDO.setDocCode(DocCodeUtil.getDocCode(docCodeVO));
 
         // 税种
-        SysCodeVO taxCategories = sysCodeProcessors.taxCategories.apply(policy.getTaxClassName());
-        policiesDO.setTaxCategoriesNames(taxCategories.getCodeName());
-        policiesDO.setTaxCategoriesCodes(taxCategories.getCodeValue());
-
+        if(!StringUtils.isEmpty(policy.getTaxClassName())){
+            List<String> taxClassNames = Arrays.stream(policy.getTaxClassName().split(",")).collect(Collectors.toList());
+            List<String> categoriesNames = new ArrayList<>();
+            List<String> categoriesCodes = new ArrayList<>();
+            for (String taxClassName : taxClassNames) {
+                SysCodeVO taxCategories = sysCodeProcessors.taxCategories.apply(taxClassName);
+                categoriesNames.add(taxCategories.getCodeName());
+                categoriesCodes.add(taxCategories.getCodeValue());
+            }
+            policiesDO.setTaxCategoriesNames(StringUtils.join(categoriesNames, ","));
+            policiesDO.setTaxCategoriesCodes(StringUtils.join(categoriesCodes, ","));
+        }
         // 所属区域
         SysCodeVO area = sysCodeProcessors.area.apply(policy.getRegion());
         policiesDO.setAreaCode(area.getCodeValue());
@@ -139,6 +151,7 @@ public class PoliciesDataSyncJob implements DataSyncJob<SpiderPolicyCombineDTO, 
             digest = digest.substring(0, DIGEST_MAX_LENGTH);
         }
         policiesDO.setDigest(digest);
+        policiesDO.setDeleted(policy.getDeleteMark());
 
         return new PoliciesCombineDTO()
                 .setPoliciesDO(policiesDO)
@@ -171,4 +184,5 @@ public class PoliciesDataSyncJob implements DataSyncJob<SpiderPolicyCombineDTO, 
         List<AttachmentDO> attachmentDOList = processData.getAttachmentDOList();
         attachmentService.saveSpiderAttachmentList(policiesDO.getId(), attachmentDOList);
     }
+
 }

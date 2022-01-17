@@ -9,7 +9,9 @@ import cn.huacloud.taxpreference.services.producer.entity.enums.FrequentlyAskedQ
 import cn.huacloud.taxpreference.services.producer.mapper.FrequentlyAskedQuestionMapper;
 import cn.huacloud.taxpreference.sync.spider.DataSyncJob;
 import cn.huacloud.taxpreference.sync.spider.entity.dos.SpiderPolicyAttachmentDO;
+import cn.huacloud.taxpreference.sync.spider.entity.dos.SpiderPolicyDataDO;
 import cn.huacloud.taxpreference.sync.spider.entity.dos.SpiderPopularQaDataDO;
+import cn.huacloud.taxpreference.sync.spider.entity.dos.SpiderQaRealationDataDO;
 import cn.huacloud.taxpreference.sync.spider.entity.dtos.FrequentlyAskedQuestionCombineDTO;
 import cn.huacloud.taxpreference.sync.spider.entity.dtos.SpiderPopularQaDataCombineDTO;
 import cn.huacloud.taxpreference.sync.spider.processor.AttachmentProcessors;
@@ -30,7 +32,7 @@ import java.util.List;
 /**
  * @author zhaoqiankun
  * @date 2021/12/29
- *         热门回答数据同步作业
+ * 热门回答数据同步作业
  */
 @RequiredArgsConstructor
 @Component
@@ -73,10 +75,24 @@ public class FrequentlyAskedQuestionDataSyncJob implements
         String attachmentSql = "SELECT * FROM policy_attachment WHERE doc_id = ? AND attachment_type = '热门回答'";
         List<SpiderPolicyAttachmentDO> spiderPolicyAttachmentDOList = jdbcTemplate.query(attachmentSql,
                 DataClassRowMapper.newInstance(SpiderPolicyAttachmentDO.class), sourceId);
+        SpiderQaRealationDataDO spiderQaRealationDataDO = new SpiderQaRealationDataDO();
+        try {
+            String qaSql = "SELECT * FROM policy_popular_data WHERE popular_qa_id = ?";
+            spiderQaRealationDataDO = jdbcTemplate.queryForObject(qaSql,
+                    DataClassRowMapper.newInstance(SpiderQaRealationDataDO.class), sourceId);
+            String policySql = "SELECT * FROM policy_data WHERE id = ?";
+            SpiderPolicyDataDO spiderPolicyDataDO = jdbcTemplate.queryForObject(policySql, DataClassRowMapper.newInstance(SpiderPolicyDataDO.class), spiderQaRealationDataDO.getPolicyId());
+            if (spiderPolicyDataDO != null && spiderPolicyDataDO.getDeleteMark()) {
+                spiderQaRealationDataDO.setPolicyId("");
+            }
+        } catch (Exception e) {
+
+        }
 
         SpiderPopularQaDataCombineDTO spiderPopularQaDataCombineDTO = new SpiderPopularQaDataCombineDTO()
                 .setSpiderPolicyAttachmentDOList(spiderPolicyAttachmentDOList)
-                .setSpiderPopularQaDataDO(spiderPopularQaDataDO);
+                .setSpiderPopularQaDataDO(spiderPopularQaDataDO)
+                .setRealationDataDO(spiderQaRealationDataDO);
 
         // 设置爬虫url
         spiderPopularQaDataCombineDTO.setSpiderUrl(spiderPopularQaDataDO.getUrl());
@@ -124,6 +140,9 @@ public class FrequentlyAskedQuestionDataSyncJob implements
         // 设置正文
         frequentlyAskedQuestionDO.setContent(pair.getFirst().html());
 
+        //设置关联关系
+        frequentlyAskedQuestionDO.setPoliciesIds(sourceData.getRealationDataDO().getPolicyId());
+
         return new FrequentlyAskedQuestionCombineDTO().setFrequentlyAskedQuestionDO(frequentlyAskedQuestionDO)
                 .setAttachmentDOList(pair.getSecond());
 
@@ -144,7 +163,7 @@ public class FrequentlyAskedQuestionDataSyncJob implements
         frequentlyAskedQuestionMapper.insert(frequentlyAskedQuestionDO);
         // 保存附件
         List<AttachmentDO> attachmentDOList = processData.getAttachmentDOList();
-        attachmentService.saveSpiderAttachmentList( frequentlyAskedQuestionDO.getId().longValue(), attachmentDOList);
+        attachmentService.saveSpiderAttachmentList(frequentlyAskedQuestionDO.getId().longValue(), attachmentDOList);
         return frequentlyAskedQuestionDO.getId().longValue();
 
 
