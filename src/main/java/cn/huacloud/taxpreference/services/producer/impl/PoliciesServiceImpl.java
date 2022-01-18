@@ -410,6 +410,8 @@ public class PoliciesServiceImpl implements PoliciesService {
 //		String specialSubject = mapParamByTypes.get(policiesCombinationDTO.getSpecialSubject());
         if (!CollectionUtils.isEmpty(policiesCombinationDTO.getSpecialSubjects())) {
             policiesDO.setSpecialSubject(StringUtils.join(policiesCombinationDTO.getSpecialSubjects(), ","));
+        }else{
+            policiesDO.setSpecialSubject("");
         }
 
         //设置摘要
