@@ -7,6 +7,7 @@ import cn.huacloud.taxpreference.services.common.entity.dos.AttachmentDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO;
 import cn.huacloud.taxpreference.services.producer.entity.enums.FrequentlyAskedQuestionStatusEnum;
 import cn.huacloud.taxpreference.services.producer.mapper.FrequentlyAskedQuestionMapper;
+import cn.huacloud.taxpreference.sync.es.trigger.impl.FAQEventTrigger;
 import cn.huacloud.taxpreference.sync.spider.DataSyncJob;
 import cn.huacloud.taxpreference.sync.spider.entity.dos.SpiderPolicyAttachmentDO;
 import cn.huacloud.taxpreference.sync.spider.entity.dos.SpiderPolicyDataDO;
@@ -44,6 +45,7 @@ public class FrequentlyAskedQuestionDataSyncJob implements
     private final AttachmentProcessors attachmentProcessors;
 
     private final AttachmentService attachmentService;
+    private final FAQEventTrigger faqEventTrigger;
 
     @Override
     public int order() {
@@ -175,6 +177,7 @@ public class FrequentlyAskedQuestionDataSyncJob implements
         FrequentlyAskedQuestionDO frequentlyAskedQuestionDO = processData.getFrequentlyAskedQuestionDO();
         frequentlyAskedQuestionDO.setId(docId);
         frequentlyAskedQuestionMapper.updateById(frequentlyAskedQuestionDO);
+       // faqEventTrigger.saveEvent(docId);
         // 保存附件
         List<AttachmentDO> attachmentDOList = processData.getAttachmentDOList();
         attachmentService.saveSpiderAttachmentList(frequentlyAskedQuestionDO.getId(), attachmentDOList);

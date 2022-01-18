@@ -7,11 +7,14 @@ import cn.huacloud.taxpreference.common.utils.DocCodeUtil;
 import cn.huacloud.taxpreference.services.common.AttachmentService;
 import cn.huacloud.taxpreference.services.common.entity.dos.AttachmentDO;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeVO;
+import cn.huacloud.taxpreference.services.producer.TaxPreferenceService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
 import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesStatusEnum;
 import cn.huacloud.taxpreference.services.producer.entity.enums.ValidityEnum;
 import cn.huacloud.taxpreference.services.producer.entity.vos.DocCodeVO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.TaxPreferenceCountVO;
 import cn.huacloud.taxpreference.services.producer.mapper.PoliciesMapper;
+import cn.huacloud.taxpreference.sync.es.trigger.impl.PoliciesEventTrigger;
 import cn.huacloud.taxpreference.sync.spider.DataSyncJob;
 import cn.huacloud.taxpreference.sync.spider.entity.dos.SpiderPolicyAttachmentDO;
 import cn.huacloud.taxpreference.sync.spider.entity.dos.SpiderPolicyDataDO;
@@ -20,6 +23,7 @@ import cn.huacloud.taxpreference.sync.spider.entity.dtos.SpiderPolicyCombineDTO;
 import cn.huacloud.taxpreference.sync.spider.processor.*;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Document;
 import org.springframework.data.util.Pair;
@@ -41,6 +45,7 @@ import java.util.stream.Collectors;
  */
 @RequiredArgsConstructor
 @Component
+@Slf4j
 public class PoliciesDataSyncJob implements DataSyncJob<SpiderPolicyCombineDTO, PoliciesCombineDTO> {
 
     private final PoliciesMapper policiesMapper;
@@ -50,6 +55,8 @@ public class PoliciesDataSyncJob implements DataSyncJob<SpiderPolicyCombineDTO, 
     private final AttachmentProcessors attachmentProcessors;
 
     private final AttachmentService attachmentService;
+    private final PoliciesEventTrigger policiesEventTrigger;
+    private final TaxPreferenceService taxPreferenceService;
 
     public static final int DIGEST_MAX_LENGTH = 200;
 
@@ -65,13 +72,14 @@ public class PoliciesDataSyncJob implements DataSyncJob<SpiderPolicyCombineDTO, 
 
     @Override
     public String getSyncIdsQuerySql() {
-        return "SELECT id FROM policy_data WHERE spider_time BETWEEN ? AND ? limit 1000";
+        return "SELECT id FROM policy_data WHERE spider_time BETWEEN ? AND ? ";
     }
 
     @Override
     public boolean needReSync(Long docId) {
         PoliciesDO policiesDO = policiesMapper.selectById(docId);
-        return policiesDO == null || policiesDO.getPoliciesStatus() != PoliciesStatusEnum.PUBLISHED;
+       // return policiesDO == null || policiesDO.getPoliciesStatus() != PoliciesStatusEnum.PUBLISHED;
+        return policiesDO==null;
     }
 
     @Override
@@ -96,8 +104,8 @@ public class PoliciesDataSyncJob implements DataSyncJob<SpiderPolicyCombineDTO, 
                 .setPoliciesStatus(PoliciesStatusEnum.REPTILE_SYNCHRONIZATION)
                 .setCreateTime(now)
                 .setUpdateTime(now)
-                .setInputUserId(-1L)
-                .setDeleted(false);
+                .setInputUserId(-1L);
+
 
         // 标题
         policiesDO.setTitle(policy.getTitle());
@@ -174,12 +182,22 @@ public class PoliciesDataSyncJob implements DataSyncJob<SpiderPolicyCombineDTO, 
         return policiesDO.getId();
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void updateProcessData(Long docId, PoliciesCombineDTO processData) {
         PoliciesDO policiesDO = processData.getPoliciesDO();
         policiesDO.setId(docId);
         policiesMapper.updateById(policiesDO);
+        if(policiesDO.getDeleted()){
+            //涉及税收优惠需要将税收优惠撤回
+            log.info("需要撤回的docid:{}",docId);
+            //根据政策法规id找税收优惠id
+            List<TaxPreferenceCountVO> taxPreferenceIdVOs = taxPreferenceService.getTaxPreferenceId(docId);
+            for (TaxPreferenceCountVO taxPreferenceIdVO : taxPreferenceIdVOs) {
+                taxPreferenceService.reTaxPreference(taxPreferenceIdVO.getTaxPreferenceId());
+            }
+            policiesEventTrigger.deleteEvent(docId);
+        }
         // 保存附件
         List<AttachmentDO> attachmentDOList = processData.getAttachmentDOList();
         attachmentService.saveSpiderAttachmentList(policiesDO.getId(), attachmentDOList);

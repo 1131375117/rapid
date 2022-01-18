@@ -6,7 +6,6 @@ import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
 
 /**
  * @description: 税收优惠政策法规关联表DTO
@@ -29,13 +28,13 @@ public class TaxPreferencePoliciesDTO {
 	 */
 	@ApiModelProperty("有效期起")
 	@NotNull(message = "有效期不能为空", groups = {ValidationGroup.Update.class, ValidationGroup.Create.class})
-	private LocalDate validityBeginDate;
+	private String validityBeginDate;
 
 	/**
 	 * 有效期至-政策法规
 	 */
 	@ApiModelProperty("有效期至")
-	private LocalDate validityEndDate;
+	private String validityEndDate;
 
 	/**
 	 * 具体优惠内容摘要
@@ -48,6 +47,14 @@ public class TaxPreferencePoliciesDTO {
 	 */
 	@ApiModelProperty("政策法规关联具体条款")
 	private String policiesItems;
+
+
+	/**
+	 * 政策法规日期类型
+	 */
+	@ApiModelProperty("政策法规关联具体条款")
+	private Boolean dateType;
+
 
 
 }

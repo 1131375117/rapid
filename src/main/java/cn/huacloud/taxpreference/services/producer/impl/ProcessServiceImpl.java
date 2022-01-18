@@ -72,7 +72,7 @@ public class ProcessServiceImpl implements ProcessService {
             TaxPreferenceDTO taxPreferenceDTO = new TaxPreferenceDTO();
             BeanUtils.copyProperties(taxPreferenceVO, taxPreferenceDTO);
             // 判断是否存在
-            taxPreferenceService.judgeExists(taxPreferenceDTO);
+            //taxPreferenceService.judgeExists(taxPreferenceDTO);
             // 检测纳税人类型和标签管理
             taxPreferenceService.checkLabels(taxPreferenceDTO);
             //检测留存备查资料、提交税务机关资料、报送时限

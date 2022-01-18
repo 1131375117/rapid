@@ -236,7 +236,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
     public ResultVO<Void> reTaxPreference(Long id) {
         log.info("撤回条件:ids={}", id);
         // 校验发布状态
-        checkReleaseStatus(id);
+        //checkReleaseStatus(id);
         // 税收优惠撤回
         revokeTaxPreference(id);
         // 撤回之后删除process数据
