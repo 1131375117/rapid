@@ -77,7 +77,7 @@ public class PoliciesES extends AbstractCombinePlainContent<Long> {
     /**
      * 所属专题
      */
-    private String specialSubject;
+    private List<String> specialSubject;
     /**
      * 摘要
      */

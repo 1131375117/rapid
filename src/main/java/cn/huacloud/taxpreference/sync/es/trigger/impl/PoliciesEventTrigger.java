@@ -18,10 +18,13 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -90,6 +93,12 @@ public class PoliciesEventTrigger extends EventTrigger<Long, PoliciesES> {
         }
         policiesES.setCollections(docStatisticsDO.getCollections());
         policiesES.setViews(docStatisticsDO.getViews());
+        //设置所属专题
+        if(!StringUtils.isEmpty(policiesDO.getSpecialSubject())){
+            policiesES.setSpecialSubject(Arrays.asList(policiesDO.getSpecialSubject().split(",")));
+        }else{
+            policiesES.setSpecialSubject(new ArrayList<>());
+        }
 
         // 类型转换属性设置
         policiesES.setArea(sysCodeService.getSimpleVOByCode(SysCodeType.AREA, policiesDO.getAreaCode()));
