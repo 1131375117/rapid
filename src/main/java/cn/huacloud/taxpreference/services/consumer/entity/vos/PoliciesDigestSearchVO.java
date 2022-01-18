@@ -3,8 +3,6 @@ package cn.huacloud.taxpreference.services.consumer.entity.vos;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.time.LocalDate;
-
 /**
  * 政策法规摘要视图，该对象为税收优惠的子对象
  * @author wangkh
@@ -32,12 +30,12 @@ public class PoliciesDigestSearchVO {
      * 有效期起
      */
     @ApiModelProperty("有效期起")
-    private LocalDate validityBeginDate;
+    private String validityBeginDate;
     /**
      * 有效期至
      */
     @ApiModelProperty("有效期至")
-    private LocalDate validityEndDate;
+    private String validityEndDate;
     /**
      * 税收优惠摘要
      */

@@ -100,12 +100,12 @@
               "type": "keyword"
             },
             "validityBeginDate": {
-              "type": "date",
-              "format": "yyyy-MM-dd"
+              "type": "text",
+              "analyzer": "ik_max_word"
             },
             "validityEndDate": {
-              "type": "date",
-              "format": "yyyy-MM-dd"
+              "type": "text",
+              "analyzer": "ik_max_word"
             },
             "digest": {
               "type": "text",
@@ -166,6 +166,6 @@
   },
   "priority": 500,
   "_meta": {
-    "description": "税收优惠索引模板，更新时间2022年1月6日"
+    "description": "税收优惠索引模板，更新时间2022年1月18日"
   }
 }
