@@ -3,6 +3,7 @@ package cn.huacloud.taxpreference.services.consumer.impl;
 import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.BizCode;
+import cn.huacloud.taxpreference.common.enums.OrganizationType;
 import cn.huacloud.taxpreference.services.consumer.FrequentlyAskedQuestionSearchService;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.FAQSearchQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.FAQSearchSimpleVO;
@@ -139,7 +140,9 @@ public class FrequentlyAskedQuestionSearchServiceImpl implements FrequentlyAsked
         head.setValue("");
         List<OrganizationVO> organizationVOS = new ArrayList<>();
         List<? extends Terms.Bucket> buckets = parsedTerms.getBuckets();
-        Collections.reverse(buckets);
+        if(OrganizationType.PROFESSIONAL.name.equals(buckets.get(0).getKey())){
+            Collections.reverse(buckets);
+        }
         for (Terms.Bucket bucket : buckets) {
             OrganizationVO organizationVO = new OrganizationVO();
             ParsedTerms parsedTerms1 = bucket.getAggregations().get(aggregationName);
@@ -157,7 +160,7 @@ public class FrequentlyAskedQuestionSearchServiceImpl implements FrequentlyAsked
             organizationVO.setTitle((String) bucket.getKey());
             organizationVO.setValue((String) bucket.getKey());
             organizationVO.setOrganizationType(String.valueOf(bucket.getKey()));
-            if("专业机构".equals(bucket.getKey())){
+            if(OrganizationType.PROFESSIONAL.name.equals(bucket.getKey())){
                 organizationVO.setChildren(null);
             }
             organizationVOS.add(organizationVO);
