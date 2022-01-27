@@ -135,7 +135,8 @@ public class PoliciesSearchServiceImpl implements PoliciesSearchService {
         SearchResponse response = simplePageSearch(getIndex(),
                 boolQuery,
                 pageQuery,
-                SortBuilders.fieldSort("releaseDate").order(SortOrder.DESC));
+                SortBuilders.fieldSort("releaseDate").order(SortOrder.DESC),
+                SortBuilders.fieldSort("id").order(SortOrder.DESC));
 
         // 数据映射
         SearchHits hits = response.getHits();

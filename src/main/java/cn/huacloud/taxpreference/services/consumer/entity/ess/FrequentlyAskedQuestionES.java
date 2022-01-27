@@ -56,7 +56,14 @@ public class FrequentlyAskedQuestionES extends AbstractCombinePlainContent<Long>
      * 解答机构
      */
     private String answerOrganization;
-
+    /**
+     * 机构类型
+     * */
+    private String organizationType;
+    /**
+     * 主题分类
+     * */
+    private String subjectType;
     @Override
     public List<CombineText> combineTextList() {
         return Collections.singletonList(CombineText.ofHtml(content));

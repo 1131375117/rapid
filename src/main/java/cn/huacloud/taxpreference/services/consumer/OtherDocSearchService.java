@@ -6,6 +6,9 @@ import cn.huacloud.taxpreference.services.consumer.entity.dtos.OtherDocQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.DocSearchSimpleVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.OtherDocVO;
 
+import java.io.IOException;
+import java.util.List;
+
 /**
  * 其他文档检索
  * @author fuhua
@@ -26,4 +29,6 @@ public interface OtherDocSearchService extends SearchService<OtherDocQueryDTO, O
      * @return
      */
     PageVO<DocSearchSimpleVO> latestCaseAnalyse(PageQueryDTO pageQuery) throws Exception;
+
+    List<String> getCaseAnalyseType(Integer size) throws IOException;
 }

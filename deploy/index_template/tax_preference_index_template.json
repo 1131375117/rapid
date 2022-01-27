@@ -31,6 +31,9 @@
           "type": "date",
           "format": "yyyy-MM-dd"
         },
+        "processId": {
+          "type": "long"
+        },
         "taxCategories": {
           "properties": {
             "codeName": {
@@ -166,6 +169,6 @@
   },
   "priority": 500,
   "_meta": {
-    "description": "税收优惠索引模板，更新时间2022年1月18日"
+    "description": "税收优惠索引模板，更新时间2022年1月26日"
   }
 }

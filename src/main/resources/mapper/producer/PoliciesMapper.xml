@@ -112,7 +112,7 @@
         <if test="keyword !=null and keyword !=''">
            and (p.title like "%"#{keyword}"%" or p.doc_code like "%"#{keyword}"%")
         </if>
-        and p.deleted=0
+        and p.deleted=0 and p.policies_status='PUBLISHED'
         </where>
     </select>
 </mapper>

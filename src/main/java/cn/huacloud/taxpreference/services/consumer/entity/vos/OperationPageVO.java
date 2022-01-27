@@ -4,7 +4,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -16,7 +15,7 @@ public class OperationPageVO<T> {
     /**
      * 日期
      */
-    private LocalDate date;
+    private String date;
     /**
      * 分页数据
      */

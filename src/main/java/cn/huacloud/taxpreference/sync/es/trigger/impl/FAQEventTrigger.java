@@ -9,8 +9,10 @@ import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQue
 import cn.huacloud.taxpreference.services.producer.entity.enums.FrequentlyAskedQuestionStatusEnum;
 import cn.huacloud.taxpreference.services.producer.mapper.FrequentlyAskedQuestionMapper;
 import cn.huacloud.taxpreference.sync.es.trigger.EventTrigger;
+import cn.huacloud.taxpreference.sync.spider.processor.HtmlProcessors;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
@@ -70,7 +72,9 @@ public class FAQEventTrigger extends EventTrigger<Long, FrequentlyAskedQuestionE
 
         // 属性转换
         faqES.setPoliciesIds(split2List(faqDO.getPoliciesIds()));
-
+        if(!StringUtils.isEmpty(faqDO.getContent())){
+            faqES.setContent(HtmlProcessors.cleanHrefStyle.apply(faqDO.getContent()));
+        }
         return faqES;
     }
 

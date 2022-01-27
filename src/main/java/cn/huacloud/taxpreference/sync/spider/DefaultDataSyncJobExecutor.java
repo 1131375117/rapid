@@ -59,9 +59,9 @@ public class DefaultDataSyncJobExecutor {
                 // 前置处理
                 spiderDataSyncDO = preHandle(dataSyncJob, spiderDataId);
                 // 跳过已经完成的任务
-            /*    if (spiderDataSyncDO.getSyncStatus() == SyncStatus.COMPLETED) {
+                if (spiderDataSyncDO.getSyncStatus() == SyncStatus.COMPLETED) {
                     continue;
-                }*/
+                }
                 // 执行同步
                 DataSyncResult dataSyncResult = dataSyncJob.doSync(spiderDataSyncDO, jdbcTemplate);
                 // 后置处理

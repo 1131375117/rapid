@@ -102,6 +102,7 @@ public class TaxPreferenceEventTrigger extends EventTrigger<Long, TaxPreferenceE
         ProcessDO latestProcess = processServiceMapper.getLatestProcess(id);
         if (latestProcess != null && latestProcess.getApprovalTime() != null) {
             taxPreferenceES.setReleaseDate(latestProcess.getApprovalTime().toLocalDate());
+            taxPreferenceES.setProcessId(latestProcess.getId());
         }
 
         // 设置政策
@@ -123,7 +124,6 @@ public class TaxPreferenceEventTrigger extends EventTrigger<Long, TaxPreferenceE
                 })
                 .collect(Collectors.toList());
         taxPreferenceES.setConditions(submitConditions);
-
         return taxPreferenceES;
     }
 

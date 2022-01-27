@@ -22,6 +22,10 @@ public class OtherDocQueryDTO extends AbstractHighlightPageQueryDTO {
     @FilterField("docType.codeValue")
     private DocType docType;
 
+    @ApiModelProperty(value = "扩展字段,案例类型")
+    @FilterField("extendsField1")
+    private String extendsField1;
+
     @Override
     public String index(ElasticsearchIndexConfig config) {
         return config.getOtherDoc().getAlias();

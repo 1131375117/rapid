@@ -13,6 +13,8 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * 案例检索
  *
@@ -40,6 +42,14 @@ public class OtherDocSearchController {
         PageVO<OtherDocVO> pageVO = otherDocSearchService.pageSearch(pageQuery);
         return ResultVO.ok(pageVO);
     }
+
+    @ApiOperation("获取所有案例分析分类")
+    @GetMapping("/otherDoc/caseType")
+    public ResultVO<List<String>> getCaseAnalyseType(@RequestParam(value = "size", defaultValue = "200") Integer size) throws Exception {
+        List<String> caseAnalyseTypeList = otherDocSearchService.getCaseAnalyseType(size);
+        return ResultVO.ok(caseAnalyseTypeList);
+    }
+
 
     @ApiOperation("案例分析检索详情")
     @GetMapping("/otherDoc/{id}")

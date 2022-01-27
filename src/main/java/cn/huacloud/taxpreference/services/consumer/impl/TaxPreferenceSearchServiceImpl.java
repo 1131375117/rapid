@@ -143,7 +143,9 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
         SearchResponse response = simplePageSearch(getIndex(),
                 queryBuilder,
                 pageQuery,
-                SortBuilders.fieldSort("releaseDate").order(SortOrder.DESC));
+                SortBuilders.fieldSort("releaseDate").order(SortOrder.DESC),
+                SortBuilders.fieldSort("processId").order(SortOrder.DESC)
+        );
 
         // 数据映射
         SearchHits hits = response.getHits();
@@ -230,7 +232,10 @@ public class TaxPreferenceSearchServiceImpl implements TaxPreferenceSearchServic
                             .filter(sysParamDO -> {
                                 // 增加业务规则，在没有选中减免事项的时候，仅展示 其他筛选条件
                                 if (CollectionUtils.isEmpty(pageQuery.getTaxPreferenceItems())) {
-                                    return "其他筛选".equals(sysParamDO.getExtendsField2());
+
+                                    List<String> codes = Arrays.asList(sysParamDO.getExtendsField1().split(","));
+                                    ArrayList<String> codesList = new ArrayList<>(codes);
+                                    return "其他筛选".equals(sysParamDO.getExtendsField2()) && !Collections.disjoint(codesList, pageQuery.getTaxCategoriesCodes());
                                 }
                                 return true;
                             })

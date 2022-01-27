@@ -17,121 +17,120 @@ import java.time.LocalDateTime;
 @Data
 @TableName("t_tax_preference")
 public class TaxPreferenceDO {
-	/**
-	 * 主键自增
-	 */
-	@TableId(type = IdType.AUTO)
-	private Long id;
+    /**
+     * 主键自增
+     */
+    @TableId(type = IdType.AUTO)
+    private Long id;
 
-	/**
-	 * 收入税种种类名称
-	 */
-	private String taxCategoriesNames;
+    /**
+     * 收入税种种类名称
+     */
+    private String taxCategoriesNames;
 
-	/**
-	 * 收入税种种类码值
-	 */
-	private String taxCategoriesCodes;
+    /**
+     * 收入税种种类码值
+     */
+    private String taxCategoriesCodes;
 
-	/**
-	 * 纳税人登记注册类型名称
-	 */
-	private String taxpayerRegisterTypeName;
+    /**
+     * 纳税人登记注册类型名称
+     */
+    private String taxpayerRegisterTypeName;
 
-	/**
-	 * 纳税人登记注册类型码值
-	 */
-	private String taxpayerRegisterTypeCode;
+    /**
+     * 纳税人登记注册类型码值
+     */
+    private String taxpayerRegisterTypeCode;
 
-	/**
-	 * 纳税人类型名称
-	 */
-	private String taxpayerTypeName;
+    /**
+     * 纳税人类型名称
+     */
+    private String taxpayerTypeName;
 
-	/**
-	 * 纳税人类型码值
-	 */
-	private String taxpayerTypeCode;
+    /**
+     * 纳税人类型码值
+     */
+    private String taxpayerTypeCode;
 
-	/**
-	 * 适用行业名称
-	 */
-	private String industryNames;
+    /**
+     * 适用行业名称
+     */
+    private String industryNames;
 
-	/**
-	 * 适用行业码值
-	 */
-	private String industryCodes;
+    /**
+     * 适用行业码值
+     */
+    private String industryCodes;
 
-	/**
-	 * 适用企业类型名称
-	 */
-	private String enterpriseType;
-	
-	/**
-	 * 优惠事项名称
-	 */
-	private String taxPreferenceName;
+    /**
+     * 适用企业类型名称
+     */
+    private String enterpriseType;
 
-	/**
-	 * 录入人用户ID
-	 */
-	private Long inputUserId;
+    /**
+     * 优惠事项名称
+     */
+    private String taxPreferenceName;
 
-	/**
-	 * 有效性
-	 */
-	private PreferenceValidation validity;
+    /**
+     * 录入人用户ID
+     */
+    private Long inputUserId;
 
-	/**
-	 * 留存备查资料
-	 */
-	private String keepQueryData;
+    /**
+     * 有效性
+     */
+    private PreferenceValidation validity;
 
-	/**
-	 * 提交税务机关资料
-	 */
-	private String submitTaxData;
+    /**
+     * 留存备查资料
+     */
+    private String keepQueryData;
 
-	/**
-	 * 资料报送时限
-	 */
-	private String submitTimeLimit;
+    /**
+     * 提交税务机关资料
+     */
+    private String submitTaxData;
 
-	/**
-	 * 申报表填写简要说明
-	 */
-	private String submitDescription;
+    /**
+     * 资料报送时限
+     */
+    private String submitTimeLimit;
 
-	/**
-	 * 创建时间
-	 */
-	private LocalDateTime createTime;
+    /**
+     * 申报表填写简要说明
+     */
+    private String submitDescription;
 
-	/**
-	 * 更新时间
-	 */
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createTime;
 
-	private LocalDateTime updateTime;
+    /**
+     * 更新时间
+     */
+    private LocalDateTime updateTime;
 
-	/**
-	 * 是否已删除
-	 */
-	private Boolean deleted;
+    /**
+     * 是否已删除
+     */
+    private Boolean deleted;
 
-	/**
-	 * 审批状态
-	 */
-	private TaxPreferenceStatus taxPreferenceStatus;
+    /**
+     * 审批状态
+     */
+    private TaxPreferenceStatus taxPreferenceStatus;
 
-	/**
-	 * 标签管理
-	 */
-	private String labels;
+    /**
+     * 标签管理
+     */
+    private String labels;
 
-	/**
-	 * 减免事项
-	 */
-	private String taxPreferenceItem;
+    /**
+     * 减免事项
+     */
+    private String taxPreferenceItem;
 
 }

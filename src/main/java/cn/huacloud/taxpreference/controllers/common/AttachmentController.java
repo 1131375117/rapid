@@ -40,9 +40,9 @@ public class AttachmentController {
                                                    @RequestParam(value = "name", required = false) String name,
                                                    @RequestPart("file") MultipartFile file) throws Exception {
         String originalFilename = file.getOriginalFilename();
-        if (StringUtils.isBlank(name)) {
+  /*      if (StringUtils.isBlank(name)) {
             name = StringUtils.substringBeforeLast(originalFilename, ".");
-        }
+        }*/
         String extension = StringUtils.substringAfterLast(originalFilename, ".");
         AttachmentVO attachmentVO = attachmentService.uploadAttachment(attachmentType, name, extension, file.getInputStream(), file.getSize());
         return ResultVO.ok(attachmentVO);
@@ -63,7 +63,6 @@ public class AttachmentController {
         headers.setContentDisposition(ContentDisposition.builder("attachment")
                 .filename(attachmentDownloadDTO.getAttachmentName(), StandardCharsets.UTF_8)
                 .build());
-
         return new ResponseEntity<>(resource, headers, HttpStatus.OK);
     }
 }

@@ -48,13 +48,7 @@
           "analyzer": "ik_max_word"
         },
         "extendsField1": {
-          "type": "text",
-          "analyzer": "ik_max_word",
-          "fields": {
-            "keyword": {
-              "type": "keyword"
-            }
-          }
+          "type": "keyword"
         },
         "extendsField2": {
           "type": "text",

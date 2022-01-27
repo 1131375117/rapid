@@ -5,7 +5,9 @@ import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.FAQSearchQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.FAQSearchSimpleVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.FAQSearchVO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.OrganizationVO;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -41,5 +43,7 @@ public interface FrequentlyAskedQuestionSearchService extends SearchService<FAQS
      * @param size 一次获取多少数据
      * @return docSourceList
      */
-    List<String> getFaqAnswerOrganization(Integer size) throws Exception;
+    List<OrganizationVO> getFaqAnswerOrganization(Integer size) throws Exception;
+
+    List<String> getFaqSubjectType(Integer size) throws IOException;
 }

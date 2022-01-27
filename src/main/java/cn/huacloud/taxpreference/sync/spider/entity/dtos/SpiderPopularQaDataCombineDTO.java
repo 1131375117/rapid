@@ -30,6 +30,6 @@ public class SpiderPopularQaDataCombineDTO extends SpiderUrlHolder {
     /**
      * 热门问答关联对象
      * */
-    private SpiderQaRealationDataDO realationDataDO;
+    private List<SpiderQaRealationDataDO> realationDataDOList;
 
 }

@@ -285,6 +285,7 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
         TaxPreferenceDO taxPreferenceDO = new TaxPreferenceDO();
         taxPreferenceDO.setId(id);
         taxPreferenceDO.setTaxPreferenceStatus(TaxPreferenceStatus.UNRELEASED);
+        taxPreferenceDO.setUpdateTime(LocalDateTime.now());
         taxPreferenceMapper.updateById(taxPreferenceDO);
     }
 

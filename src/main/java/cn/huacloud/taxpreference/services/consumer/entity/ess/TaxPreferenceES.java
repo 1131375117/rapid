@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author wangkh
@@ -36,6 +37,10 @@ public class TaxPreferenceES extends AbstractCombinePlainContent<Long> {
      * 发文日期
      */
     private LocalDate releaseDate;
+    /**
+     * 流程表id
+     */
+    private Long processId;
 
     /**
      * 所属税种
@@ -147,17 +152,24 @@ public class TaxPreferenceES extends AbstractCombinePlainContent<Long> {
     }
 
     private void initCombinePoliciesDigest() {
+        int num = 0;
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < policies.size(); i++) {
-            PoliciesDigestSearchVO foo = policies.get(i);
-            if (this.policies.size() > 1) {
-                sb.append(i + 1).append(".");
-            }
-            if (StringUtils.isNotBlank(foo.getDigest())) {
-                sb.append(foo.getDigest());
+        List<String> digestList = policies.stream().map(PoliciesDigestSearchVO::getDigest).collect(Collectors.toList());
+        for (int i = 0; i < digestList.size(); i++) {
+            if (digestList.size() == 1) {
+                sb.append(digestList.get(0));
+            } else {
+                if (!StringUtils.isEmpty(digestList.get(i))) {
+                    sb.append(num + 1).append(".");
+                    num++;
+                    sb.append(digestList.get(i));
+                }
             }
         }
         combinePoliciesDigest = sb.toString();
+        if (num == 1) {
+            combinePoliciesDigest = sb.substring(2);
+        }
     }
 
     @Override

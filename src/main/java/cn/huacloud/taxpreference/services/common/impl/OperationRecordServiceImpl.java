@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -132,11 +133,12 @@ public class OperationRecordServiceImpl implements OperationRecordService {
             OperationPageVO<OperationRecordVO> operationPageVO = new OperationPageVO<>();
             if(localDate.isEqual(LocalDate.now())){
                 operationPageVO.setIsToday(true);
+                operationPageVO.setDate("今天");
             }else {
                 operationPageVO.setIsToday(false);
+                operationPageVO.setDate(localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
             }
             List<OperationRecordVO> operationRecordVOList = new ArrayList<>();
-            operationPageVO.setDate(localDate);
             pageVO.getRecords().forEach(operationRecordVO -> {
                 if(operationRecordVO.getViewTime().isEqual(localDate)){
                     operationRecordVOList.add(operationRecordVO);

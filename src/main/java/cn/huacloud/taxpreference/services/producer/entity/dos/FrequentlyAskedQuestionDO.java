@@ -5,10 +5,11 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.experimental.Accessors;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * 热点问答实体
@@ -59,6 +60,8 @@ public class FrequentlyAskedQuestionDO {
 	 * 解答机构
 	 */
 	private String answerOrganization;
+
+	private String organizationType;
 	/**
 	 * 录入人用户id
 	 */
@@ -79,4 +82,9 @@ public class FrequentlyAskedQuestionDO {
 	 * 逻辑删除
 	 */
 	private Boolean deleted;
+	/**
+	 * 主题分类
+	 * */
+	private String subjectType;
+
 }

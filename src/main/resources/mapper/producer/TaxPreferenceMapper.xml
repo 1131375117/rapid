@@ -37,7 +37,7 @@
         <where>
               and p.deleted=0
             <if test="queryTaxPreferencesDTO.keyword!=null and queryTaxPreferencesDTO.keyword!= ''">
-                and p.tax_preference_name like "%"#{queryTaxPreferencesDTO.keyword}"%"
+                and p.tax_preference_name like concat('%',#{queryTaxPreferencesDTO.keyword},'%')
             </if>
             <if test="queryTaxPreferencesDTO.enterpriseType!=null and queryTaxPreferencesDTO.enterpriseType!=''">
                 and p.enterprise_type like #{queryTaxPreferencesDTO.enterpriseType}

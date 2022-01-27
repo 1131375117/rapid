@@ -8,8 +8,8 @@ import cn.huacloud.taxpreference.services.consumer.FrequentlyAskedQuestionSearch
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.FAQSearchQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.FAQSearchSimpleVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.FAQSearchVO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.OrganizationVO;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -41,14 +41,20 @@ public class FrequentlyAskedQuestionSearchController {
         return ResultVO.ok(pageVO);
     }
 
-    @ApiModelProperty("获取所有热门问答来源")
+    @ApiOperation("获取所有热门问答来源")
     @GetMapping("/faq/answerOrganization")
-    public ResultVO<List<String>> getFaqAnswerOrganization(@RequestParam(value = "size", defaultValue = "200") Integer size) throws Exception {
-        if (size <= 0) {
-            size = 200;
-        }
-        List<String> answerOrganizationList = frequentlyAskedQuestionSearchService.getFaqAnswerOrganization(size);
+    public ResultVO<List<OrganizationVO>> getFaqAnswerOrganization(@RequestParam(value = "size", defaultValue = "200") Integer size) throws Exception {
+
+        List<OrganizationVO> answerOrganizationList = frequentlyAskedQuestionSearchService.getFaqAnswerOrganization(size);
         return ResultVO.ok(answerOrganizationList);
+    }
+
+    @ApiOperation("获取所有主题分类")
+    @GetMapping("/faq/subjectType")
+    public ResultVO<List<String>> getFaqSubjectType(@RequestParam(value = "size", defaultValue = "200") Integer size) throws Exception {
+
+        List<String> subjectTypeList = frequentlyAskedQuestionSearchService.getFaqSubjectType(size);
+        return ResultVO.ok(subjectTypeList);
     }
 
     @ApiOperation("热点问答详情")
@@ -58,6 +64,8 @@ public class FrequentlyAskedQuestionSearchController {
         faqSearchVO.initUserCollectionInfo(CollectionType.FREQUENTLY_ASKED_QUESTION);
         return ResultVO.ok(faqSearchVO);
     }
+
+
 
     @ApiOperation("根据政策ID查询相关热点问答")
     @GetMapping("/faq/policiesRelated/{policiesId}")

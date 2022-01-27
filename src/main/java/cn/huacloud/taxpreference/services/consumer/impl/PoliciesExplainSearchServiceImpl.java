@@ -70,7 +70,8 @@ public class PoliciesExplainSearchServiceImpl implements PoliciesExplainSearchSe
         SearchResponse response = simplePageSearch(getIndex(),
                 matchAllQuery(),
                 pageQuery,
-                SortBuilders.fieldSort("releaseDate").order(SortOrder.DESC));
+                SortBuilders.fieldSort("releaseDate").order(SortOrder.DESC),
+                SortBuilders.fieldSort("id").order(SortOrder.DESC));
 
         // 数据映射
         SearchHits hits = response.getHits();

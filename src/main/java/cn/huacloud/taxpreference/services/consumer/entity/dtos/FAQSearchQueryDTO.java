@@ -17,6 +17,16 @@ public class FAQSearchQueryDTO extends AbstractHighlightPageQueryDTO {
      */
     @FilterField("answerOrganization")
     private String answerOrganization;
+    /**
+     * 机构类型
+     */
+    @FilterField("organizationType")
+    private String organizationType;
+    /**
+     * 主题分类
+     */
+    @FilterField("subjectType")
+    private String subjectType;
 
     @Override
     public String index(ElasticsearchIndexConfig config) {

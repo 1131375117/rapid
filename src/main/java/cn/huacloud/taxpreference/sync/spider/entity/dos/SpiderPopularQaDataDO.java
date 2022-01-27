@@ -1,7 +1,8 @@
 package cn.huacloud.taxpreference.sync.spider.entity.dos;
 
-import java.time.LocalDateTime;
 import lombok.Data;
+
+import java.time.LocalDateTime;
 
 /**
  * @author wangkh
@@ -73,4 +74,6 @@ public class SpiderPopularQaDataDO {
      * 标题md5+政策正文内容md5的md5值
      */
     private String titleContentMd5;
+    private String className;
+    private String caseType;
 }

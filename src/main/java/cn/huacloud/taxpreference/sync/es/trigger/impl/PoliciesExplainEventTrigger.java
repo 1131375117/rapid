@@ -14,8 +14,10 @@ import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesExplainS
 import cn.huacloud.taxpreference.services.producer.mapper.PoliciesExplainMapper;
 import cn.huacloud.taxpreference.services.producer.mapper.PoliciesMapper;
 import cn.huacloud.taxpreference.sync.es.trigger.EventTrigger;
+import cn.huacloud.taxpreference.sync.spider.processor.HtmlProcessors;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
@@ -92,6 +94,9 @@ public class PoliciesExplainEventTrigger extends EventTrigger<Long, PoliciesExpl
         docSimpleVO.setId(policiesDO.getId());
         docSimpleVO.setTitle(policiesDO.getTitle());
         policiesExplainES.setPolicies(docSimpleVO);
+        if(!StringUtils.isEmpty(policiesExplainDO.getContent())){
+            policiesExplainES.setContent(HtmlProcessors.cleanHrefStyle.apply(policiesExplainDO.getContent()));
+        }
 
         return policiesExplainES;
     }

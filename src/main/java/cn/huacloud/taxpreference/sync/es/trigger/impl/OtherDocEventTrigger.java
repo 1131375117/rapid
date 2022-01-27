@@ -8,8 +8,10 @@ import cn.huacloud.taxpreference.services.consumer.entity.ess.OtherDocES;
 import cn.huacloud.taxpreference.services.producer.entity.dos.OtherDocDO;
 import cn.huacloud.taxpreference.services.producer.mapper.OtherDocMapper;
 import cn.huacloud.taxpreference.sync.es.trigger.EventTrigger;
+import cn.huacloud.taxpreference.sync.spider.processor.HtmlProcessors;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
@@ -65,6 +67,10 @@ public class OtherDocEventTrigger extends EventTrigger<Long, OtherDocES> {
             otherDocES.setViews(0L);
         }
         otherDocES.setDocType(otherDocDO.getDocType().getSysCode());
+        if(!StringUtils.isEmpty(otherDocES.getHtmlContent())){
+            otherDocES.setHtmlContent(HtmlProcessors.cleanHrefStyle.apply(otherDocDO.getHtmlContent()));
+        }
+
         return otherDocES;
     }
 

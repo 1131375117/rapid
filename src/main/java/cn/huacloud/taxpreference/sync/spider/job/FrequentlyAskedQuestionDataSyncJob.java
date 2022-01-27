@@ -7,10 +7,11 @@ import cn.huacloud.taxpreference.services.common.entity.dos.AttachmentDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO;
 import cn.huacloud.taxpreference.services.producer.entity.enums.FrequentlyAskedQuestionStatusEnum;
 import cn.huacloud.taxpreference.services.producer.mapper.FrequentlyAskedQuestionMapper;
+import cn.huacloud.taxpreference.services.sync.entity.dos.SpiderDataSyncDO;
+import cn.huacloud.taxpreference.services.sync.mapper.SpiderDataSyncMapper;
 import cn.huacloud.taxpreference.sync.es.trigger.impl.FAQEventTrigger;
 import cn.huacloud.taxpreference.sync.spider.DataSyncJob;
 import cn.huacloud.taxpreference.sync.spider.entity.dos.SpiderPolicyAttachmentDO;
-import cn.huacloud.taxpreference.sync.spider.entity.dos.SpiderPolicyDataDO;
 import cn.huacloud.taxpreference.sync.spider.entity.dos.SpiderPopularQaDataDO;
 import cn.huacloud.taxpreference.sync.spider.entity.dos.SpiderQaRealationDataDO;
 import cn.huacloud.taxpreference.sync.spider.entity.dtos.FrequentlyAskedQuestionCombineDTO;
@@ -20,15 +21,19 @@ import cn.huacloud.taxpreference.sync.spider.processor.DateProcessors;
 import cn.huacloud.taxpreference.sync.spider.processor.HtmlProcessors;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Document;
 import org.springframework.data.util.Pair;
 import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author zhaoqiankun
@@ -46,6 +51,7 @@ public class FrequentlyAskedQuestionDataSyncJob implements
 
     private final AttachmentService attachmentService;
     private final FAQEventTrigger faqEventTrigger;
+    private final SpiderDataSyncMapper spiderDataSyncMapper;
 
     @Override
     public int order() {
@@ -77,24 +83,15 @@ public class FrequentlyAskedQuestionDataSyncJob implements
         String attachmentSql = "SELECT * FROM policy_attachment WHERE doc_id = ? AND attachment_type = '热门回答'";
         List<SpiderPolicyAttachmentDO> spiderPolicyAttachmentDOList = jdbcTemplate.query(attachmentSql,
                 DataClassRowMapper.newInstance(SpiderPolicyAttachmentDO.class), sourceId);
-        SpiderQaRealationDataDO spiderQaRealationDataDO = new SpiderQaRealationDataDO();
-        try {
-            String qaSql = "SELECT * FROM policy_popular_data WHERE popular_qa_id = ?";
-            spiderQaRealationDataDO = jdbcTemplate.queryForObject(qaSql,
-                    DataClassRowMapper.newInstance(SpiderQaRealationDataDO.class), sourceId);
-            String policySql = "SELECT * FROM policy_data WHERE id = ?";
-            SpiderPolicyDataDO spiderPolicyDataDO = jdbcTemplate.queryForObject(policySql, DataClassRowMapper.newInstance(SpiderPolicyDataDO.class), spiderQaRealationDataDO.getPolicyId());
-            if (spiderPolicyDataDO != null && spiderPolicyDataDO.getDeleteMark()) {
-                spiderQaRealationDataDO.setPolicyId("");
-            }
-        } catch (Exception e) {
 
-        }
+        String qaSql = "SELECT * FROM policy_popular_data WHERE popular_qa_id = ?";
+        List<SpiderQaRealationDataDO> spiderQaRealationDataDOList = jdbcTemplate.query(qaSql,
+                DataClassRowMapper.newInstance(SpiderQaRealationDataDO.class), sourceId);
 
         SpiderPopularQaDataCombineDTO spiderPopularQaDataCombineDTO = new SpiderPopularQaDataCombineDTO()
                 .setSpiderPolicyAttachmentDOList(spiderPolicyAttachmentDOList)
                 .setSpiderPopularQaDataDO(spiderPopularQaDataDO)
-                .setRealationDataDO(spiderQaRealationDataDO);
+                .setRealationDataDOList(spiderQaRealationDataDOList);
 
         // 设置爬虫url
         spiderPopularQaDataCombineDTO.setSpiderUrl(spiderPopularQaDataDO.getUrl());
@@ -141,9 +138,21 @@ public class FrequentlyAskedQuestionDataSyncJob implements
 
         // 设置正文
         frequentlyAskedQuestionDO.setContent(pair.getFirst().html());
-
         //设置关联关系
-        frequentlyAskedQuestionDO.setPoliciesIds(sourceData.getRealationDataDO().getPolicyId());
+        List<Long> policiesList = new ArrayList<>();
+        for (String spiderDataId : sourceData.getRealationDataDOList().stream().map(SpiderQaRealationDataDO::getPolicyId).collect(Collectors.toList())) {
+            SpiderDataSyncDO spiderDataSyncDO = spiderDataSyncMapper.getSpiderDataSyncDO(DocType.POLICIES, spiderDataId);
+            policiesList.add(spiderDataSyncDO.getDocId());
+        }
+        if (CollectionUtils.isEmpty(policiesList)) {
+            frequentlyAskedQuestionDO.setPoliciesIds("");
+        } else {
+            frequentlyAskedQuestionDO.setPoliciesIds(StringUtils.join(policiesList, ","));
+        }
+        //设置主题分类
+        frequentlyAskedQuestionDO.setSubjectType(spiderPopularQaDataDO.getCaseType());
+        frequentlyAskedQuestionDO.setOrganizationType(spiderPopularQaDataDO.getClassName());
+
 
         return new FrequentlyAskedQuestionCombineDTO().setFrequentlyAskedQuestionDO(frequentlyAskedQuestionDO)
                 .setAttachmentDOList(pair.getSecond());
@@ -177,7 +186,7 @@ public class FrequentlyAskedQuestionDataSyncJob implements
         FrequentlyAskedQuestionDO frequentlyAskedQuestionDO = processData.getFrequentlyAskedQuestionDO();
         frequentlyAskedQuestionDO.setId(docId);
         frequentlyAskedQuestionMapper.updateById(frequentlyAskedQuestionDO);
-       // faqEventTrigger.saveEvent(docId);
+        // faqEventTrigger.saveEvent(docId);
         // 保存附件
         List<AttachmentDO> attachmentDOList = processData.getAttachmentDOList();
         attachmentService.saveSpiderAttachmentList(frequentlyAskedQuestionDO.getId(), attachmentDOList);

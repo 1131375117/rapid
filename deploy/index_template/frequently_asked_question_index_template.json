@@ -49,12 +49,18 @@
         },
         "answerOrganization": {
           "type": "keyword"
+        },
+        "organizationType": {
+          "type": "keyword"
+        },
+        "subjectType": {
+          "type": "keyword"
         }
       }
     }
   },
   "priority": 500,
   "_meta": {
-    "description": "热点问答索引模板，更新时间2022年1月6日"
+    "description": "热点问答索引模板，更新时间2022年1月21日"
   }
 }

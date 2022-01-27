@@ -78,8 +78,7 @@ public class PoliciesDataSyncJob implements DataSyncJob<SpiderPolicyCombineDTO, 
     @Override
     public boolean needReSync(Long docId) {
         PoliciesDO policiesDO = policiesMapper.selectById(docId);
-       // return policiesDO == null || policiesDO.getPoliciesStatus() != PoliciesStatusEnum.PUBLISHED;
-        return policiesDO==null;
+        return policiesDO == null || policiesDO.getPoliciesStatus() != PoliciesStatusEnum.PUBLISHED;
     }
 
     @Override
@@ -98,7 +97,6 @@ public class PoliciesDataSyncJob implements DataSyncJob<SpiderPolicyCombineDTO, 
     @Override
     public PoliciesCombineDTO process(SpiderPolicyCombineDTO sourceData) {
         SpiderPolicyDataDO policy = sourceData.getSpiderPolicyDataDO();
-
         LocalDateTime now = LocalDateTime.now();
         PoliciesDO policiesDO = new PoliciesDO()
                 .setPoliciesStatus(PoliciesStatusEnum.REPTILE_SYNCHRONIZATION)

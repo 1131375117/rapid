@@ -8,6 +8,7 @@ import cn.huacloud.taxpreference.services.consumer.entity.dtos.FAQSearchQueryDTO
 import cn.huacloud.taxpreference.services.consumer.entity.vos.FAQSearchSimpleVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.FAQSearchVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PreviousNextVO;
+import cn.huacloud.taxpreference.services.producer.entity.vos.OrganizationVO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -22,11 +23,13 @@ import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.bucket.MultiBucketsAggregation;
 import org.elasticsearch.search.aggregations.bucket.terms.ParsedTerms;
+import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -55,7 +58,7 @@ public class FrequentlyAskedQuestionSearchServiceImpl implements FrequentlyAsked
     @Override
     public PageVO<FAQSearchSimpleVO> hotFAQList(PageQueryDTO pageQuery) throws Exception {
         // 执行查询
-        SearchResponse response = simplePageSearch(getIndex(), matchAllQuery(), pageQuery, SortBuilders.fieldSort("releaseDate").order(SortOrder.DESC));
+        SearchResponse response = simplePageSearch(getIndex(), matchAllQuery(), pageQuery,SortBuilders.fieldSort("views").order(SortOrder.DESC), SortBuilders.fieldSort("releaseDate").order(SortOrder.DESC));
 
         // 数据映射
         SearchHits hits = response.getHits();
@@ -112,16 +115,68 @@ public class FrequentlyAskedQuestionSearchServiceImpl implements FrequentlyAsked
     }
 
     @Override
-    public List<String> getFaqAnswerOrganization(Integer size) throws Exception {
+    public List<OrganizationVO> getFaqAnswerOrganization(Integer size) throws Exception {
         // name
         String aggregationName = "answerOrganizationTerms";
+        String aggregationtype = "organizationTypeTerms";
         // search request
         SearchRequest searchRequest = new SearchRequest(getIndex())
                 .source(SearchSourceBuilder.searchSource()
                         .size(0)
+                        .aggregation(AggregationBuilders.terms(aggregationtype)
+                                .field("organizationType")
+                                .subAggregation(AggregationBuilders.terms(aggregationName).field("answerOrganization").size(size))
+                                .size(size)
+                        ));
+        // do search
+        SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+        // get terms
+        ParsedTerms parsedTerms = searchResponse.getAggregations().get(aggregationtype);
+        // mapping return
+        List<OrganizationVO> headList = new ArrayList<>();
+        OrganizationVO head = new OrganizationVO();
+        head.setTitle("解答机构");
+        head.setValue("");
+        List<OrganizationVO> organizationVOS = new ArrayList<>();
+        List<? extends Terms.Bucket> buckets = parsedTerms.getBuckets();
+        Collections.reverse(buckets);
+        for (Terms.Bucket bucket : buckets) {
+            OrganizationVO organizationVO = new OrganizationVO();
+            ParsedTerms parsedTerms1 = bucket.getAggregations().get(aggregationName);
+            List<String> nameList = parsedTerms1.getBuckets().stream().map(MultiBucketsAggregation.Bucket::getKeyAsString)
+                    .collect(Collectors.toList());
+            ArrayList<OrganizationVO> childList = new ArrayList<>();
+            for (String name : nameList) {
+                OrganizationVO organizationVO1 = new OrganizationVO();
+                organizationVO1.setTitle(name);
+                organizationVO1.setValue(name);
+                childList.add(organizationVO1);
+            }
+
+            organizationVO.setChildren(childList);
+            organizationVO.setTitle((String) bucket.getKey());
+            organizationVO.setValue((String) bucket.getKey());
+            organizationVO.setOrganizationType(String.valueOf(bucket.getKey()));
+            if("专业机构".equals(bucket.getKey())){
+                organizationVO.setChildren(null);
+            }
+            organizationVOS.add(organizationVO);
+        }
+        head.setChildren(organizationVOS);
+        headList.add(head);
+        return headList;
+    }
+
+    @Override
+    public List<String> getFaqSubjectType(Integer size) throws IOException {
+        String aggregationName = "subjectType";
+        SearchRequest searchRequest = new SearchRequest(getIndex())
+                .source(SearchSourceBuilder.searchSource()
+                        .size(0)
                         .aggregation(AggregationBuilders.terms(aggregationName)
-                                .field("answerOrganization")
-                                .size(size)));
+                                .field("subjectType")
+                                .size(size)
+                        ));
         // do search
         SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
         // get terms

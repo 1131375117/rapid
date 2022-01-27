@@ -13,6 +13,7 @@ import cn.huacloud.taxpreference.services.producer.entity.enums.PoliciesStatusEn
 import cn.huacloud.taxpreference.services.producer.mapper.PoliciesExplainMapper;
 import cn.huacloud.taxpreference.services.producer.mapper.PoliciesMapper;
 import cn.huacloud.taxpreference.sync.es.trigger.EventTrigger;
+import cn.huacloud.taxpreference.sync.spider.processor.HtmlProcessors;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -85,7 +86,6 @@ public class PoliciesEventTrigger extends EventTrigger<Long, PoliciesES> {
         if (policiesDO == null || policiesDO.getDeleted() || policiesDO.getPoliciesStatus() != PoliciesStatusEnum.PUBLISHED) {
             return null;
         }
-
         // 属性拷贝
         PoliciesES policiesES = CustomBeanUtil.copyProperties(policiesDO, PoliciesES.class);
         if (policiesES == null) {
@@ -108,7 +108,12 @@ public class PoliciesEventTrigger extends EventTrigger<Long, PoliciesES> {
         policiesES.setIndustries(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.INDUSTRY, policiesDO.getIndustryCodes()));
         policiesES.setValidity(getEnumSysCode(policiesDO.getValidity()));
         policiesES.setLabels(split2List(policiesDO.getLabels()));
-
+        if(policiesDO.getId()==52189L){
+            System.out.println("aa");
+        }
+        if(!StringUtils.isEmpty(policiesDO.getContent())){
+            policiesES.setContent(HtmlProcessors.cleanHrefStyle.apply(policiesDO.getContent()));
+        }
         return policiesES;
     }
 

@@ -3,7 +3,9 @@ package cn.huacloud.taxpreference.sync.spider.processor;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
+import org.jsoup.select.Elements;
 
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -17,6 +19,8 @@ public interface HtmlProcessors {
     String STYLE_KEY = "style";
 
     String CLASS_KEY = "class";
+
+    String SPAN_KEY = "span";
 
     /**
      * 正文内容处理器
@@ -43,10 +47,23 @@ public interface HtmlProcessors {
     };
 
     /**
+     * 去除html a标签中的 style样式
+     */
+    Function<String, String> cleanHrefStyle = html -> {
+        Document document = Jsoup.parse(html);
+        Elements elements = document.select("a");
+        for (Element element : elements) {
+            element.attr(STYLE_KEY, "text-decoration: none");
+            element.select(SPAN_KEY).removeAttr(STYLE_KEY);
+        }
+        return String.valueOf(document);
+    };
+
+    /**
      * 去除html class属性
      */
     Function<Document, Document> cleanClass = document -> {
-        document.getElementsByAttribute(CLASS_KEY)
+        document.select("a").removeAttr(STYLE_KEY)
                 .forEach(element -> element.removeAttr(CLASS_KEY));
         return document;
     };

@@ -10,7 +10,8 @@ public enum AttachmentType implements IEnum<String> {
 
     POLICIES("政策法规", "policies"),
     POLICIES_EXPLAIN("政策解读", "policies-explain"),
-    FREQUENTLY_ASKED_QUESTION("热门问答", "faq");
+    FREQUENTLY_ASKED_QUESTION("热门问答", "faq"),
+    CASE_ANALYSIS("案例分析", "case");
 
     public final String name;
 
@@ -27,6 +28,9 @@ public enum AttachmentType implements IEnum<String> {
     }
 
     public String getPath(String md5, String attachmentName, String extension) {
+        if(attachmentName.contains(extension)){
+            return pathPrefix + "/" + md5 + "_" + attachmentName;
+        }
         return pathPrefix + "/" + md5 + "_" + attachmentName + "." + extension;
     }
 }

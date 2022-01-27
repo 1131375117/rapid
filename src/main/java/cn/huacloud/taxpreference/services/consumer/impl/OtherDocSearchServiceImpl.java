@@ -13,17 +13,24 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
+import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.bucket.MultiBucketsAggregation;
+import org.elasticsearch.search.aggregations.bucket.terms.ParsedTerms;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.QueryBuilders.matchAllQuery;
 
@@ -71,7 +78,8 @@ public class OtherDocSearchServiceImpl implements OtherDocSearchService {
         SearchResponse response = simplePageSearch(getIndex(),
                 matchAllQuery(),
                 pageQuery,
-                SortBuilders.fieldSort("releaseDate").order(SortOrder.DESC));
+                SortBuilders.fieldSort("releaseDate").order(SortOrder.DESC),
+                SortBuilders.fieldSort("id").order(SortOrder.DESC));
 
         // 数据映射
         SearchHits hits = response.getHits();
@@ -87,6 +95,27 @@ public class OtherDocSearchServiceImpl implements OtherDocSearchService {
                 .setPageNum(pageQuery.getPageNum())
                 .setPageSize(pageQuery.getPageSize())
                 .setRecords(records);
+    }
+
+    @Override
+    public List<String> getCaseAnalyseType(Integer size) throws IOException {
+
+        String aggregationName="extendsField1Terms";
+        SearchRequest searchRequest = new SearchRequest(getIndex())
+                .source(SearchSourceBuilder.searchSource()
+                        .size(0)
+                        .aggregation(AggregationBuilders.terms(aggregationName)
+                                .field("extendsField1")
+                                .size(size)
+                        ));
+        // do search
+        SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+        // get terms
+        ParsedTerms parsedTerms = searchResponse.getAggregations().get(aggregationName);
+
+        return parsedTerms.getBuckets().stream()
+                .map(MultiBucketsAggregation.Bucket::getKeyAsString)
+                .collect(Collectors.toList());
     }
 
     private String getIndex() {

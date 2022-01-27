@@ -28,7 +28,23 @@ public class KeywordPageQueryDTO extends PageQueryDTO {
         super.paramReasonable();
         if (StringUtils.isBlank(keyword)) {
             keyword = null;
+        } else {
+            keyword = toLikeStr(keyword);
+            //keyword = keyword.trim().replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_").replace("[", "\\[").replace("]", "\\]");
         }
+    }
+
+    /**
+     * mysql的模糊查询时特殊字符转义
+     *
+     * @param str 需要转换的字符串
+     * @return 返回模糊查询的字符串
+     */
+    public  String toLikeStr(String str) {
+        if (str != null && str.length() > 0) {
+            str = str.trim().replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_").replace("[", "\\[").replace("]", "\\]");
+        }
+        return str;
     }
 
     /**
