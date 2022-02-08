@@ -58,7 +58,7 @@ public class CollectionServiceImpl implements CollectionService {
                 .setDocType(DocType.valueOf(collectionDTO.getCollectionType().name));
         BeanUtils.copyProperties(collectionDTO, saveCollectionDO);
         //收藏或取消收藏
-        Boolean flag;
+        boolean flag;
         if (queryCollection(collectionDTO) != null) {
             collectionMapper.deleteById(queryCollection(collectionDTO));
             docStatisticsPlus.setCollectionsPlus(-1L);
