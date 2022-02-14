@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.controllers.consumer;
 
+import cn.huacloud.taxpreference.common.annotations.ConsumerUserCheckLogin;
 import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.CollectionType;
@@ -36,6 +37,7 @@ public class FrequentlyAskedQuestionSearchController {
 
     @ApiOperation("热点问答搜索")
     @PostMapping("/faq")
+    @ConsumerUserCheckLogin
     public ResultVO<PageVO<FAQSearchVO>> pageSearch(@RequestBody FAQSearchQueryDTO pageQuery) throws Exception {
         PageVO<FAQSearchVO> pageVO = frequentlyAskedQuestionSearchService.pageSearch(pageQuery);
         return ResultVO.ok(pageVO);
@@ -43,6 +45,7 @@ public class FrequentlyAskedQuestionSearchController {
 
     @ApiOperation("获取所有热门问答来源")
     @GetMapping("/faq/answerOrganization")
+    @ConsumerUserCheckLogin
     public ResultVO<List<OrganizationVO>> getFaqAnswerOrganization(@RequestParam(value = "size", defaultValue = "200") Integer size) throws Exception {
 
         List<OrganizationVO> answerOrganizationList = frequentlyAskedQuestionSearchService.getFaqAnswerOrganization(size);
@@ -51,6 +54,7 @@ public class FrequentlyAskedQuestionSearchController {
 
     @ApiOperation("获取所有主题分类")
     @GetMapping("/faq/subjectType")
+    @ConsumerUserCheckLogin
     public ResultVO<List<String>> getFaqSubjectType(@RequestParam(value = "size", defaultValue = "200") Integer size) throws Exception {
 
         List<String> subjectTypeList = frequentlyAskedQuestionSearchService.getFaqSubjectType(size);
@@ -59,6 +63,7 @@ public class FrequentlyAskedQuestionSearchController {
 
     @ApiOperation("热点问答详情")
     @GetMapping("/faq/{id}")
+    @ConsumerUserCheckLogin
     public ResultVO<FAQSearchVO> getFAQDetails(@PathVariable("id") Long id) throws Exception {
         FAQSearchVO faqSearchVO = frequentlyAskedQuestionSearchService.getFAQDetails(id);
         faqSearchVO.initUserCollectionInfo(CollectionType.FREQUENTLY_ASKED_QUESTION);
@@ -69,6 +74,7 @@ public class FrequentlyAskedQuestionSearchController {
 
     @ApiOperation("根据政策ID查询相关热点问答")
     @GetMapping("/faq/policiesRelated/{policiesId}")
+    @ConsumerUserCheckLogin
     public ResultVO<PageVO<FAQSearchVO>> policiesRelatedFAQ(@PathVariable("policiesId") Long policiesId, PageQueryDTO pageQuery) throws Exception {
         PageVO<FAQSearchVO> pageVO = frequentlyAskedQuestionSearchService.policiesRelatedFAQ(policiesId, pageQuery);
         return ResultVO.ok(pageVO);

@@ -108,9 +108,6 @@ public class PoliciesEventTrigger extends EventTrigger<Long, PoliciesES> {
         policiesES.setIndustries(sysCodeService.getSimpleVOListByCodeValues(SysCodeType.INDUSTRY, policiesDO.getIndustryCodes()));
         policiesES.setValidity(getEnumSysCode(policiesDO.getValidity()));
         policiesES.setLabels(split2List(policiesDO.getLabels()));
-        if(policiesDO.getId()==52189L){
-            System.out.println("aa");
-        }
         if(!StringUtils.isEmpty(policiesDO.getContent())){
             policiesES.setContent(HtmlProcessors.cleanHrefStyle.apply(policiesDO.getContent()));
         }

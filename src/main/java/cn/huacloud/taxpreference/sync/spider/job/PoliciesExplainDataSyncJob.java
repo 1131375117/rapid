@@ -70,7 +70,7 @@ public class PoliciesExplainDataSyncJob implements DataSyncJob<SpiderPolicyExpla
 	public SpiderPolicyExplainCombineDTO getSourceData(String sourceId, JdbcTemplate jdbcTemplate) {
 		String policyExplainSql = "SELECT * FROM policy_data WHERE id = ?";
 		SpiderPolicyExplainDataDO spiderPolicyExplainDataDO = jdbcTemplate.queryForObject(policyExplainSql, DataClassRowMapper.newInstance(SpiderPolicyExplainDataDO.class), sourceId);
-		String attachmentSql = "SELECT * FROM policy_attachment WHERE doc_id = ? AND attachment_type = '政策'";
+		String attachmentSql = "SELECT * FROM policy_attachment WHERE doc_id = ? AND attachment_type = '政策解读'";
 		List<SpiderPolicyAttachmentDO> spiderPolicyAttachmentDOList = jdbcTemplate.query(attachmentSql, DataClassRowMapper.newInstance(SpiderPolicyAttachmentDO.class), sourceId);
 		SpiderPolicyExplainCombineDTO spiderPolicyExplainCombineDTO = new SpiderPolicyExplainCombineDTO()
 				.setSpiderPolicyExplainDataDO(spiderPolicyExplainDataDO)

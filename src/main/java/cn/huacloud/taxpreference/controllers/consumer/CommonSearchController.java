@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.controllers.consumer;
 
+import cn.huacloud.taxpreference.common.annotations.ConsumerUserCheckLogin;
 import cn.huacloud.taxpreference.common.entity.dtos.ExSearchQueryDTO;
 import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
@@ -53,6 +54,7 @@ public class CommonSearchController {
 
     @ApiOperation("猜你关注")
     @PostMapping("/hotContent/guessYouLike")
+    @ConsumerUserCheckLogin
     public ResultVO<PageVO<HotContentVO>> guessYouLike(@RequestBody GuessYouLikeQueryDTO pageQuery) throws Exception {
         pageQuery.paramReasonable();
         if (ProducerUserUtil.isLogin()) {

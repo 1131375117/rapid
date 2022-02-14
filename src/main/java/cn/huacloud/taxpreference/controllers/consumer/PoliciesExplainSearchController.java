@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.controllers.consumer;
 
+import cn.huacloud.taxpreference.common.annotations.ConsumerUserCheckLogin;
 import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.CollectionType;
@@ -36,6 +37,7 @@ public class PoliciesExplainSearchController {
     }
 
     @ApiOperation("政策解读检索")
+    @ConsumerUserCheckLogin
     @PostMapping("/policiesExplain")
     public ResultVO<PageVO<PoliciesExplainSearchListVO>> pageSearch(@RequestBody PoliciesExplainSearchQueryDTO pageQuery) throws Exception {
         PageVO<PoliciesExplainSearchListVO> pageVO = policiesExplainSearchService.pageSearch(pageQuery);
@@ -43,6 +45,7 @@ public class PoliciesExplainSearchController {
     }
 
     @ApiOperation("根据政策ID查询相关政策解读")
+    @ConsumerUserCheckLogin
     @GetMapping("policiesExplain/policiesRelated/{policiesId}")
     public ResultVO<List<PoliciesExplainSearchSimpleVO>> policiesRelatedExplain(@PathVariable("policiesId") String policiesId) throws Exception {
         List<PoliciesExplainSearchSimpleVO> list = policiesExplainSearchService.policiesRelatedExplain(policiesId);
@@ -50,6 +53,7 @@ public class PoliciesExplainSearchController {
     }
 
     @ApiOperation("政策解读详情")
+    @ConsumerUserCheckLogin
     @GetMapping("/policiesExplain/{id}")
     public ResultVO<PoliciesExplainSearchVO> pageSearch(@PathVariable("id") Long id) throws Exception {
         PoliciesExplainSearchVO policiesExplainSearchVO = policiesExplainSearchService.getPoliciesExplainDetails(id);

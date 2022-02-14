@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.controllers.consumer;
 
+import cn.huacloud.taxpreference.common.annotations.ConsumerUserCheckLogin;
 import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.CollectionType;
@@ -51,6 +52,7 @@ public class PoliciesSearchController {
 
     @ApiOperation(value = "政策法规搜索")
     @PostMapping("/policies")
+    @ConsumerUserCheckLogin
     public ResultVO<PageVO<PoliciesSearchListVO>> pageSearch(@RequestBody PoliciesSearchQueryDTO pageQuery) throws Exception {
         PageVO<PoliciesSearchListVO> pageVO = policiesSearchService.pageSearch(pageQuery);
         return ResultVO.ok(pageVO);
@@ -58,6 +60,7 @@ public class PoliciesSearchController {
 
     @ApiOperation("政策法规详情")
     @GetMapping("/policies/{id}")
+    @ConsumerUserCheckLogin
     public ResultVO<PoliciesSearchVO> getPoliciesDetails(@PathVariable("id") Long id) throws Exception {
         PoliciesSearchVO policiesSearchVO = policiesSearchService.getPoliciesDetails(id);
         policiesSearchVO.initUserCollectionInfo(CollectionType.POLICIES);

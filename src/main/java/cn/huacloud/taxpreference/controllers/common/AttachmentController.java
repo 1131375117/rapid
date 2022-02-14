@@ -53,7 +53,9 @@ public class AttachmentController {
     public ResponseEntity<InputStreamResource> downloadAttachment(HttpServletRequest request) {
         String uri = StringUtils.substringAfter(request.getRequestURI(), "/attachment/download/");
         String path = URLDecoder.decode(uri, StandardCharsets.UTF_8);
-        // 获取文件流
+        if(!StringUtils.isEmpty(request.getQueryString())){
+            path=path+"?"+request.getQueryString();
+        }        // 获取文件流
         AttachmentDownloadDTO attachmentDownloadDTO = attachmentService.downloadAttachmentWithName(path);
         InputStreamResource resource = new InputStreamResource(attachmentDownloadDTO.getInputStream());
 

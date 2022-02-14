@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.controllers.consumer;
 
+import cn.huacloud.taxpreference.common.annotations.ConsumerUserCheckLogin;
 import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.CollectionType;
@@ -37,6 +38,7 @@ public class OtherDocSearchController {
     }
 
     @ApiOperation("案例分析检索")
+    @ConsumerUserCheckLogin
     @PostMapping("/otherDoc")
     public ResultVO<PageVO<OtherDocVO>> pageSearch(@RequestBody OtherDocQueryDTO pageQuery) throws Exception {
         PageVO<OtherDocVO> pageVO = otherDocSearchService.pageSearch(pageQuery);
@@ -44,6 +46,7 @@ public class OtherDocSearchController {
     }
 
     @ApiOperation("获取所有案例分析分类")
+    @ConsumerUserCheckLogin
     @GetMapping("/otherDoc/caseType")
     public ResultVO<List<String>> getCaseAnalyseType(@RequestParam(value = "size", defaultValue = "200") Integer size) throws Exception {
         List<String> caseAnalyseTypeList = otherDocSearchService.getCaseAnalyseType(size);
@@ -53,6 +56,7 @@ public class OtherDocSearchController {
 
     @ApiOperation("案例分析检索详情")
     @GetMapping("/otherDoc/{id}")
+    @ConsumerUserCheckLogin
     public ResultVO<OtherDocVO> pageSearch(@PathVariable("id") Long id) throws Exception {
         OtherDocVO otherDocVO = otherDocSearchService.getTaxOtherDocDetails(id);
         otherDocVO.initUserCollectionInfo(CollectionType.CASE_ANALYSIS);
