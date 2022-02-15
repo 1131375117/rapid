@@ -102,13 +102,13 @@ public class PoliciesExplainDataSyncJob implements DataSyncJob<SpiderPolicyExpla
 		policiesExplainDO.setReleaseDate(DateProcessors.releaseDate.apply(policyExplain.getRelatedInterpretationDate()));
 
 		//正文
-		String content = policyExplain.getRelatedInterpretationContent();
+		String content = policyExplain.getNextRelatedContent();
 		Document document = HtmlProcessors.content.apply(content);
 
 
 		List<SpiderPolicyAttachmentDO> spiderPolicyAttachmentDOList = sourceData.getSpiderPolicyAttachmentDOList();
 
-		Pair<Document, List<AttachmentDO>> pair = attachmentProcessors.processContentAndAttachment(document, spiderPolicyAttachmentDOList, AttachmentType.POLICIES);
+		Pair<Document, List<AttachmentDO>> pair = attachmentProcessors.processContentAndAttachment(document, spiderPolicyAttachmentDOList, AttachmentType.POLICIES_EXPLAIN);
 
 		policiesExplainDO.setContent(pair.getFirst().html());
 		policiesExplainDO.setDeleted(policyExplain.getDeleteMark());

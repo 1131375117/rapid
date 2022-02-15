@@ -15,4 +15,5 @@ public class SpiderPolicyExplainDataDO {
     private String relatedInterpretationContent;
     private String relatedInterpretationHtml;
     private Boolean deleteMark;
+    private String nextRelatedContent;
 }
