@@ -26,11 +26,11 @@
           "type": "long"
         },
         "taxPractices": {
-          "analyzer": "keyword"
+          "type": "keyword"
         },
         "finishTime": {
           "type": "date",
-          "format": "yyyy-MM-dd"
+          "format": "yyyy-MM-dd FIXME"
         },
         "taxCategories": {
           "properties": {
@@ -71,7 +71,7 @@
               "type": "keyword"
             },
             "sort": {
-              "type": "keyword"
+              "integer": "keyword"
             }
           }
         },
