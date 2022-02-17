@@ -1,0 +1,91 @@
+{
+  "index_patterns": [
+    "hot_consultation_index_*"
+  ],
+  "template": {
+    "settings": {
+      "number_of_shards": 1,
+      "number_of_replicas": 0,
+      "max_result_window": "100000000"
+    },
+    "aliases": {
+      "hot_consultation": {}
+    },
+    "mappings": {
+      "_source": {
+        "enabled": true
+      },
+      "properties": {
+        "id": {
+          "type": "long"
+        },
+        "customer_user_id": {
+          "type": "long"
+        },
+        "professor_user_id": {
+          "type": "long"
+        },
+        "taxPractices": {
+          "analyzer": "keyword"
+        },
+        "finishTime": {
+          "type": "date",
+          "format": "yyyy-MM-dd"
+        },
+        "taxCategories": {
+          "properties": {
+            "codeName": {
+              "type": "keyword"
+            },
+            "codeValue": {
+              "type": "keyword"
+            }
+          }
+        },
+        "industries": {
+          "properties": {
+            "codeName": {
+              "type": "keyword"
+            },
+            "codeValue": {
+              "type": "keyword"
+            }
+          }
+        },
+        "consultationContent": {
+          "properties": {
+            "id": {
+              "type": "long"
+            },
+            "consultationId": {
+              "type": "long"
+            },
+            "contentType": {
+              "type": "keyword"
+            },
+            "content": {
+              "type": "text",
+              "analyzer": "ik_max_word"
+            },
+            "imageUris": {
+              "type": "keyword"
+            },
+            "sort": {
+              "type": "keyword"
+            }
+          }
+        },
+        "views": {
+          "type": "long"
+        },
+        "collections": {
+          "type": "long"
+        }
+      }
+    }
+  },
+  "priority": 500,
+  "_meta": {
+    "description": "热门咨询索引模板，更新时间2022年2月17日"
+  }
+}
