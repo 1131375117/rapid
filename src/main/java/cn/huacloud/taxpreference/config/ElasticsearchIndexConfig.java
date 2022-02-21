@@ -24,6 +24,8 @@ public class ElasticsearchIndexConfig {
 
     private Index otherDoc = new Index("other_doc_index", "other_doc");
 
+    private Index consultation = new Index("consultation_index", "consultation");
+
     @NoArgsConstructor
     @AllArgsConstructor
     @Data

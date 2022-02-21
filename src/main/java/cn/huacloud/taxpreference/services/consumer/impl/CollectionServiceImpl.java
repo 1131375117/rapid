@@ -97,7 +97,10 @@ public class CollectionServiceImpl implements CollectionService {
         } else if (CollectionType.TAX_PREFERENCE.equals(collectionType)) {
             //税收优惠
             collectionDOIPage = collectionMapper.selectTaxPreferenceByCollectionType(page, CollectionType.TAX_PREFERENCE, userId);
-        } else {
+        } else if (CollectionType.CONSULTATION.equals(collectionType)) {
+            //税收优惠
+            collectionDOIPage = collectionMapper.selectConSultationByCollectionType(page, CollectionType.CONSULTATION, userId);
+        }else {
             //政策法规
             collectionDOIPage = collectionMapper.selectPoliciesByCollectionType(page, CollectionType.POLICIES, userId);
         }

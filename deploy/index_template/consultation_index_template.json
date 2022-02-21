@@ -1,6 +1,6 @@
 {
   "index_patterns": [
-    "hot_consultation_index_*"
+    "consultation_index_*"
   ],
   "template": {
     "settings": {
@@ -9,7 +9,7 @@
       "max_result_window": "100000000"
     },
     "aliases": {
-      "hot_consultation": {}
+      "consultation": {}
     },
     "mappings": {
       "_source": {
@@ -19,18 +19,18 @@
         "id": {
           "type": "long"
         },
-        "customer_user_id": {
+        "customerUserId": {
           "type": "long"
         },
-        "professor_user_id": {
+        "professorUserId": {
           "type": "long"
         },
         "taxPractices": {
           "type": "keyword"
         },
         "finishTime": {
-          "type": "date",
-          "format": "yyyy-MM-dd FIXME"
+          "type":"date",
+          "format":"yyyy-MM-dd'T'HH:mm:ss"
         },
         "taxCategories": {
           "properties": {
@@ -71,7 +71,7 @@
               "type": "keyword"
             },
             "sort": {
-              "integer": "keyword"
+              "type": "integer"
             }
           }
         },

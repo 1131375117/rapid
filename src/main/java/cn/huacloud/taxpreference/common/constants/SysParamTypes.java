@@ -23,4 +23,6 @@ public interface SysParamTypes {
     String POLICIES_SPECIAL_SUBJECT ="policies.specialSubject";
     // 税收优惠条件
     String TAX_PREFERENCE_CONDITION = "tax.preference.condition";
+    //税务实务数据
+    String TAX_CONSULTATION = "tax.consultation";
 }

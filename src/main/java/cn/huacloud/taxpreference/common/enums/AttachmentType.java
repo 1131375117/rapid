@@ -11,6 +11,7 @@ public enum AttachmentType implements IEnum<String> {
     POLICIES("政策法规", "policies"),
     POLICIES_EXPLAIN("政策解读", "policies-explain"),
     FREQUENTLY_ASKED_QUESTION("热门问答", "faq"),
+    CONSULTATION("专家咨询", "consultation"),
     CASE_ANALYSIS("案例分析", "case");
 
     public final String name;

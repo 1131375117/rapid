@@ -25,7 +25,8 @@ public class OperationRecordDTO {
             "views.policies->政策法规浏览量," +
             "views.caseAnalysis->案例分析浏览量," +
             "views.policiesExplain->政策解读浏览量," +
-            "views.frequentlyAskedQuestion->热门问答浏览量")
+            "views.frequentlyAskedQuestion->热门问答浏览量" +
+            "views.consultation->热门咨询")
     @NotEmpty(message = "操作类型不能为空")
     private String operationType;
 

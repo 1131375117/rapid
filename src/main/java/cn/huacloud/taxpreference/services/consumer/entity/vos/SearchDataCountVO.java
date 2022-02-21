@@ -17,4 +17,6 @@ public class SearchDataCountVO {
     private Long taxPreferenceCount;
     @ApiModelProperty("官方问答总数")
     private Long faqCont;
+    @ApiModelProperty("热门咨询总数")
+    private ConsultationCountVO consultationCountVO;
 }

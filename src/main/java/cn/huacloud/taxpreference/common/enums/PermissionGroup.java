@@ -16,6 +16,8 @@ public enum PermissionGroup implements IEnum<String> {
     FREQUENTLY_ASKED_QUESTION("热点问答"),
     // 税收优惠事项
     TAX_PREFERENCE("税收优惠事项"),
+    //热门咨询
+    HOT_CONSULTATION("热门咨询"),
     // 内容审核列表
     APPROVAL("内容审核列表"),
     // 用户管理

@@ -65,4 +65,6 @@ public interface CollectionMapper extends BaseMapper<CollectionDO> {
      * @return 我的收藏集合
      */
     IPage<CollectionVO> selectTaxPreferenceByCollectionType(@Param("page") Page<CollectionVO> pageQueryDTO, @Param("collectionType") CollectionType collectionType, @Param("userId") Long userId);
+
+    IPage<CollectionVO> selectConSultationByCollectionType(@Param("page")Page<CollectionVO> page,@Param("collectionType") CollectionType consultation, @Param("userId") Long userId);
 }

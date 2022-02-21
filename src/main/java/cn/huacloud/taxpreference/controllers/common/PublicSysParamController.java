@@ -77,4 +77,15 @@ public class PublicSysParamController {
         return ResultVO.ok(result);
     }
 
+    @ApiOperation("税务实务数据列表")
+    @GetMapping("/sys/param/consultationTypes")
+    public ResultVO<List<String>> getConsultationTypes() {
+        List<String> list = sysParamService.getMapParamByTypes(String.class, SysParamTypes.TAX_CONSULTATION)
+                .entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .map(Map.Entry::getValue)
+                .collect(Collectors.toList());
+        return ResultVO.ok(list);
+    }
+
 }

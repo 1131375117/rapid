@@ -19,8 +19,8 @@ public enum DocType implements IEnum<String>, SysCodeGetter {
     POLICIES_EXPLAIN("政策解读", "policies_explain", ElasticsearchIndexConfig::getPoliciesExplain),
     FREQUENTLY_ASKED_QUESTION("热门问答", "frequently_asked_question", ElasticsearchIndexConfig::getFrequentlyAskedQuestion),
     TAX_PREFERENCE("税收优惠", "tax_preference", ElasticsearchIndexConfig::getTaxPreference),
-    CASE_ANALYSIS("案例分析", "other_doc", ElasticsearchIndexConfig::getOtherDoc);
-
+    CASE_ANALYSIS("案例分析", "other_doc", ElasticsearchIndexConfig::getOtherDoc),
+    CONSULTATION("专家咨询","consultation",ElasticsearchIndexConfig::getConsultation);
     private static Map<String, DocType> indexPrefixDocTypeMap;
 
     /**

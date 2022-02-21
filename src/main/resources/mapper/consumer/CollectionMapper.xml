@@ -12,37 +12,50 @@
                tc.collection_type as collectionType
         from t_collection tc
                  left join t_policies tp on tc.source_id = tp.id
-        where tc.consumer_user_id = #{userId} and tc.collection_type=#{collectionType}
+        where tc.consumer_user_id = #{userId}
+          and tc.collection_type = #{collectionType}
         order by tc.create_time desc
 
     </select>
     <select id="selectCaseAnalysisByCollectionType"
             resultType="cn.huacloud.taxpreference.services.consumer.entity.vos.CollectionVO">
-        select tod.title, tc.source_id as sourceId, tc.create_time as collectionTime, tc.collection_type as collectionType
+        select tod.title,
+               tc.source_id       as sourceId,
+               tc.create_time     as collectionTime,
+               tc.collection_type as collectionType
         from t_collection tc
                  left join t_other_doc tod on tc.source_id = tod.id
-        where tc.consumer_user_id = #{userId} and tc.collection_type=#{collectionType}
+        where tc.consumer_user_id = #{userId}
+          and tc.collection_type = #{collectionType}
         order by tc.create_time desc
     </select>
     <select id="selectFrequentlyAskedQuestionByCollectionType"
             resultType="cn.huacloud.taxpreference.services.consumer.entity.vos.CollectionVO">
-        select tfaq.title, tc.source_id as sourceId, tc.create_time as collectionTime, tc.collection_type as collectionType
+        select tfaq.title,
+               tc.source_id       as sourceId,
+               tc.create_time     as collectionTime,
+               tc.collection_type as collectionType
         from t_collection tc
                  left join t_frequently_asked_question tfaq on tc.source_id = tfaq.id
-        where tc.consumer_user_id = #{userId} and tc.collection_type=#{collectionType}
+        where tc.consumer_user_id = #{userId}
+          and tc.collection_type = #{collectionType}
         order by tc.create_time desc
 
     </select>
     <select id="selectPoliciesExplainByCollectionType"
             resultType="cn.huacloud.taxpreference.services.consumer.entity.vos.CollectionVO">
-        select tpe.title, tc.source_id as sourceId, tc.create_time as collectionTime, tc.collection_type as collectionType
+        select tpe.title,
+               tc.source_id       as sourceId,
+               tc.create_time     as collectionTime,
+               tc.collection_type as collectionType
         from t_collection tc
                  left join t_policies_explain tpe on tc.source_id = tpe.id
-        where tc.consumer_user_id = #{userId} and tc.collection_type=#{collectionType}
+        where tc.consumer_user_id = #{userId}
+          and tc.collection_type = #{collectionType}
         order by tc.create_time desc
     </select>
     <select id="selectTaxPreferenceByCollectionType"
-            resultType="cn.huacloud.taxpreference.services.consumer.entity.vos.CollectionVO" >
+            resultType="cn.huacloud.taxpreference.services.consumer.entity.vos.CollectionVO">
 
         select ttp.tax_preference_name as title,
                tc.source_id            as sourceId,
@@ -50,7 +63,22 @@
                tc.collection_type      as collectionType
         from t_collection tc
                  left join t_tax_preference ttp on tc.source_id = ttp.id
-        where tc.consumer_user_id = #{userId} and tc.collection_type=#{collectionType}
+        where tc.consumer_user_id = #{userId}
+          and tc.collection_type = #{collectionType}
+        order by tc.create_time desc
+    </select>
+    <select id="selectConSultationByCollectionType"
+            resultType="cn.huacloud.taxpreference.services.consumer.entity.vos.CollectionVO">
+
+        select tcc.content         as title,
+               t.source_id       as sourceId,
+               tc.create_time     as collectionTime,
+               t.collection_type as collectionType
+        from t_collection t
+                 left join t_consultation tc on t.source_id = tc.id
+                 left join t_consultation_content tcc on tc.id = tcc.consultation_id and tcc.content_type='QUESTION'
+        where t.consumer_user_id = #{userId}
+          and t.collection_type = #{collectionType}
         order by tc.create_time desc
     </select>
 

@@ -60,11 +60,14 @@ public class CommonSearchServiceImpl implements CommonSearchService {
 
     private final OtherDocSearchService otherDocSearchService;
 
+    private final ConsultationSearchService consultationSearchService;
+
     private static final DocType[] ALL_DOC_TYPES = {DocType.POLICIES,
             DocType.POLICIES_EXPLAIN,
             DocType.FREQUENTLY_ASKED_QUESTION,
             DocType.TAX_PREFERENCE,
-            DocType.CASE_ANALYSIS};
+            DocType.CASE_ANALYSIS,
+            DocType.CONSULTATION};
 
     private static final String[] FETCH_SOURCE = {"id", "docType.codeName", "docType.codeValue", "title", "releaseDate", "labels"};
 
@@ -217,6 +220,15 @@ public class CommonSearchServiceImpl implements CommonSearchService {
             SysCodeCountVO sysCodeCountVO = getDeclareDocTypeCount(DocType.CASE_ANALYSIS, queryBuilder);
             sysCodeCountVOList.add(sysCodeCountVO);
         }
+        // 热门咨询
+        {
+            ConsultationQueryDTO queryDTO = new ConsultationQueryDTO();
+            BeanUtils.copyProperties(pageQuery, queryDTO);
+            queryDTO.paramReasonable();
+            QueryBuilder queryBuilder = consultationSearchService.getQueryBuilder(queryDTO);
+            SysCodeCountVO sysCodeCountVO = getDeclareDocTypeCount(DocType.CONSULTATION, queryBuilder);
+            sysCodeCountVOList.add(sysCodeCountVO);
+        }
 
         return sysCodeCountVOList;
     }
@@ -237,6 +249,8 @@ public class CommonSearchServiceImpl implements CommonSearchService {
         Long faq = docCountQuery(DocType.FREQUENTLY_ASKED_QUESTION, matchAllQuery());
         searchDataCountVO.setFaqCont(faq);
 
+
+
         return searchDataCountVO;
     }
 
@@ -246,7 +260,7 @@ public class CommonSearchServiceImpl implements CommonSearchService {
      * @param queryBuilder 查询构建器
      * @return 统计数
      */
-    private Long docCountQuery(DocType docType, QueryBuilder queryBuilder) throws Exception {
+    public Long docCountQuery(DocType docType, QueryBuilder queryBuilder) throws Exception {
         CountRequest request = new CountRequest(docType.indexGetter.apply(indexConfig).getAlias())
                 .query(queryBuilder);
         CountResponse countResponse = restHighLevelClient.count(request, RequestOptions.DEFAULT);

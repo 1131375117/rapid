@@ -141,7 +141,10 @@ public class PoliciesDataSyncJob implements DataSyncJob<SpiderPolicyCombineDTO, 
         policiesDO.setReleaseDate(DateProcessors.releaseDate.apply(policy.getPublishDate()));
 
         // 正文
-        String content = policy.getContent();
+        String content = policy.getNextContent();
+        if(StringUtils.isEmpty(content)){
+            content=policy.getContent();
+        }
         Document document = HtmlProcessors.content.apply(content);
 
         // 附件
