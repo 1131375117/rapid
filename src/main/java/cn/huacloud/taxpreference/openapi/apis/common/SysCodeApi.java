@@ -1,4 +1,4 @@
-package cn.huacloud.taxpreference.openapi.apis;
+package cn.huacloud.taxpreference.openapi.apis.common;
 
 import cn.huacloud.taxpreference.common.enums.SysCodeType;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
