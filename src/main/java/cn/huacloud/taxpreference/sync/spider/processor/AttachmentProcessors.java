@@ -1,12 +1,10 @@
 package cn.huacloud.taxpreference.sync.spider.processor;
 
 import cn.huacloud.taxpreference.common.enums.AttachmentType;
-import cn.huacloud.taxpreference.common.utils.SpringUtil;
 import cn.huacloud.taxpreference.config.MinioConfig;
 import cn.huacloud.taxpreference.config.SpiderDataSyncConfig;
 import cn.huacloud.taxpreference.services.common.AttachmentService;
 import cn.huacloud.taxpreference.services.common.entity.dos.AttachmentDO;
-import cn.huacloud.taxpreference.sync.spider.SpiderDataSyncScheduler;
 import cn.huacloud.taxpreference.sync.spider.entity.dos.SpiderPolicyAttachmentDO;
 import io.minio.GetObjectArgs;
 import io.minio.GetObjectResponse;
@@ -20,7 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -38,11 +36,12 @@ import java.util.stream.Stream;
  */
 @Slf4j
 @Component
-public class AttachmentProcessors implements CommandLineRunner {
+public class AttachmentProcessors {
 
     @Autowired
     private MinioClient minioClient;
 
+    @Qualifier("spiderMinioClient")
     @Autowired
     private MinioClient spiderMinioClient;
 
@@ -155,12 +154,5 @@ public class AttachmentProcessors implements CommandLineRunner {
          * html元素
          */
         private Element element;
-    }
-
-    @Override
-    public void run(String... args) throws Exception {
-        // set spiderMinioClient after server started
-        SpiderDataSyncScheduler scheduler = SpringUtil.getBean(SpiderDataSyncScheduler.class);
-        spiderMinioClient = scheduler.getSpiderMinioClient();
     }
 }

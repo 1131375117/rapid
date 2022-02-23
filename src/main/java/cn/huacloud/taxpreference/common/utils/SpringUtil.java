@@ -4,7 +4,6 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 /**
@@ -17,7 +16,7 @@ public class SpringUtil implements ApplicationContextAware {
     private static ApplicationContext context;
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(@NotNull ApplicationContext applicationContext) throws BeansException {
         context = applicationContext;
     }
 

@@ -4,9 +4,6 @@ import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.config.SpiderDataSyncConfig;
 import cn.huacloud.taxpreference.services.sync.mapper.SpiderDataSyncMapper;
-import io.minio.BucketExistsArgs;
-import io.minio.MinioClient;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
@@ -40,12 +37,7 @@ public class SpiderDataSyncScheduler implements InitializingBean, SchedulingConf
     private final SpiderDataSyncMapper spiderDataSyncMapper;
 
     // 初始化创建，不交由spring管理
-    private JdbcTemplate jdbcTemplate;
-    // 初始化创建，不交由spring管理
     private DefaultDataSyncJobExecutor dataSyncJobExecutor;
-
-    @Getter
-    private MinioClient spiderMinioClient;
 
     public synchronized void executeJobs(DataSyncJobParam dataSyncJobParam) {
         if (!spiderDataSyncConfig.getEnabled()) {
@@ -85,22 +77,14 @@ public class SpiderDataSyncScheduler implements InitializingBean, SchedulingConf
         dataSourceProperties.setBeanClassLoader(SpiderDataSyncScheduler.class.getClassLoader());
         dataSourceProperties.afterPropertiesSet();
         // 创建jdbcTemplate
-        jdbcTemplate = new JdbcTemplate(dataSourceProperties.initializeDataSourceBuilder().build());
+        // 初始化创建，不交由spring管理
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSourceProperties.initializeDataSourceBuilder().build());
 
         SpiderDataSyncConfig.Minio minio = spiderDataSyncConfig.getMinio();
         if (minio == null) {
             throw new IllegalArgumentException("开启爬虫数据同步，minio配置信息不能为空");
         }
-        spiderMinioClient = MinioClient.builder()
-                .endpoint(minio.getEndpoint())
-                .credentials(minio.getAccessKey(), minio.getSecretKey())
-                .build();
 
-        // 检查存储桶是否已经创建，没有创建则抛出异常
-        boolean bucketExists = spiderMinioClient.bucketExists(BucketExistsArgs.builder().bucket(minio.getBucket()).build());
-        if (!bucketExists) {
-            throw new RuntimeException("没有找到爬虫minio的存储桶：" + minio.getBucket());
-        }
 
         // 默认的任务执行器
         dataSyncJobExecutor = new DefaultDataSyncJobExecutor(jdbcTemplate, spiderDataSyncMapper);

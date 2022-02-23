@@ -7,6 +7,7 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 /**
  * @author wangkh
@@ -33,7 +34,8 @@ public class MinioConfig {
      */
     private String bucket = "tax-preference";
 
-    @Bean
+    @Primary
+    @Bean("minioClient")
     public MinioClient minioClient() throws Exception {
         MinioClient minioClient = MinioClient.builder()
                 .endpoint(endpoint)
