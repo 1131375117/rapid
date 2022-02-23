@@ -1,7 +1,10 @@
 package cn.huacloud.taxpreference.config;
 
+import io.minio.BucketExistsArgs;
+import io.minio.MinioClient;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -29,6 +32,21 @@ public class SpiderDataSyncConfig {
      * minio
      */
     private Minio minio;
+
+    @Bean("spiderMinioClient")
+    public MinioClient spiderMinioClient() throws Exception {
+        MinioClient spiderMinioClient = MinioClient.builder()
+                .endpoint(minio.getEndpoint())
+                .credentials(minio.getAccessKey(), minio.getSecretKey())
+                .build();
+
+        // 检查存储桶是否已经创建，没有创建则抛出异常
+        boolean bucketExists = spiderMinioClient.bucketExists(BucketExistsArgs.builder().bucket(minio.getBucket()).build());
+        if (!bucketExists) {
+            throw new RuntimeException("没有找到爬虫minio的存储桶：" + minio.getBucket());
+        }
+        return spiderMinioClient;
+    }
 
     @Data
     public static class DataSource {

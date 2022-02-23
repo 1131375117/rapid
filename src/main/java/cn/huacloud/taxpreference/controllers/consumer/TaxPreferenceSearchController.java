@@ -51,7 +51,7 @@ public class TaxPreferenceSearchController {
         PageVO<TaxPreferenceSearchListVO> pageVO = taxPreferenceSearchService.pageSearch(pageQuery);
         // 添加序号
         List<TaxPreferenceSearchListVO> records = pageVO.getRecords();
-        long startNum = (pageVO.getPageNum() - 1) * pageVO.getPageSize() + 1;
+        long startNum = (pageVO.getPageNum() - 1L) * pageVO.getPageSize() + 1;
         for (int i = 0; i < records.size(); i++) {
             records.get(i).setNum(startNum + i);
         }
