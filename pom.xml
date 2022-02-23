@@ -175,6 +175,8 @@
             <artifactId>tencentcloud-sdk-java</artifactId>
             <version>${tencentcloud-sdk-java-sms}</version>
         </dependency>
+        <!--swagger-ui-doc-->
+
     </dependencies>
 
     <dependencyManagement>
