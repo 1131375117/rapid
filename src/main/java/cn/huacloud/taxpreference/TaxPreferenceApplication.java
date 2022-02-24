@@ -1,20 +1,17 @@
 package cn.huacloud.taxpreference;
 
-import com.spring4all.swagger.EnableSwagger2Doc;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * Spring Boot 启动类
  * @author wangkh
  */
 @Slf4j
-@EnableSwagger2Doc
 @MapperScan("cn.huacloud.taxpreference.services.*.mapper")
 @SpringBootApplication
 public class TaxPreferenceApplication {

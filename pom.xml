@@ -20,7 +20,7 @@
         <dockerfile.tag.version>${project.version}</dockerfile.tag.version>
         <!--版本信息-->
         <commons.io.version>2.6</commons.io.version>
-        <spring.swagger.version>1.5.1.RELEASE</spring.swagger.version>
+        <spring.swagger.version>2.0.2.RELEASE</spring.swagger.version>
         <mybatis.plus.version>3.4.3.4</mybatis.plus.version>
         <sa.token.version>1.27.0</sa.token.version>
         <minio.version>8.3.3</minio.version>
@@ -105,7 +105,7 @@
         <!--swagger-->
         <dependency>
             <groupId>com.spring4all</groupId>
-            <artifactId>spring-boot-starter-swagger</artifactId>
+            <artifactId>swagger-spring-boot-starter</artifactId>
             <version>${spring.swagger.version}</version>
         </dependency>
         <!--mybatis plus-->

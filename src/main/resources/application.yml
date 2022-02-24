@@ -33,6 +33,9 @@ swagger:
     tool:
       title: "系统工具"
       basePackage: cn.huacloud.taxpreference.controllers.tool
+    open-api:
+      title: "开放接口"
+      basePackage: cn.huacloud.taxpreference.openapi.apis
 
 # mybatis plus
 mybatis-plus:
