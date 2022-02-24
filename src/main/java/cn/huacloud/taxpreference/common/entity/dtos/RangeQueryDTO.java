@@ -11,6 +11,6 @@ import lombok.Data;
 public class RangeQueryDTO<T> {
     @ApiModelProperty(value = "开始",example = "1920-03-01")
     private T from;
-    @ApiModelProperty(value = "结束",example = "2025-03-0")
+    @ApiModelProperty(value = "结束",example = "2025-03-01")
     private T to;
 }

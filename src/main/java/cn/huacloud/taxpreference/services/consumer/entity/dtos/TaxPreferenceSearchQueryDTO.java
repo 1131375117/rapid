@@ -23,11 +23,11 @@ public class TaxPreferenceSearchQueryDTO extends AbstractHighlightPageQueryDTO {
     @ApiModelProperty(value = "是否使用推荐",example = "false")
     private Boolean useRecommend;
 
-    @ApiModelProperty(value = "所属税种",dataType = "String[]",example = "10101")
+    @ApiModelProperty(value = "所属税种",example = "[\"10101\"]")
     @FilterField("taxCategories.codeValue")
     private List<String> taxCategoriesCodes;
 
-    @ApiModelProperty(value = "企业类型",dataType = "String[]",example ="" )
+    @ApiModelProperty(value = "企业类型",example = "[\"递归的方式\"]")
     @FilterField("enterpriseType")
     private List<String> enterpriseTypes;
 
@@ -35,11 +35,11 @@ public class TaxPreferenceSearchQueryDTO extends AbstractHighlightPageQueryDTO {
     @FilterField("taxPreferenceItem")
     private List<String> taxPreferenceItems;
 
-    @ApiModelProperty(value = "纳税人登记注册类型码值",example = "")
+    @ApiModelProperty(value = "纳税人登记注册类型码值")
     @FilterField("taxpayerRegisterType.codeValue")
     private String taxpayerRegisterTypeCode;
 
-    @ApiModelProperty("动态筛选条件")
+    @ApiModelProperty(value = "动态筛选条件")
     private List<ConditionQuery> conditions;
 
     @Override
@@ -107,13 +107,13 @@ public class TaxPreferenceSearchQueryDTO extends AbstractHighlightPageQueryDTO {
         /**
          * 条件名称
          */
-        @ApiModelProperty(value = "条件名称",example = "纳税信用等级")
+        @ApiModelProperty(value = "条件名称")
         private String conditionName;
 
         /**
          * 具体要求
          */
-        @ApiModelProperty(value = "具体要求集合",dataType = "String[]",example = "不限")
+        @ApiModelProperty(value = "具体要求集合")
         private List<String> conditionValues;
 
         @Override

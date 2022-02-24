@@ -12,6 +12,7 @@ import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesSearchSimp
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesSearchVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -64,7 +65,7 @@ public class PoliciesSearchApi {
     @ApiOperation("政策法规详情")
     @GetMapping("/policies/{id}")
     @OpenApiCheckToken
-    public ResultVO<PoliciesSearchVO> getPoliciesDetails(@PathVariable("id") Long id) throws Exception {
+    public ResultVO<PoliciesSearchVO> getPoliciesDetails(@PathVariable("id")@ApiParam(example ="49308") Long id) throws Exception {
         PoliciesSearchVO policiesSearchVO = policiesSearchService.getPoliciesDetails(id);
         policiesSearchVO.initUserCollectionInfo(CollectionType.POLICIES);
         return ResultVO.ok(policiesSearchVO);

@@ -11,6 +11,7 @@ import cn.huacloud.taxpreference.services.consumer.entity.dtos.TaxPreferenceSear
 import cn.huacloud.taxpreference.services.consumer.entity.vos.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,7 +64,7 @@ public class TaxPreferenceSearchApi {
     @ApiOperation("税收优惠详情")
     @GetMapping("/taxPreference/{id}")
     @OpenApiCheckToken
-    public ResultVO<TaxPreferenceSearchVO> getTaxPreferenceDetails(@PathVariable("id") Long id) throws Exception {
+    public ResultVO<TaxPreferenceSearchVO> getTaxPreferenceDetails(@PathVariable("id") @ApiParam(example = "187") Long id) throws Exception {
         TaxPreferenceSearchVO taxPreferenceSearchVO = taxPreferenceSearchService.getTaxPreferenceDetails(id);
         taxPreferenceSearchVO.initUserCollectionInfo(CollectionType.TAX_PREFERENCE);
         return ResultVO.ok(taxPreferenceSearchVO);

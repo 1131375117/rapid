@@ -19,7 +19,7 @@ import java.util.List;
 @Setter
 public class PoliciesExplainSearchQueryDTO extends AbstractHighlightPageQueryDTO {
 
-    @ApiModelProperty(value = "所属税种",example = "")
+    @ApiModelProperty(value = "所属税种")
     @FilterField("taxCategories.codeValue")
     private String taxCategoriesCode;
 
@@ -32,16 +32,16 @@ public class PoliciesExplainSearchQueryDTO extends AbstractHighlightPageQueryDTO
     @FilterField(value = "area.codeValue")
     private String areaCode;
 
-    @ApiModelProperty(value = "适用行业码值",dataType = "String[]",example = "")
+    @ApiModelProperty(value = "适用行业码值")
     @WithChildrenCodes(SysCodeType.INDUSTRY)
     @FilterField(value = "industries.codeValue")
     private List<String> industryCodes;
 
-    @ApiModelProperty(value = "纳税人资格认定类型码值",dataType = "String[]",example = "")
+    @ApiModelProperty(value = "纳税人资格认定类型码值")
     @FilterField("taxpayerIdentifyTypes.codeValue")
     private List<String> taxpayerIdentifyTypeCodes;
 
-    @ApiModelProperty(value = "适用企业类型码值",dataType = "String[]",example = "")
+    @ApiModelProperty(value = "适用企业类型码值")
     @FilterField("enterpriseTypes.codeValue")
     private List<String> enterpriseTypesCodes;
 

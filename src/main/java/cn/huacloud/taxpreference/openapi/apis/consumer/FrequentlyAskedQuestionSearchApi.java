@@ -12,6 +12,7 @@ import cn.huacloud.taxpreference.services.consumer.entity.vos.FAQSearchVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.OrganizationVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -65,7 +66,7 @@ public class FrequentlyAskedQuestionSearchApi {
     @ApiOperation("热点问答详情")
     @GetMapping("/faq/{id}")
     @OpenApiCheckToken
-    public ResultVO<FAQSearchVO> getFAQDetails(@PathVariable(value = "id") Long id) throws Exception {
+    public ResultVO<FAQSearchVO> getFAQDetails(@PathVariable(value = "id") @ApiParam(example = "8753") Long id) throws Exception {
         FAQSearchVO faqSearchVO = frequentlyAskedQuestionSearchService.getFAQDetails(id);
         faqSearchVO.initUserCollectionInfo(CollectionType.FREQUENTLY_ASKED_QUESTION);
         return ResultVO.ok(faqSearchVO);
@@ -76,7 +77,7 @@ public class FrequentlyAskedQuestionSearchApi {
     @ApiOperation("根据政策ID查询相关热点问答")
     @GetMapping("/faq/policiesRelated/{policiesId}")
     @OpenApiCheckToken
-    public ResultVO<PageVO<FAQSearchVO>> policiesRelatedFAQ(@PathVariable("policiesId") Long policiesId, PageQueryDTO pageQuery) throws Exception {
+    public ResultVO<PageVO<FAQSearchVO>> policiesRelatedFAQ(@PathVariable("policiesId") @ApiParam(example = "8753") Long policiesId, PageQueryDTO pageQuery) throws Exception {
         PageVO<FAQSearchVO> pageVO = frequentlyAskedQuestionSearchService.policiesRelatedFAQ(policiesId, pageQuery);
         return ResultVO.ok(pageVO);
     }

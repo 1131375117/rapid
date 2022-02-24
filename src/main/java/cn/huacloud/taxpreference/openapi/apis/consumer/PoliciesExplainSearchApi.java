@@ -12,6 +12,7 @@ import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesExplainSea
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesExplainSearchVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,7 +49,7 @@ public class PoliciesExplainSearchApi {
     @ApiOperation("根据政策ID查询相关政策解读")
     @OpenApiCheckToken
     @GetMapping("policiesExplain/policiesRelated/{policiesId}")
-    public ResultVO<List<PoliciesExplainSearchSimpleVO>> policiesRelatedExplain(@PathVariable("policiesId") String policiesId) throws Exception {
+    public ResultVO<List<PoliciesExplainSearchSimpleVO>> policiesRelatedExplain(@PathVariable("policiesId") @ApiParam(example = "49308") String policiesId) throws Exception {
         List<PoliciesExplainSearchSimpleVO> list = policiesExplainSearchService.policiesRelatedExplain(policiesId);
         return ResultVO.ok(list);
     }
@@ -56,7 +57,7 @@ public class PoliciesExplainSearchApi {
     @ApiOperation("政策解读详情")
     @OpenApiCheckToken
     @GetMapping("/policiesExplain/{id}")
-    public ResultVO<PoliciesExplainSearchVO> pageSearch(@PathVariable("id") Long id) throws Exception {
+    public ResultVO<PoliciesExplainSearchVO> pageSearch(@PathVariable("id") @ApiParam(defaultValue = "2360") Long id) throws Exception {
         PoliciesExplainSearchVO policiesExplainSearchVO = policiesExplainSearchService.getPoliciesExplainDetails(id);
         policiesExplainSearchVO.initUserCollectionInfo(CollectionType.POLICIES_EXPLAIN);
         return ResultVO.ok(policiesExplainSearchVO);

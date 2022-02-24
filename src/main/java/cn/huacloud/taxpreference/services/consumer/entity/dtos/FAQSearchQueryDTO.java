@@ -17,13 +17,13 @@ public class FAQSearchQueryDTO extends AbstractHighlightPageQueryDTO {
      * 解答机构
      */
     @FilterField("answerOrganization")
-    @ApiModelProperty(value = "解答机构分为官方机关和专业机构,通过热门问答来源获取",example = "专业机构")
+    @ApiModelProperty(value = ",通过热门问答来源获取",example = "国家税务总局辽宁省税务局")
     private String answerOrganization;
     /**
      * 机构类型
      */
     @FilterField("organizationType")
-    @ApiModelProperty(value = "机构类型,通过热门问答来源获取",notes = "国家税务总局辽宁省税务局")
+    @ApiModelProperty(value = "机构类型,通过热门问答来源获取",notes = "官方机关")
     private String organizationType;
     /**
      * 主题分类
