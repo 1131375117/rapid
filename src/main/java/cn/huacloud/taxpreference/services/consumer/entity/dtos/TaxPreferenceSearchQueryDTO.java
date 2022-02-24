@@ -20,22 +20,22 @@ import java.util.stream.Collectors;
 @Setter
 public class TaxPreferenceSearchQueryDTO extends AbstractHighlightPageQueryDTO {
 
-    @ApiModelProperty("是否使用推荐")
+    @ApiModelProperty(value = "是否使用推荐",example = "false")
     private Boolean useRecommend;
 
-    @ApiModelProperty("所属税种")
+    @ApiModelProperty(value = "所属税种",dataType = "String[]",example = "10101")
     @FilterField("taxCategories.codeValue")
     private List<String> taxCategoriesCodes;
 
-    @ApiModelProperty("企业类型")
+    @ApiModelProperty(value = "企业类型",dataType = "String[]",example ="" )
     @FilterField("enterpriseType")
     private List<String> enterpriseTypes;
 
-    @ApiModelProperty("减免事项")
+    @ApiModelProperty(value = "减免事项",example = "")
     @FilterField("taxPreferenceItem")
     private List<String> taxPreferenceItems;
 
-    @ApiModelProperty("纳税人登记注册类型码值")
+    @ApiModelProperty(value = "纳税人登记注册类型码值",example = "")
     @FilterField("taxpayerRegisterType.codeValue")
     private String taxpayerRegisterTypeCode;
 
@@ -107,13 +107,13 @@ public class TaxPreferenceSearchQueryDTO extends AbstractHighlightPageQueryDTO {
         /**
          * 条件名称
          */
-        @ApiModelProperty("条件名称")
+        @ApiModelProperty(value = "条件名称",example = "纳税信用等级")
         private String conditionName;
 
         /**
          * 具体要求
          */
-        @ApiModelProperty("具体要求集合")
+        @ApiModelProperty(value = "具体要求集合",dataType = "String[]",example = "不限")
         private List<String> conditionValues;
 
         @Override

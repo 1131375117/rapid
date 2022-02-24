@@ -12,6 +12,6 @@ import lombok.Data;
 public class ViewQueryDTO extends PageQueryDTO {
 
     @ApiModelProperty(notes = "浏览类型,POLICIES-政策法规,POLICIES_EXPLAIN-政策解读,FREQUENTLY_ASKED_QUESTION-热门问答" +
-            "TAX_PREFERENCE-税收优惠,CASE_ANALYSIS-案例分析")
+            "TAX_PREFERENCE-税收优惠,CASE_ANALYSIS-案例分析",example = "POLICIES")
     private ViewType viewType;
 }

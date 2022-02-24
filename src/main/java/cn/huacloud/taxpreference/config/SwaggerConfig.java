@@ -67,6 +67,4 @@ public class SwaggerConfig {
                 .apis(RequestHandlerSelectors.basePackage(basePackage))
                 .build();
     }
-
-
 }

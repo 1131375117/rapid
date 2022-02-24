@@ -42,7 +42,7 @@ public class PublicSysParamApi {
     @ApiOperation("税收优惠和税种绑定的自定义条件")
     @OpenApiCheckToken
     @PostMapping("/sys/param/basePreferenceCondition")
-    public ResultVO<List<ChoiceGroupVO<String>>> getBasePreferenceCondition(@RequestBody Set<String> taxCategoriesCode) {
+    public ResultVO<List<ChoiceGroupVO<String>>> getBasePreferenceCondition(@RequestBody() Set<String> taxCategoriesCode) {
         List<ChoiceGroupVO<String>> conditions = sysParamService.getSysParamDOByTypes(SysParamTypes.TAX_PREFERENCE_CONDITION).stream()
                 .filter(sysParamDO -> !"自定义条件".equals(sysParamDO.getExtendsField3()))
                 .filter(sysParamDO -> CustomStringUtil.haveIntersection(sysParamDO.getExtendsField1(), taxCategoriesCode))

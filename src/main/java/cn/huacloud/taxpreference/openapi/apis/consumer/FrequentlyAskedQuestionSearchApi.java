@@ -65,7 +65,7 @@ public class FrequentlyAskedQuestionSearchApi {
     @ApiOperation("热点问答详情")
     @GetMapping("/faq/{id}")
     @OpenApiCheckToken
-    public ResultVO<FAQSearchVO> getFAQDetails(@PathVariable("id") Long id) throws Exception {
+    public ResultVO<FAQSearchVO> getFAQDetails(@PathVariable(value = "id") Long id) throws Exception {
         FAQSearchVO faqSearchVO = frequentlyAskedQuestionSearchService.getFAQDetails(id);
         faqSearchVO.initUserCollectionInfo(CollectionType.FREQUENTLY_ASKED_QUESTION);
         return ResultVO.ok(faqSearchVO);

@@ -26,14 +26,14 @@ public class OperationRecordDTO {
             "views.caseAnalysis->案例分析浏览量," +
             "views.policiesExplain->政策解读浏览量," +
             "views.frequentlyAskedQuestion->热门问答浏览量" +
-            "views.consultation->热门咨询")
+            "views.consultation->热门咨询",example = "views.policies")
     @NotEmpty(message = "操作类型不能为空")
     private String operationType;
 
     /**
      * 操作参数
      */
-    @ApiModelProperty("操作参数,浏览操作只需要给id,例如:5")
+    @ApiModelProperty(value = "操作参数,浏览操作只需要给id,例如:9015",example = "9015")
     private String operationParam;
 
 }
