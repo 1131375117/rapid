@@ -27,7 +27,7 @@ public class PoliciesExplainSearchQueryDTO extends AbstractHighlightPageQueryDTO
     @RangeField("releaseDate")
     private LocalDateRangeQueryDTO releaseDate;
 
-    @ApiModelProperty(value = "所属区域码值",example = "中央")
+    @ApiModelProperty(value = "所属区域码值", example = "中央")
     @WithChildrenCodes(SysCodeType.AREA)
     @FilterField(value = "area.codeValue")
     private String areaCode;

@@ -46,10 +46,11 @@ public class OperationRecordApi {
     @OpenApiCheckToken
     @PostMapping("/queryOperationRecord")
     public ResultVO<PageByOperationVO> queryOperationRecord(@RequestBody ViewQueryDTO pageQueryDTO) {
-        PageByOperationVO pageVO=null;
+        PageByOperationVO pageVO = null;
         pageQueryDTO.paramReasonable();
         if (OpenApiStpUtil.isLogin()) {
-            Long consumerUserId = OpenApiStpUtil.getLoginIdAsLong();;
+            Long consumerUserId = OpenApiStpUtil.getLoginIdAsLong();
+            ;
             pageVO = operationRecord.queryOperationRecord(pageQueryDTO, consumerUserId);
         }
         return ResultVO.ok(pageVO);

@@ -12,6 +12,7 @@ import java.util.List;
 
 /**
  * 动态条件视图对象
+ *
  * @author wangkh
  */
 @Data
@@ -27,7 +28,7 @@ public class DynamicConditionVO {
     @Getter
     @Setter
     public static class Condition extends GroupVO<String> {
-        @ApiModelProperty(value = "是否多选",example = "true")
+        @ApiModelProperty(value = "是否多选", example = "true")
         private Boolean multipleChoice;
     }
 

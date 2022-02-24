@@ -14,24 +14,25 @@ import java.util.stream.Collectors;
 
 /**
  * 税收优惠分页检索对象
+ *
  * @author wangkh
  */
 @Getter
 @Setter
 public class TaxPreferenceSearchQueryDTO extends AbstractHighlightPageQueryDTO {
 
-    @ApiModelProperty(value = "是否使用推荐",example = "false")
+    @ApiModelProperty(value = "是否使用推荐", example = "false")
     private Boolean useRecommend;
 
-    @ApiModelProperty(value = "所属税种",example = "[\"10101\"]")
+    @ApiModelProperty(value = "所属税种", example = "[\"10101\"]")
     @FilterField("taxCategories.codeValue")
     private List<String> taxCategoriesCodes;
 
-    @ApiModelProperty(value = "企业类型",example = "[\"递归的方式\"]")
+    @ApiModelProperty(value = "企业类型", example = "[\"递归的方式\"]")
     @FilterField("enterpriseType")
     private List<String> enterpriseTypes;
 
-    @ApiModelProperty(value = "减免事项",example = "")
+    @ApiModelProperty(value = "减免事项", example = "")
     @FilterField("taxPreferenceItem")
     private List<String> taxPreferenceItems;
 
