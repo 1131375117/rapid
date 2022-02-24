@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/open-api/v1/search")
 @RestController
-public class PoliciesSearchController {
+public class PoliciesSearchApi {
 
     private final PoliciesSearchService policiesSearchService;
 

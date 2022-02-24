@@ -1,8 +1,8 @@
 package cn.huacloud.taxpreference.openapi.apis.consumer;
 
-import cn.huacloud.taxpreference.common.utils.ConsumerUserUtil;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.openapi.auth.OpenApiCheckToken;
+import cn.huacloud.taxpreference.openapi.auth.OpenApiStpUtil;
 import cn.huacloud.taxpreference.services.common.entity.dtos.CollectionQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.CollectionService;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.CollectionDTO;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/open-api/v1")
 @RestController
-public class CollectionController {
+public class CollectionApi {
 
     private final CollectionService collectionService;
 
@@ -34,7 +34,7 @@ public class CollectionController {
     @OpenApiCheckToken
     @PutMapping("/collection")
     public ResultVO<Boolean> saveOrCancelCollection(@RequestBody @Validated CollectionDTO collectionDTO) {
-        collectionDTO.setConsumerUserId(ConsumerUserUtil.getCurrentUser().getId());
+        collectionDTO.setConsumerUserId(OpenApiStpUtil.getLoginIdAsLong());
         Boolean isCollection = collectionService.saveOrCancelCollection(collectionDTO);
         return ResultVO.ok(isCollection);
     }
@@ -48,7 +48,7 @@ public class CollectionController {
     @PostMapping("/queryCollection")
     public ResultVO<PageByCollectionVO> queryCollection(@RequestBody CollectionQueryDTO pageQueryDTO) {
         pageQueryDTO.paramReasonable();
-        PageByCollectionVO pageVO = collectionService.queryCollection(pageQueryDTO, ConsumerUserUtil.getCurrentUser().getId());
+        PageByCollectionVO pageVO = collectionService.queryCollection(pageQueryDTO, OpenApiStpUtil.getLoginIdAsLong());
         return ResultVO.ok(pageVO);
     }
 }

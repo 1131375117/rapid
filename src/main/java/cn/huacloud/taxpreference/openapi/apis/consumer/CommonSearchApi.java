@@ -1,12 +1,11 @@
 package cn.huacloud.taxpreference.openapi.apis.consumer;
 
-import cn.huacloud.taxpreference.common.annotations.ConsumerUserCheckLogin;
 import cn.huacloud.taxpreference.common.entity.dtos.ExSearchQueryDTO;
 import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
-import cn.huacloud.taxpreference.common.utils.ProducerUserUtil;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.openapi.auth.OpenApiCheckToken;
+import cn.huacloud.taxpreference.openapi.auth.OpenApiStpUtil;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeCountVO;
 import cn.huacloud.taxpreference.services.consumer.CommonSearchService;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.GuessYouLikeQueryDTO;
@@ -26,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/open-api/v1/search")
 @RestController
-public class CommonSearchController {
+public class CommonSearchApi {
 
     private final CommonSearchService commonSearchService;
 
@@ -61,8 +60,8 @@ public class CommonSearchController {
     @PostMapping("/hotContent/guessYouLike")
     public ResultVO<PageVO<HotContentVO>> guessYouLike(@RequestBody GuessYouLikeQueryDTO pageQuery) throws Exception {
         pageQuery.paramReasonable();
-        if (ProducerUserUtil.isLogin()) {
-            pageQuery.setUserId(ProducerUserUtil.getCurrentUserId());
+        if (OpenApiStpUtil.isLogin()) {
+            pageQuery.setUserId(OpenApiStpUtil.getLoginIdAsLong());
         }
         PageVO<HotContentVO> pageVO = commonSearchService.guessYouLike(pageQuery);
         return ResultVO.ok(pageVO);

@@ -24,7 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/open-api/v1/search")
 @RestController
-public class TaxPreferenceSearchController {
+public class TaxPreferenceSearchApi {
 
     private final TaxPreferenceSearchService taxPreferenceSearchService;
 
