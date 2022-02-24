@@ -20,6 +20,6 @@ public class TaxPreferenceApplication {
         // 打印 swagger 地址
         Environment environment = context.getBean(Environment.class);
 
-        log.info("SwaggerUrl: http://localhost:{}/swagger-ui.html", environment.getProperty("server.port"));
+        log.info("SwaggerUrl: http://localhost:{}/doc.html", environment.getProperty("server.port"));
     }
 }

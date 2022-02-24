@@ -21,6 +21,7 @@
         <!--版本信息-->
         <commons.io.version>2.6</commons.io.version>
         <spring.swagger.version>2.0.2.RELEASE</spring.swagger.version>
+        <knife4j.version>3.0.3</knife4j.version>
         <mybatis.plus.version>3.4.3.4</mybatis.plus.version>
         <sa.token.version>1.27.0</sa.token.version>
         <minio.version>8.3.3</minio.version>
@@ -103,6 +104,11 @@
             <version>${sa.token.version}</version>
         </dependency>
         <!--swagger-->
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-spring-boot-starter</artifactId>
+            <version>${knife4j.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.spring4all</groupId>
             <artifactId>swagger-spring-boot-starter</artifactId>

@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  * @author wangkh
  */
 @RequiredArgsConstructor
-@Api("系统码值")
+@Api(tags = "系统码值")
 @RequestMapping("/open-api/v1")
 @RestController
 public class SysCodeApi {
