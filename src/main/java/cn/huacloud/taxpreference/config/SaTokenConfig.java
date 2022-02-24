@@ -1,8 +1,10 @@
 package cn.huacloud.taxpreference.config;
 
 import cn.dev33.satoken.interceptor.SaAnnotationInterceptor;
+import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.strategy.SaStrategy;
 import cn.huacloud.taxpreference.common.utils.ConsumerStpUtil;
+import cn.huacloud.taxpreference.openapi.auth.OpenApiStpUtil;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.AnnotatedElementUtils;
@@ -30,6 +32,8 @@ public class SaTokenConfig implements WebMvcConfigurer, CommandLineRunner {
         // 重写Sa-Token的注解处理器，增加注解合并功能
         SaStrategy.me.getAnnotation = AnnotatedElementUtils::getMergedAnnotation;
         // 解决匿名内部类懒加载的问题
+        StpUtil.getLoginType();
         ConsumerStpUtil.getLoginType();
+        OpenApiStpUtil.getLoginType();
     }
 }

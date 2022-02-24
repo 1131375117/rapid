@@ -5,6 +5,7 @@ import cn.huacloud.taxpreference.common.annotations.PermissionInfo;
 import cn.huacloud.taxpreference.common.enums.PermissionGroup;
 import cn.huacloud.taxpreference.common.enums.user.UserType;
 import cn.huacloud.taxpreference.common.exception.MissingPermissionInfoException;
+import cn.huacloud.taxpreference.config.PermissionConfig;
 import cn.huacloud.taxpreference.services.user.PermissionService;
 import cn.huacloud.taxpreference.services.user.entity.dos.PermissionDO;
 import cn.huacloud.taxpreference.services.user.entity.vos.PermissionGroupVO;
@@ -35,6 +36,8 @@ public class PermissionServiceImpl implements PermissionService, CommandLineRunn
     private final PermissionMapper permissionMapper;
 
     private final RequestMappingHandlerMapping requestMappingHandlerMapping;
+
+    private final PermissionConfig permissionConfig;
 
     @Override
     public List<PermissionGroupVO> getPermissionGroupVOList() {
@@ -131,6 +134,8 @@ public class PermissionServiceImpl implements PermissionService, CommandLineRunn
     @Override
     public void run(String... args) {
         // 扫描权限并保存到数据库
-        scanPermissionAndSave();
+        if (permissionConfig.getScanPermissionAndSave()) {
+            scanPermissionAndSave();
+        }
     }
 }

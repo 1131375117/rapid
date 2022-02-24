@@ -7,6 +7,7 @@ import cn.dev33.satoken.exception.SaTokenException;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.exception.TaxPreferenceException;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
+import cn.huacloud.taxpreference.openapi.auth.OpenApiStpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -36,9 +37,17 @@ public class GlobalExceptionHandler {
         if (e instanceof NotLoginException) {
             NotLoginException notLoginException = (NotLoginException) e;
             if (NotLoginException.TOKEN_TIMEOUT.equals(notLoginException.getType())) {
-                resultVO = BizCode._4211.getResultVO();
+                if (OpenApiStpUtil.getLoginType().equals(notLoginException.getLoginType())) {
+                    resultVO = BizCode._4703.getResultVO();
+                } else {
+                    resultVO = BizCode._4211.getResultVO();
+                }
             } else {
-                resultVO = BizCode._4200.getResultVO();
+                if (OpenApiStpUtil.getLoginType().equals(notLoginException.getLoginType())) {
+                    resultVO = BizCode._4702.getResultVO();
+                } else {
+                    resultVO = BizCode._4200.getResultVO();
+                }
             }
         } else if (e instanceof NotRoleException) {
             resultVO = BizCode._4201.getResultVO(e.getMessage());

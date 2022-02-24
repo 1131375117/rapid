@@ -1,0 +1,36 @@
+# swagger
+springfox:
+  documentation:
+    enabled: true
+
+swagger:
+  docket:
+    common:
+      title: "公共服务接口"
+      basePackage: cn.huacloud.taxpreference.controllers.common
+    consumer:
+      title: "前台接口"
+      basePackage: cn.huacloud.taxpreference.controllers.consumer
+    producer:
+      title: "后台接口"
+      basePackage: cn.huacloud.taxpreference.controllers.producer
+    sso:
+      title: "用户登录"
+      basePackage: cn.huacloud.taxpreference.controllers.sso
+    user:
+      title: "用户管理"
+      basePackage: cn.huacloud.taxpreference.controllers.user
+    tool:
+      title: "系统工具"
+      basePackage: cn.huacloud.taxpreference.controllers.tool
+    open-api:
+      title: "OpenAPI开放接口"
+      basePackage: cn.huacloud.taxpreference.openapi.apis
+  global-response-message:
+    get:
+      - code: 200
+        description: "请求成功"
+    post:
+      - code: 200
+        description: "请求成功"
+

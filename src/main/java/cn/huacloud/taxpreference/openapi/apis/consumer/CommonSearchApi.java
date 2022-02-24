@@ -1,15 +1,10 @@
 package cn.huacloud.taxpreference.openapi.apis.consumer;
 
 import cn.huacloud.taxpreference.common.entity.dtos.ExSearchQueryDTO;
-import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
-import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.openapi.auth.OpenApiCheckToken;
-import cn.huacloud.taxpreference.openapi.auth.OpenApiStpUtil;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeCountVO;
 import cn.huacloud.taxpreference.services.consumer.CommonSearchService;
-import cn.huacloud.taxpreference.services.consumer.entity.dtos.GuessYouLikeQueryDTO;
-import cn.huacloud.taxpreference.services.consumer.entity.vos.HotContentVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.SearchDataCountVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -46,7 +41,7 @@ public class CommonSearchApi {
         return ResultVO.ok(sysCodeCountVOList);
     }
 
-    @ApiOperation(value = "本周热点内容", notes = "需要根据 hotContentType.codeValue 跳转不同的页面，POLICIES:政策法规;POLICIES_EXPLAIN:政策解读;FREQUENTLY_ASKED_QUESTION:热门问答;TAX_PREFERENCE:税收优惠;CASE_ANALYSIS:案例分析")
+    /*@ApiOperation(value = "本周热点内容", notes = "需要根据 hotContentType.codeValue 跳转不同的页面，POLICIES:政策法规;POLICIES_EXPLAIN:政策解读;FREQUENTLY_ASKED_QUESTION:热门问答;TAX_PREFERENCE:税收优惠;CASE_ANALYSIS:案例分析")
     @GetMapping("/hotContent/weekly")
     @OpenApiCheckToken
     public ResultVO<PageVO<HotContentVO>> weeklyHotContent(PageQueryDTO pageQuery) throws Exception {
@@ -65,5 +60,5 @@ public class CommonSearchApi {
         }
         PageVO<HotContentVO> pageVO = commonSearchService.guessYouLike(pageQuery);
         return ResultVO.ok(pageVO);
-    }
+    }*/
 }

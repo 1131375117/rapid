@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.common.utils;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,14 +19,17 @@ public class ResultVO<T> {
     /**
      * 状态码
      */
+    @ApiModelProperty(value = "状态码")
     private int code;
     /**
      * 描述信息
      */
+    @ApiModelProperty(value = "描述信息")
     private String msg;
     /**
      * 返回数据
      */
+    @ApiModelProperty("响应数据体")
     private T data;
 
     public static <T> ResultVO<T> ok(int code, String msg, T data) {

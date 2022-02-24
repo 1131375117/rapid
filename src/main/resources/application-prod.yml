@@ -21,6 +21,11 @@ spring:
     username: tax_preference
     password: ""
 
+# swagger
+springfox:
+  documentation:
+    enabled: false
+
 ## mybatis plus
 #mybatis-plus:
 #  configuration:

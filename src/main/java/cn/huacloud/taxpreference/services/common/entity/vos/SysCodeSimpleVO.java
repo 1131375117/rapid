@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.common.entity.vos;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -13,9 +14,11 @@ public class SysCodeSimpleVO {
     /**
      * 码值名称
      */
+    @ApiModelProperty("码值名称")
     private String codeName;
     /**
      * 码值代码
      */
+    @ApiModelProperty("码值代码")
     private String codeValue;
 }

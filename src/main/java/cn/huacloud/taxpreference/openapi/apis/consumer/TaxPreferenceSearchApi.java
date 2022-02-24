@@ -46,7 +46,7 @@ public class TaxPreferenceSearchApi {
         return ResultVO.ok(page);
     }
 
-    @ApiOperation("税收优惠搜索")
+    @ApiOperation(value = "税收优惠搜索", notes = "税收优惠高级搜索接口")
     @PostMapping("/taxPreference")
     @OpenApiCheckToken
     public ResultVO<PageVO<TaxPreferenceSearchListVO>> pageSearch(@RequestBody TaxPreferenceSearchQueryDTO pageQuery) throws Exception {

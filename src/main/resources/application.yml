@@ -1,5 +1,7 @@
+# server
 server:
   port: 9090
+
 # spring
 spring:
   profiles:
@@ -13,29 +15,9 @@ spring:
       max-file-size: 128MB
 
 # swagger
-swagger:
-  docket:
-    common:
-      title: "公共服务接口"
-      basePackage: cn.huacloud.taxpreference.controllers.common
-    consumer:
-      title: "前台接口"
-      basePackage: cn.huacloud.taxpreference.controllers.consumer
-    producer:
-      title: "后台接口"
-      basePackage: cn.huacloud.taxpreference.controllers.producer
-    sso:
-      title: "用户登录"
-      basePackage: cn.huacloud.taxpreference.controllers.sso
-    user:
-      title: "用户管理"
-      basePackage: cn.huacloud.taxpreference.controllers.user
-    tool:
-      title: "系统工具"
-      basePackage: cn.huacloud.taxpreference.controllers.tool
-    open-api:
-      title: "开放接口"
-      basePackage: cn.huacloud.taxpreference.openapi.apis
+springfox:
+  documentation:
+    enabled: true
 
 # mybatis plus
 mybatis-plus:
@@ -54,6 +36,7 @@ sa-token:
   is-log: true
   is-print: false
 
+# logging
 logging:
   level:
     org.elasticsearch.client.RestClient: error

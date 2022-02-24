@@ -6,7 +6,8 @@ import org.springframework.context.annotation.Configuration;
 /**
  * @author wangkh
  */
-@Configuration@ConfigurationProperties(prefix = "tax-preference.encrypt")
+@Configuration
+@ConfigurationProperties(prefix = "tax-preference.encrypt")
 public class EncryptConfig {
     /**
      * AES 秘钥，16进制长度为16的字符串

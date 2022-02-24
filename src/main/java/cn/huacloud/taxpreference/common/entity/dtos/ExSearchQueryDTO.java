@@ -19,7 +19,7 @@ import java.util.Set;
 @Setter
 public class ExSearchQueryDTO extends KeywordPageQueryDTO {
 
-    @ApiModelProperty("查询范围")
+    @ApiModelProperty(value = "查询范围", notes = "可用值:CONTENT:全文,TITLE:标题,TITLE_AND_CONTENT:全文+标题")
     private SearchScope searchScope;
     @ApiModelProperty("是否精确查询")
     private Boolean preciseQuery;
