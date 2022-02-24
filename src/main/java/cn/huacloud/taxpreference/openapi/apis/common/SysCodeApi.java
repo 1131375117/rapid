@@ -43,7 +43,7 @@ public class SysCodeApi {
     @OpenApiCheckToken
     @ApiOperation(value = "获取系统码值", notes = "参数 sysCodeType 是提供码值类型")
     @GetMapping("/sys/codes")
-    public ResultVO<List<SysCodeTreeVO>> getSysCodes(@RequestParam("sysCodeType") SysCodeType sysCodeType) {
+    public ResultVO<List<SysCodeTreeVO>> getSysCodes(@RequestParam(value = "sysCodeType",defaultValue = "TAX_CATEGORIES") SysCodeType sysCodeType) {
         List<SysCodeTreeVO> sysCodeVOList = sysCodeService.getSysCodeTreeVO(sysCodeType);
         return ResultVO.ok(sysCodeVOList);
     }
@@ -51,7 +51,7 @@ public class SysCodeApi {
     @OpenApiCheckToken
     @ApiOperation(value = "获取税收优惠的系统码值", notes = "参数 sysCodeType 是提供码值类型")
     @GetMapping("/sys/codes/taxPreference")
-    public ResultVO<List<SysCodeTreeVO>> getTaxPreferenceSysCodes(@RequestParam("sysCodeType") SysCodeType sysCodeType) {
+    public ResultVO<List<SysCodeTreeVO>> getTaxPreferenceSysCodes(@RequestParam(value = "sysCodeType",defaultValue = "TAX_CATEGORIES") SysCodeType sysCodeType) {
         List<SysCodeTreeVO> sysCodeVOList;
         // 税收优惠的税种范围不一样
         if (SysCodeType.TAX_CATEGORIES == sysCodeType) {

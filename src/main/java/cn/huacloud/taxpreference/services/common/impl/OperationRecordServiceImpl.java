@@ -149,7 +149,7 @@ public class OperationRecordServiceImpl implements OperationRecordService {
         });
         PageByOperationVO pageByOperationVO = new PageByOperationVO();
         BeanUtils.copyProperties(pageVO, pageByOperationVO);
-        pageByOperationVO.setList(operationPageVOList);
+        pageByOperationVO.setRecords(operationPageVOList);
         return pageByOperationVO;
     }
 

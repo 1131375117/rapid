@@ -20,48 +20,48 @@ import java.util.List;
 @Setter
 public class PoliciesSearchQueryDTO extends AbstractHighlightPageQueryDTO {
 
-    @ApiModelProperty("文号字号")
+    @ApiModelProperty(value = "文号字号",example = "中华人民共和国工业和信息化部")
     private String docWordCode;
 
-    @ApiModelProperty("文号年号")
+    @ApiModelProperty(value = "文号年号",example = "2021")
     @FilterField("docYearCode")
     private Integer docYearCode;
 
-    @ApiModelProperty("文号编号")
+    @ApiModelProperty(value = "文号编号",example = "10")
     @FilterField("docNumCode")
     private Integer docNumCode;
 
-    @ApiModelProperty("所属税种")
+    @ApiModelProperty(value = "所属税种",example = "")
     @FilterField("taxCategories.codeValue")
     private String taxCategoriesCode;
 
-    @ApiModelProperty("发布日期")
+    @ApiModelProperty(value = "发布日期")
     @RangeField("releaseDate")
     private LocalDateRangeQueryDTO releaseDate;
 
-    @ApiModelProperty("所属区域码值")
+    @ApiModelProperty(value = "所属区域码值",example = "中央")
     @WithChildrenCodes(SysCodeType.AREA)
     @FilterField(value = "area.codeValue")
     private String areaCode;
 
-    @ApiModelProperty("适用行业码值")
+    @ApiModelProperty(value = "适用行业码值",example = "")
     @WithChildrenCodes(SysCodeType.INDUSTRY)
     @FilterField(value = "industries.codeValue")
     private List<String> industryCodes;
 
-    @ApiModelProperty("纳税人资格认定类型码值")
+    @ApiModelProperty(value = "纳税人资格认定类型码值",dataType = "String[]",example = "")
     @FilterField("taxpayerIdentifyTypes.codeValue")
     private List<String> taxpayerIdentifyTypeCodes;
 
-    @ApiModelProperty("适用企业类型码值")
+    @ApiModelProperty(value = "适用企业类型码值",dataType = "String[]",example = "")
     @FilterField("enterpriseTypes.codeValue")
     private List<String> enterpriseTypesCodes;
 
-    @ApiModelProperty(value = "有效性", notes = "INVALID:失效;FULL_TEXT_VALID:全文有效;FULL_TEXT_REPEAL:全文废止;PARTIAL_VALID:部分有效;CLAUSE_INVALIDITY:条款失效;FULL_TEXT_INVALIDATION:全文失效;PARTIAL_REPEAL:部分废止;CLAUSE_REPEAL:条款废止")
+    @ApiModelProperty(value = "有效性", notes = "INVALID:失效;FULL_TEXT_VALID:全文有效;FULL_TEXT_REPEAL:全文废止;PARTIAL_VALID:部分有效;CLAUSE_INVALIDITY:条款失效;FULL_TEXT_INVALIDATION:全文失效;PARTIAL_REPEAL:部分废止;CLAUSE_REPEAL:条款废止",example = "FULL_TEXT_VALID")
     @FilterField("validity.codeValue")
     public ValidityEnum validity;
 
-    @ApiModelProperty("所属专题")
+    @ApiModelProperty(value = "所属专题",dataType = "String[]",example = "")
     @FilterField("specialSubject")
     private List<String> specialSubjects;
 

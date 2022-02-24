@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,9 +16,9 @@ import lombok.Setter;
 @ApiModel
 public class PageQueryDTO {
 
-    @ApiModelProperty("当前页")
+    @ApiModelProperty(value = "当前页", example = "1")
     private Integer pageNum;
-    @ApiModelProperty("每页显示条数")
+    @ApiModelProperty(value = "每页显示条数",example = "10")
     private Integer pageSize;
 
     /**

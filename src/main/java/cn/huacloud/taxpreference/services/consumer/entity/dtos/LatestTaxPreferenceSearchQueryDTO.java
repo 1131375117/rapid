@@ -12,7 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 @Getter
 @Setter
 public class LatestTaxPreferenceSearchQueryDTO extends PageQueryDTO {
-    @ApiModelProperty("所属税种")
+    @ApiModelProperty(value = "所属税种",example = "10101")
     private String taxCategoriesCode;
 
     @Override
