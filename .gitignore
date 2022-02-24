@@ -2,3 +2,4 @@
 *.iml
 target
 src/test/resources/json/format.json
+src/test/resources/html
