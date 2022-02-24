@@ -9,7 +9,8 @@
         select tp.title,
                tc.source_id       as sourceId,
                tc.create_time     as collectionTime,
-               tc.collection_type as collectionType
+               tc.collection_type as collectionType,
+               tp.doc_source as docSource
         from t_collection tc
                  left join t_policies tp on tc.source_id = tp.id
         where tc.consumer_user_id = #{userId}
@@ -22,7 +23,8 @@
         select tod.title,
                tc.source_id       as sourceId,
                tc.create_time     as collectionTime,
-               tc.collection_type as collectionType
+               tc.collection_type as collectionType,
+               tod.doc_source as docSource
         from t_collection tc
                  left join t_other_doc tod on tc.source_id = tod.id
         where tc.consumer_user_id = #{userId}
@@ -34,7 +36,8 @@
         select tfaq.title,
                tc.source_id       as sourceId,
                tc.create_time     as collectionTime,
-               tc.collection_type as collectionType
+               tc.collection_type as collectionType,
+               tfaq.doc_source as docSource
         from t_collection tc
                  left join t_frequently_asked_question tfaq on tc.source_id = tfaq.id
         where tc.consumer_user_id = #{userId}
@@ -47,7 +50,8 @@
         select tpe.title,
                tc.source_id       as sourceId,
                tc.create_time     as collectionTime,
-               tc.collection_type as collectionType
+               tc.collection_type as collectionType,
+               tpe.doc_source as docSource
         from t_collection tc
                  left join t_policies_explain tpe on tc.source_id = tpe.id
         where tc.consumer_user_id = #{userId}

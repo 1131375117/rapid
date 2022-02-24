@@ -24,7 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/open-api/v1/search")
 @RestController
-public class PoliciesExplainSearchController {
+public class PoliciesExplainSearchApi {
 
     private final PoliciesExplainSearchService policiesExplainSearchService;
 

@@ -35,4 +35,7 @@ public class CollectionVO {
     @ApiModelProperty("收藏时间")
     private LocalDate collectionTime;
 
+    @ApiModelProperty("文档来源")
+    private String docSource;
+
 }

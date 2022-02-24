@@ -1,8 +1,8 @@
 package cn.huacloud.taxpreference.openapi.apis.common;
 
-import cn.huacloud.taxpreference.common.utils.ConsumerUserUtil;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.openapi.auth.OpenApiCheckToken;
+import cn.huacloud.taxpreference.openapi.auth.OpenApiStpUtil;
 import cn.huacloud.taxpreference.services.common.OperationRecordService;
 import cn.huacloud.taxpreference.services.common.entity.dtos.OperationRecordDTO;
 import cn.huacloud.taxpreference.services.common.entity.dtos.ViewQueryDTO;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/open-api/v1")
 @RestController
-public class OperationRecordController {
+public class OperationRecordApi {
 
     private final OperationRecordService operationRecord;
 
@@ -37,8 +37,8 @@ public class OperationRecordController {
     @OpenApiCheckToken
     @PostMapping("/operationRecord")
     public ResultVO<Void> operationRecord(@RequestBody @Validated OperationRecordDTO operationRecordDTO) {
-        if (ConsumerUserUtil.isLogin()) {
-            Long consumerUserId = ConsumerUserUtil.getCurrentUserId();
+        if (OpenApiStpUtil.isLogin()) {
+            Long consumerUserId = OpenApiStpUtil.getLoginIdAsLong();
             operationRecord.saveOperationRecord(operationRecordDTO, consumerUserId);
         }
         return ResultVO.ok();
@@ -50,8 +50,8 @@ public class OperationRecordController {
     public ResultVO<PageByOperationVO> queryOperationRecord(@RequestBody ViewQueryDTO pageQueryDTO) {
         PageByOperationVO pageVO=null;
         pageQueryDTO.paramReasonable();
-        if (ConsumerUserUtil.isLogin()) {
-            Long consumerUserId = ConsumerUserUtil.getCurrentUserId();
+        if (OpenApiStpUtil.isLogin()) {
+            Long consumerUserId = OpenApiStpUtil.getLoginIdAsLong();;
             pageVO = operationRecord.queryOperationRecord(pageQueryDTO, consumerUserId);
         }
         return ResultVO.ok(pageVO);

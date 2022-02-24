@@ -290,7 +290,8 @@ public class ProducerUserServiceImpl implements ProducerUserService {
     @Override
     public boolean isUserAccountExist(String userAccount) {
         LambdaQueryWrapper<ProducerUserDO> queryWrapper = Wrappers.lambdaQuery(ProducerUserDO.class)
-                .eq(ProducerUserDO::getUserAccount, userAccount);
+                .eq(ProducerUserDO::getUserAccount, userAccount)
+                .eq(ProducerUserDO::getDeleted,false);
         Long count = producerUserMapper.selectCount(queryWrapper);
         return count > 0;
     }

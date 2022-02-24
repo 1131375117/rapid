@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @RequestMapping("/open-api/v1")
 @RestController
-public class PublicSysParamController {
+public class PublicSysParamApi {
 
     private final SysParamService sysParamService;
 
