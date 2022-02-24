@@ -8,9 +8,9 @@ import lombok.Data;
  */
 @Data
 public class DocSimpleVO {
-    @ApiModelProperty("主键ID")
+    @ApiModelProperty(value = "主键ID",example = "2222")
     private Long id;
 
-    @ApiModelProperty("标题")
+    @ApiModelProperty(value = "标题",example = "标题")
     private String title;
 }

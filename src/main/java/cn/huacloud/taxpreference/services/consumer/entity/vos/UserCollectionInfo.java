@@ -15,7 +15,7 @@ public abstract class UserCollectionInfo {
 
     @Getter
     @Setter
-    @ApiModelProperty("是否已收藏")
+    @ApiModelProperty(value = "是否已收藏",example = "false")
     protected Boolean haveCollection = false;
 
     /**

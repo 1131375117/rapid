@@ -10,16 +10,16 @@ import lombok.Data;
  */
 @Data
 public class PreviousNextVO<T> {
-    @ApiModelProperty("上一篇")
+    @ApiModelProperty(value = "上一篇",example = "49307")
     private Doc<T> previous;
-    @ApiModelProperty("下一篇")
+    @ApiModelProperty(value = "下一篇",example = "49309")
     private Doc<T> next;
 
     @Data
     public static class Doc<T> {
         @ApiModelProperty("ID主键")
         private T id;
-        @ApiModelProperty("标题")
+        @ApiModelProperty(value = "标题",example = "关于取消增值税一般纳税人年检收费的通知")
         private String title;
     }
 }

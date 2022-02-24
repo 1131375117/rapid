@@ -14,16 +14,16 @@ import java.util.List;
 @Data
 public class TaxPreferenceSearchListVO {
 
-    @ApiModelProperty("序号-列表展示用")
+    @ApiModelProperty(value = "序号-列表展示用",example = "1")
     private Long num;
 
-    @ApiModelProperty("主键ID-列表展示用")
+    @ApiModelProperty(value = "主键ID-列表展示用",example = "205")
     private Long id;
 
-    @ApiModelProperty("优惠事项名称-列表展示用")
+    @ApiModelProperty(value = "优惠事项名称-列表展示用",example = "税收优惠名称")
     private String taxPreferenceName;
 
-    @ApiModelProperty("发文日期")
+    @ApiModelProperty(value = "发文日期",example = "2022-01-26")
     private LocalDate releaseDate;
 
     @ApiModelProperty("所属税种-列表展示用")
@@ -38,13 +38,13 @@ public class TaxPreferenceSearchListVO {
     @ApiModelProperty("适用行业")
     private List<SysCodeSimpleVO> industries;
 
-    @ApiModelProperty("企业类型")
+    @ApiModelProperty(value = "企业类型",example = "企业类型")
     private String enterpriseType;
 
-    @ApiModelProperty("减免事项")
+    @ApiModelProperty(value = "减免事项",example = "关于XX的减免事项")
     private String taxPreferenceItem;
 
-    @ApiModelProperty("有效性")
+    @ApiModelProperty(value = "有效性")
     private SysCodeSimpleVO validity;
 
     @ApiModelProperty("政策")
@@ -53,33 +53,33 @@ public class TaxPreferenceSearchListVO {
     @ApiModelProperty("申报条件")
     private List<ConditionSearchVO> submitConditions;
 
-    @ApiModelProperty("留存备查资料")
+    @ApiModelProperty(value = "留存备查资料",example = "留存被查资料")
     private String keepQueryData;
 
-    @ApiModelProperty("提交税务机关资料")
+    @ApiModelProperty(value = "提交税务机关资料",example = "税务机关资料")
     private String submitTaxData;
 
-    @ApiModelProperty("资料报送时限")
+    @ApiModelProperty(value = "资料报送时限",example = "资料送报时限")
     private String submitTimeLimit;
 
-    @ApiModelProperty("申报表填写简要说明")
+    @ApiModelProperty(value = "申报表填写简要说明",example = "申报表简要信息")
     private String submitDescription;
 
     @ApiModelProperty("标签管理")
     private List<String> labels;
 
-    @ApiModelProperty("无装饰的组合文本")
+    @ApiModelProperty(value = "无装饰的组合文本",example = "无装饰文本")
     private String combinePlainContent;
 
-    @ApiModelProperty("浏览量")
+    @ApiModelProperty(value = "浏览量",example = "0")
     private Long views;
 
-    @ApiModelProperty("收藏量")
+    @ApiModelProperty(value = "收藏量",example = "0")
     private Long collections;
 
-    @ApiModelProperty("优惠政策（文件名/文号）-列表展示用")
+    @ApiModelProperty(value = "优惠政策（文件名/文号）-列表展示用",example = "国家税务总局长治市税务局公告〔2018〕5号")
     private String combinePoliciesTitle;
 
-    @ApiModelProperty("摘要-列表展示用")
+    @ApiModelProperty(value = "摘要-列表展示用",example = "国家税务总局长治市税务局关于废止税收规范性文件的公告")
     private String combinePoliciesDigest;
 }

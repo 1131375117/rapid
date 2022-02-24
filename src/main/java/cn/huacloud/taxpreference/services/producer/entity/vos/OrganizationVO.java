@@ -10,7 +10,7 @@ import java.util.List;
  **/
 @Data
 public class OrganizationVO {
-    @ApiModelProperty("名称")
+    @ApiModelProperty(value = "名称")
     private String title;
     @ApiModelProperty("值")
     private String value;

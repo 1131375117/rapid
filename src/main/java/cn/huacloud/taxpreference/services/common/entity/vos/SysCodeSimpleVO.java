@@ -14,11 +14,11 @@ public class SysCodeSimpleVO {
     /**
      * 码值名称
      */
-    @ApiModelProperty("码值名称")
+    @ApiModelProperty(value = "码值名称",example = "码值")
     private String codeName;
     /**
      * 码值代码
      */
-    @ApiModelProperty("码值代码")
+    @ApiModelProperty(value = "码值代码",example = "01")
     private String codeValue;
 }

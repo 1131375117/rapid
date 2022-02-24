@@ -17,7 +17,7 @@ public class ConditionSearchVO {
     /**
      * 条件名称
      */
-    @ApiModelProperty("条件名称")
+    @ApiModelProperty(value = "条件名称")
     private String conditionName;
 
     /**

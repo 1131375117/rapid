@@ -13,16 +13,16 @@ import java.util.List;
  */
 @Data
 public class PoliciesExplainSearchListVO {
-    @ApiModelProperty("主键ID")
+    @ApiModelProperty(value = "主键ID",example = "3007")
     private Long id;
 
-    @ApiModelProperty("标题")
+    @ApiModelProperty(value = "标题",example = "222222")
     private String title;
 
     @ApiModelProperty("所属区域")
     private SysCodeSimpleVO area;
 
-    @ApiModelProperty("来源")
+    @ApiModelProperty(value = "来源",example = "文档来源")
     private String docSource;
 
     @ApiModelProperty("所属税种")
@@ -37,12 +37,12 @@ public class PoliciesExplainSearchListVO {
     @ApiModelProperty("适用行业名称")
     private List<SysCodeSimpleVO> industries;
 
-    @ApiModelProperty("发布日期")
+    @ApiModelProperty(value = "发布日期",example = "2022-01-13")
     private LocalDate releaseDate;
 
-    @ApiModelProperty("正文")
+    @ApiModelProperty(value = "正文",example = "这是正文部分")
     private String content;
 
-    @ApiModelProperty("无装饰的组合文本")
+    @ApiModelProperty(value = "无装饰的组合文本",example = "日，国家税务总局公布了《重大税收违法失信主体信息公布管理办法》（国家税务总局令第54号），现就有关事项解读如下： 一、修订背景 为贯彻中共中央办公厅、国务院办公厅《关于进一步深化税收征管改革的意见》和《国务院办公厅关于进一步完善失信约束制度构建诚信建设长效机制的指导意见》（国办发〔2020〕49号），深入推进重大税收违法失信案件管理工作，规范管理流程")
     private String combinePlainContent;
 }

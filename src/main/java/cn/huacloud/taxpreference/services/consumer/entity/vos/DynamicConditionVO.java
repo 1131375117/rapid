@@ -27,7 +27,7 @@ public class DynamicConditionVO {
     @Getter
     @Setter
     public static class Condition extends GroupVO<String> {
-        @ApiModelProperty("是否多选")
+        @ApiModelProperty(value = "是否多选",example = "true")
         private Boolean multipleChoice;
     }
 
