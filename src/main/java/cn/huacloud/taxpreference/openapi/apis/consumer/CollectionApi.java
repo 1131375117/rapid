@@ -7,6 +7,7 @@ import cn.huacloud.taxpreference.services.common.entity.dtos.CollectionQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.CollectionService;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.CollectionDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PageByCollectionVO;
+import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
  *
  * @author fuhua
  **/
+@ApiSupport(order = 800)
 @Api(tags = "收藏功能")
 @RequiredArgsConstructor
 @RequestMapping("/open-api/v1")

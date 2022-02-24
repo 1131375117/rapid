@@ -6,6 +6,7 @@ import cn.huacloud.taxpreference.openapi.auth.OpenApiCheckToken;
 import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeCountVO;
 import cn.huacloud.taxpreference.services.consumer.CommonSearchService;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.SearchDataCountVO;
+import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import java.util.List;
 /**
  * @author wangkh
  */
+@ApiSupport(order = 300)
 @Api(tags = "公共检索")
 @RequiredArgsConstructor
 @RequestMapping("/open-api/v1/search")

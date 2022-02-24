@@ -9,6 +9,8 @@ import cn.huacloud.taxpreference.services.consumer.TaxPreferenceSearchService;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.LatestTaxPreferenceSearchQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.TaxPreferenceSearchQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.*;
+import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
+import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -21,6 +23,7 @@ import java.util.List;
 /**
  * @author wangkh
  */
+@ApiSupport(order = 600)
 @Api(tags = "税收优惠检索")
 @RequiredArgsConstructor
 @RequestMapping("/open-api/v1/search")
@@ -29,6 +32,7 @@ public class TaxPreferenceSearchApi {
 
     private final TaxPreferenceSearchService taxPreferenceSearchService;
 
+    @ApiOperationSupport(order = 1)
     @ApiOperation("热门税收优惠（首页）")
     @OpenApiCheckToken
     @GetMapping("/taxPreference/hot")
@@ -38,6 +42,7 @@ public class TaxPreferenceSearchApi {
         return ResultVO.ok(page);
     }
 
+    @ApiOperationSupport(order = 2)
     @ApiOperation("最新税收优惠（首页）")
     @OpenApiCheckToken
     @GetMapping("/taxPreference/latest")
@@ -47,6 +52,7 @@ public class TaxPreferenceSearchApi {
         return ResultVO.ok(page);
     }
 
+    @ApiOperationSupport(order = 3)
     @ApiOperation(value = "税收优惠搜索", notes = "税收优惠高级搜索接口")
     @PostMapping("/taxPreference")
     @OpenApiCheckToken
@@ -61,6 +67,7 @@ public class TaxPreferenceSearchApi {
         return ResultVO.ok(pageVO);
     }
 
+    @ApiOperationSupport(order = 4)
     @ApiOperation("税收优惠详情")
     @GetMapping("/taxPreference/{id}")
     @OpenApiCheckToken
@@ -70,6 +77,7 @@ public class TaxPreferenceSearchApi {
         return ResultVO.ok(taxPreferenceSearchVO);
     }
 
+    @ApiOperationSupport(order = 5)
     @ApiOperation("热门标签列表")
     @GetMapping("/taxPreference/hotLabels")
     @OpenApiCheckToken
@@ -78,6 +86,7 @@ public class TaxPreferenceSearchApi {
         return ResultVO.ok(hotLabels);
     }
 
+    @ApiOperationSupport(order = 6)
     @ApiOperation("根据条件参数动态获取筛选条件")
     @PostMapping("/taxPreference/dynamicCondition")
     @OpenApiCheckToken
@@ -89,6 +98,7 @@ public class TaxPreferenceSearchApi {
         return ResultVO.ok(dynamicConditionVO);
     }
 
+    @ApiOperationSupport(order = 7)
     @ApiOperation("获取减免事项关联的税种码值")
     @PostMapping("/taxPreference/itemRelatedCodes")
     @OpenApiCheckToken

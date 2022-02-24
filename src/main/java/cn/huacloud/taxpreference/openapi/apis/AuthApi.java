@@ -7,6 +7,7 @@ import cn.huacloud.taxpreference.openapi.auth.OpenApiStpUtil;
 import cn.huacloud.taxpreference.services.openapi.OpenApiService;
 import cn.huacloud.taxpreference.services.openapi.entity.dos.ApiAccessKeyDO;
 import cn.huacloud.taxpreference.services.openapi.entity.vos.TokenInfoVO;
+import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +22,9 @@ import java.time.LocalDateTime;
 /**
  * @author wangkh
  */
+@ApiSupport(order = 0)
 @Slf4j
-@Api(tags = "接口授权")
+@Api(tags = "OpenAPI授权")
 @RequiredArgsConstructor
 @RequestMapping("/open-api/v1")
 @RestController

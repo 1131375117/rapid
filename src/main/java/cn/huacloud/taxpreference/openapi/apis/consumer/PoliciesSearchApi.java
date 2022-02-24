@@ -10,6 +10,7 @@ import cn.huacloud.taxpreference.services.consumer.entity.dtos.PoliciesSearchQue
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesSearchListVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesSearchSimpleVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesSearchVO;
+import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * @author wangkh
  */
+@ApiSupport(order = 400)
 @Api(tags = "政策法规检索")
 @RequiredArgsConstructor
 @RequestMapping("/open-api/v1/search")

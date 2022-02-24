@@ -30,7 +30,7 @@ mybatis-plus:
 # sa-token
 sa-token:
   token-name: satoken
-  activity-timeout: 14400
+  activity-timeout: 28800
   is-share: true
   token-style: uuid
   is-log: true
