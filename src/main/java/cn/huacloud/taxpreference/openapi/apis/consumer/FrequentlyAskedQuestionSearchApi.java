@@ -10,6 +10,7 @@ import cn.huacloud.taxpreference.services.consumer.entity.dtos.FAQSearchQueryDTO
 import cn.huacloud.taxpreference.services.consumer.entity.vos.FAQSearchSimpleVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.FAQSearchVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.OrganizationVO;
+import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import java.util.List;
 /**
  * @author wangkh
  */
+@ApiSupport(order = 700)
 @Api(tags = "热点问答检索")
 @RequiredArgsConstructor
 @RequestMapping("/open-api/v1/search")

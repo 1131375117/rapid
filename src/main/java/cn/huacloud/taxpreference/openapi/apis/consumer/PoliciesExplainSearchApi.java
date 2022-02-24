@@ -10,6 +10,7 @@ import cn.huacloud.taxpreference.services.consumer.entity.dtos.PoliciesExplainSe
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesExplainSearchListVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesExplainSearchSimpleVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PoliciesExplainSearchVO;
+import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import java.util.List;
 /**
  * @author wangkh
  */
+@ApiSupport(order = 500)
 @Api(tags = "政策解读检索")
 @RequiredArgsConstructor
 @RequestMapping("/open-api/v1/search")

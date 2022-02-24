@@ -8,6 +8,7 @@ import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.openapi.auth.OpenApiCheckToken;
 import cn.huacloud.taxpreference.services.common.SysParamService;
 import cn.huacloud.taxpreference.services.common.entity.dos.SysParamDO;
+import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 /**
  * @author wangkh
  */
+@ApiSupport(order = 200)
 @Api(tags = "公开的系统参数")
 @RequiredArgsConstructor
 @RequestMapping("/open-api/v1")
