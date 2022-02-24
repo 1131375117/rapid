@@ -10,11 +10,16 @@ import cn.huacloud.taxpreference.openapi.apis.AuthApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpMethod;
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.Response;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * @author wangkh
@@ -63,10 +68,21 @@ public class SwaggerConfig {
         String basePackage = clazz.getPackage().getName();
         return new Docket(DocumentationType.SWAGGER_2)
                 .groupName(groupName)
+                .globalResponses(HttpMethod.GET, Collections.singletonList(response("200", "请求成功")))
+                .globalResponses(HttpMethod.POST, Collections.singletonList(response("200", "请求成功")))
                 .select()
                 .apis(RequestHandlerSelectors.basePackage(basePackage))
                 .build();
     }
 
-
+    private Response response(String code, String description) {
+        return new Response(code,
+                description,
+                true,
+                new ArrayList<>(),
+                new ArrayList<>(),
+                new ArrayList<>(),
+                new ArrayList<>()
+                );
+    }
 }
