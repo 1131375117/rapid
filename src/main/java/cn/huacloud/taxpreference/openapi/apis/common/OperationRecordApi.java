@@ -7,26 +7,22 @@ import cn.huacloud.taxpreference.services.common.OperationRecordService;
 import cn.huacloud.taxpreference.services.common.entity.dtos.OperationRecordDTO;
 import cn.huacloud.taxpreference.services.common.entity.dtos.ViewQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PageByOperationVO;
-import com.github.xiaoymin.knife4j.annotations.ApiSupport;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 操作记录
  *
  * @author fuhua
  **/
-@ApiSupport(order = 900)
-@Api(tags = "操作记录")
 @RequiredArgsConstructor
+/*@ApiSupport(order = 900)
+@Api(tags = "操作记录")
 @RequestMapping("/open-api/v1")
-@RestController
+@RestController*/
 public class OperationRecordApi {
 
     private final OperationRecordService operationRecord;
