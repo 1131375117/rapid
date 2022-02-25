@@ -22,7 +22,7 @@ public class DocCodeUtil {
             sb.append(docWordCode);
         }
         if (docYearCode != null) {
-            sb.append("〔").append(docYearCode).append("〕");
+            sb.append("〔").append(docYearCode).append("〕").append("年");
         }
         if (docNumCode != null) {
             sb.append(docNumCode).append("号");

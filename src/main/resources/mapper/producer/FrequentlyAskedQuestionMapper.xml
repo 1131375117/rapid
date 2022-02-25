@@ -22,7 +22,8 @@
                 and doc_source like "%"#{frequentlyAskedQuestionQueryDTO.docSource}"%"
             </if>
             <if test="frequentlyAskedQuestionQueryDTO.keyword!=null and frequentlyAskedQuestionQueryDTO.keyword!=''">
-                and title like "%"#{frequentlyAskedQuestionQueryDTO.keyword}"%"
+                and (title like "%"#{frequentlyAskedQuestionQueryDTO.keyword}"%"
+                or doc_source like "%"#{frequentlyAskedQuestionQueryDTO.keyword}"%")
             </if>
             <if test="frequentlyAskedQuestionQueryDTO.frequentlyAskedQuestionStatus!=null and frequentlyAskedQuestionQueryDTO.frequentlyAskedQuestionStatus!=''">
                 and frequently_asked_question_status=#{frequentlyAskedQuestionQueryDTO.frequentlyAskedQuestionStatus}

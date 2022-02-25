@@ -1,6 +1,5 @@
 package cn.huacloud.taxpreference.controllers.common;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.huacloud.taxpreference.common.annotations.PermissionInfo;
 import cn.huacloud.taxpreference.common.enums.AttachmentType;
 import cn.huacloud.taxpreference.common.enums.PermissionGroup;
@@ -33,7 +32,7 @@ public class AttachmentController {
     private final AttachmentService attachmentService;
 
     @PermissionInfo(name = "上传附件", group = PermissionGroup.POLICIES)
-    @SaCheckPermission("attachment_upload")
+    /*@SaCheckPermission("attachment_upload")*/
     @ApiOperation("上传附件")
     @PostMapping("/attachment/upload")
     public ResultVO<AttachmentVO> uploadAttachment(@RequestParam("attachmentType") AttachmentType attachmentType,

@@ -32,7 +32,7 @@ public class TaxPreferenceSearchQueryDTO extends AbstractHighlightPageQueryDTO {
     @FilterField("enterpriseType")
     private List<String> enterpriseTypes;
 
-    @ApiModelProperty(value = "减免事项", example = "")
+    @ApiModelProperty(value = "减免事项")
     @FilterField("taxPreferenceItem")
     private List<String> taxPreferenceItems;
 

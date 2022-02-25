@@ -49,7 +49,7 @@ public class FrequentlyAskedQuestionQueryDTO extends KeywordPageQueryDTO {
 	@ApiModelProperty("更新日期")
 	private LocalDateTime updateTime;
 
-	@ApiModelProperty(value = "排序", notes = "RELEASE_DATE:发布时间,UPDATE_TIME:更新时间")
+	@ApiModelProperty(value = "排序", notes = "RELEASE_DATE:发布时间,UPDATE_TIME:更新时间",example = "RELEASE_DATE")
 	private PoliciesSortType sortField;
 
 	@Override
