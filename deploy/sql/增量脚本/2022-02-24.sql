@@ -29,3 +29,21 @@ CREATE TABLE `t_consultation_content`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 24
   DEFAULT CHARSET = utf8mb4 COMMENT ='热门咨询表';
+
+
+CREATE TABLE `t_api_access_key`
+(
+    `id`                bigint(20)   NOT NULL AUTO_INCREMENT COMMENT 'ID主键',
+    `consumer_user_id`  bigint(20)   NOT NULL COMMENT '消费者用户id',
+    `access_key_id`     varchar(128) NOT NULL COMMENT 'accessKeyId',
+    `access_key_secret` varchar(128) NOT NULL COMMENT 'accessKeySecret',
+    `enable`            tinyint(4)   NOT NULL COMMENT '是否可用',
+    `create_time`       datetime     NOT NULL COMMENT '创建时间',
+    `last_use_time`     datetime DEFAULT NULL COMMENT '最后时间时间',
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 2
+  DEFAULT CHARSET = utf8mb4 COMMENT ='API访问密钥';
+
+INSERT INTO t_api_access_key
+VALUES (1, -1, 'LTAI5tFPbwtd5UNZW9jBWBCL', 'QS9bGktBytwMdrcW5iLyVyBA0lXeOP', 1, CURRENT_TIMESTAMP, null);
