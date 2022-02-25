@@ -6,6 +6,7 @@ import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.enums.DocType;
 import cn.huacloud.taxpreference.config.ElasticsearchIndexConfig;
 import cn.huacloud.taxpreference.services.consumer.ConsultationSearchService;
+import cn.huacloud.taxpreference.services.consumer.entity.dtos.ApproximateConsultationDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.ConsultationQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.ConsultationCountVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.ConsultationESVO;
@@ -31,12 +32,14 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.elasticsearch.index.query.QueryBuilders.matchAllQuery;
+import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
 
 /**
  * 热门咨询检索
@@ -139,6 +142,38 @@ public class ConsultationSearchServiceImpl implements ConsultationSearchService 
         consultationCountVO.setQuestionTotals(questionCount);
         consultationCountVO.setCustomTotals(customCount);
         return consultationCountVO;
+    }
+
+    @Override
+    public PageVO<ConsultationESVO> approximateConsultation(ApproximateConsultationDTO pageQuery) throws Exception {
+        // 执行查询
+        QueryBuilder queryBuilder;
+        if (pageQuery.getIndustryCodes() == null|| CollectionUtils.isEmpty(pageQuery.getIndustryCodes() )) {
+            queryBuilder = matchAllQuery();
+        } else {
+            queryBuilder = matchQuery("industries.codeValue", pageQuery.getIndustryCodes().get(0));
+        }
+        // 执行查询
+        SearchResponse response = simplePageSearch(getIndex(),
+                queryBuilder,
+                pageQuery,
+                SortBuilders.fieldSort("views").order(SortOrder.DESC)
+        );
+
+        // 数据映射
+        SearchHits hits = response.getHits();
+        List<ConsultationESVO> records = new ArrayList<>();
+        for (SearchHit hit : hits.getHits()) {
+            ConsultationESVO consultationESVO = objectMapper.readValue(hit.getSourceAsString(), ConsultationESVO.class);
+            records.add(consultationESVO);
+        }
+
+        // 返回数据
+        return new PageVO<ConsultationESVO>()
+                .setTotal(hits.getTotalHits().value)
+                .setPageNum(pageQuery.getPageNum())
+                .setPageSize(pageQuery.getPageSize())
+                .setRecords(records);
     }
 
     private long getCustomCount() throws IOException {
