@@ -59,6 +59,9 @@ tax-preference:
     other-doc:
       index: other_doc_index_2021-12-21_test
       alias: other_doc_test
+    consultation:
+      index: consultation_index_2022-02-17_test
+      alias: consultation_test
 # 爬虫数据同步
 spider-sync:
   enabled: true

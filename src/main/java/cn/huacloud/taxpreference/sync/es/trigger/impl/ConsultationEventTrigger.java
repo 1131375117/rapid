@@ -15,6 +15,7 @@ import cn.huacloud.taxpreference.services.producer.mapper.ConsultationMapper;
 import cn.huacloud.taxpreference.sync.es.trigger.EventTrigger;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -88,6 +90,11 @@ public class ConsultationEventTrigger extends EventTrigger<Long, ConsultationES>
         for (ConsultationContentDO consultationContentDO : consultationContentDOList) {
             ConsultationContentESVO consultationContentESVO = new ConsultationContentESVO();
             CustomBeanUtil.copyProperties(consultationContentDO, consultationContentESVO);
+            if(!StringUtils.isEmpty(consultationContentDO.getImageUris())){
+                consultationContentESVO.setImageUris(Arrays.asList(consultationContentDO.getImageUris().split(",")));
+            }else{
+                consultationContentESVO.setImageUris(new ArrayList<>());
+            }
             consultationContentESVOList.add(consultationContentESVO);
         }
         consultationES.setConsultationContent(consultationContentESVOList);
