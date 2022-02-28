@@ -1,12 +1,14 @@
 package cn.huacloud.taxpreference.services.common.entity.dos;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * t_api_user_statistics
@@ -15,18 +17,20 @@ import java.util.Date;
 @ApiModel(value="cn.huacloud.taxpreference.services.common.entity.dos.ApiUserStatisticsDOOpenAPI统计信息表")
 @Data
 @Accessors(chain = true)
+@TableName("t_api_user_statistics")
 public class ApiUserStatisticsDO implements Serializable {
     /**
      * 主键id
      */
     @ApiModelProperty(value="主键id")
+    @TableId(type = IdType.AUTO)
     private Long id;
 
     /**
      * 用户id
      */
     @ApiModelProperty(value="用户id")
-    private Long akId;
+    private String akId;
 
     /**
      * 请求方式
@@ -44,13 +48,13 @@ public class ApiUserStatisticsDO implements Serializable {
      * 请求耗时最长时间
      */
     @ApiModelProperty(value="请求耗时最长时间")
-    private Date maxTime;
+    private Long maxTime;
 
     /**
      * 请求耗时最短时间
      */
     @ApiModelProperty(value="请求耗时最短时间")
-    private Date minTime;
+    private Long minTime;
 
     /**
      * 接口调用总时长

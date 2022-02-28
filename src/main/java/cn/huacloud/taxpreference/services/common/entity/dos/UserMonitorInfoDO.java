@@ -1,5 +1,8 @@
 package cn.huacloud.taxpreference.services.common.entity.dos;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -15,18 +18,20 @@ import java.time.LocalDateTime;
 @ApiModel(value="cn.huacloud.taxpreference.services.common.entity.dos.UserMonitorInfoDO调用记录表")
 @Data
 @Accessors(chain = true)
+@TableName("t_user_monitor_info")
 public class UserMonitorInfoDO implements Serializable {
     /**
      * 主键id
      */
     @ApiModelProperty(value="主键id")
+    @TableId(type = IdType.AUTO)
     private Long id;
 
     /**
      * 用户id
      */
     @ApiModelProperty(value="用户id")
-    private Long akId;
+    private String akId;
 
     /**
      * 请求方式

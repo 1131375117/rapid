@@ -76,3 +76,4 @@ spring:
         deleteConsultation-in-0:
           destination: deleteConsultationExchange
           group: deleteConsultationQueue
+
