@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.openapi.apis.consumer;
 
+import cn.huacloud.taxpreference.common.annotations.MonitorInterface;
 import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.CollectionType;
@@ -36,8 +37,10 @@ public class TaxPreferenceSearchApi {
     @ApiOperation("热门税收优惠（首页）")
     @OpenApiCheckToken
     @GetMapping("/taxPreference/hot")
+    @MonitorInterface
     public ResultVO<PageVO<DocSearchSimpleVO>> hotTaxPreference(PageQueryDTO pageQuery) throws Exception {
         pageQuery.paramReasonable();
+        int a=1/0;
         PageVO<DocSearchSimpleVO> page = taxPreferenceSearchService.hotTaxPreference(pageQuery);
         return ResultVO.ok(page);
     }
@@ -56,6 +59,7 @@ public class TaxPreferenceSearchApi {
     @ApiOperation(value = "税收优惠搜索", notes = "税收优惠高级搜索接口")
     @PostMapping("/taxPreference")
     @OpenApiCheckToken
+    @MonitorInterface
     public ResultVO<PageVO<TaxPreferenceSearchListVO>> pageSearch(@RequestBody TaxPreferenceSearchQueryDTO pageQuery) throws Exception {
         PageVO<TaxPreferenceSearchListVO> pageVO = taxPreferenceSearchService.pageSearch(pageQuery);
         // 添加序号

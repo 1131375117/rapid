@@ -2,6 +2,7 @@ package cn.huacloud.taxpreference.openapi.apis;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.huacloud.taxpreference.common.enums.BizCode;
+import cn.huacloud.taxpreference.common.utils.MonitorUtil;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.openapi.auth.OpenApiStpUtil;
 import cn.huacloud.taxpreference.services.openapi.OpenApiService;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 
 /**
@@ -31,6 +33,8 @@ import java.time.LocalDateTime;
 public class AuthApi {
 
     private final OpenApiService openApiService;
+
+    private final HttpServletRequest request;
 
     @ApiOperation("获取OpenAPI授权访问token")
     @PostMapping("/auth/token")
@@ -60,7 +64,7 @@ public class AuthApi {
         } else {
             invalidTime = LocalDateTime.now().plusSeconds(tokenTimeout);
         }
-
+        MonitorUtil.accessKeyId.put(tokenInfo.getTokenValue(),accessKeyId);
         tokenInfoVO.setInvalidTime(invalidTime);
         return ResultVO.ok(tokenInfoVO);
     }

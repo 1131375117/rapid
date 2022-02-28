@@ -6,6 +6,7 @@ import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.utils.ConsumerUserUtil;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.consumer.ConsultationSearchService;
+import cn.huacloud.taxpreference.services.consumer.entity.dtos.ApproximateConsultationDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.ConsultationDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.ConsultationQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.ConsultationCountVO;
@@ -90,4 +91,11 @@ public class ConsultationSearchController {
         return ResultVO.ok(count);
     }
 
+    @ApiOperation("近似推荐")
+    @PostMapping("/approximateConsultation")
+    @ConsumerUserCheckLogin
+    public ResultVO<PageVO<ConsultationESVO>> approximateConsultation(@RequestBody ApproximateConsultationDTO approximateConsultationDTO) throws Exception {
+        PageVO<ConsultationESVO> pageVO = consultationSearchService.approximateConsultation(approximateConsultationDTO);
+        return ResultVO.ok(pageVO);
+    }
 }
