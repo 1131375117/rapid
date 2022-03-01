@@ -82,6 +82,7 @@ spider-sync:
 # 企业微信配置
 wwx:
   corp-id: "wx9a124e5ac3e8815c"
+  provider-secret: "-2siEGlPSyf5EeOk3g61TxgD9DwxazfF3MwQXFo9KygK6ijP9Rweh7IsXCGRQb9E"
   suite-id: "wxc56593939fb029d1"
   secret: "dcBNFmhW7-iGXntd3RufqlY3u228-H0HbZBX1pen6_Q"
   token: "Pr0KgCr7qor43O2yKLG6Ah8sce9JrLom"

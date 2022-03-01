@@ -13,6 +13,9 @@
  */
 package cn.huacloud.taxpreference.services.wwx.ase;
 
+import cn.huacloud.taxpreference.services.wwx.entity.dtos.CallbackBodyDTO;
+import cn.huacloud.taxpreference.services.wwx.entity.dtos.CallbackQueryDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 
 import javax.crypto.Cipher;
@@ -37,6 +40,7 @@ import java.util.Random;
  * 	<li>如果安装了JDK，将两个jar文件放到%JDK_HOME%\jre\lib\security目录下覆盖原来文件</li>
  * </ol>
  */
+@Slf4j
 public class WXBizMsgCrypt {
 	static Charset CHARSET = Charset.forName("utf-8");
 	Base64 base64 = new Base64();
@@ -101,7 +105,7 @@ public class WXBizMsgCrypt {
 	 * @return 加密后base64编码的字符串
 	 * @throws AesException aes加密失败
 	 */
-	String encrypt(String randomStr, String text) throws AesException {
+	public String encrypt(String randomStr, String text) throws AesException {
 		ByteGroup byteCollector = new ByteGroup();
 		byte[] randomStrBytes = randomStr.getBytes(CHARSET);
 		byte[] textBytes = text.getBytes(CHARSET);
@@ -148,7 +152,7 @@ public class WXBizMsgCrypt {
 	 * @return 解密得到的明文
 	 * @throws AesException aes解密失败
 	 */
-	String decrypt(String text) throws AesException {
+	public String decrypt(String text) throws AesException {
 		byte[] original;
 		try {
 			// 设置解密模式为AES的CBC模式
@@ -241,7 +245,7 @@ public class WXBizMsgCrypt {
 	 * @return 解密后的原文
 	 * @throws AesException 执行失败，请查看该异常的错误码和具体的错误信息
 	 */
-	public String DecryptMsg(String msgSignature, String timeStamp, String nonce, String postData)
+	public String decryptMsg(String msgSignature, String timeStamp, String nonce, String postData)
 			throws AesException {
 
 		// 密钥，公众账号的app secret
@@ -263,19 +267,27 @@ public class WXBizMsgCrypt {
 		return result;
 	}
 
+	public void verifySignature(CallbackQueryDTO queryDTO, String encrypt) throws Exception {
+		String signature = SHA1.getSHA1(token, queryDTO.getTimestamp(), queryDTO.getNonce(), encrypt);
+		if (!signature.equals(queryDTO.getMsgSignature())) {
+			log.info("签名验证失败");
+			throw new AesException(AesException.ValidateSignatureError);
+		}
+	}
+
 	/**
 	 * 验证URL
 	 * @param msgSignature 签名串，对应URL参数的msg_signature
-	 * @param timeStamp 时间戳，对应URL参数的timestamp
+	 * @param timestamp 时间戳，对应URL参数的timestamp
 	 * @param nonce 随机串，对应URL参数的nonce
 	 * @param echoStr 随机串，对应URL参数的echostr
 	 * 
 	 * @return 解密之后的echostr
 	 * @throws AesException 执行失败，请查看该异常的错误码和具体的错误信息
 	 */
-	public String VerifyURL(String msgSignature, String timeStamp, String nonce, String echoStr)
+	public String verifyURL(String msgSignature, String timestamp, String nonce, String echoStr)
 			throws AesException {
-		String signature = SHA1.getSHA1(token, timeStamp, nonce, echoStr);
+		String signature = SHA1.getSHA1(token, timestamp, nonce, echoStr);
 
 		if (!signature.equals(msgSignature)) {
 			throw new AesException(AesException.ValidateSignatureError);

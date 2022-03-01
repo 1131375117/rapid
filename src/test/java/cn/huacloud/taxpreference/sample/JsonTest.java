@@ -1,7 +1,7 @@
 package cn.huacloud.taxpreference.sample;
 
 import cn.huacloud.taxpreference.common.enums.DocType;
-import cn.huacloud.taxpreference.services.wwx.entity.dtos.CallBackBodyDTO;
+import cn.huacloud.taxpreference.services.wwx.entity.dtos.CallbackBodyDTO;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,7 +34,7 @@ public class JsonTest {
                 "   <AgentID><![CDATA[toAgentID]]></AgentID>\n" +
                 "   <Encrypt><![CDATA[msg_encrypt]]></Encrypt>\n" +
                 "</xml>";
-        CallBackBodyDTO paramDTO = xmlMapper.readValue(xml, CallBackBodyDTO.class);
+        CallbackBodyDTO paramDTO = xmlMapper.readValue(xml, CallbackBodyDTO.class);
         System.out.println(paramDTO);
     }
 
