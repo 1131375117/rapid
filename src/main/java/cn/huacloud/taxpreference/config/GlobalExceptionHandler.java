@@ -8,12 +8,14 @@ import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.exception.TaxPreferenceException;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.openapi.auth.OpenApiStpUtil;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.stream.Collectors;
 
 /**
@@ -23,7 +25,10 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
+
+    private final HttpServletRequest request;
 
     /**
      * 捕获 sa-token 权限异常
@@ -57,6 +62,7 @@ public class GlobalExceptionHandler {
             resultVO = BizCode._500.getResultVO();
             resultVO.setData(e.getMessage());
         }
+        request.setAttribute("result", resultVO);
         return resultVO;
     }
 
@@ -69,11 +75,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(TaxPreferenceException.class)
     public ResultVO<Object> handleTaxPreferenceException(TaxPreferenceException e) {
         log.info("接口调用业务异常: {}", e.getMessage());
+        request.setAttribute("result", new ResultVO<>(e.getCode(), e.getMessage(), e.getData()));
         return new ResultVO<>(e.getCode(), e.getMessage(), e.getData());
     }
 
     /**
      * 捕获参数校验异常
+     *
      * @param e 被捕获异常
      * @return resultVO
      */
@@ -84,27 +92,34 @@ public class GlobalExceptionHandler {
                 .map(fieldError -> fieldError.getField() + " => " + fieldError.getDefaultMessage())
                 .collect(Collectors.joining(";"));
         log.info("参数校验失败：{}", message);
+        request.setAttribute("result", new ResultVO<>(BizCode._4100.code, message, null));
         return new ResultVO<>(BizCode._4100.code, message, null);
     }
 
     /**
      * 消息转换异常，通常是前端入参错误，提示前端
+     *
      * @param e 被捕获异常
      * @return resultVO
      */
     @ExceptionHandler(HttpMessageConversionException.class)
     public ResultVO<Void> handleHttpMessageConversionException(HttpMessageConversionException e) {
         log.error("消息转换异常", e);
+        request.setAttribute("result", BizCode._4100.getResultVO());
         return BizCode._4100.getResultVO();
     }
 
     /**
      * 全局异常
+     *
      * @return resultVO
      */
     @ExceptionHandler(Exception.class)
     public ResultVO<Void> handleException(Exception e) {
         log.error("接口调用异常", e);
+        request.setAttribute("result", BizCode._500.getResultVO());
         return BizCode._500.getResultVO();
     }
+
+
 }

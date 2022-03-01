@@ -1,6 +1,6 @@
 package cn.huacloud.taxpreference.sync.es.trigger.impl;
 
-import cn.huacloud.taxpreference.services.common.entity.dos.ApiUserStatisticsDO;
+import cn.huacloud.taxpreference.services.common.entity.dos.UserMonitorInfoDO;
 import cn.huacloud.taxpreference.sync.es.trigger.MysqlEventTrigger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -16,16 +16,12 @@ import java.util.function.Supplier;
  */
 @RequiredArgsConstructor
 @Component
-public class MonitorApiEventTrigger extends MysqlEventTrigger<ApiUserStatisticsDO> {
+public class MonitorUserApiInfoEventTrigger extends MysqlEventTrigger<UserMonitorInfoDO> {
 
     @Bean
-    public Supplier<Flux<ApiUserStatisticsDO>> saveApiUserStatisticsSuppler() {
+    public Supplier<Flux<UserMonitorInfoDO>> saveUserMonitorInfoSuppler() {
         return saveMany::asFlux;
     }
 
-    @Bean
-    public Supplier<Flux<ApiUserStatisticsDO>> updateApiUserStatisticsSuppler() {
-        return updateMany::asFlux;
-    }
 
 }

@@ -45,9 +45,19 @@ public class MonitorUtil {
      */
     public static synchronized Long storeMaxTime(Long maxTime, Long thisTime) {
         if (thisTime > maxTime) {
-            maxTime = thisTime;
+            return thisTime;
         }
         return maxTime;
+    }
+
+    /**
+     * 比较时长min
+     */
+    public static synchronized Long storeMinTime(Long minTime, Long thisTime) {
+        if (thisTime < minTime) {
+            return thisTime;
+        }
+        return minTime;
     }
 
     /**
@@ -66,14 +76,4 @@ public class MonitorUtil {
         return totalCount + 1;
     }
 
-
-    /**
-     * 比较时长short
-     */
-    public static synchronized Long storeMinTime(Long minTime, Long thisTime) {
-        if (thisTime < minTime) {
-            minTime = thisTime;
-        }
-        return minTime;
-    }
 }

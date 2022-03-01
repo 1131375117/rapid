@@ -2,7 +2,6 @@ package cn.huacloud.taxpreference.openapi.apis;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.huacloud.taxpreference.common.enums.BizCode;
-import cn.huacloud.taxpreference.common.utils.MonitorUtil;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.openapi.auth.OpenApiStpUtil;
 import cn.huacloud.taxpreference.services.openapi.OpenApiService;
@@ -64,7 +63,6 @@ public class AuthApi {
         } else {
             invalidTime = LocalDateTime.now().plusSeconds(tokenTimeout);
         }
-        MonitorUtil.accessKeyId.put(tokenInfo.getTokenValue(),accessKeyId);
         tokenInfoVO.setInvalidTime(invalidTime);
         return ResultVO.ok(tokenInfoVO);
     }

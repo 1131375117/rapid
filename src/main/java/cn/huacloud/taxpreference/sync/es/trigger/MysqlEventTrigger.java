@@ -1,14 +1,12 @@
-/*
 package cn.huacloud.taxpreference.sync.es.trigger;
 
 import reactor.core.publisher.Sinks;
 
-*/
 /**
  * 事件触发器
  *
- * @author wangkh
- *//*
+ * @author fuhua
+ */
 
 public abstract class MysqlEventTrigger<T> {
 
@@ -21,17 +19,15 @@ public abstract class MysqlEventTrigger<T> {
             saveMany.tryEmitNext(t);
         }
     }
-
-    */
-/**
+    /*
+     *
      * 触发删除事件
      *
      * @param t 主键ID
-     *//*
+     */
 
     public void updateEvent(T t) {
         updateMany.tryEmitNext(t);
     }
 
 }
-*/
