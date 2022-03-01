@@ -78,3 +78,11 @@ spider-sync:
     bucket: "data-spider"
     access-key: "data_spider"
     secret-key: "data_spider"
+
+# 企业微信配置
+wwx:
+  corp-id: "wx9a124e5ac3e8815c"
+  suite-id: "wxc56593939fb029d1"
+  secret: "dcBNFmhW7-iGXntd3RufqlY3u228-H0HbZBX1pen6_Q"
+  token: "Pr0KgCr7qor43O2yKLG6Ah8sce9JrLom"
+  encoding-aes-key: "85kZ3CSeTdxQjHqntw5scxk1pLJrmx2psoIReB1ySv1"

@@ -1,10 +1,12 @@
 package cn.huacloud.taxpreference.sample;
 
 import cn.huacloud.taxpreference.common.enums.DocType;
+import cn.huacloud.taxpreference.services.wwx.entity.dtos.CallBackBodyDTO;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionLikeType;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -14,12 +16,27 @@ import java.util.List;
 
 /**
  * json测试类
+ *
  * @author wangkh
  */
 @Slf4j
 public class JsonTest {
 
     ObjectMapper objectMapper = new ObjectMapper();
+
+
+    @Test
+    public void testXml() throws Exception {
+        XmlMapper xmlMapper = new XmlMapper();
+        String xml =
+                "<xml> \n" +
+                "   <ToUserName><![CDATA[toUser]]></ToUserName>\n" +
+                "   <AgentID><![CDATA[toAgentID]]></AgentID>\n" +
+                "   <Encrypt><![CDATA[msg_encrypt]]></Encrypt>\n" +
+                "</xml>";
+        CallBackBodyDTO paramDTO = xmlMapper.readValue(xml, CallBackBodyDTO.class);
+        System.out.println(paramDTO);
+    }
 
     @Test
     public void testConvert() throws Exception {
