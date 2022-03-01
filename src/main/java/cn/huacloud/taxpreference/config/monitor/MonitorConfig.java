@@ -1,4 +1,4 @@
-package cn.huacloud.taxpreference.config;
+package cn.huacloud.taxpreference.config.monitor;
 
 import cn.huacloud.taxpreference.services.common.MonitorService;
 import cn.huacloud.taxpreference.sync.es.trigger.impl.MonitorApiEventTrigger;

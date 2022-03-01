@@ -1,4 +1,4 @@
-package cn.huacloud.taxpreference.config;
+package cn.huacloud.taxpreference.config.monitor;
 
 import cn.huacloud.taxpreference.common.annotations.MonitorInterface;
 import cn.huacloud.taxpreference.common.enums.user.RequestType;

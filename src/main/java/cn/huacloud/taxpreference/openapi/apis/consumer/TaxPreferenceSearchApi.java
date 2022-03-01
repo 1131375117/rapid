@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.openapi.apis.consumer;
 
+import cn.huacloud.taxpreference.common.annotations.LimitApi;
 import cn.huacloud.taxpreference.common.annotations.MonitorInterface;
 import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
@@ -38,6 +39,7 @@ public class TaxPreferenceSearchApi {
     @OpenApiCheckToken
     @GetMapping("/taxPreference/hot")
     @MonitorInterface
+    @LimitApi
     public ResultVO<PageVO<DocSearchSimpleVO>> hotTaxPreference(PageQueryDTO pageQuery) throws Exception {
         pageQuery.paramReasonable();
         PageVO<DocSearchSimpleVO> page = taxPreferenceSearchService.hotTaxPreference(pageQuery);
