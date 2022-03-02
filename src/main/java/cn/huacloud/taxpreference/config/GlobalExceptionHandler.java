@@ -8,6 +8,7 @@ import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.exception.TaxPreferenceException;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.openapi.auth.OpenApiStpUtil;
+import cn.huacloud.taxpreference.services.wwx.ase.AesException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.converter.HttpMessageConversionException;
@@ -80,6 +81,18 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * 捕获企业微信AES异常
+     *
+     * @param e 被捕获异常
+     * @return resultVO
+     */
+    @ExceptionHandler(AesException.class)
+    public ResultVO<Object> handleAesException(AesException e) {
+        log.error("企业微信AES异常: {}", e.getMessage());
+        return new ResultVO<>(e.getCode(), e.getMessage(), null);
+    }
+
+    /**
      * 捕获参数校验异常
      *
      * @param e 被捕获异常
@@ -120,6 +133,5 @@ public class GlobalExceptionHandler {
         request.setAttribute("result", BizCode._500.getResultVO());
         return BizCode._500.getResultVO();
     }
-
 
 }

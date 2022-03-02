@@ -75,3 +75,22 @@ spider-sync:
     bucket: "data-spider"
     access-key: "data_spider"
     secret-key: "data_spider"
+
+# 企业微信配置
+wwx:
+  # 税收优惠主应用
+  tax-preference:
+    corp-id: ""
+    provider-secret: ""
+    suite-id: ""
+    secret: ""
+    token: ""
+    encoding-aes-key: ""
+  # 税务小工具
+  tax-tool:
+    corp-id: ""
+    provider-secret: ""
+    suite-id: ""
+    secret: ""
+    token: ""
+    encoding-aes-key: ""

@@ -1,0 +1,9 @@
+<xml>
+    <ToUserName><![CDATA[wx9a124e5ac3e8815c]]></ToUserName>
+    <FromUserName><![CDATA[1035]]></FromUserName>
+    <CreateTime>1646165416</CreateTime>
+    <MsgType><![CDATA[event]]></MsgType>
+    <AgentID>1000096</AgentID>
+    <Event><![CDATA[enter_agent]]></Event>
+    <EventKey><![CDATA[]]></EventKey>
+</xml>

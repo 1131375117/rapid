@@ -1,6 +1,6 @@
 package cn.huacloud.taxpreference.services.wwx.ase;
 
-public class AesException extends Exception {
+public class AesException extends RuntimeException {
 
 	public final static int OK = 0;
 	public final static int ValidateSignatureError = -40001;
