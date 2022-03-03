@@ -25,4 +25,6 @@ public class ConsumerLoginUserVO {
     private List<String> permissionCodes;
     @ApiModelProperty("手机号")
     private String phoneNumber;
+    @ApiModelProperty("邮箱")
+    private String email;
 }

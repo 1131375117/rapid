@@ -25,4 +25,12 @@ public interface SysParamTypes {
     String TAX_PREFERENCE_CONDITION = "tax.preference.condition";
     //税务实务数据
     String TAX_CONSULTATION = "tax.consultation";
+    //邮箱验证码过期时间
+    String SES_VERIFICATION_CODE_EXPIRE_MINUTES = "ses.verificationCodeExpireMinutes";
+    // 邮箱基础参数
+    String SES_BASE = "ses.base";
+    // 邮箱发送频率时间限制
+    String SES_RATE_LIMIT_SECONDS = "ses.rateLimitSeconds";
+    // 邮箱绑定
+    String SES_BIND_VERIFICATION_CODE = "ses.bind.verificationCode";
 }

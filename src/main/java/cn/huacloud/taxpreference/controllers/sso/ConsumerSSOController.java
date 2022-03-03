@@ -1,13 +1,13 @@
 package cn.huacloud.taxpreference.controllers.sso;
 
 import cn.dev33.satoken.secure.SaSecureUtil;
+import cn.huacloud.taxpreference.common.annotations.ConsumerUserCheckLogin;
+import cn.huacloud.taxpreference.common.annotations.PermissionInfo;
 import cn.huacloud.taxpreference.common.enums.BizCode;
+import cn.huacloud.taxpreference.common.enums.PermissionGroup;
 import cn.huacloud.taxpreference.common.utils.*;
 import cn.huacloud.taxpreference.services.user.ConsumerUserService;
-import cn.huacloud.taxpreference.services.user.entity.dtos.PasswordLoginDTO;
-import cn.huacloud.taxpreference.services.user.entity.dtos.RetrievePasswordDTO;
-import cn.huacloud.taxpreference.services.user.entity.dtos.SmsLoginDTO;
-import cn.huacloud.taxpreference.services.user.entity.dtos.UserRegisterDTO;
+import cn.huacloud.taxpreference.services.user.entity.dtos.*;
 import cn.huacloud.taxpreference.services.user.entity.vos.ConsumerLoginUserVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.constraints.NotEmpty;
 
 /**
  * 单点登录接口
@@ -139,5 +141,38 @@ public class ConsumerSSOController {
             throw BizCode._4600.exception();
         }
         stringRedisTemplate.delete(redisKey);
+    }
+
+    /**
+     * 根据id修改前台用户昵称
+     */
+    @PermissionInfo(name = "前台用户信息管理", group = PermissionGroup.CONSUMER_MANAGE)
+    @ConsumerUserCheckLogin
+    @ApiOperation("修改前台用户昵称")
+    @PutMapping("/consumer/sso/updateName")
+    public ResultVO<Void> producerUserPageQuery(@RequestParam @NotEmpty(message = "用户名不能为空") String username) {
+        consumerUserService.updateConsumerName(ConsumerUserUtil.getCurrentUser().getUserAccount(), username);
+
+        return ResultVO.ok();
+    }
+
+    @ApiOperation("修改密码")
+    @PutMapping("/consumer/sso/updatePassword")
+    @ConsumerUserCheckLogin
+    public ResultVO<Void> updatePassword(@RequestBody UpdatePasswordDTO updatePasswordDTO) {
+        // 校验验证码
+        checkVerificationCode(RedisKeyUtil.getSmsRetrievePasswordRedisKey(updatePasswordDTO.getPhoneNumber()), updatePasswordDTO.getVerificationCode());
+        consumerUserService.updatePassword(updatePasswordDTO.getPhoneNumber(), PasswordSecureUtil.decrypt(updatePasswordDTO.getNewPassword()));
+        return ResultVO.ok(null);
+    }
+
+    @ApiOperation("邮箱绑定")
+    @PutMapping("/consumer/sso/bindEmail")
+    @ConsumerUserCheckLogin
+    public ResultVO<Void> bindEmail(@RequestBody UserEmailBindDTO userEmailBindDTO) {
+        // 校验验证码
+        checkVerificationCode(RedisKeyUtil.getEmailBindRedisKey(userEmailBindDTO.getEmail()), userEmailBindDTO.getVerificationCode());
+        consumerUserService.bindEmail(userEmailBindDTO.getEmail(), ConsumerUserUtil.getCurrentUser().getUserAccount());
+        return ResultVO.ok(null);
     }
 }

@@ -48,4 +48,24 @@ public interface ConsumerUserService {
      */
     void retrievePassword(String phoneNumber, String password);
 
+    /**
+     * 修改用户名称
+     * @param account 用户账号
+     * @param username 用户名
+     */
+    void updateConsumerName(String account, String username);
+
+    /**
+     * 修改密码
+     * @param phoneNumber 手机号
+     * @param newPassword 新密码
+     */
+    void updatePassword(String phoneNumber, String newPassword );
+
+    /**
+     * 邮箱绑定
+     * @param email 邮件名称
+     * @param userAccount 用户账户
+     */
+    void bindEmail(String email, String userAccount);
 }

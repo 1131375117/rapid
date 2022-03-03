@@ -22,8 +22,11 @@ public enum PermissionGroup implements IEnum<String> {
     APPROVAL("内容审核列表"),
     // 用户管理
     USER_MANAGE("用户管理"),
+    //前台用户管理
+    CONSUMER_MANAGE("前台用户管理"),
     // 角色管理
     ROLE_MANAGE("角色管理");
+
 
     public final String name;
 

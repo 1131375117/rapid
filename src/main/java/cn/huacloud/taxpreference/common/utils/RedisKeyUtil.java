@@ -41,4 +41,14 @@ public class RedisKeyUtil {
     public static String getSmsRetrievePasswordRedisKey(String phoneNumber) {
         return "sms:retrievePassword:" + phoneNumber;
     }
+
+    /**
+     * 获取邮箱绑定验证码redisKey
+     * @param email 邮箱
+     * @return redisKey
+     */
+    public static String getEmailBindRedisKey(String email) {
+        return "sms:bind:" + email;
+    }
+
 }

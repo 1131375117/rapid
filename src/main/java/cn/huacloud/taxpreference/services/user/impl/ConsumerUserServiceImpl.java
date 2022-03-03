@@ -84,6 +84,44 @@ public class ConsumerUserServiceImpl implements ConsumerUserService {
         consumerUserMapper.updateById(consumerUserDO);
     }
 
+    @Override
+    public void updateConsumerName(String account, String username) {
+        //判断用户是否存在
+        ConsumerUserDO consumerUserDO = consumerUserMapper.getByAccount(account);
+        if (consumerUserDO == null) {
+            throw BizCode._4100.exception();
+        }
+        consumerUserDO.setUsername(username);
+        consumerUserMapper.updateById(consumerUserDO);
+
+
+    }
+
+    @Override
+    public void updatePassword(String phoneNumber, String newPassword) {
+        ConsumerUserDO consumerUserDO = consumerUserMapper.getByPhoneNumber(phoneNumber);
+        if (consumerUserDO == null) {
+            throw BizCode._4603.exception();
+        }
+        consumerUserDO.setPassword(SaSecureUtil.md5(newPassword));
+        consumerUserMapper.updateById(consumerUserDO);
+    }
+
+    @Override
+    public void bindEmail(String email, String userAccount) {
+        //校验该邮箱是否已被绑定
+        ConsumerUserDO consumerUserDO = consumerUserMapper.getByEmail(email);
+        if (consumerUserDO != null) {
+            throw BizCode._4605.exception();
+        }
+        consumerUserDO = consumerUserMapper.getByAccount(userAccount);
+        if (consumerUserDO == null) {
+            throw BizCode._4605.exception();
+        }
+        consumerUserDO.setEmail(email);
+        consumerUserMapper.updateById(consumerUserDO);
+    }
+
     private String getNextUID() {
         // TODO UUID不方便记忆，替换为更好的实现
         return IdWorker.get32UUID();

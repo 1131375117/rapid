@@ -26,4 +26,26 @@ public interface ConsumerUserMapper extends BaseMapper<ConsumerUserDO> {
                 .eq(ConsumerUserDO::getDeleted, false);
         return selectOne(queryWrapper);
     }
+
+    default ConsumerUserDO getByAccount(String account){
+        LambdaQueryWrapper<ConsumerUserDO> queryWrapper = Wrappers.lambdaQuery(ConsumerUserDO.class)
+                .eq(ConsumerUserDO::getUserAccount, account)
+                .eq(ConsumerUserDO::getDeleted, false);
+        return selectOne(queryWrapper);
+    };
+
+   default ConsumerUserDO getByPhoneNumberAndPassword(String phoneNumber, String password){
+       LambdaQueryWrapper<ConsumerUserDO> queryWrapper = Wrappers.lambdaQuery(ConsumerUserDO.class)
+               .eq(ConsumerUserDO::getPhoneNumber, phoneNumber)
+               .eq(ConsumerUserDO::getPassword,password)
+               .eq(ConsumerUserDO::getDeleted, false);
+       return selectOne(queryWrapper);
+   };
+
+   default ConsumerUserDO getByEmail(String email){
+       LambdaQueryWrapper<ConsumerUserDO> queryWrapper = Wrappers.lambdaQuery(ConsumerUserDO.class)
+               .eq(ConsumerUserDO::getEmail, email)
+               .eq(ConsumerUserDO::getDeleted, false);
+       return selectOne(queryWrapper);
+   };
 }
