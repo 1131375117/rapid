@@ -6,6 +6,7 @@ import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.utils.ConsumerUserUtil;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.consumer.ConsultationSearchService;
+import cn.huacloud.taxpreference.services.consumer.entity.dtos.AppendConsultationDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.ApproximateConsultationDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.ConsultationDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.ConsultationQueryDTO;
@@ -42,6 +43,19 @@ public class ConsultationSearchController {
     public ResultVO<Void> saveConsultation(@Validated @RequestBody ConsultationDTO consultationDTO) {
         consultationDTO.setCustomerUserId(ConsumerUserUtil.getCurrentUser().getId());
         consultationService.saveConsultation(consultationDTO);
+        return ResultVO.ok();
+    }
+
+    /**
+     * 新增
+     * 参数列表：docId,收藏类型
+     */
+    @ApiOperation(value = "追问热门咨询问题")
+    @ConsumerUserCheckLogin
+    @PutMapping("/consultation")
+    public ResultVO<Void> appendConsultation(@Validated @RequestBody AppendConsultationDTO consultationDTO) {
+
+        consultationService.appendConsultation(consultationDTO);
         return ResultVO.ok();
     }
 

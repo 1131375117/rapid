@@ -16,10 +16,7 @@ public class UpdatePasswordDTO {
     private String phoneNumber;
     @ApiModelProperty("短信验证码")
     private String verificationCode;
-    @NotEmpty(message = "密码不能为空")
-    @ApiModelProperty("加密后密码")
-    private String oldPassword;
-    @NotEmpty(message = "请再次输入密码")
-    @ApiModelProperty("第二次密码")
+    @NotEmpty(message = "请输入密码")
+    @ApiModelProperty("密码")
     private String newPassword;
 }

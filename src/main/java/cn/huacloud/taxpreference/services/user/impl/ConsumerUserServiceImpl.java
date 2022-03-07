@@ -112,7 +112,7 @@ public class ConsumerUserServiceImpl implements ConsumerUserService {
         //校验该邮箱是否已被绑定
         ConsumerUserDO consumerUserDO = consumerUserMapper.getByEmail(email);
         if (consumerUserDO != null) {
-            throw BizCode._4605.exception();
+            throw BizCode._4607.exception();
         }
         consumerUserDO = consumerUserMapper.getByAccount(userAccount);
         if (consumerUserDO == null) {

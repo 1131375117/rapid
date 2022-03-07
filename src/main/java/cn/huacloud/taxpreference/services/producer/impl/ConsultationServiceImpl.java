@@ -8,6 +8,7 @@ import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
 import cn.huacloud.taxpreference.services.common.entity.dtos.SysCodeStringDTO;
 import cn.huacloud.taxpreference.services.consumer.CommonSearchService;
+import cn.huacloud.taxpreference.services.consumer.entity.dtos.AppendConsultationDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.ConsultationDTO;
 import cn.huacloud.taxpreference.services.producer.ConsultationService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.ConsultationContentDO;
@@ -58,7 +59,6 @@ public class ConsultationServiceImpl implements ConsultationService {
         consultationMapper.insert(consultationDO);
         LambdaQueryWrapper<ConsultationContentDO> queryWrapper = Wrappers.lambdaQuery(ConsultationContentDO.class).eq(ConsultationContentDO::getConsultationId, consultationDO.getId());
         Long count = consultationContentMapper.selectCount(queryWrapper);
-
         //热门咨询内容表
         ConsultationContentDO consultationContentDO = new ConsultationContentDO();
         BeanUtils.copyProperties(consultationDTO, consultationContentDO);
@@ -144,6 +144,22 @@ public class ConsultationServiceImpl implements ConsultationService {
         List<QueryConsultationVO> records = iPage.getRecords();
         PageVO<QueryConsultationVO> pageVO = PageVO.createPageVO(iPage, records);
         return ResultVO.ok(pageVO);
+    }
+
+    @Override
+    public void appendConsultation(AppendConsultationDTO consultationDTO) {
+        LambdaQueryWrapper<ConsultationContentDO> queryWrapper = Wrappers.lambdaQuery(ConsultationContentDO.class).eq(ConsultationContentDO::getConsultationId, consultationDTO.getConsultationId());
+        Long count = consultationContentMapper.selectCount(queryWrapper);
+        //热门咨询内容表
+        ConsultationContentDO consultationContentDO = new ConsultationContentDO();
+        BeanUtils.copyProperties(consultationDTO, consultationContentDO);
+        consultationContentDO.setContentType(ContentType.QUESTION);
+        consultationContentDO.setSort((int) (1 + count));
+        if (!CollectionUtils.isEmpty(consultationDTO.getImageUris())) {
+            consultationContentDO.setImageUris(StringUtils.join(consultationDTO.getImageUris(), ","));
+        }
+        consultationContentDO.setCreateTime(LocalDateTime.now());
+        consultationContentMapper.insert(consultationContentDO);
     }
 
     private void copyProperties(ConsultationDTO consultationDTO, ConsultationDO consultationDO) {

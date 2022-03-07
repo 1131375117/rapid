@@ -25,7 +25,7 @@ public class EmailController {
 
     private final EmailService emailService;
 
-    @ApiOperation("发送短信")
+    @ApiOperation("发送邮件")
     @PostMapping("/sendEmail")
     public ResultVO<Void> sendSms(String email, EmailBiz emailBiz) {
         if (StringUtils.isBlank(email) || email.length() < 11) {

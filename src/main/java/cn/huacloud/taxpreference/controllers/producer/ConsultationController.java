@@ -53,6 +53,7 @@ public class ConsultationController {
         return ResultVO.ok();
     }
 
+
     @PermissionInfo(name = "热门咨询详情", group = PermissionGroup.HOT_CONSULTATION)
     @SaCheckPermission("producer_consultation_detail")
     @ApiOperation("热门咨询详情")

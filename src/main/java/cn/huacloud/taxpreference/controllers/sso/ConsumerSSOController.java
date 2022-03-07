@@ -152,7 +152,9 @@ public class ConsumerSSOController {
     @PutMapping("/consumer/sso/updateName")
     public ResultVO<Void> producerUserPageQuery(@RequestParam @NotEmpty(message = "用户名不能为空") String username) {
         consumerUserService.updateConsumerName(ConsumerUserUtil.getCurrentUser().getUserAccount(), username);
-
+        // 查找用户登录信息
+        ConsumerLoginUserVO loginUserVO = consumerUserService.getLoginUserVO(ConsumerUserUtil.getCurrentUser().getUserAccount());
+        ConsumerStpUtil.getSession().set(ConsumerUserUtil.CONSUMER_USER, loginUserVO);
         return ResultVO.ok();
     }
 
@@ -163,6 +165,9 @@ public class ConsumerSSOController {
         // 校验验证码
         checkVerificationCode(RedisKeyUtil.getSmsRetrievePasswordRedisKey(updatePasswordDTO.getPhoneNumber()), updatePasswordDTO.getVerificationCode());
         consumerUserService.updatePassword(updatePasswordDTO.getPhoneNumber(), PasswordSecureUtil.decrypt(updatePasswordDTO.getNewPassword()));
+        // 查找用户登录信息
+        ConsumerLoginUserVO loginUserVO = consumerUserService.getLoginUserVO(ConsumerUserUtil.getCurrentUser().getUserAccount());
+        ConsumerStpUtil.getSession().set(ConsumerUserUtil.CONSUMER_USER, loginUserVO);
         return ResultVO.ok(null);
     }
 
@@ -173,6 +178,9 @@ public class ConsumerSSOController {
         // 校验验证码
         checkVerificationCode(RedisKeyUtil.getEmailBindRedisKey(userEmailBindDTO.getEmail()), userEmailBindDTO.getVerificationCode());
         consumerUserService.bindEmail(userEmailBindDTO.getEmail(), ConsumerUserUtil.getCurrentUser().getUserAccount());
+        // 查找用户登录信息
+        ConsumerLoginUserVO loginUserVO = consumerUserService.getLoginUserVO(ConsumerUserUtil.getCurrentUser().getUserAccount());
+        ConsumerStpUtil.getSession().set(ConsumerUserUtil.CONSUMER_USER, loginUserVO);
         return ResultVO.ok(null);
     }
 }

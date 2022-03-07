@@ -2,6 +2,7 @@ package cn.huacloud.taxpreference.services.producer;
 
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
+import cn.huacloud.taxpreference.services.consumer.entity.dtos.AppendConsultationDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.ConsultationDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.ConsultationReplyDTO;
 import cn.huacloud.taxpreference.services.producer.entity.dtos.QueryConsultationDTO;
@@ -33,5 +34,16 @@ public interface ConsultationService {
      */
     ConsultationVO consultationDetail(Long id);
 
+    /**
+     * 查询专家咨询列表
+     * @param queryConsultationDTO 查询对象
+     * @return 返回专家咨询数据
+     */
     ResultVO<PageVO<QueryConsultationVO>> queryConsultationList(QueryConsultationDTO queryConsultationDTO);
+
+    /**
+     * 专家咨询追问
+     * @param consultationDTO 专家咨询追问对象
+     */
+    void appendConsultation(AppendConsultationDTO consultationDTO);
 }
