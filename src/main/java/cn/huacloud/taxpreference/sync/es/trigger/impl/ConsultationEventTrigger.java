@@ -85,14 +85,15 @@ public class ConsultationEventTrigger extends EventTrigger<Long, ConsultationES>
             consultationES.setCollections(0L);
             consultationES.setViews(0L);
         }
+
         //copy子表内容
         List<ConsultationContentESVO> consultationContentESVOList = new ArrayList<>();
         for (ConsultationContentDO consultationContentDO : consultationContentDOList) {
             ConsultationContentESVO consultationContentESVO = new ConsultationContentESVO();
             CustomBeanUtil.copyProperties(consultationContentDO, consultationContentESVO);
-            if(!StringUtils.isEmpty(consultationContentDO.getImageUris())){
+            if (!StringUtils.isEmpty(consultationContentDO.getImageUris())) {
                 consultationContentESVO.setImageUris(Arrays.asList(consultationContentDO.getImageUris().split(",")));
-            }else{
+            } else {
                 consultationContentESVO.setImageUris(new ArrayList<>());
             }
             consultationContentESVOList.add(consultationContentESVO);

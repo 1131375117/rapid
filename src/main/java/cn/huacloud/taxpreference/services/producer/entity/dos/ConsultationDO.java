@@ -76,4 +76,9 @@ public class ConsultationDO implements Serializable {
     */
     private LocalDateTime createTime;
 
+    /**
+     * 是否公开
+     */
+    private Long published;
+
 }

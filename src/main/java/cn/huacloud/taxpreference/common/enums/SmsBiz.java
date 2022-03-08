@@ -19,8 +19,8 @@ public enum SmsBiz implements SysParamTypesGetter, IEnum<String> {
 
     LOGIN_VERIFICATION_CODE("发送登录验证码", SmsBizLoginVerificationCodeHandler.class, Arrays.asList(SysParamTypes.SMS_LOGIN_VERIFICATION_CODE, SysParamTypes.SMS_BASE)),
     REGISTER_VERIFICATION_CODE("发送注册验证码", SmsBizRegisterVerificationCodeHandler.class, Arrays.asList(SysParamTypes.SMS_REGISTER_VERIFICATION_CODE, SysParamTypes.SMS_BASE)),
-    RETRIEVE_PASSWORD_VERIFICATION_CODE("发送注册验证码", SmsBizRetrievePasswordVerificationCodeHandler.class, Arrays.asList(SysParamTypes.SMS_RETRIEVE_PASSWORD_VERIFICATION_CODE, SysParamTypes.SMS_BASE));
-
+    RETRIEVE_PASSWORD_VERIFICATION_CODE("发送密码重置验证码", SmsBizRetrievePasswordVerificationCodeHandler.class, Arrays.asList(SysParamTypes.SMS_RETRIEVE_PASSWORD_VERIFICATION_CODE, SysParamTypes.SMS_BASE)),
+    CONSUMER_SUBSCRIBE__CODE("发送订阅业务", SmsBizRetrievePasswordVerificationCodeHandler.class, Arrays.asList(SysParamTypes.SMS_RETRIEVE_PASSWORD_VERIFICATION_CODE, SysParamTypes.SMS_BASE));
     /**
      * 业务中文名称
      */

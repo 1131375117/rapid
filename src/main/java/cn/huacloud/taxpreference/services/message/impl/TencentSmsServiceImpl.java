@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -101,7 +102,9 @@ public class TencentSmsServiceImpl implements SmsService {
         request.setPhoneNumberSet(phoneNumberSet);
         request.setTemplateId(smsParams.getTemplateId());
         // 设置短信参数
-        request.setTemplateParamSet(params.toArray(new String[0]));
+        if(!CollectionUtils.isEmpty(params)){
+            request.setTemplateParamSet(params.toArray(new String[0]));
+        }
         // 执行发送
         smsClient.SendSms(request);
     }

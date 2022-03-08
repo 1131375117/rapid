@@ -32,6 +32,10 @@ public class ConsultationQueryDTO extends AbstractHighlightPageQueryDTO {
     @FilterField("industries.codeValue")
     private List<String> industries;
 
+    @ApiModelProperty(value = "公开",hidden = true)
+    @FilterField("published")
+    private Long published;
+
 
     @Override
     public String index(ElasticsearchIndexConfig config) {

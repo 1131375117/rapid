@@ -54,4 +54,8 @@ public class ConsultationES implements IDGetter<Object> {
      * 收藏量
      */
     private Long collections;
+    /**
+     * 是否公开
+     * */
+    private Long published;
 }

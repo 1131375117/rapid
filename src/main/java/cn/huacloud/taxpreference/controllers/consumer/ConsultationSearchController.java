@@ -6,19 +6,19 @@ import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.utils.ConsumerUserUtil;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.consumer.ConsultationSearchService;
-import cn.huacloud.taxpreference.services.consumer.entity.dtos.AppendConsultationDTO;
-import cn.huacloud.taxpreference.services.consumer.entity.dtos.ApproximateConsultationDTO;
-import cn.huacloud.taxpreference.services.consumer.entity.dtos.ConsultationDTO;
-import cn.huacloud.taxpreference.services.consumer.entity.dtos.ConsultationQueryDTO;
+import cn.huacloud.taxpreference.services.consumer.entity.dtos.*;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.ConsultationCountVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.ConsultationESVO;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.ConsultationListVO;
 import cn.huacloud.taxpreference.services.producer.ConsultationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -54,7 +54,6 @@ public class ConsultationSearchController {
     @ConsumerUserCheckLogin
     @PutMapping("/consultation")
     public ResultVO<Void> appendConsultation(@Validated @RequestBody AppendConsultationDTO consultationDTO) {
-
         consultationService.appendConsultation(consultationDTO);
         return ResultVO.ok();
     }
@@ -63,6 +62,7 @@ public class ConsultationSearchController {
     @ConsumerUserCheckLogin
     @PostMapping("/consultationQuery")
     public ResultVO<PageVO<ConsultationESVO>> pageSearch(@RequestBody ConsultationQueryDTO pageQuery) throws Exception {
+        pageQuery.setPublished(1L);
         PageVO<ConsultationESVO> pageVO = consultationSearchService.pageSearch(pageQuery);
         List<ConsultationESVO> records = pageVO.getRecords();
         for (ConsultationESVO record : records) {
@@ -111,5 +111,32 @@ public class ConsultationSearchController {
     public ResultVO<PageVO<ConsultationESVO>> approximateConsultation(@RequestBody ApproximateConsultationDTO approximateConsultationDTO) throws Exception {
         PageVO<ConsultationESVO> pageVO = consultationSearchService.approximateConsultation(approximateConsultationDTO);
         return ResultVO.ok(pageVO);
+    }
+
+    @ApiOperation("查询我的咨询")
+    @GetMapping("/myConsultation")
+    @ConsumerUserCheckLogin
+    public ResultVO<PageVO<ConsultationListVO>> myConsultation(MyConsultationDTO pageQuery) throws Exception {
+        Long currentUserId = ConsumerUserUtil.getCurrentUserId();
+        pageQuery.setCustomerUserId(currentUserId);
+        PageVO<ConsultationESVO> pageVO = consultationSearchService.pageSearch(pageQuery);
+        //封装返回结果
+        PageVO<ConsultationListVO> consultationListVOPageVO = new PageVO<>();
+        //List
+        List<ConsultationListVO> consultationListVOS = new ArrayList<>();
+
+        List<ConsultationESVO> records = pageVO.getRecords();
+        for (ConsultationESVO record : records) {
+            ConsultationListVO consultationCountVO = new ConsultationListVO();
+            consultationCountVO.setConsultationContent(
+                    record.getConsultationContent().get(0).getContent());
+            BeanUtils.copyProperties(record, consultationCountVO);
+            consultationCountVO.setCreateTime(record.getConsultationContent().get(0).getCreateTime());
+            consultationListVOS.add(consultationCountVO);
+        }
+
+        BeanUtils.copyProperties(pageVO, consultationListVOPageVO);
+        consultationListVOPageVO.setRecords(consultationListVOS);
+        return ResultVO.ok(consultationListVOPageVO);
     }
 }

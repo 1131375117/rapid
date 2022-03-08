@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -31,5 +32,8 @@ public class ConsultationContentESVO implements Serializable {
      */
     @ApiModelProperty("图片")
     private List<String> imageUris;
+
+    @ApiModelProperty("咨询时间")
+    private LocalDateTime createTime;
 
 }

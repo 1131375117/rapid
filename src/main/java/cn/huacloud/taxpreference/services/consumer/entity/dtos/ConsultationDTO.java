@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -52,5 +53,11 @@ public class ConsultationDTO  {
      */
     @ApiModelProperty("咨询图片url")
     private List<String> imageUris;
+    /**
+     * 是否公开
+     */
+    @ApiModelProperty("是否公开,0-不公开，1")
+    @NotNull(message = "不能为空")
+    private Long published;
 
 }

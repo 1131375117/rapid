@@ -1,6 +1,7 @@
 package cn.huacloud.taxpreference.services.producer.impl;
 
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
+import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.enums.ContentType;
 import cn.huacloud.taxpreference.common.enums.ReplyStatus;
 import cn.huacloud.taxpreference.common.enums.SysCodeType;
@@ -36,6 +37,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author fuhua
@@ -150,6 +152,11 @@ public class ConsultationServiceImpl implements ConsultationService {
     public void appendConsultation(AppendConsultationDTO consultationDTO) {
         LambdaQueryWrapper<ConsultationContentDO> queryWrapper = Wrappers.lambdaQuery(ConsultationContentDO.class).eq(ConsultationContentDO::getConsultationId, consultationDTO.getConsultationId());
         Long count = consultationContentMapper.selectCount(queryWrapper);
+        List<ConsultationContentDO> consultationContentDOS = consultationContentMapper.selectList(queryWrapper);
+        List<ConsultationContentDO> collect = consultationContentDOS.stream().filter(consultationContentDO -> consultationContentDO.getContentType().equals(ContentType.QUESTION)).collect(Collectors.toList());
+        if (collect.size() >= 3) {
+            throw BizCode._4608.exception();
+        }
         //热门咨询内容表
         ConsultationContentDO consultationContentDO = new ConsultationContentDO();
         BeanUtils.copyProperties(consultationDTO, consultationContentDO);

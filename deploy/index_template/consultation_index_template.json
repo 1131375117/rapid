@@ -70,12 +70,19 @@
             "imageUris": {
               "type": "keyword"
             },
+            "createTime": {
+              "type":"date",
+              "format":"yyyy-MM-dd'T'HH:mm:ss"
+            },
             "sort": {
               "type": "integer"
             }
           }
         },
         "views": {
+          "type": "long"
+        },
+        "published": {
           "type": "long"
         },
         "collections": {

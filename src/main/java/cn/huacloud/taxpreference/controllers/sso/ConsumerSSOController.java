@@ -167,7 +167,7 @@ public class ConsumerSSOController {
         consumerUserService.updatePassword(updatePasswordDTO.getPhoneNumber(), PasswordSecureUtil.decrypt(updatePasswordDTO.getNewPassword()));
         // 查找用户登录信息
         ConsumerLoginUserVO loginUserVO = consumerUserService.getLoginUserVO(ConsumerUserUtil.getCurrentUser().getUserAccount());
-        ConsumerStpUtil.getSession().set(ConsumerUserUtil.CONSUMER_USER, loginUserVO);
+        ConsumerStpUtil.logout();
         return ResultVO.ok(null);
     }
 

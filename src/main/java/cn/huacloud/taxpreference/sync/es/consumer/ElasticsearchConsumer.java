@@ -3,6 +3,8 @@ package cn.huacloud.taxpreference.sync.es.consumer;
 import cn.huacloud.taxpreference.common.utils.SpringUtil;
 import cn.huacloud.taxpreference.services.consumer.entity.AbstractCombinePlainContent;
 import cn.huacloud.taxpreference.services.consumer.entity.CombineText;
+import cn.huacloud.taxpreference.services.message.SmsService;
+import cn.huacloud.taxpreference.services.message.impl.TencentSmsServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.index.IndexRequest;
@@ -27,6 +29,10 @@ public interface ElasticsearchConsumer<T extends IDGetter<?>> {
 
     default RestHighLevelClient getRestHighLevelClient() {
         return SpringUtil.getBean(RestHighLevelClient.class);
+    }
+
+    default SmsService getSmsServer() {
+        return SpringUtil.getBean(TencentSmsServiceImpl.class);
     }
 
     default ObjectMapper getObjectMapper() {

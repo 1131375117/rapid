@@ -97,6 +97,7 @@ public class ProcessServiceImpl implements ProcessService {
             taxPreferenceMapper.updateById(taxPreferenceDO);
             //同步到es
             taxPreferenceEventTrigger.saveEvent(taxPreferenceDO.getId());
+
         }
         return ResultVO.ok();
     }

@@ -22,6 +22,10 @@ public class ConsultationESVO {
     private Long collections;
     @ApiModelProperty("回答时间")
     private LocalDateTime finishTime;
+    @ApiModelProperty("创建时间")
+    private LocalDateTime createTime;
+    @ApiModelProperty("是否公开")
+    private Long published;
     @ApiModelProperty("行业")
     private List<SysCodeSimpleVO> industries;
 

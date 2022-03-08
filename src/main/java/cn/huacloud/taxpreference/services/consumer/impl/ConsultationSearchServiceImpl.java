@@ -72,7 +72,7 @@ public class ConsultationSearchServiceImpl implements ConsultationSearchService 
     public PageVO<ConsultationESVO> hotConsultation(PageQueryDTO pageQuery) throws Exception {
         // 执行查询
         SearchResponse response = simplePageSearch(getIndex(),
-                matchAllQuery(),
+                matchQuery("published",1),
                 pageQuery,
                 SortBuilders.fieldSort("views").order(SortOrder.DESC),
                 SortBuilders.fieldSort("finishTime").order(SortOrder.DESC));
@@ -98,7 +98,7 @@ public class ConsultationSearchServiceImpl implements ConsultationSearchService 
 
         // 执行查询
         SearchResponse response = simplePageSearch(getIndex(),
-                matchAllQuery(),
+                matchQuery("published",1),
                 pageQuery,
                 SortBuilders.fieldSort("finishTime").order(SortOrder.DESC));
 
@@ -136,7 +136,7 @@ public class ConsultationSearchServiceImpl implements ConsultationSearchService 
         //热门咨询总数
         ConsultationCountVO consultationCountVO = new ConsultationCountVO();
         //获取问题个数
-        long questionCount = docCountQuery(DocType.CONSULTATION, matchAllQuery());
+        long questionCount = docCountQuery(DocType.CONSULTATION, matchQuery("published",1));
         //获取企业个数
         long customCount = getCustomCount();
         consultationCountVO.setQuestionTotals(questionCount);
@@ -195,7 +195,6 @@ public class ConsultationSearchServiceImpl implements ConsultationSearchService 
     }
 
     public Long docCountQuery(DocType docType, QueryBuilder queryBuilder) throws Exception {
-        ConsultationCountVO consultationCountVO = new ConsultationCountVO();
         CountRequest request = new CountRequest(docType.indexGetter.apply(indexConfig).getAlias())
                 .query(queryBuilder);
         CountResponse countResponse = restHighLevelClient.count(request, RequestOptions.DEFAULT);
