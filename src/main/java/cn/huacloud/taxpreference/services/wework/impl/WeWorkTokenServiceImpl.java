@@ -60,7 +60,7 @@ public class WeWorkTokenServiceImpl implements WeWorkTokenService {
             return suiteToken;
         }
         SuiteToken.Request request = new SuiteToken.Request();
-        AppConfig appConfig = weWorkConfig.getAppConfig(appName);
+        AppConfig appConfig = weWorkConfig.getAppConfigByAppName(appName);
         request.setSuite_id(appConfig.getSuiteId());
         request.setSuite_secret(appConfig.getSecret());
         request.setSuite_ticket(getSuiteTicket(appName));
@@ -88,6 +88,7 @@ public class WeWorkTokenServiceImpl implements WeWorkTokenService {
         dto.setUserId(userInfo3rd.getUserId());
         dto.setOpenUserId(userInfo3rd.getOpen_userid());
         dto.setOpenId(userInfo3rd.getOpenId());
+        dto.setCorpId(userInfo3rd.getCorpId());
         return dto;
     }
 }

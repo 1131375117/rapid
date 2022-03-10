@@ -29,7 +29,12 @@ public class WeWorkConfig {
     }
 
     public AppConfig getAppConfigByUri(String uri) {
-        // TODO
+        // TODO 新加入的应用需要在这里配置
         return taxPreference;
+    }
+
+    public String getAppNameByUri(String requestURI) {
+        // TODO 新加入的应用需要在这里配置
+        return WeWorkConstants.APP_NAME_TAX_PREFERENCE;
     }
 }

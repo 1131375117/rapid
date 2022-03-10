@@ -89,6 +89,8 @@ wwx:
     secret: "dcBNFmhW7-iGXntd3RufqlY3u228-H0HbZBX1pen6_Q"
     token: "Pr0KgCr7qor43O2yKLG6Ah8sce9JrLom"
     encoding-aes-key: "85kZ3CSeTdxQjHqntw5scxk1pLJrmx2psoIReB1ySv1"
+    hosts:
+      - "tax-wwx.hua-cloud.net.cn"
   # 税务小工具
   tax-tool:
     corp-id: "wx9a124e5ac3e8815c"
@@ -97,3 +99,5 @@ wwx:
     secret: "-cuNx4ZJOOsOWXDIdZMzS_-Bdt3EGKibNjLtYjVnCxI"
     token: "VzShwDoTtBMn9qahSB45nVQPqIY5Eh"
     encoding-aes-key: "gKUXxMtvyacfq3KczuhjJawW4IUpqV7CuLIIMWMPn5n"
+    hosts:
+      - "tax-wwx.hua-cloud.net.cn"

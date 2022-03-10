@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.function.SupplierUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -83,19 +84,19 @@ public class CallbackServiceImpl implements CallbackService, InitializingBean {
         Map<String, WeWorkMessageHandler> handlerMap = group2Type2Handler.get(groupKey);
         if (handlerMap == null) {
             log.error("找不到对应的消息分组处理器，group：{}", groupKey);
-            return FAIL;
+            return SUCCESS;
         }
         if (messageNode.has(groupKey)) {
             String groupValue = messageNode.get(groupKey).asText();
             WeWorkMessageHandler messageHandler = handlerMap.get(groupValue);
             if (messageHandler == null) {
                 log.error("找不到对应的消息处理器，{}：{}", groupKey, groupValue);
-                return FAIL;
+                return SUCCESS;
             }
             return messageHandler.handle(appName, messageNode, messageCrypt);
         } else {
             log.error("找不到对应的消息分组");
-            return FAIL;
+            return SUCCESS;
         }
     }
 

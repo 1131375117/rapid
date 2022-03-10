@@ -4,19 +4,20 @@ import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.exception.NotPermissionException;
 import cn.dev33.satoken.exception.NotRoleException;
 import cn.dev33.satoken.exception.SaTokenException;
+import cn.dev33.satoken.spring.SpringMVCUtil;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.exception.TaxPreferenceException;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.openapi.auth.OpenApiStpUtil;
-import cn.huacloud.taxpreference.services.wwx.ase.AesException;
+import cn.huacloud.taxpreference.services.wework.auth2.WeWorkCheckRedirectComponent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.stream.Collectors;
 
 /**
@@ -29,7 +30,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
 
-    private final HttpServletRequest request;
+    // private final HttpServletRequest request;
+    @Autowired
+    private WeWorkCheckRedirectComponent weWorkCheckRedirectComponent;
 
     /**
      * 捕获 sa-token 权限异常
@@ -42,15 +45,18 @@ public class GlobalExceptionHandler {
         ResultVO resultVO;
         if (e instanceof NotLoginException) {
             NotLoginException notLoginException = (NotLoginException) e;
-            if (NotLoginException.TOKEN_TIMEOUT.equals(notLoginException.getType())) {
-                if (OpenApiStpUtil.getLoginType().equals(notLoginException.getLoginType())) {
+            // open api未登录异常处理
+            if ((OpenApiStpUtil.getLoginType().equals(notLoginException.getLoginType()))) {
+                if (NotLoginException.TOKEN_TIMEOUT.equals(notLoginException.getType())) {
                     resultVO = BizCode._4703.getResultVO();
                 } else {
-                    resultVO = BizCode._4211.getResultVO();
+                    resultVO = BizCode._4702.getResultVO();
                 }
             } else {
-                if (OpenApiStpUtil.getLoginType().equals(notLoginException.getLoginType())) {
-                    resultVO = BizCode._4702.getResultVO();
+                // 在抛出未登录异常时检查是否为企业微信访问，如果是则执行重定向
+                weWorkCheckRedirectComponent.checkAndRedirect(SpringMVCUtil.getRequest(), SpringMVCUtil.getResponse());
+                if (NotLoginException.TOKEN_TIMEOUT.equals(notLoginException.getType())) {
+                    resultVO = BizCode._4211.getResultVO();
                 } else {
                     resultVO = BizCode._4200.getResultVO();
                 }
@@ -63,7 +69,7 @@ public class GlobalExceptionHandler {
             resultVO = BizCode._500.getResultVO();
             resultVO.setData(e.getMessage());
         }
-        request.setAttribute("result", resultVO);
+        // request.setAttribute("result", resultVO);
         return resultVO;
     }
 
@@ -76,20 +82,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(TaxPreferenceException.class)
     public ResultVO<Object> handleTaxPreferenceException(TaxPreferenceException e) {
         log.info("接口调用业务异常: {}", e.getMessage());
-        request.setAttribute("result", new ResultVO<>(e.getCode(), e.getMessage(), e.getData()));
+        // request.setAttribute("result", new ResultVO<>(e.getCode(), e.getMessage(), e.getData()));
         return new ResultVO<>(e.getCode(), e.getMessage(), e.getData());
-    }
-
-    /**
-     * 捕获企业微信AES异常
-     *
-     * @param e 被捕获异常
-     * @return resultVO
-     */
-    @ExceptionHandler(AesException.class)
-    public ResultVO<Object> handleAesException(AesException e) {
-        log.error("企业微信AES异常: {}", e.getMessage());
-        return new ResultVO<>(e.getCode(), e.getMessage(), null);
     }
 
     /**
@@ -105,7 +99,7 @@ public class GlobalExceptionHandler {
                 .map(fieldError -> fieldError.getField() + " => " + fieldError.getDefaultMessage())
                 .collect(Collectors.joining(";"));
         log.info("参数校验失败：{}", message);
-        request.setAttribute("result", new ResultVO<>(BizCode._4100.code, message, null));
+        // request.setAttribute("result", new ResultVO<>(BizCode._4100.code, message, null));
         return new ResultVO<>(BizCode._4100.code, message, null);
     }
 
@@ -118,7 +112,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageConversionException.class)
     public ResultVO<Void> handleHttpMessageConversionException(HttpMessageConversionException e) {
         log.error("消息转换异常", e);
-        request.setAttribute("result", BizCode._4100.getResultVO());
+        // request.setAttribute("result", BizCode._4100.getResultVO());
         return BizCode._4100.getResultVO();
     }
 
@@ -130,8 +124,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResultVO<Void> handleException(Exception e) {
         log.error("接口调用异常", e);
-        request.setAttribute("result", BizCode._500.getResultVO());
+        // request.setAttribute("result", BizCode._500.getResultVO());
         return BizCode._500.getResultVO();
     }
-
 }

@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.services.user;
 
+import cn.huacloud.taxpreference.services.user.entity.dos.ConsumerUserDO;
 import cn.huacloud.taxpreference.services.user.entity.vos.ConsumerLoginUserVO;
 
 /**
@@ -48,4 +49,16 @@ public interface ConsumerUserService {
      */
     void retrievePassword(String phoneNumber, String password);
 
+    /**
+     * 通过ID获取消费者用户实体
+     * @param consumerUserId 消费者用户ID
+     * @return ConsumerUserDO
+     */
+    ConsumerUserDO getUserDOById(Long consumerUserId);
+
+    /**
+     * 通过开放用户ID自动注册
+     * @param openUserId 开放用户ID
+     */
+    ConsumerUserDO autoCreateUserByOpenUserId(String openUserId);
 }

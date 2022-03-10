@@ -34,6 +34,6 @@ public class CreateAuthInfoHandlerWeWork implements InfoWeWorkMessageHandler {
         PermanentCode permanentCode = serviceClient.getPermanentCode(suiteToken, request);
         String json = ObjectMapperProvider.writeJsonPrettyString(permanentCode);
         System.out.println(json);
-        return FAIL;
+        return SUCCESS;
     }
 }

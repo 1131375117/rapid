@@ -18,6 +18,7 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.util.AntPathMatcher;
 
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
@@ -36,6 +37,27 @@ import java.util.regex.Pattern;
  */
 @Slf4j
 public class SampleTest {
+
+    @Test
+    public void testAntMatch() {
+
+    }
+
+    @Test
+    public void testListDisjoint() {
+        List<String> list1 = new ArrayList<>();
+        list1.add("a");
+        list1.add("a");
+        list1.add("c");
+
+        List<String> list2 = new ArrayList<>();
+        list2.add("a");
+        list2.add("f");
+        list2.add("d");
+
+        boolean disjoint = Collections.disjoint(list1, list2);
+        System.out.println(disjoint);
+    }
 
     @Test
     public void printUUID() {

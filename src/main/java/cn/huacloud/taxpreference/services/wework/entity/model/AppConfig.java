@@ -33,6 +33,8 @@ public class AppConfig {
      * 应用encodingAesKey，在管理页面随机生成
      */
     private String encodingAesKey;
-
+    /**
+     * 微信应用绑定的域名
+     */
     private List<String> hosts;
 }

@@ -20,7 +20,7 @@ CREATE TABLE `t_channel_user`
 (
     `id`               bigint(20)                              NOT NULL AUTO_INCREMENT COMMENT 'ID主键',
     `consumer_user_id` bigint(20)                              NOT NULL COMMENT '消费者用户表ID',
-    `channel_name`     varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '渠道名称',
+    `channel_name`     varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '渠道名称',
     `channel_type`     varchar(32) COLLATE utf8mb4_unicode_ci  NOT NULL COMMENT '渠道枚举值',
     `open_user_id`     varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '渠道用户ID，由第三方系统提供',
     `extends_field1`   varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '扩展属性1',

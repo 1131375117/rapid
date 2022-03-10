@@ -6,6 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 /**
+ * 第三方用户身份信息
  * @author wangkh
  */
 @Data
