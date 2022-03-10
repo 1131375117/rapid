@@ -1,4 +1,4 @@
-package cn.huacloud.taxpreference.controllers.wwx;
+package cn.huacloud.taxpreference.controllers.wework;
 
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
@@ -14,36 +14,36 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
 @RestController
-public class TaxPreferenceWWXCallbackController {
+public class TaxToolWeWorkCallbackController {
 
-    /*private final TaxPreferenceWWXService taxPreferenceWWXService;
+    /*private final TaxToolWWXService taxToolWWXService;
 
     @ApiOperation("验证URL有效性")
-    @GetMapping("/wwx/callback/*")
+    @GetMapping("/wwx/tax-tool/callback/*")
     public ResponseEntity<String> verifyURL(HttpServletRequest request, CallbackQueryDTO queryDTO) throws Exception {
         log.info("验证URL有效性回调，URL：{}", request.getRequestURL());
-        String result = taxPreferenceWWXService.verifyURL(queryDTO);
+        String result = taxToolWWXService.verifyURL(queryDTO);
         return ResponseEntity.ok().body(result);
     }
 
     @ApiOperation("安装完成回调、注册回调")
-    @PostMapping("/wwx/callback/install")
+    @PostMapping("/wwx/tax-tool/callback/install")
     public ResponseEntity<String> installCallback(CallbackQueryDTO queryDTO, @RequestBody String bodyStr) throws Exception {
-        String result = taxPreferenceWWXService.installCallback(queryDTO, bodyStr);
+        String result = taxToolWWXService.installCallback(queryDTO, bodyStr);
         return ResponseEntity.ok().body(result);
     }
 
     @ApiOperation("数据回调")
-    @PostMapping("/wwx/callback/data")
+    @PostMapping("/wwx/tax-tool/callback/data")
     public ResponseEntity<String> dataCallback(CallbackQueryDTO queryDTO, @RequestBody String bodyStr) throws Exception {
-        String result = taxPreferenceWWXService.dataCallback(queryDTO, bodyStr);
+        String result = taxToolWWXService.dataCallback(queryDTO, bodyStr);
         return ResponseEntity.ok().body(result);
     }
 
     @ApiOperation("指令回调")
-    @PostMapping("/wwx/callback/instruct")
+    @PostMapping("/wwx/tax-tool/callback/instruct")
     public ResponseEntity<String> instructCallback(CallbackQueryDTO queryDTO, @RequestBody String bodyStr) throws Exception {
-        String result = taxPreferenceWWXService.instructCallback(queryDTO, bodyStr);
+        String result = taxToolWWXService.instructCallback(queryDTO, bodyStr);
         return ResponseEntity.ok().body(result);
     }*/
 }

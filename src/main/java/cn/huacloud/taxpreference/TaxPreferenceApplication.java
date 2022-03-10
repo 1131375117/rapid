@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
 
@@ -11,6 +12,7 @@ import org.springframework.core.env.Environment;
  * Spring Boot 启动类
  * @author wangkh
  */
+@EnableFeignClients
 @Slf4j
 @MapperScan("cn.huacloud.taxpreference.services.*.mapper")
 @SpringBootApplication
