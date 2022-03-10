@@ -1,15 +1,10 @@
 package cn.huacloud.taxpreference.controllers.wwx;
 
-import cn.huacloud.taxpreference.services.wwx.TaxToolWWXService;
-import cn.huacloud.taxpreference.services.wwx.entity.dtos.CallbackQueryDTO;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author wangkh
@@ -21,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 public class TaxToolWWXCallbackController {
 
-    private final TaxToolWWXService taxToolWWXService;
+    /*private final TaxToolWWXService taxToolWWXService;
 
     @ApiOperation("验证URL有效性")
     @GetMapping("/wwx/tax-tool/callback/*")
@@ -50,5 +45,5 @@ public class TaxToolWWXCallbackController {
     public ResponseEntity<String> instructCallback(CallbackQueryDTO queryDTO, @RequestBody String bodyStr) throws Exception {
         String result = taxToolWWXService.instructCallback(queryDTO, bodyStr);
         return ResponseEntity.ok().body(result);
-    }
+    }*/
 }
