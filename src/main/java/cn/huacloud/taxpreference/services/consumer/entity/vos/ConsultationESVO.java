@@ -28,10 +28,14 @@ public class ConsultationESVO extends UserSubScribeInfo {
     private String status;
     @ApiModelProperty("行业")
     private List<SysCodeSimpleVO> industries;
+    @ApiModelProperty("税种")
+    private List<SysCodeSimpleVO> taxCategories;
     @ApiModelProperty("咨询者id")
     private Long customerUserId;
     @ApiModelProperty("专家名称")
     private String professorUserName;
+    @ApiModelProperty("实务税务")
+    private String taxPractices;
     @ApiModelProperty("追问次数,只在详情接口使用")
     private Integer appendCount;
     @ApiModelProperty("第一条提问时间")

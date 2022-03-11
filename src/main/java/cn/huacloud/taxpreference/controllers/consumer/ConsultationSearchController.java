@@ -142,7 +142,7 @@ public class ConsultationSearchController {
         return ResultVO.ok(pageVO);
     }
 
-    @ApiOperation("前端小红点消息提示，NOT_READ-未读，HAVE_READ-已读")
+    @ApiOperation("前端小红点消息提示，HIDDEN-隐藏,SHOW-显示")
     @PostMapping("/replyTipsConsultation")
     @ConsumerUserCheckLogin
     public ResultVO<RedPointStatus> replyTipsConsultation() throws IOException {

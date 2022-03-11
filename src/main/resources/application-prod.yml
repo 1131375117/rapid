@@ -20,7 +20,18 @@ spring:
     virtual-host: tax_preference
     username: tax_preference
     password: ""
-
+  mail:
+    host: smtp.qq.com
+    username: 1131375117@qq.com
+    password: gulqeyfvrczhheac
+    properties:
+      mail:
+        smtp:
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+    ##         ssl:
+    ##           enable :true
+    default-encoding: utf-8
 # swagger
 springfox:
   documentation:

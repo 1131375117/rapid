@@ -43,7 +43,7 @@ public class ConsultationEventTrigger extends EventTrigger<Long, ConsultationES>
     private final ConsultationContentMapper contentMapper;
     private final DocStatisticsService docStatisticsService;
     private final SysCodeService sysCodeService;
-    private ProducerUserService producerUserService;
+    private final ProducerUserService producerUserService;
 
 
     @Bean
@@ -91,11 +91,13 @@ public class ConsultationEventTrigger extends EventTrigger<Long, ConsultationES>
         }
 
         //获取昵称
-        ProducerUserVO userVO = producerUserService.getProducerUserByUserId(consultationDO.getProfessorUserId());
-        if (userVO != null) {
-            consultationES.setProfessorUserName(userVO.getUsername());
+        Long professorUserId = consultationDO.getProfessorUserId();
+        if (professorUserId != null) {
+            ProducerUserVO userVO = producerUserService.getProducerUserByUserId(consultationDO.getProfessorUserId());
+            if (userVO != null) {
+                consultationES.setProfessorUserName(userVO.getUsername());
+            }
         }
-
 
         //copy子表内容
         List<ConsultationContentESVO> consultationContentESVOList = new ArrayList<>();

@@ -7,12 +7,12 @@
     <select id="queryConsultationList"
             resultType="cn.huacloud.taxpreference.services.producer.entity.vos.QueryConsultationVO">
         select tc.industry_names industryNames,
-               tc.tax_categories_names taxCategoriesNames,
-               tc.tax_practices taxPractices,
-               tc.create_time createTime,
-               tcc.content content,
-               tc.status status,
-               tc.id id
+        tc.tax_categories_names taxCategoriesNames,
+        tc.tax_practices taxPractices,
+        tc.create_time createTime,
+        tcc.content content,
+        tc.status status,
+        tc.id id
         from t_consultation as tc
         left join t_consultation_content as tcc
         on tc.id=tcc.consultation_id and tcc.content_type='QUESTION'
@@ -40,7 +40,7 @@
                 and tc.create_time &lt;= #{queryDTO.endTime}
             </if>
         </where>
-
+        order by tcc.create_time desc
 
     </select>
 </mapper>
