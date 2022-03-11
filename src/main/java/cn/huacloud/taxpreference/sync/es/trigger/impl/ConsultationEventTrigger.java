@@ -12,6 +12,8 @@ import cn.huacloud.taxpreference.services.producer.entity.dos.ConsultationConten
 import cn.huacloud.taxpreference.services.producer.entity.dos.ConsultationDO;
 import cn.huacloud.taxpreference.services.producer.mapper.ConsultationContentMapper;
 import cn.huacloud.taxpreference.services.producer.mapper.ConsultationMapper;
+import cn.huacloud.taxpreference.services.user.ProducerUserService;
+import cn.huacloud.taxpreference.services.user.entity.vos.ProducerUserVO;
 import cn.huacloud.taxpreference.sync.es.trigger.EventTrigger;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -41,6 +43,7 @@ public class ConsultationEventTrigger extends EventTrigger<Long, ConsultationES>
     private final ConsultationContentMapper contentMapper;
     private final DocStatisticsService docStatisticsService;
     private final SysCodeService sysCodeService;
+    private ProducerUserService producerUserService;
 
 
     @Bean
@@ -87,6 +90,13 @@ public class ConsultationEventTrigger extends EventTrigger<Long, ConsultationES>
             consultationES.setViews(0L);
         }
 
+        //获取昵称
+        ProducerUserVO userVO = producerUserService.getProducerUserByUserId(consultationDO.getProfessorUserId());
+        if (userVO != null) {
+            consultationES.setProfessorUserName(userVO.getUsername());
+        }
+
+
         //copy子表内容
         List<ConsultationContentESVO> consultationContentESVOList = new ArrayList<>();
         for (ConsultationContentDO consultationContentDO : consultationContentDOList) {
@@ -107,7 +117,7 @@ public class ConsultationEventTrigger extends EventTrigger<Long, ConsultationES>
     @Override
     protected IPage<Long> pageIdList(int pageNum, int pageSize) {
         LambdaQueryWrapper<ConsultationDO> queryWrapper = Wrappers.lambdaQuery(ConsultationDO.class)
-                .eq(ConsultationDO::getPublished,true)
+                .eq(ConsultationDO::getPublished, true)
                 .isNotNull(ConsultationDO::getFinishTime);
         IPage<ConsultationDO> page = consultationMapper.selectPage(Page.of(pageNum, pageSize), queryWrapper);
         return mapToIdPage(page, ConsultationDO::getId);

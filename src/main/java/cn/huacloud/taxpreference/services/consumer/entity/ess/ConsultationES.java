@@ -25,6 +25,10 @@ public class ConsultationES implements IDGetter<Object> {
      */
     private Long professorUserId;
     /**
+     * 专家昵称
+     */
+    private String professorUserName;
+    /**
      * 税务实务
      */
     private String taxPractices;
@@ -56,10 +60,10 @@ public class ConsultationES implements IDGetter<Object> {
     private Long collections;
     /**
      * 是否公开
-     * */
+     */
     private Long published;
     /**
      * 回复状态
-     * */
+     */
     private String status;
 }

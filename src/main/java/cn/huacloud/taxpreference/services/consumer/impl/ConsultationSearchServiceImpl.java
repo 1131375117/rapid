@@ -138,6 +138,7 @@ public class ConsultationSearchServiceImpl implements ConsultationSearchService 
                 .filter(consultationContentDO -> consultationContentDO.getContentType().equals(ContentType.QUESTION))
                 .collect(Collectors.toList());
         consultationESVO.setAppendCount(collect.size());
+        consultationESVO.setFirstQuestTime(consultationESVO.getConsultationContent().get(0).getCreateTime());
         return consultationESVO;
     }
 

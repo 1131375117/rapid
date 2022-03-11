@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author fuhua
@@ -129,6 +130,15 @@ public class ConsultationSearchController {
     @ConsumerUserCheckLogin
     public ResultVO<PageVO<ConsultationESVO>> approximateConsultation(@RequestBody ConsultationQueryDTO pageQuery) throws Exception {
         PageVO<ConsultationESVO> pageVO = consultationSearchService.pageSearch(pageQuery);
+        pageVO.setRecords(pageVO.getRecords()
+                .stream()
+                .peek(consultationESVO
+                        -> consultationESVO.setFirstQuestTime(
+                        consultationESVO.getConsultationContent()
+                                .get(0)
+                                .getCreateTime()))
+                .collect(Collectors.toList()))
+        ;
         return ResultVO.ok(pageVO);
     }
 
