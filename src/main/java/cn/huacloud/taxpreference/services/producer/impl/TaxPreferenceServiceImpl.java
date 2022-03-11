@@ -595,9 +595,10 @@ public class TaxPreferenceServiceImpl implements TaxPreferenceService {
 
     @Override
     public List<String> queryEnterprise() {
-      List<String> enterpriseList= taxPreferenceMapper.queryEnterpirse();
+        List<String> enterpriseList = taxPreferenceMapper.queryEnterpirse();
         return enterpriseList;
     }
+
 
     private String getNamesByCodeValues(String s) {
         SysCodeVO sysCodeVO = sysCodeService.getCodeVOByCodeName(SysCodeType.TAXPAYER_TYPE, s);

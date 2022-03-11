@@ -58,4 +58,8 @@ public class ConsultationES implements IDGetter<Object> {
      * 是否公开
      * */
     private Long published;
+    /**
+     * 回复状态
+     * */
+    private String status;
 }

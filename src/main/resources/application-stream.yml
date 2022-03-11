@@ -1,7 +1,7 @@
 spring:
   cloud:
     function:
-      definition: "savePoliciesSuppler;deletePoliciesSuppler;savePolicies;deletePolicies;savePoliciesExplainSuppler;deletePoliciesExplainSuppler;savePoliciesExplain;deletePoliciesExplain;saveFAQSuppler;deleteFAQSuppler;saveFAQ;deleteFAQ;saveTaxPreferenceSuppler;deleteTaxPreferenceSuppler;saveTaxPreference;deleteTaxPreference;saveOtherDocSuppler;deleteOtherDocSuppler;saveOtherDoc;deleteOtherDoc;saveConsultationSuppler;deleteConsultationSuppler;saveConsultation;deleteConsultation"
+      definition: "savePoliciesSuppler;deletePoliciesSuppler;savePolicies;deletePolicies;savePoliciesExplainSuppler;deletePoliciesExplainSuppler;savePoliciesExplain;deletePoliciesExplain;saveFAQSuppler;deleteFAQSuppler;saveFAQ;deleteFAQ;saveTaxPreferenceSuppler;deleteTaxPreferenceSuppler;saveTaxPreference;deleteTaxPreference;saveOtherDocSuppler;deleteOtherDocSuppler;saveOtherDoc;deleteOtherDoc;saveConsultationSuppler;deleteConsultationSuppler;saveConsultation;deleteConsultation;sendSmsSuppler;sendSms"
     stream:
       bindings:
         # policies save
@@ -76,3 +76,10 @@ spring:
         deleteConsultation-in-0:
           destination: deleteConsultationExchange
           group: deleteConsultationQueue
+        #sms send
+        sendSmsSuppler-out-0:
+          destination: sendSmsExchange
+        sendSms-in-0:
+          destination: sendSmsExchange
+          group: sendSmsQueue
+

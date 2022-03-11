@@ -19,4 +19,8 @@ public class TencentSesParamDTO {
     private Long templateId;
     // 邮件主题
     private String subjectType;
+    //邮件模板
+    private String template;
+
+    private String host;
 }

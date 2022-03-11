@@ -17,6 +17,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -99,13 +100,17 @@ public class ConsultationEventTrigger extends EventTrigger<Long, ConsultationES>
             consultationContentESVOList.add(consultationContentESVO);
         }
         consultationES.setConsultationContent(consultationContentESVOList);
-
+        consultationES.setStatus(String.valueOf(consultationDO.getStatus()));
         return consultationES;
     }
 
     @Override
     protected IPage<Long> pageIdList(int pageNum, int pageSize) {
-        return null;
+        LambdaQueryWrapper<ConsultationDO> queryWrapper = Wrappers.lambdaQuery(ConsultationDO.class)
+                .eq(ConsultationDO::getPublished,true)
+                .isNotNull(ConsultationDO::getFinishTime);
+        IPage<ConsultationDO> page = consultationMapper.selectPage(Page.of(pageNum, pageSize), queryWrapper);
+        return mapToIdPage(page, ConsultationDO::getId);
     }
 
 

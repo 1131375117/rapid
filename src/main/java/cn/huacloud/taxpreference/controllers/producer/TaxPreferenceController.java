@@ -39,7 +39,7 @@ public class TaxPreferenceController {
     @SaCheckPermission("producer_taxPreference_query")
     @ApiOperation("税收优惠查询接口")
     @PostMapping("queryTaxPreference")
-    public ResultVO<PageVO<QueryTaxPreferencesVO>> queryTaxPreference( @RequestBody QueryTaxPreferencesDTO queryTaxPreferencesDTO) {
+    public ResultVO<PageVO<QueryTaxPreferencesVO>> queryTaxPreference(@RequestBody QueryTaxPreferencesDTO queryTaxPreferencesDTO) {
         queryTaxPreferencesDTO.paramReasonable();
         return taxPreferenceService.queryTaxPreferenceList(queryTaxPreferencesDTO, ProducerUserUtil.getCurrentUser().getId());
     }
@@ -75,6 +75,7 @@ public class TaxPreferenceController {
     public ResultVO<Void> updateTaxPreferenceSubmit(@Validated(ValidationGroup.Update.class) @RequestBody TaxPreferenceDTO taxPreferenceDTO) throws MethodArgumentNotValidException {
         return taxPreferenceService.updateTaxPreference(taxPreferenceDTO, ProducerUserUtil.getCurrentUser());
     }
+
     /**
      * 税收优惠事项基本信息展示
      * 查询条件:优惠事项id

@@ -63,4 +63,17 @@ public class SubScribeServiceImpl implements SubScribeService {
         return subscribeDOS;
     }
 
+    @Override
+    public Boolean isUserSubscribe(Long currentUserId, CollectionType subscribeType, Long id) {
+        LambdaQueryWrapper<SubscribeDO> wrapper = Wrappers.lambdaQuery(SubscribeDO.class)
+                .eq(SubscribeDO::getSourceId, id)
+                .eq(SubscribeDO::getConsumerUserId,currentUserId)
+                .eq(SubscribeDO::getSubscribeType, subscribeType);
+        List<SubscribeDO> subscribeDOS = subscribeMapper.selectList(wrapper);
+        if (subscribeDOS != null&&subscribeDOS.size()>0) {
+            return true;
+        }
+        return false;
+    }
+
 }

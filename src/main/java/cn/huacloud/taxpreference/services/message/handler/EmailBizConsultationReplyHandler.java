@@ -7,17 +7,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 短信订阅业务
- *
- * @author fuhua
+ * 短信登录验证码处理器
+ * @author wangkh
  */
 @RequiredArgsConstructor
 @Component
-public class SmsBizConsumerSubscribeCodeHandler implements SmsBizHandler {
+public class EmailBizConsultationReplyHandler implements EmailBizHandler {
 
 
     @Override
-    public List<String> getParams(List<String> phoneNumbers) {
+    public List<String> getParams(List<String> emails) {
         return new ArrayList<>();
     }
 }

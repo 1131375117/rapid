@@ -57,7 +57,10 @@ public class ConsultationDTO  {
      * 是否公开
      */
     @ApiModelProperty("是否公开,0-不公开，1")
-    @NotNull(message = "不能为空")
     private Long published;
+
+    @ApiModelProperty("手机号")
+    @NotNull
+    private Long phoneNumber;
 
 }

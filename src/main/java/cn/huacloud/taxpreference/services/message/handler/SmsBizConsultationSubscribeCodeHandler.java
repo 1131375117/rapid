@@ -13,7 +13,7 @@ import java.util.List;
  */
 @RequiredArgsConstructor
 @Component
-public class SmsBizConsumerSubscribeCodeHandler implements SmsBizHandler {
+public class SmsBizConsultationSubscribeCodeHandler implements SmsBizHandler {
 
 
     @Override

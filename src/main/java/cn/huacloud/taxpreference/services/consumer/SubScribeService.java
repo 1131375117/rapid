@@ -27,4 +27,13 @@ public interface SubScribeService {
      * @return
      */
     List<SubscribeDO> selectList(Long id, CollectionType taxPreference);
+
+    /**
+     * 是否订阅
+     * @param currentUserId 用户id
+     * @param subscribeType 订阅类型
+     * @param id
+     * @return
+     */
+    Boolean isUserSubscribe(Long currentUserId, CollectionType subscribeType, Long id);
 }

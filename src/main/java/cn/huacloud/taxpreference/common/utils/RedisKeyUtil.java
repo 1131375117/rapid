@@ -51,4 +51,13 @@ public class RedisKeyUtil {
         return "sms:bind:" + email;
     }
 
+    /**
+     * 获取专家咨询用户未读消息提示redisKey
+     * @param userId 用户id
+     * @return redisKey
+     */
+    public static String getConsultationReplyRedisKey(Long userId) {
+        return "consultation:reply:" + userId;
+    }
+
 }

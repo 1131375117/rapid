@@ -1,6 +1,5 @@
 package cn.huacloud.taxpreference.services.consumer.entity.vos;
 
-import cn.huacloud.taxpreference.services.common.entity.vos.SysCodeSimpleVO;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -19,7 +18,7 @@ public class ConsultationListVO {
     @ApiModelProperty("开始时间")
     private LocalDateTime createTime;
     @ApiModelProperty("税种")
-    private List<SysCodeSimpleVO> taxCategories;
+    private List<String> taxCategories;
     @ApiModelProperty("内容")
     private String consultationContent;
 

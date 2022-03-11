@@ -15,6 +15,8 @@ public interface SysParamTypes {
     String SMS_REGISTER_VERIFICATION_CODE = "sms.register.verificationCode";
     // 短信找回密码
     String SMS_RETRIEVE_PASSWORD_VERIFICATION_CODE = "sms.retrievePassword.verificationCode";
+    // 短信专家回复
+    String SMS_CONSULTATION_REPLY_CODE = "sms.consultation.replyCode";
     // 短信发送频率时间限制
     String SMS_RATE_LIMIT_SECONDS = "sms.rateLimitSeconds";
     // 短信验证码过期时间
@@ -33,4 +35,6 @@ public interface SysParamTypes {
     String SES_RATE_LIMIT_SECONDS = "ses.rateLimitSeconds";
     // 邮箱绑定
     String SES_BIND_VERIFICATION_CODE = "ses.bind.verificationCode";
+    // 专家邮件回复
+    String SES_CONSULTATION_REPLY = "ses.consultation.replyCode";
 }

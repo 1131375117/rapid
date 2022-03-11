@@ -1,10 +1,7 @@
 package cn.huacloud.taxpreference.common.enums;
 
 import cn.huacloud.taxpreference.common.constants.SysParamTypes;
-import cn.huacloud.taxpreference.services.message.handler.SmsBizHandler;
-import cn.huacloud.taxpreference.services.message.handler.SmsBizLoginVerificationCodeHandler;
-import cn.huacloud.taxpreference.services.message.handler.SmsBizRegisterVerificationCodeHandler;
-import cn.huacloud.taxpreference.services.message.handler.SmsBizRetrievePasswordVerificationCodeHandler;
+import cn.huacloud.taxpreference.services.message.handler.*;
 import com.baomidou.mybatisplus.annotation.IEnum;
 import lombok.Getter;
 
@@ -20,7 +17,8 @@ public enum SmsBiz implements SysParamTypesGetter, IEnum<String> {
     LOGIN_VERIFICATION_CODE("发送登录验证码", SmsBizLoginVerificationCodeHandler.class, Arrays.asList(SysParamTypes.SMS_LOGIN_VERIFICATION_CODE, SysParamTypes.SMS_BASE)),
     REGISTER_VERIFICATION_CODE("发送注册验证码", SmsBizRegisterVerificationCodeHandler.class, Arrays.asList(SysParamTypes.SMS_REGISTER_VERIFICATION_CODE, SysParamTypes.SMS_BASE)),
     RETRIEVE_PASSWORD_VERIFICATION_CODE("发送密码重置验证码", SmsBizRetrievePasswordVerificationCodeHandler.class, Arrays.asList(SysParamTypes.SMS_RETRIEVE_PASSWORD_VERIFICATION_CODE, SysParamTypes.SMS_BASE)),
-    CONSUMER_SUBSCRIBE__CODE("发送订阅业务", SmsBizRetrievePasswordVerificationCodeHandler.class, Arrays.asList(SysParamTypes.SMS_RETRIEVE_PASSWORD_VERIFICATION_CODE, SysParamTypes.SMS_BASE));
+    CONSUMER_SUBSCRIBE__CODE("发送订阅业务", SmsBizRetrievePasswordVerificationCodeHandler.class, Arrays.asList(SysParamTypes.SMS_RETRIEVE_PASSWORD_VERIFICATION_CODE, SysParamTypes.SMS_BASE)),
+    CONSULTATION_REPLAY("专家回复业务", SmsBizConsultationSubscribeCodeHandler.class, Arrays.asList(SysParamTypes.SMS_CONSULTATION_REPLY_CODE, SysParamTypes.SMS_BASE));;
     /**
      * 业务中文名称
      */

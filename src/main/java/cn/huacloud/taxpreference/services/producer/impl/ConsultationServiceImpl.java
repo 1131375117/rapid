@@ -1,16 +1,15 @@
 package cn.huacloud.taxpreference.services.producer.impl;
 
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
-import cn.huacloud.taxpreference.common.enums.BizCode;
-import cn.huacloud.taxpreference.common.enums.ContentType;
-import cn.huacloud.taxpreference.common.enums.ReplyStatus;
-import cn.huacloud.taxpreference.common.enums.SysCodeType;
+import cn.huacloud.taxpreference.common.enums.*;
+import cn.huacloud.taxpreference.common.utils.RedisKeyUtil;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.common.SysCodeService;
 import cn.huacloud.taxpreference.services.common.entity.dtos.SysCodeStringDTO;
-import cn.huacloud.taxpreference.services.consumer.CommonSearchService;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.AppendConsultationDTO;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.ConsultationDTO;
+import cn.huacloud.taxpreference.services.message.EmailService;
+import cn.huacloud.taxpreference.services.message.SmsService;
 import cn.huacloud.taxpreference.services.producer.ConsultationService;
 import cn.huacloud.taxpreference.services.producer.entity.dos.ConsultationContentDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.ConsultationDO;
@@ -21,6 +20,8 @@ import cn.huacloud.taxpreference.services.producer.entity.vos.ConsultationVO;
 import cn.huacloud.taxpreference.services.producer.entity.vos.QueryConsultationVO;
 import cn.huacloud.taxpreference.services.producer.mapper.ConsultationContentMapper;
 import cn.huacloud.taxpreference.services.producer.mapper.ConsultationMapper;
+import cn.huacloud.taxpreference.services.user.entity.dos.ConsumerUserDO;
+import cn.huacloud.taxpreference.services.user.mapper.ConsumerUserMapper;
 import cn.huacloud.taxpreference.sync.es.trigger.impl.ConsultationEventTrigger;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -29,6 +30,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -37,6 +39,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -49,7 +52,10 @@ public class ConsultationServiceImpl implements ConsultationService {
     private final ConsultationContentMapper consultationContentMapper;
     private final SysCodeService sysCodeService;
     private final ConsultationEventTrigger consultationEventTrigger;
-    private final CommonSearchService commonSearchService;
+    private final SmsService smsService;
+    private final EmailService emailService;
+    private final ConsumerUserMapper consumerUserMapper;
+    private final StringRedisTemplate stringRedisTemplate;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -72,7 +78,7 @@ public class ConsultationServiceImpl implements ConsultationService {
         consultationContentDO.setCreateTime(LocalDateTime.now());
         consultationContentDO.setConsultationId(consultationDO.getId());
         consultationContentMapper.insert(consultationContentDO);
-
+        consultationEventTrigger.saveEvent(consultationDO.getId());
         return true;
     }
 
@@ -88,6 +94,8 @@ public class ConsultationServiceImpl implements ConsultationService {
         consultationMapper.updateById(consultationDO);
         LambdaQueryWrapper<ConsultationContentDO> queryWrapper = Wrappers.lambdaQuery(ConsultationContentDO.class).eq(ConsultationContentDO::getConsultationId, consultationDO.getId());
         Long count = consultationContentMapper.selectCount(queryWrapper);
+
+
         //热门咨询content表
         ConsultationContentDO consultationContentDO = new ConsultationContentDO();
         BeanUtils.copyProperties(consultationReplyDTO, consultationContentDO);
@@ -98,8 +106,23 @@ public class ConsultationServiceImpl implements ConsultationService {
         }
         consultationContentDO.setCreateTime(LocalDateTime.now());
         consultationContentMapper.insert(consultationContentDO);
+
         //写入es
         consultationEventTrigger.saveEvent(consultationDO.getId());
+
+        //发送短信
+        ConsultationDO selectById = consultationMapper.selectById(consultationReplyDTO.getConsultationId());
+        smsService.sendSms(String.valueOf(selectById.getPhoneNumber()), SmsBiz.CONSULTATION_REPLAY);
+
+        //发送邮件
+        Long customerUserId = selectById.getCustomerUserId();
+        ConsumerUserDO consumerUserDO = consumerUserMapper.selectById(customerUserId);
+        if (!StringUtils.isEmpty(consumerUserDO.getEmail())) {
+            emailService.sendEmail(consumerUserDO.getEmail(), EmailBiz.CONSULTATION_REPLY);
+        }
+
+        //写入redis
+        stringRedisTemplate.opsForValue().set(RedisKeyUtil.getConsultationReplyRedisKey(customerUserId), String.valueOf(RedPointStatus.SHOW),7L, TimeUnit.DAYS);
 
     }
 
@@ -149,12 +172,20 @@ public class ConsultationServiceImpl implements ConsultationService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void appendConsultation(AppendConsultationDTO consultationDTO) {
-        LambdaQueryWrapper<ConsultationContentDO> queryWrapper = Wrappers.lambdaQuery(ConsultationContentDO.class).eq(ConsultationContentDO::getConsultationId, consultationDTO.getConsultationId());
+        LambdaQueryWrapper<ConsultationContentDO> queryWrapper = Wrappers.lambdaQuery(ConsultationContentDO.class)
+                .eq(ConsultationContentDO::getConsultationId, consultationDTO.getConsultationId());
         Long count = consultationContentMapper.selectCount(queryWrapper);
+
+        //修改答复状态
+        ConsultationDO consultationDO = new ConsultationDO();
+        consultationDO.setId(consultationDTO.getConsultationId()).setStatus(ReplyStatus.NOT_REPLY);
+        consultationMapper.updateById(consultationDO);
+
         List<ConsultationContentDO> consultationContentDOS = consultationContentMapper.selectList(queryWrapper);
         List<ConsultationContentDO> collect = consultationContentDOS.stream().filter(consultationContentDO -> consultationContentDO.getContentType().equals(ContentType.QUESTION)).collect(Collectors.toList());
-        if (collect.size() >= 3) {
+        if (collect.size() >= 4) {
             throw BizCode._4608.exception();
         }
         //热门咨询内容表
@@ -167,6 +198,7 @@ public class ConsultationServiceImpl implements ConsultationService {
         }
         consultationContentDO.setCreateTime(LocalDateTime.now());
         consultationContentMapper.insert(consultationContentDO);
+        consultationEventTrigger.saveEvent(consultationDO.getId());
     }
 
     private void copyProperties(ConsultationDTO consultationDTO, ConsultationDO consultationDO) {

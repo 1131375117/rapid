@@ -13,7 +13,9 @@ import java.util.List;
  * @author wangkh
  */
 public enum EmailBiz implements SysParamTypesGetter, IEnum<String> {
-    BIND_VERIFICATION_CODE("发送绑定验证码", EmailBizBindVerificationCodeHandler.class, Arrays.asList(SysParamTypes.SES_BIND_VERIFICATION_CODE, SysParamTypes.SES_BASE));
+    BIND_VERIFICATION_CODE("发送绑定验证码", EmailBizBindVerificationCodeHandler.class, Arrays.asList(SysParamTypes.SES_BIND_VERIFICATION_CODE, SysParamTypes.SES_BASE)),
+    CONSULTATION_REPLY("专家回复邮件", EmailBizConsultationReplyHandler.class, Arrays.asList(SysParamTypes.SES_CONSULTATION_REPLY, SysParamTypes.SES_BASE))
+    ;
 
     /**
      * 业务中文名称

@@ -64,6 +64,7 @@ public class TaxPreferenceSearchController {
     public ResultVO<TaxPreferenceSearchVO> getTaxPreferenceDetails(@PathVariable("id") Long id) throws Exception {
         TaxPreferenceSearchVO taxPreferenceSearchVO = taxPreferenceSearchService.getTaxPreferenceDetails(id);
         taxPreferenceSearchVO.initUserCollectionInfo(CollectionType.TAX_PREFERENCE);
+        taxPreferenceSearchVO.initUserSubscribe(CollectionType.TAX_PREFERENCE);
         return ResultVO.ok(taxPreferenceSearchVO);
     }
 
@@ -93,4 +94,5 @@ public class TaxPreferenceSearchController {
         List<String> itemRelatedCodes = taxPreferenceSearchService.getItemRelatedCodes(taxPreferenceItems);
         return ResultVO.ok(itemRelatedCodes);
     }
+
 }

@@ -18,9 +18,13 @@ import com.tencentcloudapi.ses.v20201002.models.SendEmailResponse;
 import com.tencentcloudapi.ses.v20201002.models.Template;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
+import javax.mail.internet.MimeMessage;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +49,7 @@ public class TencentEmailServiceImpl implements EmailService {
     private final ObjectMapper objectMapper;
 
     private final List<EmailService.Interceptor> interceptors;
+    private final JavaMailSenderImpl javaMailSender;
 
     @Override
     @Transactional
@@ -88,7 +93,7 @@ public class TencentEmailServiceImpl implements EmailService {
      * @param sesParam     业务参数
      * @throws Exception
      */
-    private void sendEmail(List<String> emails, List<String> systemParams, TencentSesParamDTO sesParam) throws Exception {
+    private void sendEmailTencent(List<String> emails, List<String> systemParams, TencentSesParamDTO sesParam) throws Exception {
         // TODO SmsClient应该实例化，但是修改系统参数后又不能及时生效，先采用实时创建对象的方式实现
         // 实例化一个认证对象，入参需要传入腾讯云账户secretId，secretKey,此处还需注意密钥对的保密
         Credential cred = new Credential(sesParam.getSecretId(), sesParam.getSecretKey());
@@ -105,7 +110,7 @@ public class TencentEmailServiceImpl implements EmailService {
         Template template = new Template();
         template.setTemplateID(sesParam.getTemplateId());
         HashMap<String, String> contentMap = new HashMap<>(16);
-        contentMap.put("code",systemParams.get(0));
+        contentMap.put("code", systemParams.get(0));
         template.setTemplateData(objectMapper.writeValueAsString(contentMap));
         req.setTemplate(template);
         req.setSubject(sesParam.getSubjectType());
@@ -113,6 +118,38 @@ public class TencentEmailServiceImpl implements EmailService {
         SendEmailResponse resp = client.SendEmail(req);
         // 输出json格式的字符串回包
         System.out.println(SendEmailResponse.toJsonString(resp));
+    }
+
+
+    /**
+     * @param emails       邮件集合
+     * @param systemParams 邮件系统参数
+     * @param sesParam     业务参数
+     * @throws Exception
+     */
+    private void sendEmail(List<String> emails, List<String> systemParams, TencentSesParamDTO sesParam) throws Exception {
+
+        //1、创建一个复杂的邮件
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+        //邮件主题
+        helper.setSubject(sesParam.getSubjectType());
+        //文本中添加图片
+        // helper.addInline("image1",new FileSystemResource("D:\\images\\spring\\1.jpg"));
+        //邮件内容
+        if (CollectionUtils.isEmpty(systemParams)) {
+            helper.setText(sesParam.getTemplate(), true);
+        } else {
+            helper.setText(String.format(sesParam.getTemplate(), systemParams.get(0)), true);
+        }
+        helper.setTo(emails.get(0));
+        helper.setFrom(sesParam.getSecretId());
+        //附件添加图片
+        // helper.addAttachment("1.jpg",new File("D:\\images\\spring\\1.jpg"));
+        //附件添加word文档
+        //  helper.addAttachment("哈哈哈.docx",new File("D:\\images\\spring\\哈哈哈.docx"));
+
+        javaMailSender.send(mimeMessage);
     }
 
     /**

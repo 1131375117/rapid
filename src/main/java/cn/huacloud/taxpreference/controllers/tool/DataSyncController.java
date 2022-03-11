@@ -33,6 +33,8 @@ public class DataSyncController {
 
     private final TaxPreferenceEventTrigger taxPreferenceEventTrigger;
 
+    private final ConsultationEventTrigger consultationEventTrigger;
+
     private final OtherDocEventTrigger otherDocEventTrigger;
 
     private final SpiderDataSyncScheduler spiderDataSyncScheduler;
@@ -83,6 +85,14 @@ public class DataSyncController {
         sysConfig.checkSysPassword(jobParam.getPassword());
         spiderDataSyncScheduler.executeJobs(jobParam);
         return ResultVO.ok();
+    }
+
+    @ApiOperation("同步热门咨询数据")
+    @GetMapping("/sync/consultation")
+    public ResultVO<Void> syncAllTaxConsultation(String password) {
+        sysConfig.checkSysPassword(password);
+        long total = consultationEventTrigger.syncAll();
+        return ResultVO.ok().setMsg(MessageFormatter.format("成功同步数据{}条", total).getMessage());
     }
 
     @Getter

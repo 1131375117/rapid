@@ -122,4 +122,5 @@ public interface TaxPreferenceService {
 	 * @return
 	 */
 	List<String> queryEnterprise();
+
 }
