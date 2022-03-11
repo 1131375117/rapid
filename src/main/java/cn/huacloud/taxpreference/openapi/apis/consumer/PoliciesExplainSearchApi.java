@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.openapi.apis.consumer;
 
+import cn.huacloud.taxpreference.common.annotations.MonitorInterface;
 import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.enums.CollectionType;
@@ -33,6 +34,7 @@ public class PoliciesExplainSearchApi {
 
     @ApiOperation("最新政策解读（首页）")
     @OpenApiCheckToken
+    @MonitorInterface
     @GetMapping("/policiesExplain/latest")
     public ResultVO<PageVO<PoliciesExplainSearchSimpleVO>> latestPoliciesExplain(PageQueryDTO pageQuery) throws Exception {
         pageQuery.paramReasonable();
@@ -42,6 +44,7 @@ public class PoliciesExplainSearchApi {
 
     @ApiOperation("政策解读检索")
     @OpenApiCheckToken
+    @MonitorInterface
     @PostMapping("/policiesExplain")
     public ResultVO<PageVO<PoliciesExplainSearchListVO>> pageSearch(@RequestBody PoliciesExplainSearchQueryDTO pageQuery) throws Exception {
         PageVO<PoliciesExplainSearchListVO> pageVO = policiesExplainSearchService.pageSearch(pageQuery);
@@ -50,6 +53,7 @@ public class PoliciesExplainSearchApi {
 
     @ApiOperation("根据政策ID查询相关政策解读")
     @OpenApiCheckToken
+    @MonitorInterface
     @GetMapping("policiesExplain/policiesRelated/{policiesId}")
     public ResultVO<List<PoliciesExplainSearchSimpleVO>> policiesRelatedExplain(@PathVariable("policiesId") @ApiParam(example = "49308") String policiesId) throws Exception {
         List<PoliciesExplainSearchSimpleVO> list = policiesExplainSearchService.policiesRelatedExplain(policiesId);
@@ -58,6 +62,7 @@ public class PoliciesExplainSearchApi {
 
     @ApiOperation("政策解读详情")
     @OpenApiCheckToken
+    @MonitorInterface
     @GetMapping("/policiesExplain/{id}")
     public ResultVO<PoliciesExplainSearchVO> pageSearch(@PathVariable("id") @ApiParam(defaultValue = "2360") Long id) throws Exception {
         PoliciesExplainSearchVO policiesExplainSearchVO = policiesExplainSearchService.getPoliciesExplainDetails(id);

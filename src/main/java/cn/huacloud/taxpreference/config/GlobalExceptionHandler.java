@@ -4,6 +4,8 @@ import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.exception.NotPermissionException;
 import cn.dev33.satoken.exception.NotRoleException;
 import cn.dev33.satoken.exception.SaTokenException;
+import cn.dev33.satoken.spring.SpringMVCUtil;
+import cn.huacloud.taxpreference.common.constants.TaxBaseConstants;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.exception.TaxPreferenceException;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
@@ -15,7 +17,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.stream.Collectors;
 
 /**
@@ -28,7 +29,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
 
-    private final HttpServletRequest request;
 
     /**
      * 捕获 sa-token 权限异常
@@ -62,7 +62,7 @@ public class GlobalExceptionHandler {
             resultVO = BizCode._500.getResultVO();
             resultVO.setData(e.getMessage());
         }
-        request.setAttribute("result", resultVO);
+        SpringMVCUtil.getRequest().setAttribute(TaxBaseConstants.REQUEST_KEY, resultVO);
         return resultVO;
     }
 
@@ -75,7 +75,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(TaxPreferenceException.class)
     public ResultVO<Object> handleTaxPreferenceException(TaxPreferenceException e) {
         log.info("接口调用业务异常: {}", e.getMessage());
-        request.setAttribute("result", new ResultVO<>(e.getCode(), e.getMessage(), e.getData()));
+        SpringMVCUtil.getRequest().setAttribute(TaxBaseConstants.REQUEST_KEY, new ResultVO<>(e.getCode(), e.getMessage(), e.getData()));
         return new ResultVO<>(e.getCode(), e.getMessage(), e.getData());
     }
 
@@ -92,7 +92,8 @@ public class GlobalExceptionHandler {
                 .map(fieldError -> fieldError.getField() + " => " + fieldError.getDefaultMessage())
                 .collect(Collectors.joining(";"));
         log.info("参数校验失败：{}", message);
-        request.setAttribute("result", new ResultVO<>(BizCode._4100.code, message, null));
+        SpringMVCUtil.getRequest().setAttribute(TaxBaseConstants.REQUEST_KEY, new ResultVO<>(BizCode._4100.code, message, null));
+
         return new ResultVO<>(BizCode._4100.code, message, null);
     }
 
@@ -105,7 +106,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageConversionException.class)
     public ResultVO<Void> handleHttpMessageConversionException(HttpMessageConversionException e) {
         log.error("消息转换异常", e);
-        request.setAttribute("result", BizCode._4100.getResultVO());
+        SpringMVCUtil.getRequest().setAttribute(TaxBaseConstants.REQUEST_KEY, BizCode._4100.getResultVO());
         return BizCode._4100.getResultVO();
     }
 
@@ -117,7 +118,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResultVO<Void> handleException(Exception e) {
         log.error("接口调用异常", e);
-        request.setAttribute("result", BizCode._500.getResultVO());
+        SpringMVCUtil.getRequest().setAttribute(TaxBaseConstants.REQUEST_KEY, BizCode._500.getResultVO());
         return BizCode._500.getResultVO();
     }
 

@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.openapi.apis.consumer;
 
+import cn.huacloud.taxpreference.common.annotations.MonitorInterface;
 import cn.huacloud.taxpreference.common.entity.dtos.ExSearchQueryDTO;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.openapi.auth.OpenApiCheckToken;
@@ -28,6 +29,7 @@ public class CommonSearchApi {
 
     @ApiOperation("数据统计（首页）")
     @OpenApiCheckToken
+    @MonitorInterface
     @GetMapping("/dataCount")
     public ResultVO<SearchDataCountVO> getDataCount() throws Exception {
         SearchDataCountVO searchDataCountVO = commonSearchService.getDataCount();
@@ -36,6 +38,7 @@ public class CommonSearchApi {
 
     @ApiOperation("高级搜索统计所有文档数")
     @OpenApiCheckToken
+    @MonitorInterface
     @PostMapping("/allDocCount")
     public ResultVO<List<SysCodeCountVO>> allDocCount(@RequestBody ExSearchQueryDTO pageQuery) throws Exception {
         pageQuery.paramReasonable();
