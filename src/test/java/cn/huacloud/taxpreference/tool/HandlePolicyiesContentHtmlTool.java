@@ -8,6 +8,7 @@ import cn.huacloud.taxpreference.services.producer.mapper.PoliciesMapper;
 import cn.huacloud.taxpreference.services.sync.entity.dos.SpiderDataSyncDO;
 import cn.huacloud.taxpreference.services.sync.mapper.SpiderDataSyncMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -16,6 +17,7 @@ import java.sql.*;
 /**
  * @author fuhua
  **/
+@Ignore
 @Slf4j
 public class HandlePolicyiesContentHtmlTool extends BaseApplicationTest {
     @Autowired

@@ -84,6 +84,28 @@ public class ConsumerUserServiceImpl implements ConsumerUserService {
         consumerUserMapper.updateById(consumerUserDO);
     }
 
+    @Override
+    public ConsumerUserDO getUserDOById(Long consumerUserId) {
+        return consumerUserMapper.selectById(consumerUserId);
+    }
+
+    @Transactional
+    @Override
+    public ConsumerUserDO autoCreateUserByOpenUserId(String openUserId) {
+        String openUserIdMd5 = SaSecureUtil.md5(openUserId);
+        ConsumerUserDO consumerUserDO = new ConsumerUserDO()
+                .setUserAccount(getNextUID())
+                .setPassword(SaSecureUtil.md5(UUID.randomUUID().toString()))
+                .setUsername(openUserIdMd5)
+                .setPhoneNumber("-1")
+                .setRoleCodes("")
+                .setCreateWay(CreateWay.CHANNEL_OPEN_USER_ID_AUTO)
+                .setCreateTime(LocalDateTime.now())
+                .setDeleted(false);
+        consumerUserMapper.insert(consumerUserDO);
+        return consumerUserDO;
+    }
+
     private String getNextUID() {
         // TODO UUID不方便记忆，替换为更好的实现
         return IdWorker.get32UUID();

@@ -17,6 +17,6 @@ public class LimitApiConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
 
-        registry.addInterceptor(new LimitInterceptor(redisLimitManager,defaultLimitManager)).addPathPatterns("/**");
+        // registry.addInterceptor(new LimitInterceptor(redisLimitManager,defaultLimitManager)).addPathPatterns("/**");
     }
 }

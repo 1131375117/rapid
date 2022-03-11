@@ -81,8 +81,23 @@ spider-sync:
 
 # 企业微信配置
 wwx:
-  corp-id: "wx9a124e5ac3e8815c"
-  suite-id: "wxc56593939fb029d1"
-  secret: "dcBNFmhW7-iGXntd3RufqlY3u228-H0HbZBX1pen6_Q"
-  token: "Pr0KgCr7qor43O2yKLG6Ah8sce9JrLom"
-  encoding-aes-key: "85kZ3CSeTdxQjHqntw5scxk1pLJrmx2psoIReB1ySv1"
+  # 税收优惠主应用
+  tax-preference:
+    corp-id: "wx9a124e5ac3e8815c"
+    provider-secret: "-2siEGlPSyf5EeOk3g61TxgD9DwxazfF3MwQXFo9KygK6ijP9Rweh7IsXCGRQb9E"
+    suite-id: "wxc56593939fb029d1"
+    secret: "dcBNFmhW7-iGXntd3RufqlY3u228-H0HbZBX1pen6_Q"
+    token: "Pr0KgCr7qor43O2yKLG6Ah8sce9JrLom"
+    encoding-aes-key: "85kZ3CSeTdxQjHqntw5scxk1pLJrmx2psoIReB1ySv1"
+    hosts:
+      - "tax-wwx.hua-cloud.net.cn"
+  # 税务小工具
+  tax-tool:
+    corp-id: "wx9a124e5ac3e8815c"
+    provider-secret: "-2siEGlPSyf5EeOk3g61TxgD9DwxazfF3MwQXFo9KygK6ijP9Rweh7IsXCGRQb9E"
+    suite-id: "wxe27c223ff88693e7"
+    secret: "-cuNx4ZJOOsOWXDIdZMzS_-Bdt3EGKibNjLtYjVnCxI"
+    token: "VzShwDoTtBMn9qahSB45nVQPqIY5Eh"
+    encoding-aes-key: "gKUXxMtvyacfq3KczuhjJawW4IUpqV7CuLIIMWMPn5n"
+    hosts:
+      - "tax-wwx.hua-cloud.net.cn"
