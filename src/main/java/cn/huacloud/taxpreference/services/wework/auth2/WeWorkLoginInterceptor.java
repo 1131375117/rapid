@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author wangkh
  */
-@Component
+@Deprecated
 public class WeWorkLoginInterceptor implements HandlerInterceptor {
     @Autowired
     private WeWorkTokenService weWorkTokenService;

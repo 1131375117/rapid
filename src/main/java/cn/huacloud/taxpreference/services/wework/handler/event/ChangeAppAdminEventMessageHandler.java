@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
  * @author wangkh
  */
 @Component
-public class ChangeAppAdminEventWeWorkMessageHandler implements EventWeWorkMessageHandler {
+public class ChangeAppAdminEventMessageHandler implements EventWeWorkMessageHandler {
     @Override
     public String type() {
         return "change_app_admin";

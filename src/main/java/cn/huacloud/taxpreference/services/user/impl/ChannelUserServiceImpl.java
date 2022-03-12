@@ -33,7 +33,7 @@ public class ChannelUserServiceImpl implements ChannelUserService {
             return consumerUserService.getUserDOById(channelUserDO.getConsumerUserId());
         }
         // 不存在需要新创建用户
-        ConsumerUserDO consumerUserDO = consumerUserService.autoCreateUserByOpenUserId(openUserId);
+        ConsumerUserDO consumerUserDO = consumerUserService.autoCreateUserByOpenUserId(channelType.defaultUsername, openUserId);
 
         channelUserDO = new ChannelUserDO()
                 .setConsumerUserId(consumerUserDO.getId())

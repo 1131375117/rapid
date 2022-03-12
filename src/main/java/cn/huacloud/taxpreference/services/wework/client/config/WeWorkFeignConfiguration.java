@@ -10,7 +10,6 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author wangkh
  */
-
 public class WeWorkFeignConfiguration {
     @Bean
     public Logger.Level level() {

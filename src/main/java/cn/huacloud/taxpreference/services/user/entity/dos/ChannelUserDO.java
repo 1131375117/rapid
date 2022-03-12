@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
  */
 @Accessors(chain = true)
 @Data
-@TableName("t_wwx_company")
+@TableName("t_channel_user")
 public class ChannelUserDO {
     @TableId(type = IdType.AUTO)
     private Long id;

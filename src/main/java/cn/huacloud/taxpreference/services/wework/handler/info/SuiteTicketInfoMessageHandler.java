@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  * @author wangkh
  */
 @Component
-public class SuiteTicketInfoHandlerWeWork implements InfoWeWorkMessageHandler {
+public class SuiteTicketInfoMessageHandler implements InfoWeWorkMessageHandler {
 
     @Autowired
     private WeWorkTokenService weWorkTokenService;
