@@ -77,7 +77,9 @@ public class ConsultationSearchController {
         List<ConsultationESVO> records = pageVO.getRecords();
         for (ConsultationESVO record : records) {
             record.setConsultationContent(Collections.singletonList(record.getConsultationContent().get(0)));
+            record.setFirstQuestTime(record.getConsultationContent().get(0).getCreateTime());
         }
+
         return ResultVO.ok(pageVO);
     }
 
@@ -96,8 +98,17 @@ public class ConsultationSearchController {
     @ConsumerUserCheckLogin
     public ResultVO<PageVO<ConsultationESVO>> hotConsultation(PageQueryDTO pageQuery) throws Exception {
         pageQuery.paramReasonable();
-        PageVO<ConsultationESVO> page = consultationSearchService.hotConsultation(pageQuery);
-        return ResultVO.ok(page);
+        PageVO<ConsultationESVO> pageVO = consultationSearchService.hotConsultation(pageQuery);
+        pageVO.setRecords(pageVO.getRecords()
+                .stream()
+                .peek(consultationESVO
+                        -> consultationESVO.setFirstQuestTime(
+                        consultationESVO.getConsultationContent()
+                                .get(0)
+                                .getCreateTime()))
+                .collect(Collectors.toList()))
+        ;
+        return ResultVO.ok(pageVO);
     }
 
     @ApiOperation("最新热门咨询")
@@ -105,8 +116,17 @@ public class ConsultationSearchController {
     @ConsumerUserCheckLogin
     public ResultVO<PageVO<ConsultationESVO>> latestTaxPreference(PageQueryDTO pageQuery) throws Exception {
         pageQuery.paramReasonable();
-        PageVO<ConsultationESVO> page = consultationSearchService.latestConsultation(pageQuery);
-        return ResultVO.ok(page);
+        PageVO<ConsultationESVO> pageVO = consultationSearchService.latestConsultation(pageQuery);
+        pageVO.setRecords(pageVO.getRecords()
+                .stream()
+                .peek(consultationESVO
+                        -> consultationESVO.setFirstQuestTime(
+                        consultationESVO.getConsultationContent()
+                                .get(0)
+                                .getCreateTime()))
+                .collect(Collectors.toList()))
+        ;
+        return ResultVO.ok(pageVO);
     }
 
     @ApiOperation("热门咨询详情")
