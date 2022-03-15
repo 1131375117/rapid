@@ -1,5 +1,7 @@
 package cn.huacloud.taxpreference.common.utils;
 
+import cn.huacloud.taxpreference.config.limit.ConfigLimitDto;
+
 /**
  * Redis键工具类，集中管理Redis键
  * @author wangkh
@@ -41,4 +43,13 @@ public class RedisKeyUtil {
     public static String getSmsRetrievePasswordRedisKey(String phoneNumber) {
         return "sms:retrievePassword:" + phoneNumber;
     }
+    /**
+     * 获取限流获取redisKey
+     * @param userId 用户id
+     * @return redisKey
+     */
+    public static String getLimitUserRedisKey(String userId, ConfigLimitDto routeConfig) {
+        return "api:lmt:"+userId+":"+routeConfig.getIp()+":"+routeConfig.getRequestMethod()+":"+routeConfig.getPath();
+    }
+
 }

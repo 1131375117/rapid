@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.openapi.apis.consumer;
 
+import cn.huacloud.taxpreference.common.annotations.LimitApi;
 import cn.huacloud.taxpreference.common.annotations.MonitorInterface;
 import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
@@ -33,6 +34,7 @@ public class PoliciesSearchApi {
     @ApiOperation("最新中央政策（首页）")
     @OpenApiCheckToken
     @MonitorInterface
+    @LimitApi
     @GetMapping("/policies/latestCentral")
     public ResultVO<PageVO<PoliciesSearchSimpleVO>> latestCentralPolicies(PageQueryDTO pageQuery) throws Exception {
         pageQuery.paramReasonable();
@@ -43,6 +45,7 @@ public class PoliciesSearchApi {
     @ApiOperation("最新地方政策（首页）")
     @OpenApiCheckToken
     @MonitorInterface
+    @LimitApi
     @GetMapping("/policies/latestLocal")
     public ResultVO<PageVO<PoliciesSearchSimpleVO>> latestLocalPolicies(PageQueryDTO pageQuery) throws Exception {
         pageQuery.paramReasonable();
@@ -53,6 +56,7 @@ public class PoliciesSearchApi {
     @ApiOperation("热门政策（首页）")
     @OpenApiCheckToken
     @MonitorInterface
+    @LimitApi
     @GetMapping("/policies/hot")
     public ResultVO<PageVO<PoliciesSearchSimpleVO>> hotPolicies(PageQueryDTO pageQuery) throws Exception {
         pageQuery.paramReasonable();
@@ -63,6 +67,7 @@ public class PoliciesSearchApi {
     @ApiOperation(value = "政策法规搜索")
     @OpenApiCheckToken
     @MonitorInterface
+    @LimitApi
     @PostMapping("/policies")
     public ResultVO<PageVO<PoliciesSearchListVO>> pageSearch(@RequestBody PoliciesSearchQueryDTO pageQuery) throws Exception {
         PageVO<PoliciesSearchListVO> pageVO = policiesSearchService.pageSearch(pageQuery);
@@ -73,6 +78,7 @@ public class PoliciesSearchApi {
     @GetMapping("/policies/{id}")
     @OpenApiCheckToken
     @MonitorInterface
+    @LimitApi
     public ResultVO<PoliciesSearchVO> getPoliciesDetails(@PathVariable("id")@ApiParam(example ="49308") Long id) throws Exception {
         PoliciesSearchVO policiesSearchVO = policiesSearchService.getPoliciesDetails(id);
         policiesSearchVO.initUserCollectionInfo(CollectionType.POLICIES);

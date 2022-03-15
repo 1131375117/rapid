@@ -25,4 +25,6 @@ public interface SysParamTypes {
     String TAX_PREFERENCE_CONDITION = "tax.preference.condition";
     //税务实务数据
     String TAX_CONSULTATION = "tax.consultation";
+    //限流基础参数
+    String LIMIT_BASE = "limit.base";
 }

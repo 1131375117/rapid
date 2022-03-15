@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.openapi.apis.consumer;
 
+import cn.huacloud.taxpreference.common.annotations.LimitApi;
 import cn.huacloud.taxpreference.common.annotations.MonitorInterface;
 import cn.huacloud.taxpreference.common.entity.dtos.PageQueryDTO;
 import cn.huacloud.taxpreference.common.entity.vos.PageVO;
@@ -35,6 +36,7 @@ public class FrequentlyAskedQuestionSearchApi {
     @ApiOperation("热门问答简单列表")
     @OpenApiCheckToken
     @MonitorInterface
+    @LimitApi
     @GetMapping("/faq/hot")
     public ResultVO<PageVO<FAQSearchSimpleVO>> hotFAQList(PageQueryDTO pageQuery) throws Exception {
         PageVO<FAQSearchSimpleVO> pageVO = frequentlyAskedQuestionSearchService.hotFAQList(pageQuery);
@@ -45,6 +47,7 @@ public class FrequentlyAskedQuestionSearchApi {
     @PostMapping("/faq")
     @OpenApiCheckToken
     @MonitorInterface
+    @LimitApi
     public ResultVO<PageVO<FAQSearchVO>> pageSearch(@RequestBody FAQSearchQueryDTO pageQuery) throws Exception {
         PageVO<FAQSearchVO> pageVO = frequentlyAskedQuestionSearchService.pageSearch(pageQuery);
         return ResultVO.ok(pageVO);
@@ -54,6 +57,7 @@ public class FrequentlyAskedQuestionSearchApi {
     @GetMapping("/faq/answerOrganization")
     @OpenApiCheckToken
     @MonitorInterface
+    @LimitApi
     public ResultVO<List<OrganizationVO>> getFaqAnswerOrganization(@RequestParam(value = "size", defaultValue = "200") Integer size) throws Exception {
 
         List<OrganizationVO> answerOrganizationList = frequentlyAskedQuestionSearchService.getFaqAnswerOrganization(size);
@@ -64,6 +68,7 @@ public class FrequentlyAskedQuestionSearchApi {
     @GetMapping("/faq/subjectType")
     @OpenApiCheckToken
     @MonitorInterface
+    @LimitApi
     public ResultVO<List<String>> getFaqSubjectType(@RequestParam(value = "size", defaultValue = "200") Integer size) throws Exception {
 
         List<String> subjectTypeList = frequentlyAskedQuestionSearchService.getFaqSubjectType(size);
@@ -74,6 +79,7 @@ public class FrequentlyAskedQuestionSearchApi {
     @GetMapping("/faq/{id}")
     @OpenApiCheckToken
     @MonitorInterface
+    @LimitApi
     public ResultVO<FAQSearchVO> getFAQDetails(@PathVariable(value = "id") @ApiParam(example = "8753") Long id) throws Exception {
         FAQSearchVO faqSearchVO = frequentlyAskedQuestionSearchService.getFAQDetails(id);
         faqSearchVO.initUserCollectionInfo(CollectionType.FREQUENTLY_ASKED_QUESTION);
@@ -86,6 +92,7 @@ public class FrequentlyAskedQuestionSearchApi {
     @GetMapping("/faq/policiesRelated/{policiesId}")
     @OpenApiCheckToken
     @MonitorInterface
+    @LimitApi
     public ResultVO<PageVO<FAQSearchVO>> policiesRelatedFAQ(@PathVariable("policiesId") @ApiParam(example = "8753") Long policiesId, PageQueryDTO pageQuery) throws Exception {
         PageVO<FAQSearchVO> pageVO = frequentlyAskedQuestionSearchService.policiesRelatedFAQ(policiesId, pageQuery);
         return ResultVO.ok(pageVO);

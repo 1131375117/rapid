@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  * @author hua-cloud
  */
 
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD,ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface LimitApi {
 
@@ -25,7 +25,7 @@ public @interface LimitApi {
     /**
      * 每秒可处理请求数,exec_count_per_second
      */
-    int execCountPerSecond() default 10;
+    int execCountPerSecond() default 800;
 
     /** 限流过期时间，默认1秒，即每durationSeconds秒允许多少请求（当limit_type=1时有效）, 数据库字段：durationSeconds */
     int durationSeconds() default 1;

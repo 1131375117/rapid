@@ -50,6 +50,7 @@ public class TaxPreferenceSearchApi {
     @ApiOperation("最新税收优惠（首页）")
     @OpenApiCheckToken
     @MonitorInterface
+    @LimitApi
     @GetMapping("/taxPreference/latest")
     public ResultVO<PageVO<DocSearchSimpleVO>> latestTaxPreference(LatestTaxPreferenceSearchQueryDTO pageQuery) throws Exception {
         pageQuery.paramReasonable();
@@ -62,6 +63,7 @@ public class TaxPreferenceSearchApi {
     @PostMapping("/taxPreference")
     @OpenApiCheckToken
     @MonitorInterface
+    @LimitApi
     public ResultVO<PageVO<TaxPreferenceSearchListVO>> pageSearch(@RequestBody TaxPreferenceSearchQueryDTO pageQuery) throws Exception {
         PageVO<TaxPreferenceSearchListVO> pageVO = taxPreferenceSearchService.pageSearch(pageQuery);
         // 添加序号
@@ -78,6 +80,7 @@ public class TaxPreferenceSearchApi {
     @GetMapping("/taxPreference/{id}")
     @MonitorInterface
     @OpenApiCheckToken
+    @LimitApi
     public ResultVO<TaxPreferenceSearchVO> getTaxPreferenceDetails(@PathVariable("id") @ApiParam(example = "187") Long id) throws Exception {
         TaxPreferenceSearchVO taxPreferenceSearchVO = taxPreferenceSearchService.getTaxPreferenceDetails(id);
         taxPreferenceSearchVO.initUserCollectionInfo(CollectionType.TAX_PREFERENCE);
@@ -89,6 +92,7 @@ public class TaxPreferenceSearchApi {
     @GetMapping("/taxPreference/hotLabels")
     @MonitorInterface
     @OpenApiCheckToken
+    @LimitApi
     public ResultVO<List<HotLabelVO>> hotLabels(@RequestParam(value = "size", defaultValue = "30") Integer size) throws Exception {
         List<HotLabelVO> hotLabels = taxPreferenceSearchService.hotLabels(size);
         return ResultVO.ok(hotLabels);
@@ -99,6 +103,7 @@ public class TaxPreferenceSearchApi {
     @PostMapping("/taxPreference/dynamicCondition")
     @MonitorInterface
     @OpenApiCheckToken
+    @LimitApi
     public ResultVO<DynamicConditionVO> getDynamicCondition(@RequestBody TaxPreferenceSearchQueryDTO pageQuery) throws Exception {
         pageQuery.setKeyword(null);
         pageQuery.setConditions(new ArrayList<>());
@@ -112,6 +117,7 @@ public class TaxPreferenceSearchApi {
     @PostMapping("/taxPreference/itemRelatedCodes")
     @MonitorInterface
     @OpenApiCheckToken
+    @LimitApi
     public ResultVO<List<String>> getItemRelatedCodes(@RequestBody List<String> taxPreferenceItems) throws Exception {
         List<String> itemRelatedCodes = taxPreferenceSearchService.getItemRelatedCodes(taxPreferenceItems);
         return ResultVO.ok(itemRelatedCodes);
