@@ -79,7 +79,7 @@ public class WeWorkTokenServiceImpl implements WeWorkTokenService {
     @Override
     public UserInfo3rdDTO getUserInfo3rdDTO(String appName, String code) {
         UserInfo3rd userInfo3rd = weWorkServiceClient.getUserInfo3rd(getSuiteToken(appName), code);
-
+        log.info("UserInfo3rd：\n{}", ObjectMapperProvider.writeJsonPrettyString(userInfo3rd));
         if (userInfo3rd.getErrcode() != 0) {
             String json = ObjectMapperProvider.writeJsonPrettyString(this);
             throw new TaxPreferenceException(userInfo3rd.getErrcode(), "获取访问用户身份失败：\n" + json);

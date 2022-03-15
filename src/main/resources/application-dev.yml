@@ -85,12 +85,10 @@ wwx:
   tax-preference:
     corp-id: "wx9a124e5ac3e8815c"
     provider-secret: "-2siEGlPSyf5EeOk3g61TxgD9DwxazfF3MwQXFo9KygK6ijP9Rweh7IsXCGRQb9E"
-    suite-id: "wxc56593939fb029d1"
-    secret: "dcBNFmhW7-iGXntd3RufqlY3u228-H0HbZBX1pen6_Q"
-    token: "Pr0KgCr7qor43O2yKLG6Ah8sce9JrLom"
-    encoding-aes-key: "85kZ3CSeTdxQjHqntw5scxk1pLJrmx2psoIReB1ySv1"
-    hosts:
-      - "tax-wwx.hua-cloud.net.cn"
+    suite-id: "wx6028dadfd03632a8"
+    secret: "2ZTaXIOLJ9oG_EzKsVtqRK-7ZSbwj_y9rIzdOXjKOq0"
+    token: "Ey6liMxc2qvSt3ixoJCrRaVSOqrMPv"
+    encoding-aes-key: "x1zyI2J87DSFvOByJ7XAXC2SD3mehcJFPDHrISBHmH6"
   # 税务小工具
   tax-tool:
     corp-id: "wx9a124e5ac3e8815c"
@@ -99,5 +97,3 @@ wwx:
     secret: "-cuNx4ZJOOsOWXDIdZMzS_-Bdt3EGKibNjLtYjVnCxI"
     token: "VzShwDoTtBMn9qahSB45nVQPqIY5Eh"
     encoding-aes-key: "gKUXxMtvyacfq3KczuhjJawW4IUpqV7CuLIIMWMPn5n"
-    hosts:
-      - "tax-wwx.hua-cloud.net.cn"

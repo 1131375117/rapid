@@ -10,10 +10,8 @@ import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.exception.TaxPreferenceException;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.openapi.auth.OpenApiStpUtil;
-import cn.huacloud.taxpreference.services.wework.auth2.WeWorkCheckRedirectComponent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -30,10 +28,6 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
-
-
-    @Autowired
-    private WeWorkCheckRedirectComponent weWorkCheckRedirectComponent;
 
     /**
      * 捕获 sa-token 权限异常
@@ -54,8 +48,6 @@ public class GlobalExceptionHandler {
                     resultVO = BizCode._4702.getResultVO();
                 }
             } else {
-                // 在抛出未登录异常时检查是否为企业微信访问，如果是则执行重定向
-                weWorkCheckRedirectComponent.checkAndRedirect(SpringMVCUtil.getRequest(), SpringMVCUtil.getResponse());
                 if (NotLoginException.TOKEN_TIMEOUT.equals(notLoginException.getType())) {
                     resultVO = BizCode._4211.getResultVO();
                 } else {

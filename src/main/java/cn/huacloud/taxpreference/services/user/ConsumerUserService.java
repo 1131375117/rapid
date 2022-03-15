@@ -58,7 +58,8 @@ public interface ConsumerUserService {
 
     /**
      * 通过开放用户ID自动注册
+     * @param username
      * @param openUserId 开放用户ID
      */
-    ConsumerUserDO autoCreateUserByOpenUserId(String openUserId);
+    ConsumerUserDO autoCreateUserByOpenUserId(String username, String openUserId);
 }

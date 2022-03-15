@@ -18,8 +18,8 @@ import java.util.List;
 /**
  * @author wangkh
  */
+@Deprecated
 @Slf4j
-@Component
 public class WeWorkCheckRedirectComponent {
 
     public static final String REDIRECT_STATE = "WWX_AUTH_REDIRECT";

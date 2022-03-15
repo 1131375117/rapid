@@ -19,7 +19,8 @@ public class UserInfo3rd {
     private String UserId;
     @JsonProperty("DeviceId")
     private String DeviceId;
-    private List<Object> parents;
+    private String user_ticket;
+    private Integer expires_in;
     private String open_userid;
     @JsonProperty("OpenId")
     private String OpenId;
