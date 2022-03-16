@@ -12,7 +12,6 @@ import cn.huacloud.taxpreference.services.common.entity.dos.ApiUserStatisticsDO;
 import cn.huacloud.taxpreference.services.common.entity.dos.UserMonitorInfoDO;
 import cn.huacloud.taxpreference.sync.es.trigger.impl.MonitorApiEventTrigger;
 import cn.huacloud.taxpreference.sync.es.trigger.impl.MonitorUserApiInfoEventTrigger;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -24,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -51,6 +51,10 @@ public class MonitorInterceptor implements HandlerInterceptor {
         if (!method.isAnnotationPresent(MonitorInterface.class)) {
             return true;
         }
+
+        //RequestWrapper requestWrapper = new RequestWrapper(SpringMVCUtil.getRequest());
+        //String params = MonitorUtil.getRequestPayload(requestWrapper);
+
         //设置请求开始时间
         String params = MonitorUtil.getRequestPayload(SpringMVCUtil.getRequest());
         SpringMVCUtil.getRequest().setAttribute(TaxBaseConstants.START_TIME, System.currentTimeMillis());
@@ -68,7 +72,7 @@ public class MonitorInterceptor implements HandlerInterceptor {
         monitorApiInfo(request, response, (HandlerMethod) handler, ex);
     }
 
-    private synchronized void monitorApiInfo(HttpServletRequest request, HttpServletResponse response, HandlerMethod handler, Exception ex) throws JsonProcessingException {
+    private synchronized void monitorApiInfo(HttpServletRequest request, HttpServletResponse response, HandlerMethod handler, Exception ex) throws IOException {
         if (handler == null) {
             return;
         }
