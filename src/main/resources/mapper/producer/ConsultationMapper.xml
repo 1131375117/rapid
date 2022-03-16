@@ -40,7 +40,9 @@
                 and tc.create_time &lt;= #{queryDTO.endTime}
             </if>
         </where>
+
         order by tcc.create_time desc
+        limit #{pageNum},#{pageSize}
 
     </select>
     <select id="selectCountByConsultationId" resultType="java.lang.Long">

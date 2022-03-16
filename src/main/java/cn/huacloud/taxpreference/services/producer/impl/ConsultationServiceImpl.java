@@ -24,9 +24,7 @@ import cn.huacloud.taxpreference.services.user.entity.dos.ConsumerUserDO;
 import cn.huacloud.taxpreference.services.user.mapper.ConsumerUserMapper;
 import cn.huacloud.taxpreference.sync.es.trigger.impl.ConsultationEventTrigger;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -63,6 +61,7 @@ public class ConsultationServiceImpl implements ConsultationService {
         //热门咨询表
         ConsultationDO consultationDO = new ConsultationDO();
         copyProperties(consultationDTO, consultationDO);
+        consultationDO.setFinishTime(LocalDateTime.now());
 
         consultationMapper.insert(consultationDO);
         LambdaQueryWrapper<ConsultationContentDO> queryWrapper = Wrappers.lambdaQuery(ConsultationContentDO.class).eq(ConsultationContentDO::getConsultationId, consultationDO.getId());
@@ -162,14 +161,17 @@ public class ConsultationServiceImpl implements ConsultationService {
     @Override
     public ResultVO<PageVO<QueryConsultationVO>> queryConsultationList(QueryConsultationDTO queryConsultationDTO) {
         //查询list
-        Page<QueryConsultationVO> page =
-                new Page<>(queryConsultationDTO.getPageNum(), queryConsultationDTO.getPageSize());
-        IPage<QueryConsultationVO> iPage =
-                consultationMapper.queryConsultationList(page, queryConsultationDTO);
-        List<QueryConsultationVO> records = iPage.getRecords();
+        Integer pageNum = queryConsultationDTO.getPageNum();
+        Integer pageSize = queryConsultationDTO.getPageSize();
+        List<QueryConsultationVO> voList = consultationMapper.queryConsultationList((pageNum - 1) * pageSize, pageSize, queryConsultationDTO);
+       // List<QueryConsultationVO> records = iPage.getRecords();
         Long count = consultationMapper.selectCountByConsultationId(queryConsultationDTO);
-        iPage.setTotal(count);
-        PageVO<QueryConsultationVO> pageVO = PageVO.createPageVO(iPage, records);
+        PageVO<QueryConsultationVO> pageVO=new PageVO<>();
+        pageVO.setTotal(count);
+        pageVO.setPageNum(pageNum);
+        pageVO.setPageSize(pageSize);
+        pageVO.setRecords(voList);
+        //PageVO<QueryConsultationVO> pageVO = PageVO.createPageVO(iPage, records);
         return ResultVO.ok(pageVO);
     }
 
@@ -183,6 +185,7 @@ public class ConsultationServiceImpl implements ConsultationService {
         //修改答复状态
         ConsultationDO consultationDO = new ConsultationDO();
         consultationDO.setId(consultationDTO.getConsultationId()).setStatus(ReplyStatus.NOT_REPLY);
+        consultationDO.setFinishTime(LocalDateTime.now());
         consultationMapper.updateById(consultationDO);
 
         List<ConsultationContentDO> consultationContentDOS = consultationContentMapper.selectList(queryWrapper);
