@@ -167,6 +167,8 @@ public class ConsultationServiceImpl implements ConsultationService {
         IPage<QueryConsultationVO> iPage =
                 consultationMapper.queryConsultationList(page, queryConsultationDTO);
         List<QueryConsultationVO> records = iPage.getRecords();
+        Long count = consultationMapper.selectCountByConsultationId(queryConsultationDTO);
+        iPage.setTotal(count);
         PageVO<QueryConsultationVO> pageVO = PageVO.createPageVO(iPage, records);
         return ResultVO.ok(pageVO);
     }

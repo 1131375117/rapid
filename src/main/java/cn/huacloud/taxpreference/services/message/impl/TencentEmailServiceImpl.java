@@ -55,9 +55,12 @@ public class TencentEmailServiceImpl implements EmailService {
     @Transactional
     public void sendEmail(List<String> emails, EmailBiz emailBiz) {
         // 执行拦截器
-        for (EmailService.Interceptor interceptor : interceptors) {
-            interceptor.apply(emails, emailBiz);
+        if (!EmailBiz.CONSULTATION_REPLY.equals(emailBiz)) {
+            for (EmailService.Interceptor interceptor : interceptors) {
+                interceptor.apply(emails, emailBiz);
+            }
         }
+
 
         // 获取处理器
         EmailBizHandler emailBizHandler = SpringUtil.getBean(emailBiz.emailBizHandlerClass);

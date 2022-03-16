@@ -28,6 +28,9 @@ public class QueryConsultationVO {
     @ApiModelProperty("咨询内容")
     private String content;
 
+    @ApiModelProperty("行业")
+    private String industryNames;
+
     @ApiModelProperty("答复状态,  NOT_REPLY-未答复,HAVE_REPLY-已答复;")
     private ReplyStatus status;
 }

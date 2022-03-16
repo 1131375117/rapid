@@ -23,4 +23,10 @@ public interface ConsultationMapper extends BaseMapper<ConsultationDO> {
      * @return
      */
     IPage<QueryConsultationVO> queryConsultationList(@Param("page") Page<QueryConsultationVO> page,@Param("queryDTO") QueryConsultationDTO queryConsultationDTO);
+    /**
+     * 查询热点咨询总数
+     * @param queryConsultationDTO
+     * @return
+     */
+    Long  selectCountByConsultationId(@Param("queryDTO")QueryConsultationDTO queryConsultationDTO);
 }

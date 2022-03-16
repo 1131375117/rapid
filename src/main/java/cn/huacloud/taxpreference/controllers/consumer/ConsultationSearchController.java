@@ -90,6 +90,16 @@ public class ConsultationSearchController {
 
         pageQuery.paramReasonable();
         PageVO<ConsultationESVO> page = consultationSearchService.myConsultation(pageQuery, ConsumerUserUtil.getCurrentUserId());
+        PageVO<ConsultationESVO> pageVO = consultationSearchService.hotConsultation(pageQuery);
+        pageVO.setRecords(pageVO.getRecords()
+                .stream()
+                .peek(consultationESVO
+                        -> consultationESVO.setFirstQuestTime(
+                        consultationESVO.getConsultationContent()
+                                .get(0)
+                                .getCreateTime()))
+                .collect(Collectors.toList()))
+        ;
         return ResultVO.ok(page);
     }
 

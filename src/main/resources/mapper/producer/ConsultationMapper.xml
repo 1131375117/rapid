@@ -43,4 +43,36 @@
         order by tcc.create_time desc
 
     </select>
+    <select id="selectCountByConsultationId" resultType="java.lang.Long">
+
+        select count(1)
+        from t_consultation as tc
+        left join t_consultation_content as tcc
+        on tc.id=tcc.consultation_id and tcc.content_type='QUESTION'
+        <where>
+            <if test="queryDTO.taxCategoriesCodes!=null and queryDTO.taxCategoriesCodes.size>0 ">
+                and (1!=1
+                <foreach collection="queryDTO.taxCategoriesCodes" item="taxCategories">
+                    or FIND_IN_SET(#{taxCategories},tc.tax_categories_codes)
+                </foreach>
+                )
+            </if>
+            <if test="queryDTO.taxPractices!=null and queryDTO.taxPractices!='' ">
+                and tc.tax_practices=#{queryDTO.taxPractices}
+            </if>
+            <if test="queryDTO.status!=null ">
+                and tc.status = #{queryDTO.status}
+            </if>
+            <if test="queryDTO.keyword!=null and queryDTO.keyword!='' ">
+                and tcc.content like concat('%',#{queryDTO.keyword},'%')
+            </if>
+            <if test="queryDTO.startTime!=null ">
+                and tc.create_time >= #{queryDTO.startTime}
+            </if>
+            <if test="queryDTO.endTime!=null ">
+                and tc.create_time &lt;= #{queryDTO.endTime}
+            </if>
+        </where>
+    </select>
+
 </mapper>

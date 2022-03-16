@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 
 /**
  * 腾讯云短信服务实现
+ *
  * @author wangkh
  */
 @Slf4j
@@ -47,8 +48,10 @@ public class TencentSmsServiceImpl implements SmsService {
     @Override
     public void sendSms(List<String> phoneNumbers, SmsBiz smsBiz) {
         // 执行拦截器
-        for (Interceptor interceptor : interceptors) {
-            interceptor.apply(phoneNumbers, smsBiz);
+        if (!smsBiz.equals(SmsBiz.CONSULTATION_REPLAY)) {
+            for (Interceptor interceptor : interceptors) {
+                interceptor.apply(phoneNumbers, smsBiz);
+            }
         }
 
         // 获取处理器
@@ -79,9 +82,10 @@ public class TencentSmsServiceImpl implements SmsService {
 
     /**
      * 发送短信
+     *
      * @param phoneNumbers 电话号码集合
-     * @param params 短信参数
-     * @param smsParams 短信系统参数
+     * @param params       短信参数
+     * @param smsParams    短信系统参数
      */
     private void sendSms(List<String> phoneNumbers, List<String> params, TencentSmsParamDTO smsParams) throws Exception {
         // TODO SmsClient应该实例化，但是修改系统参数后又不能及时生效，先采用实时创建对象的方式实现
@@ -102,7 +106,7 @@ public class TencentSmsServiceImpl implements SmsService {
         request.setPhoneNumberSet(phoneNumberSet);
         request.setTemplateId(smsParams.getTemplateId());
         // 设置短信参数
-        if(!CollectionUtils.isEmpty(params)){
+        if (!CollectionUtils.isEmpty(params)) {
             request.setTemplateParamSet(params.toArray(new String[0]));
         }
         // 执行发送
@@ -111,10 +115,11 @@ public class TencentSmsServiceImpl implements SmsService {
 
     /**
      * 保存消息记录
+     *
      * @param phoneNumbers 电话号码集合
-     * @param params 短信参数
-     * @param smsParams 短信系统参数
-     * @param smsBiz 短信业务
+     * @param params       短信参数
+     * @param smsParams    短信系统参数
+     * @param smsBiz       短信业务
      */
     private void saveMessageRecord(List<String> phoneNumbers, List<String> params, TencentSmsParamDTO smsParams, SmsBiz smsBiz) throws Exception {
         String phoneNumbersStr = phoneNumbers.stream()
