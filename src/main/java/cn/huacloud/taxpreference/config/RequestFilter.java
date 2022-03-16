@@ -12,6 +12,7 @@ import java.io.IOException;
  */
 @Component
 public class RequestFilter implements Filter {
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
     }
@@ -19,7 +20,10 @@ public class RequestFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         ServletRequest requestWrapper = null;
-
+        if ("application/x-www-form-urlencoded".equals(servletRequest.getContentType())) {
+            filterChain.doFilter(servletRequest, servletResponse);
+            return;
+        }
         if (servletRequest instanceof HttpServletRequest) {
             requestWrapper = new RequestWrapper((HttpServletRequest) servletRequest);
         }

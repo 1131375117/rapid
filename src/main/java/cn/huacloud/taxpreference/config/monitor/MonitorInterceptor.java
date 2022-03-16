@@ -100,6 +100,10 @@ public class MonitorInterceptor implements HandlerInterceptor {
         if (!RequestType.GET.name.equalsIgnoreCase(pattern)) {
             parameterMap = (String) request.getAttribute(TaxBaseConstants.PARAMS);
         }
+        if("application/x-www-form-urlencoded".equals(request.getContentType())){
+            String queryString = request.getQueryString();
+            parameterMap=objectMapper.writeValueAsString(request.getParameterMap());
+        }
 
         //获取开始时间
         Long startTime = (Long) SpringMVCUtil.getRequest().getAttribute(TaxBaseConstants.START_TIME);
