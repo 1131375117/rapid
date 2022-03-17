@@ -24,6 +24,7 @@ public class RequestFilter implements Filter {
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
+
         if (servletRequest instanceof HttpServletRequest) {
             requestWrapper = new RequestWrapper((HttpServletRequest) servletRequest);
         }

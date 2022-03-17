@@ -3,7 +3,6 @@ package cn.huacloud.taxpreference.config.monitor;
 import cn.dev33.satoken.spring.SpringMVCUtil;
 import cn.huacloud.taxpreference.common.annotations.MonitorInterface;
 import cn.huacloud.taxpreference.common.constants.TaxBaseConstants;
-import cn.huacloud.taxpreference.common.enums.user.RequestType;
 import cn.huacloud.taxpreference.common.utils.MonitorUtil;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.openapi.auth.OpenApiStpUtil;
@@ -28,6 +27,7 @@ import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * @author fuhua
@@ -96,14 +96,24 @@ public class MonitorInterceptor implements HandlerInterceptor {
 
         //获取请求参数
         ObjectMapper objectMapper = new ObjectMapper();
-        String parameterMap = objectMapper.writeValueAsString(SpringMVCUtil.getRequest().getParameterMap());
-        if (!RequestType.GET.name.equalsIgnoreCase(pattern)) {
+        String parameterMap;
+
+        Map<String, String[]> paramArr = SpringMVCUtil.getRequest().getParameterMap();
+
+        if (!paramArr.isEmpty()) {
+            parameterMap = objectMapper.writeValueAsString(SpringMVCUtil.getRequest().getParameterMap());
+        } else {
             parameterMap = (String) request.getAttribute(TaxBaseConstants.PARAMS);
+
         }
-        if("application/x-www-form-urlencoded".equals(request.getContentType())){
-            String queryString = request.getQueryString();
-            parameterMap=objectMapper.writeValueAsString(request.getParameterMap());
-        }
+
+/*        if("application/x-www-form-urlencoded".equals(request.getContentType())&&RequestType.POST.name.equalsIgnoreCase(pattern)){
+            parameterMap = (String) request.getAttribute(TaxBaseConstants.PARAMS);
+        }*/
+/*        if (!RequestType.GET.name.equalsIgnoreCase(pattern)) {
+            parameterMap = (String) request.getAttribute(TaxBaseConstants.PARAMS);
+        }*/
+
 
         //获取开始时间
         Long startTime = (Long) SpringMVCUtil.getRequest().getAttribute(TaxBaseConstants.START_TIME);
