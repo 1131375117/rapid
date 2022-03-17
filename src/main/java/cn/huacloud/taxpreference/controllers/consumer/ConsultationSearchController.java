@@ -76,7 +76,7 @@ public class ConsultationSearchController {
         PageVO<ConsultationESVO> pageVO = consultationSearchService.pageSearch(pageQuery);
         List<ConsultationESVO> records = pageVO.getRecords();
         for (ConsultationESVO record : records) {
-            record.setConsultationContent(Collections.singletonList(record.getConsultationContent().get(0)));
+            record.setConsultationContent(record.getConsultationContent());
             record.setFirstQuestTime(record.getConsultationContent().get(0).getCreateTime());
         }
 
