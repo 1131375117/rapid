@@ -40,14 +40,16 @@ public class GlobalExceptionHandler {
         ResultVO resultVO;
         if (e instanceof NotLoginException) {
             NotLoginException notLoginException = (NotLoginException) e;
-            // open api未登录异常处理
+
             if ((OpenApiStpUtil.getLoginType().equals(notLoginException.getLoginType()))) {
+                // open api未登录异常处理
                 if (NotLoginException.TOKEN_TIMEOUT.equals(notLoginException.getType())) {
                     resultVO = BizCode._4703.getResultVO();
                 } else {
                     resultVO = BizCode._4702.getResultVO();
                 }
             } else {
+                // 其他未登录异常，前台登录、后台登录
                 if (NotLoginException.TOKEN_TIMEOUT.equals(notLoginException.getType())) {
                     resultVO = BizCode._4211.getResultVO();
                 } else {
@@ -55,14 +57,16 @@ public class GlobalExceptionHandler {
                 }
             }
         } else if (e instanceof NotRoleException) {
+            // 没有角色
             resultVO = BizCode._4201.getResultVO(e.getMessage());
         } else if (e instanceof NotPermissionException) {
+            // 没有权限
             resultVO = BizCode._4202.getResultVO(e.getMessage());
         } else {
             resultVO = BizCode._500.getResultVO();
             resultVO.setData(e.getMessage());
         }
-
+        // 设置返回结果
         SpringMVCUtil.getRequest().setAttribute(TaxBaseConstants.REQUEST_KEY, resultVO);
         return resultVO;
     }
@@ -76,8 +80,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(TaxPreferenceException.class)
     public ResultVO<Object> handleTaxPreferenceException(TaxPreferenceException e) {
         log.info("接口调用业务异常: {}", e.getMessage());
-        SpringMVCUtil.getRequest().setAttribute(TaxBaseConstants.REQUEST_KEY, new ResultVO<>(e.getCode(), e.getMessage(), e.getData()));
-        return new ResultVO<>(e.getCode(), e.getMessage(), e.getData());
+        ResultVO<Object> resultVO = new ResultVO<>(e.getCode(), e.getMessage(), e.getData());
+        // 设置返回结果
+        SpringMVCUtil.getRequest().setAttribute(TaxBaseConstants.REQUEST_KEY, resultVO);
+        return resultVO;
     }
 
     /**

@@ -21,9 +21,8 @@ public class MonitorConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-          registry
-                  .addInterceptor(new MonitorInterceptor(monitorService, monitorApiEventTrigger, monitorUserApiInfoEventTrigger))
-                  .addPathPatterns("/**");
+          // registry.addInterceptor(new MonitorInterceptor(monitorService, monitorApiEventTrigger, monitorUserApiInfoEventTrigger))
+          //        .addPathPatterns("/**");
                  // .excludePathPatterns("/open-api/v1/auth/token");
     }
 }

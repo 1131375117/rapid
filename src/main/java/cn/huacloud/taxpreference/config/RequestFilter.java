@@ -10,7 +10,8 @@ import java.io.IOException;
  * @author 付华
  * @description 解决request数据流只能读取一次的问题
  */
-@Component
+@Deprecated
+//@Component
 public class RequestFilter implements Filter {
 
     @Override

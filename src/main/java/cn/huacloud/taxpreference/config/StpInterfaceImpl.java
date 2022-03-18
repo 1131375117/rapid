@@ -1,6 +1,7 @@
 package cn.huacloud.taxpreference.config;
 
 import cn.dev33.satoken.stp.StpInterface;
+import cn.dev33.satoken.stp.StpUtil;
 import cn.huacloud.taxpreference.common.utils.ProducerUserUtil;
 import cn.huacloud.taxpreference.services.user.entity.vos.ProducerLoginUserVO;
 import org.springframework.stereotype.Component;
@@ -19,8 +20,11 @@ public class StpInterfaceImpl implements StpInterface {
      */
     @Override
     public List<String> getPermissionList(Object loginId, String loginType) {
-        ProducerLoginUserVO loginUserVO = ProducerUserUtil.getCurrentUser();
-        return loginUserVO.getPermissionCodes();
+        if (StpUtil.getLoginType().equals(loginType)) {
+            ProducerLoginUserVO loginUserVO = ProducerUserUtil.getCurrentUser();
+            return loginUserVO.getPermissionCodes();
+        }
+        throw new UnsupportedOperationException("不支持此类权限控制，loginType：" + loginType);
     }
 
     /**
@@ -28,7 +32,10 @@ public class StpInterfaceImpl implements StpInterface {
      */
     @Override
     public List<String> getRoleList(Object loginId, String loginType) {
-        ProducerLoginUserVO loginUserVO = ProducerUserUtil.getCurrentUser();
-        return loginUserVO.getRoleCodes();
+        if (StpUtil.getLoginType().equals(loginType)) {
+            ProducerLoginUserVO loginUserVO = ProducerUserUtil.getCurrentUser();
+            return loginUserVO.getRoleCodes();
+        }
+        throw new UnsupportedOperationException("不支持此类角色控制，loginType：" + loginType);
     }
 }

@@ -3,6 +3,53 @@
 
 本系统目标是为企业财务人员提供权威的、精准的税务优惠内容推送服务。
 
+## 项目结构
+
+```shell
+├─deploy # 部署目录                                             
+│  ├─docker # docker-compose部署脚本和相关文件
+│  └─sql # sql脚本
+├─docs # 文档
+└─src
+    └─main
+      ├─java
+      │  └─cn
+      │      └─huacloud
+      │          └─taxpreference
+      │              ├─common # 公共包
+      │              │  ├─annotations # 注解
+      │              │  ├─constants   # 常量
+      │              │  ├─encrypt     # 加密
+      │              │  ├─entity      # 实体
+      │              │  ├─enums       # 枚举
+      │              │  ├─exception   # 异常
+      │              │  └─utils       # 工具类
+      │              ├─config # spring配置
+      │              ├─controllers # 前段控制器
+      │              │  ├─common   # 公共接口
+      │              │  ├─consumer # 消费者接口（前台接口）
+      │              │  ├─producer # 生产者接口（后台接口）
+      │              │  ├─sso      # 单点登录接口
+      │              │  ├─tool     # 调试工具接口
+      │              │  ├─user     # 用户接口（目前目前只有后台用户）
+      │              │  └─wework   # 企业微信接口
+      │              ├─openapi # OpenAPI接口
+      │              ├─services # 服务
+      │              │  ├─common    # 公共服务
+      │              │  ├─consumer  # 消费者服务（前台服务）
+      │              │  ├─message   # 消息服务 短信、邮件发送
+      │              │  ├─openapi   # OpenAPI服务
+      │              │  ├─producer  # 生产者服务（后台服务）
+      │              │  ├─sync      # 数据同步服务
+      │              │  ├─user      # 用户服务
+      │              │  └─wework    # 企业微信接入服务
+      │              └─sync
+      │                  ├─es     # ES数据同步模块
+      │                  └─spider # 爬虫数据同步模块
+      └─resources # 资源文件
+          └─mapper # mybatis mapper xml
+```
+
 ## 用户权限控制
 
 项目采用Sa-Token框架来控制管理权限，只用权限注解来进行权限录入，同时需要添加自定义权限信息补充注解，具体使用方法如下：

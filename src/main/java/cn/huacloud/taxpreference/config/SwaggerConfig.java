@@ -27,6 +27,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * swagger 配置配合knife使用
+ * spring4all的swagger在高版本封装的并不好，不支持自定义全局返回结果，所以才手动配置。
  * @author wangkh
  */
 @Configuration

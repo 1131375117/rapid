@@ -12,18 +12,18 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- * Sa-Token配置类
+ * mvc配置类
  * @author wangkh
  */
 @Configuration
-public class SaTokenConfig implements WebMvcConfigurer, CommandLineRunner {
+public class SpringMvcConfig implements WebMvcConfigurer, CommandLineRunner {
 
     /**
-     * 注册Sa-Token的注解拦截器，打开注解式鉴权功能
+     * 拦截器配置
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        // 注册注解拦截器，并排除不需要注解鉴权的接口地址 (与登录拦截器无关)
+        // 注册注解拦截器，并排除不需要注解鉴权的接口地址
         registry.addInterceptor(new SaAnnotationInterceptor()).addPathPatterns("/**");
     }
 

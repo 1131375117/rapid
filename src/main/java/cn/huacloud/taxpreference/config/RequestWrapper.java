@@ -10,6 +10,7 @@ import java.io.*;
  * @author 付华
  * @description 解决在request的数据流只能读取一次的问题
  */
+@Deprecated
 public class RequestWrapper extends HttpServletRequestWrapper {
     private final String body;
     public RequestWrapper(HttpServletRequest request) {
