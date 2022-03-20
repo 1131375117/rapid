@@ -33,7 +33,6 @@
       │              │  ├─tool     # 调试工具接口
       │              │  ├─user     # 用户接口（目前目前只有后台用户）
       │              │  └─wework   # 企业微信接口
-      │              ├─openapi # OpenAPI接口
       │              ├─services # 服务
       │              │  ├─common    # 公共服务
       │              │  ├─consumer  # 消费者服务（前台服务）

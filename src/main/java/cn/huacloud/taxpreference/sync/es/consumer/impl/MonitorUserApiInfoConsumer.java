@@ -1,6 +1,6 @@
 package cn.huacloud.taxpreference.sync.es.consumer.impl;
 
-import cn.huacloud.taxpreference.services.common.entity.dos.UserMonitorInfoDO;
+import cn.huacloud.taxpreference.services.openapi.entity.dos.ApiMonitorInfoDO;
 import cn.huacloud.taxpreference.sync.es.consumer.MySqlConsumer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,10 +16,10 @@ import java.util.function.Consumer;
 @Slf4j
 @RequiredArgsConstructor
 @Configuration
-public class MonitorUserApiInfoConsumer implements MySqlConsumer<UserMonitorInfoDO> {
+public class MonitorUserApiInfoConsumer implements MySqlConsumer<ApiMonitorInfoDO> {
 
     @Bean
-    public Consumer<UserMonitorInfoDO> saveUserMonitorInfo() {
+    public Consumer<ApiMonitorInfoDO> saveUserMonitorInfo() {
         return this::save;
     }
 
@@ -29,7 +29,7 @@ public class MonitorUserApiInfoConsumer implements MySqlConsumer<UserMonitorInfo
     }
 
     @Override
-    public void save(UserMonitorInfoDO source) {
+    public void save(ApiMonitorInfoDO source) {
         getUserMonitorInfoMapper().insert(source);
     }
 

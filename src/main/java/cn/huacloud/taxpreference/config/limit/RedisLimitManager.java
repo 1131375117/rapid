@@ -3,7 +3,7 @@ package cn.huacloud.taxpreference.config.limit;
 
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.utils.RedisKeyUtil;
-import cn.huacloud.taxpreference.openapi.auth.OpenApiStpUtil;
+import cn.huacloud.taxpreference.services.openapi.auth.OpenApiStpUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.ClassPathResource;
@@ -69,7 +69,7 @@ public class RedisLimitManager extends DefaultLimitManager {
 
 
     @Override
-    public double acquireToken(ConfigLimitDto routeConfig) {
+    public double acquireToken(ConfigLimitDTO routeConfig) {
         String limitUserRedisKey = RedisKeyUtil.getLimitUserRedisKey(OpenApiStpUtil.getLoginIdAsString(), routeConfig);
         List<String> keys = getKeys(limitUserRedisKey);
         String[] args = new String[]{routeConfig.getReplenishRate() + "", routeConfig.getBurstCapacity() + "", Instant.now().getEpochSecond() + "", routeConfig.getRequestedTokens() + ""};
@@ -98,7 +98,7 @@ public class RedisLimitManager extends DefaultLimitManager {
     }
 
     @Override
-    public boolean acquire(ConfigLimitDto routeConfig) {
+    public boolean acquire(ConfigLimitDTO routeConfig) {
 
         String limitUserRedisKey = RedisKeyUtil.getLimitUserRedisKey(OpenApiStpUtil.getLoginIdAsString(), routeConfig);
 

@@ -97,3 +97,9 @@ wwx:
     secret: "-cuNx4ZJOOsOWXDIdZMzS_-Bdt3EGKibNjLtYjVnCxI"
     token: "VzShwDoTtBMn9qahSB45nVQPqIY5Eh"
     encoding-aes-key: "gKUXxMtvyacfq3KczuhjJawW4IUpqV7CuLIIMWMPn5n"
+
+# open-api
+open-api:
+  token-config:
+    auto-renew: false
+    is-share: false

@@ -45,7 +45,7 @@ public class LimitInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        ConfigLimitDto configLimitDto = sysParamService.getObjectParamByTypes(Collections.singletonList(SysParamTypes.LIMIT_BASE), ConfigLimitDto.class);
+        ConfigLimitDTO configLimitDto = sysParamService.getObjectParamByTypes(Collections.singletonList(SysParamTypes.LIMIT_BASE), ConfigLimitDTO.class);
         configLimitDto.setRequestMethod(request.getMethod());
         configLimitDto.setPath(request.getRequestURI());
         configLimitDto.setIp(IpUtil.getIp(request));
@@ -65,16 +65,6 @@ public class LimitInterceptor implements HandlerInterceptor {
            redisLimitManager.acquireToken(configLimitDto);
         }
         return true;
-    }
-
-    @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-
-    }
-
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-
     }
 
 }

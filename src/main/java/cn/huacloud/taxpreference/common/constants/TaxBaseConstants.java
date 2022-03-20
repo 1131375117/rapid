@@ -12,7 +12,6 @@ public interface TaxBaseConstants {
     String START_TIME = "startTime";
     //请求参数
     String PARAMS = "params";
-
     //请求token
     String TOKEN = "Token";
 }

@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.annotation.IEnum;
  * @author wangkh
  */
 public enum ChannelUserType implements IEnum<String> {
-    XFT_OPEN_API("薪福通OpenAPI", "薪福通用户"),
+    OPEN_API("OpenAPI", "OpenAPI用户"),
     WORK_WEI_XIN("企业微信", "企业微信用户"),
     WEI_XIN("微信", "微信用户");
 

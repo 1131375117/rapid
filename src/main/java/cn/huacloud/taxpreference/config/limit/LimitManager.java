@@ -13,7 +13,7 @@ public interface LimitManager {
      * @param configLimitDto 路由配置
      * @return 返回耗时时间，秒
      */
-    double acquireToken(ConfigLimitDto configLimitDto);
+    double acquireToken(ConfigLimitDTO configLimitDto);
 
     /**
      * 是否需要限流，如果使用{@link cn.huacloud.taxpreference.common.enums.LimitType#LEAKY_BUCKET
@@ -22,6 +22,6 @@ public interface LimitManager {
      * @param configLimitDto 路由配置
      * @return 如果返回true，表示可以执行业务代码，返回false则需要限流
      */
-    boolean acquire(ConfigLimitDto configLimitDto);
+    boolean acquire(ConfigLimitDTO configLimitDto);
 
 }

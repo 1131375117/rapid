@@ -11,14 +11,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class DefaultLimitManager implements LimitManager {
 
-
     @Override
-    public double acquireToken(ConfigLimitDto configLimitDto) {
+    public double acquireToken(ConfigLimitDTO configLimitDto) {
         return 0;
     }
 
     @Override
-    public boolean acquire(ConfigLimitDto configLimitDto) {
+    public boolean acquire(ConfigLimitDTO configLimitDto) {
         return false;
     }
 }

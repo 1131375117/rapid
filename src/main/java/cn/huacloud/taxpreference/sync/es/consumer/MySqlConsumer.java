@@ -1,8 +1,8 @@
 package cn.huacloud.taxpreference.sync.es.consumer;
 
 import cn.huacloud.taxpreference.common.utils.SpringUtil;
-import cn.huacloud.taxpreference.services.common.MonitorService;
-import cn.huacloud.taxpreference.services.common.mapper.UserMonitorInfoMapper;
+import cn.huacloud.taxpreference.services.openapi.MonitorService;
+import cn.huacloud.taxpreference.services.openapi.mapper.ApiMonitorInfoMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 
@@ -15,8 +15,8 @@ public interface MySqlConsumer<T> {
         return SpringUtil.getBean(MonitorService.class);
     }
 
-    default UserMonitorInfoMapper getUserMonitorInfoMapper() {
-        return SpringUtil.getBean(UserMonitorInfoMapper.class);
+    default ApiMonitorInfoMapper getUserMonitorInfoMapper() {
+        return SpringUtil.getBean(ApiMonitorInfoMapper.class);
     }
 
     Logger getLog();

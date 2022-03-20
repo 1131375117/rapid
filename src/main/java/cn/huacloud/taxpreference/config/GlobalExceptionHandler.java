@@ -9,7 +9,7 @@ import cn.huacloud.taxpreference.common.constants.TaxBaseConstants;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.exception.TaxPreferenceException;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
-import cn.huacloud.taxpreference.openapi.auth.OpenApiStpUtil;
+import cn.huacloud.taxpreference.services.openapi.auth.OpenApiStpUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.converter.HttpMessageConversionException;
