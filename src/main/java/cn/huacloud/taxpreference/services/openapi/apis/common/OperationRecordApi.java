@@ -39,7 +39,7 @@ public class OperationRecordApi {
      * 操作记录:前台数据操作一次调用一次
      * 参数：操作类型,操作参数
      */
-    @ApiOperation("操作记录接口")
+    @ApiOperation("添加操作记录")
     @OpenApiCheckOpenUserId
     @MonitorApi
     @LimitApi
@@ -53,7 +53,8 @@ public class OperationRecordApi {
         return ResultVO.ok();
     }
 
-    @ApiOperation("操作记录列表")
+    @ApiOperation("查询操作记录")
+    @OpenApiCheckOpenUserId
     @MonitorApi
     @LimitApi
     @OpenApiCheckToken
