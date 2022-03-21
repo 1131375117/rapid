@@ -2,6 +2,7 @@ package cn.huacloud.taxpreference.tool;
 
 import cn.huacloud.taxpreference.BaseApplicationTest;
 import cn.huacloud.taxpreference.common.enums.DocType;
+import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesExplainDO;
 import cn.huacloud.taxpreference.services.producer.mapper.PoliciesExplainMapper;
 import cn.huacloud.taxpreference.services.producer.mapper.PoliciesMapper;
@@ -35,8 +36,63 @@ public class HandlePolicyiesContentHtmlTool extends BaseApplicationTest {
     //MySQL数据库的连接密码
     public static final String DBPASS = "oOSI-5QArNyH_rW9b--Xxbfax4k0";
 
+    /**
+     * 替换演示环境已经发布的政策数据
+     */
     @Test
-    public void main() {
+    public void testPolicy() {
+        Connection con = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        //政策法规
+        String sql = "select id , content, next_content from policy_data where next_content is not null";
+
+        try {
+            //加载驱动程序
+            Class.forName(DBDRIVER);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            //连接MySQL数据库时，要写上连接的用户名和密码
+            con = DriverManager.getConnection(DBURL, DBUSER, DBPASS);
+            stmt = con.createStatement();
+            rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                String id = rs.getString("id");
+                System.out.print("id:" + id + " ");
+                String next_content = rs.getString("next_content");
+                SpiderDataSyncDO spiderDataSyncDO = spiderDataSyncMapper.getSpiderDataSyncDO(DocType.POLICIES, id);
+                if (spiderDataSyncDO != null) {
+                    /*
+                     * 修改政策法规
+                     * */
+                    PoliciesDO policiesDO = new PoliciesDO();
+                    policiesDO.setContent(next_content);
+                    policiesDO.setId(spiderDataSyncDO.getDocId());
+                    policiesMapper.updateById(policiesDO);
+
+
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try {
+            //关闭数据库
+            assert con != null;
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 替换演示环境已经发布的政策解读数据
+     */
+    @Test
+    public void testPolicyExplain() {
         Connection con = null;
         Statement stmt = null;
         ResultSet rs = null;
@@ -75,7 +131,7 @@ public class HandlePolicyiesContentHtmlTool extends BaseApplicationTest {
                      * 修改政策解读
                      *
                      * */
-                    PoliciesExplainDO policiesExplainDO=new PoliciesExplainDO();
+                    PoliciesExplainDO policiesExplainDO = new PoliciesExplainDO();
                     policiesExplainDO.setContent(next_related_content);
                     policiesExplainDO.setId(spiderDataSyncDO.getDocId());
                     policiesExplainMapper.updateById(policiesExplainDO);
