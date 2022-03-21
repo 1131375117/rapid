@@ -1,17 +1,25 @@
 package cn.huacloud.taxpreference.controllers.consumer;
 
 import cn.huacloud.taxpreference.common.annotations.ConsumerUserCheckLogin;
+import cn.huacloud.taxpreference.common.entity.vos.PageVO;
 import cn.huacloud.taxpreference.common.utils.ConsumerUserUtil;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.common.entity.dtos.CollectionQueryDTO;
 import cn.huacloud.taxpreference.services.consumer.CollectionService;
 import cn.huacloud.taxpreference.services.consumer.entity.dtos.CollectionDTO;
+import cn.huacloud.taxpreference.services.consumer.entity.vos.CollectionVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PageByCollectionVO;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 收藏功能
@@ -45,9 +53,37 @@ public class CollectionController {
      */
     @ApiOperation("我的收藏展示")
     @PostMapping("/queryCollection")
-    public ResultVO<PageByCollectionVO> queryCollection(@RequestBody CollectionQueryDTO pageQueryDTO) {
+    public ResultVO<PageVO<DateRecords<CollectionVO>>> queryCollection(@RequestBody CollectionQueryDTO pageQueryDTO) {
         pageQueryDTO.paramReasonable();
         PageByCollectionVO pageVO = collectionService.queryCollection(pageQueryDTO, ConsumerUserUtil.getCurrentUser().getId());
-        return ResultVO.ok(pageVO);
+
+        // TODO 返回记录不结构不统一，这里对OpenAPI单独进行调整
+        PageVO<DateRecords<CollectionVO>> newPage = new PageVO<>();
+        newPage.setPageNum(pageVO.getPageNum());
+        newPage.setPageSize(pageVO.getPageSize());
+        newPage.setTotal(pageVO.getTotal());
+
+        List<DateRecords<CollectionVO>> records = pageVO.getList().stream().map(vo -> {
+            DateRecords<CollectionVO> dateRecords = new DateRecords<>();
+            dateRecords.setDate(vo.getDate());
+            List<CollectionVO> pageVOList = vo.getPageVOList();
+            dateRecords.setSubRecords(pageVOList);
+            return dateRecords;
+        }).collect(Collectors.toList());
+        newPage.setRecords(records);
+        return ResultVO.ok(newPage);
+    }
+
+    /**
+     * 嫌弃 cn.huacloud.taxpreference.services.consumer.entity.vos.CollectionPageVO 的命名
+     *
+     * @param <T>
+     */
+    @Data
+    public static class DateRecords<T> {
+        @ApiModelProperty("日期")
+        private LocalDate date;
+        @ApiModelProperty("子记录")
+        private List<T> subRecords;
     }
 }
