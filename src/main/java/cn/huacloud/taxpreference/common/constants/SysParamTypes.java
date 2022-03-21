@@ -37,4 +37,6 @@ public interface SysParamTypes {
     String SES_BIND_VERIFICATION_CODE = "ses.bind.verificationCode";
     // 专家邮件回复
     String SES_CONSULTATION_REPLY = "ses.consultation.replyCode";
+    //限流基础参数
+    String LIMIT_BASE = "limit.base";
 }

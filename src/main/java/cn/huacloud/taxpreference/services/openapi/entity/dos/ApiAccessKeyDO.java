@@ -15,10 +15,28 @@ import java.time.LocalDateTime;
 public class ApiAccessKeyDO {
     @TableId(type = IdType.AUTO)
     private Long id;
+    /**
+     * 消费者用户ID
+     */
     private Long consumerUserId;
+    /**
+     * accessKeyId
+     */
     private String accessKeyId;
+    /**
+     * accessKeySecret
+     */
     private String accessKeySecret;
+    /**
+     * 是否可用
+     */
     private Boolean enable;
+    /**
+     * 创建时间
+     */
     private LocalDateTime createTime;
+    /**
+     * 最后使用时间
+     */
     private LocalDateTime lastUseTime;
 }

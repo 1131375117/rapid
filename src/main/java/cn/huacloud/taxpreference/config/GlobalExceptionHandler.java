@@ -4,10 +4,13 @@ import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.exception.NotPermissionException;
 import cn.dev33.satoken.exception.NotRoleException;
 import cn.dev33.satoken.exception.SaTokenException;
+import cn.dev33.satoken.spring.SpringMVCUtil;
+import cn.huacloud.taxpreference.common.constants.TaxBaseConstants;
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.exception.TaxPreferenceException;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
-import cn.huacloud.taxpreference.openapi.auth.OpenApiStpUtil;
+import cn.huacloud.taxpreference.services.openapi.auth.OpenApiStpUtil;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -23,6 +26,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
 
     /**
@@ -36,27 +40,34 @@ public class GlobalExceptionHandler {
         ResultVO resultVO;
         if (e instanceof NotLoginException) {
             NotLoginException notLoginException = (NotLoginException) e;
-            if (NotLoginException.TOKEN_TIMEOUT.equals(notLoginException.getType())) {
-                if (OpenApiStpUtil.getLoginType().equals(notLoginException.getLoginType())) {
+
+            if ((OpenApiStpUtil.getLoginType().equals(notLoginException.getLoginType()))) {
+                // open api未登录异常处理
+                if (NotLoginException.TOKEN_TIMEOUT.equals(notLoginException.getType())) {
                     resultVO = BizCode._4703.getResultVO();
                 } else {
-                    resultVO = BizCode._4211.getResultVO();
+                    resultVO = BizCode._4702.getResultVO();
                 }
             } else {
-                if (OpenApiStpUtil.getLoginType().equals(notLoginException.getLoginType())) {
-                    resultVO = BizCode._4702.getResultVO();
+                // 其他未登录异常，前台登录、后台登录
+                if (NotLoginException.TOKEN_TIMEOUT.equals(notLoginException.getType())) {
+                    resultVO = BizCode._4211.getResultVO();
                 } else {
                     resultVO = BizCode._4200.getResultVO();
                 }
             }
         } else if (e instanceof NotRoleException) {
+            // 没有角色
             resultVO = BizCode._4201.getResultVO(e.getMessage());
         } else if (e instanceof NotPermissionException) {
+            // 没有权限
             resultVO = BizCode._4202.getResultVO(e.getMessage());
         } else {
             resultVO = BizCode._500.getResultVO();
             resultVO.setData(e.getMessage());
         }
+        // 设置返回结果
+        SpringMVCUtil.getRequest().setAttribute(TaxBaseConstants.REQUEST_KEY, resultVO);
         return resultVO;
     }
 
@@ -69,11 +80,15 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(TaxPreferenceException.class)
     public ResultVO<Object> handleTaxPreferenceException(TaxPreferenceException e) {
         log.info("接口调用业务异常: {}", e.getMessage());
-        return new ResultVO<>(e.getCode(), e.getMessage(), e.getData());
+        ResultVO<Object> resultVO = new ResultVO<>(e.getCode(), e.getMessage(), e.getData());
+        // 设置返回结果
+        SpringMVCUtil.getRequest().setAttribute(TaxBaseConstants.REQUEST_KEY, resultVO);
+        return resultVO;
     }
 
     /**
      * 捕获参数校验异常
+     *
      * @param e 被捕获异常
      * @return resultVO
      */
@@ -84,27 +99,34 @@ public class GlobalExceptionHandler {
                 .map(fieldError -> fieldError.getField() + " => " + fieldError.getDefaultMessage())
                 .collect(Collectors.joining(";"));
         log.info("参数校验失败：{}", message);
+
+        SpringMVCUtil.getRequest().setAttribute(TaxBaseConstants.REQUEST_KEY, new ResultVO<>(BizCode._4100.code, message, null));
         return new ResultVO<>(BizCode._4100.code, message, null);
     }
 
     /**
      * 消息转换异常，通常是前端入参错误，提示前端
+     *
      * @param e 被捕获异常
      * @return resultVO
      */
     @ExceptionHandler(HttpMessageConversionException.class)
     public ResultVO<Void> handleHttpMessageConversionException(HttpMessageConversionException e) {
         log.error("消息转换异常", e);
+
+        SpringMVCUtil.getRequest().setAttribute(TaxBaseConstants.REQUEST_KEY, BizCode._4100.getResultVO());
         return BizCode._4100.getResultVO();
     }
 
     /**
      * 全局异常
+     *
      * @return resultVO
      */
     @ExceptionHandler(Exception.class)
     public ResultVO<Void> handleException(Exception e) {
         log.error("接口调用异常", e);
+        SpringMVCUtil.getRequest().setAttribute(TaxBaseConstants.REQUEST_KEY, BizCode._500.getResultVO());
         return BizCode._500.getResultVO();
     }
 }

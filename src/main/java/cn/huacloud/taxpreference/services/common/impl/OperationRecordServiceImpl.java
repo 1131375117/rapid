@@ -92,7 +92,7 @@ public class OperationRecordServiceImpl implements OperationRecordService {
     }
 
     @Override
-    public PageByOperationVO queryOperationRecord(ViewQueryDTO pageQueryDTO, Long userId) {
+    public PageByOperationVO<OperationRecordVO> queryOperationRecord(ViewQueryDTO pageQueryDTO, Long userId) {
         Page<OperationRecordVO> page = new Page<>(pageQueryDTO.getPageNum(), pageQueryDTO.getPageSize());
         IPage<OperationRecordVO> operationRecordVOIPage;
 
@@ -126,7 +126,7 @@ public class OperationRecordServiceImpl implements OperationRecordService {
             }
         }
         PageVO<OperationRecordVO> pageVO = PageVO.createPageVO(operationRecordVOIPage, operationRecordVOIPage.getRecords());
-        List<OperationPageVO> operationPageVOList = new ArrayList<>();
+        List<OperationPageVO<OperationRecordVO>> operationPageVOList = new ArrayList<>();
         Set<LocalDate> dateSet = pageVO.getRecords().stream().map(OperationRecordVO::getViewTime).collect(Collectors.toSet());
         dateSet.forEach(localDate -> {
             //返回的vo对象
@@ -147,7 +147,7 @@ public class OperationRecordServiceImpl implements OperationRecordService {
             operationPageVO.setPageVOList(operationRecordVOList);
             operationPageVOList.add(operationPageVO);
         });
-        PageByOperationVO pageByOperationVO = new PageByOperationVO();
+        PageByOperationVO<OperationRecordVO> pageByOperationVO = new PageByOperationVO<>();
         BeanUtils.copyProperties(pageVO, pageByOperationVO);
         pageByOperationVO.setRecords(operationPageVOList);
         return pageByOperationVO;

@@ -40,3 +40,4 @@ sa-token:
 logging:
   level:
     org.elasticsearch.client.RestClient: error
+    cn.huacloud.taxpreference.services.wework.client: debug

@@ -6,7 +6,7 @@ import cn.huacloud.taxpreference.controllers.producer.PoliciesController;
 import cn.huacloud.taxpreference.controllers.sso.ConsumerSSOController;
 import cn.huacloud.taxpreference.controllers.tool.SysToolController;
 import cn.huacloud.taxpreference.controllers.user.ProducerUserController;
-import cn.huacloud.taxpreference.openapi.apis.AuthApi;
+import cn.huacloud.taxpreference.services.openapi.apis.AuthApi;
 import com.github.xiaoymin.knife4j.spring.plugin.ApiListingOrderReader;
 import com.github.xiaoymin.knife4j.spring.plugin.OperationOrderBuilderPlugin;
 import org.springframework.context.annotation.Bean;
@@ -27,6 +27,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * swagger 配置配合knife使用
+ * spring4all的swagger在高版本封装的并不好，不支持自定义全局返回结果，所以才手动配置。
  * @author wangkh
  */
 @Configuration

@@ -4,6 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 /**
+ * mysql字段加密配置，未启用
  * @author wangkh
  */
 @Configuration

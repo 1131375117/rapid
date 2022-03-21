@@ -25,6 +25,11 @@ public class TaxPreferenceException extends RuntimeException {
         super(message);
     }
 
+    public TaxPreferenceException(Integer code, String message) {
+        super(message);
+        this.code = code;
+    }
+
     public TaxPreferenceException(String message, Throwable cause) {
         super(message, cause);
     }

@@ -89,3 +89,28 @@ spider-sync:
     bucket: "data-spider"
     access-key: "data_spider"
     secret-key: "data_spider"
+
+# 企业微信配置
+wwx:
+  # 税收优惠主应用
+  tax-preference:
+    corp-id: "wx9a124e5ac3e8815c"
+    provider-secret: "-2siEGlPSyf5EeOk3g61TxgD9DwxazfF3MwQXFo9KygK6ijP9Rweh7IsXCGRQb9E"
+    suite-id: "wx6028dadfd03632a8"
+    secret: "2ZTaXIOLJ9oG_EzKsVtqRK-7ZSbwj_y9rIzdOXjKOq0"
+    token: "Ey6liMxc2qvSt3ixoJCrRaVSOqrMPv"
+    encoding-aes-key: "x1zyI2J87DSFvOByJ7XAXC2SD3mehcJFPDHrISBHmH6"
+  # 税务小工具
+  tax-tool:
+    corp-id: "wx9a124e5ac3e8815c"
+    provider-secret: "-2siEGlPSyf5EeOk3g61TxgD9DwxazfF3MwQXFo9KygK6ijP9Rweh7IsXCGRQb9E"
+    suite-id: "wxe27c223ff88693e7"
+    secret: "-cuNx4ZJOOsOWXDIdZMzS_-Bdt3EGKibNjLtYjVnCxI"
+    token: "VzShwDoTtBMn9qahSB45nVQPqIY5Eh"
+    encoding-aes-key: "gKUXxMtvyacfq3KczuhjJawW4IUpqV7CuLIIMWMPn5n"
+
+# open-api
+open-api:
+  token-config:
+    auto-renew: false
+    is-share: false

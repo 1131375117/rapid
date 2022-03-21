@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 /**
+ * 系统配置类
  * @author wangkh
  */
 @Data
@@ -14,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 public class SysConfig {
 
     /**
-     * 系统管理密码
+     * 系统管理密码，用于调用系统管理接口，并非后台登录的管理员密码
      */
     private String password = "12345678Aa";
 

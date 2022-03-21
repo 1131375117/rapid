@@ -5,6 +5,7 @@ import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.services.common.OperationRecordService;
 import cn.huacloud.taxpreference.services.common.entity.dtos.OperationRecordDTO;
 import cn.huacloud.taxpreference.services.common.entity.dtos.ViewQueryDTO;
+import cn.huacloud.taxpreference.services.common.entity.vos.OperationRecordVO;
 import cn.huacloud.taxpreference.services.consumer.entity.vos.PageByOperationVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -44,8 +45,8 @@ public class OperationRecordController {
 
     @ApiOperation("操作记录列表")
     @PostMapping("/queryOperationRecord")
-    public ResultVO<PageByOperationVO> queryOperationRecord(@RequestBody ViewQueryDTO pageQueryDTO) {
-        PageByOperationVO pageVO=null;
+    public ResultVO<PageByOperationVO<OperationRecordVO>> queryOperationRecord(@RequestBody ViewQueryDTO pageQueryDTO) {
+        PageByOperationVO<OperationRecordVO> pageVO = null;
         pageQueryDTO.paramReasonable();
         if (ConsumerUserUtil.isLogin()) {
             Long consumerUserId = ConsumerUserUtil.getCurrentUserId();

@@ -1,7 +1,8 @@
 spring:
   cloud:
     function:
-      definition: "savePoliciesSuppler;deletePoliciesSuppler;savePolicies;deletePolicies;savePoliciesExplainSuppler;deletePoliciesExplainSuppler;savePoliciesExplain;deletePoliciesExplain;saveFAQSuppler;deleteFAQSuppler;saveFAQ;deleteFAQ;saveTaxPreferenceSuppler;deleteTaxPreferenceSuppler;saveTaxPreference;deleteTaxPreference;saveOtherDocSuppler;deleteOtherDocSuppler;saveOtherDoc;deleteOtherDoc;saveConsultationSuppler;deleteConsultationSuppler;saveConsultation;deleteConsultation;sendSmsSuppler;sendSms"
+      definition: "savePoliciesSuppler;deletePoliciesSuppler;savePolicies;deletePolicies;savePoliciesExplainSuppler;deletePoliciesExplainSuppler;savePoliciesExplain;deletePoliciesExplain;saveFAQSuppler;deleteFAQSuppler;saveFAQ;deleteFAQ;saveTaxPreferenceSuppler;deleteTaxPreferenceSuppler;saveTaxPreference;deleteTaxPreference;saveOtherDocSuppler;deleteOtherDocSuppler;saveOtherDoc;deleteOtherDoc;saveConsultationSuppler;deleteConsultationSuppler;saveConsultation;deleteConsultation;sendSmsSuppler;sendSms;apiMonitorInfoSupplier;apiMonitorInfoConsumer"
+      # 去除definition  saveApiUserStatisticsSuppler;updateApiUserStatisticsSuppler;saveApiUserStatistics;updateApiUserStatistics;saveUserMonitorInfoSuppler;saveUserMonitorInfo
     stream:
       bindings:
         # policies save
@@ -82,4 +83,13 @@ spring:
         sendSms-in-0:
           destination: sendSmsExchange
           group: sendSmsQueue
+
+        # api monitor info
+        apiMonitorInfoSupplier-out-0:
+          destination: apiMonitorInfoExchange
+        apiMonitorInfoConsumer-in-0:
+          destination: apiMonitorInfoExchange
+          group: apiMonitorInfoQueue
+
+
 

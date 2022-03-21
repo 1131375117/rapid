@@ -4,6 +4,7 @@ import cn.huacloud.taxpreference.common.enums.CollectionType;
 import cn.huacloud.taxpreference.common.utils.ConsumerUserUtil;
 import cn.huacloud.taxpreference.common.utils.SpringUtil;
 import cn.huacloud.taxpreference.services.consumer.CollectionService;
+import cn.huacloud.taxpreference.services.openapi.auth.OpenApiStpUtil;
 import cn.huacloud.taxpreference.services.consumer.SubScribeService;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -28,6 +29,18 @@ public abstract class UserCollectionInfo {
             if (ConsumerUserUtil.isLogin()) {
                 haveCollection = SpringUtil.getBean(CollectionService.class)
                         .isUserCollection(ConsumerUserUtil.getCurrentUserId(), collectionType, getId());
+            }
+        } catch (Exception e) {
+            haveCollection = false;
+        }
+    }
+
+    public void initOpenAPIUserCollectionInfo(CollectionType collectionType) {
+        try {
+            Long consumerUserId = OpenApiStpUtil.getConsumerUserId();
+            if (consumerUserId != null) {
+                haveCollection = SpringUtil.getBean(CollectionService.class)
+                        .isUserCollection(consumerUserId, collectionType, getId());
             }
         } catch (Exception e) {
             haveCollection = false;
