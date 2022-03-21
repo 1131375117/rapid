@@ -1,6 +1,6 @@
 package cn.huacloud.taxpreference.common.utils;
 
-import cn.huacloud.taxpreference.config.limit.ConfigLimitDTO;
+import cn.huacloud.taxpreference.services.common.limit.ConfigLimitDTO;
 
 /**
  * Redis键工具类，集中管理Redis键

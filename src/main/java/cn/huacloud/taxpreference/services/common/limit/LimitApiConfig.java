@@ -1,4 +1,4 @@
-package cn.huacloud.taxpreference.config.limit;
+package cn.huacloud.taxpreference.services.common.limit;
 
 import cn.huacloud.taxpreference.services.common.SysParamService;
 import lombok.RequiredArgsConstructor;

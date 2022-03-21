@@ -1,4 +1,4 @@
-package cn.huacloud.taxpreference.config.limit;
+package cn.huacloud.taxpreference.services.common.limit;
 
 /**
  * 限流管理

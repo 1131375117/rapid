@@ -83,23 +83,6 @@ spring:
         apiMonitorInfoConsumer-in-0:
           destination: apiMonitorInfoExchange
           group: apiMonitorInfoQueue
-        #ApiUserStatistics save
-#        saveApiUserStatisticsSuppler-out-0:
-#          destination: saveApiUserStatisticsExchange
-#        saveApiUserStatistics-in-0:
-#          destination: saveApiUserStatisticsExchange
-#          group: saveApiUserStatisticsQueue
-#        # ApiUserStatistics update
-#        updateApiUserStatisticsSuppler-out-0:
-#          destination: updateApiUserStatisticsExchange
-#        updateApiUserStatistics-in-0:
-#          destination: updateApiUserStatisticsExchange
-#          group: updateApiUserStatisticsQueue
-#        #UserMonitorInfo save
-#        saveUserMonitorInfoSuppler-out-0:
-#          destination: saveUserMonitorInfoExchange
-#        saveUserMonitorInfo-in-0:
-#          destination: saveUserMonitorInfoExchange
-#          group: saveUserMonitorInfoQueue
+
 
 

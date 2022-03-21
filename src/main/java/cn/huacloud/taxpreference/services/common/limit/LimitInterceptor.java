@@ -1,4 +1,4 @@
-package cn.huacloud.taxpreference.config.limit;
+package cn.huacloud.taxpreference.services.common.limit;
 
 import cn.dev33.satoken.spring.SpringMVCUtil;
 import cn.huacloud.taxpreference.common.annotations.LimitApi;
@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
