@@ -2,6 +2,7 @@ package cn.huacloud.taxpreference.sync.spider.job;
 
 import cn.huacloud.taxpreference.common.enums.AttachmentType;
 import cn.huacloud.taxpreference.common.enums.DocType;
+import cn.huacloud.taxpreference.common.enums.JobType;
 import cn.huacloud.taxpreference.services.common.AttachmentService;
 import cn.huacloud.taxpreference.services.common.entity.dos.AttachmentDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.FrequentlyAskedQuestionDO;
@@ -100,7 +101,7 @@ public class FrequentlyAskedQuestionDataSyncJob implements
     }
 
     @Override
-    public FrequentlyAskedQuestionCombineDTO process(SpiderPopularQaDataCombineDTO sourceData) {
+    public FrequentlyAskedQuestionCombineDTO process(SpiderPopularQaDataCombineDTO sourceData, JobType jobType) {
         // 爬虫库 ，热门问答对象
         SpiderPopularQaDataDO spiderPopularQaDataDO = sourceData.getSpiderPopularQaDataDO();
 
@@ -113,6 +114,24 @@ public class FrequentlyAskedQuestionDataSyncJob implements
                 .setUpdateTime(now)
                 .setInputUserId(-1L)
                 .setDeleted(false);
+
+        // 正文
+        String content = spiderPopularQaDataDO.getContent();
+        Document document = HtmlProcessors.content.apply(content);
+
+        // 附件
+        List<SpiderPolicyAttachmentDO> spiderPolicyAttachmentDOList = sourceData.getSpiderPolicyAttachmentDOList();
+        Pair<Document, List<AttachmentDO>> pair = attachmentProcessors.processContentAndAttachment(document,
+                spiderPolicyAttachmentDOList, AttachmentType.FREQUENTLY_ASKED_QUESTION);
+
+        // 设置正文
+        frequentlyAskedQuestionDO.setContent(pair.getFirst().html());
+        if (JobType.UPDATE.equals(jobType)) {
+            frequentlyAskedQuestionDO.setFrequentlyAskedQuestionStatus(null);
+            frequentlyAskedQuestionDO.setCreateTime(null);
+            return new FrequentlyAskedQuestionCombineDTO().setFrequentlyAskedQuestionDO(frequentlyAskedQuestionDO)
+                    .setAttachmentDOList(pair.getSecond());
+        }
 
         // 标题
         frequentlyAskedQuestionDO.setTitle(spiderPopularQaDataDO.getTitle());
@@ -127,7 +146,7 @@ public class FrequentlyAskedQuestionDataSyncJob implements
         // 网站名称
         frequentlyAskedQuestionDO.setAnswerOrganization(spiderPopularQaDataDO.getSiteName());
 
-        // 正文
+ /*       // 正文
         String content = spiderPopularQaDataDO.getContent();
         Document document = HtmlProcessors.content.apply(content);
 
@@ -137,7 +156,7 @@ public class FrequentlyAskedQuestionDataSyncJob implements
                 spiderPolicyAttachmentDOList, AttachmentType.FREQUENTLY_ASKED_QUESTION);
 
         // 设置正文
-        frequentlyAskedQuestionDO.setContent(pair.getFirst().html());
+        frequentlyAskedQuestionDO.setContent(pair.getFirst().html());*/
         //设置关联关系
         List<Long> policiesList = new ArrayList<>();
         for (String spiderDataId : sourceData.getRealationDataDOList().stream().map(SpiderQaRealationDataDO::getPolicyId).collect(Collectors.toList())) {

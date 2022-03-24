@@ -2,6 +2,7 @@ package cn.huacloud.taxpreference.sync.spider.job;
 
 import cn.huacloud.taxpreference.common.enums.AttachmentType;
 import cn.huacloud.taxpreference.common.enums.DocType;
+import cn.huacloud.taxpreference.common.enums.JobType;
 import cn.huacloud.taxpreference.services.common.AttachmentService;
 import cn.huacloud.taxpreference.services.common.entity.dos.AttachmentDO;
 import cn.huacloud.taxpreference.services.producer.TaxPreferenceService;
@@ -70,8 +71,8 @@ public class CaseAnalysisDataSyncJob implements DataSyncJob<SpiderCaseAnalysisCo
     @Override
     public boolean needReSync(Long docId) {
         OtherDocDO otherDocDO = otherDocMapper.selectById(docId);
-        return otherDocDO == null ;
-      //  return policiesDO==null;
+        return otherDocDO == null;
+        //  return policiesDO==null;
     }
 
     @Override
@@ -88,20 +89,13 @@ public class CaseAnalysisDataSyncJob implements DataSyncJob<SpiderCaseAnalysisCo
     }
 
     @Override
-    public CaseAnalysisCombineDTO process(SpiderCaseAnalysisCombineDTO sourceData) {
+    public CaseAnalysisCombineDTO process(SpiderCaseAnalysisCombineDTO sourceData, JobType jobType) {
         SpiderCaseDataDO spiderCaseDataDO = sourceData.getSpiderCaseDataDO();
         LocalDateTime now = LocalDateTime.now();
-        OtherDocDO otherDocDO=new OtherDocDO()
+        OtherDocDO otherDocDO = new OtherDocDO()
                 .setDocType(DocType.CASE_ANALYSIS)
                 .setCreateTime(now)
                 .setUpdateTime(now);
-        // 标题
-        otherDocDO.setTitle(spiderCaseDataDO.getTitle());
-        // 来源
-        otherDocDO.setDocSource(spiderCaseDataDO.getContentSource());
-
-        // 发布日期
-        otherDocDO.setReleaseDate(DateProcessors.releaseDate.apply(spiderCaseDataDO.getPublishTime()));
 
         // 正文
         String content = spiderCaseDataDO.getContentHtml();
@@ -114,6 +108,21 @@ public class CaseAnalysisDataSyncJob implements DataSyncJob<SpiderCaseAnalysisCo
         // 设置正文
         otherDocDO.setHtmlContent(pair.getFirst().html());
         otherDocDO.setPlainContent(spiderCaseDataDO.getContentText());
+
+        if (JobType.UPDATE.equals(jobType)) {
+            otherDocDO.setCreateTime(null);
+            return new CaseAnalysisCombineDTO()
+                    .setOtherDocDO(otherDocDO)
+                    .setAttachmentDOList(pair.getSecond());
+        }
+        // 标题
+        otherDocDO.setTitle(spiderCaseDataDO.getTitle());
+        // 来源
+        otherDocDO.setDocSource(spiderCaseDataDO.getContentSource());
+
+        // 发布日期
+        otherDocDO.setReleaseDate(DateProcessors.releaseDate.apply(spiderCaseDataDO.getPublishTime()));
+
         //设置caseType
         otherDocDO.setExtendsField1(spiderCaseDataDO.getCaseType());
 

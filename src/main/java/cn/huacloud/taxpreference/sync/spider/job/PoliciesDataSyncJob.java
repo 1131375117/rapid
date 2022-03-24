@@ -2,6 +2,7 @@ package cn.huacloud.taxpreference.sync.spider.job;
 
 import cn.huacloud.taxpreference.common.enums.AttachmentType;
 import cn.huacloud.taxpreference.common.enums.DocType;
+import cn.huacloud.taxpreference.common.enums.JobType;
 import cn.huacloud.taxpreference.common.utils.CustomBeanUtil;
 import cn.huacloud.taxpreference.common.utils.DocCodeUtil;
 import cn.huacloud.taxpreference.services.common.AttachmentService;
@@ -95,7 +96,7 @@ public class PoliciesDataSyncJob implements DataSyncJob<SpiderPolicyCombineDTO, 
     }
 
     @Override
-    public PoliciesCombineDTO process(SpiderPolicyCombineDTO sourceData) {
+    public PoliciesCombineDTO process(SpiderPolicyCombineDTO sourceData, JobType jobType) {
         SpiderPolicyDataDO policy = sourceData.getSpiderPolicyDataDO();
         LocalDateTime now = LocalDateTime.now();
         PoliciesDO policiesDO = new PoliciesDO()
@@ -103,7 +104,29 @@ public class PoliciesDataSyncJob implements DataSyncJob<SpiderPolicyCombineDTO, 
                 .setCreateTime(now)
                 .setUpdateTime(now)
                 .setInputUserId(-1L);
+        // 正文
+        String content = policy.getNextContent();
+        if (StringUtils.isEmpty(content)) {
+            content = policy.getContent();
+        }
+        Document document = HtmlProcessors.content.apply(content);
 
+        //是否删除
+        policiesDO.setDeleted(policy.getDeleteMark());
+
+        // 附件
+        List<SpiderPolicyAttachmentDO> spiderPolicyAttachmentDOList = sourceData.getSpiderPolicyAttachmentDOList();
+        Pair<Document, List<AttachmentDO>> pair = attachmentProcessors.processContentAndAttachment(document, spiderPolicyAttachmentDOList, AttachmentType.POLICIES);
+
+        // 设置正文
+        policiesDO.setContent(pair.getFirst().html());
+        if (JobType.UPDATE.equals(jobType)) {
+            policiesDO.setPoliciesStatus(null);
+            policiesDO.setCreateTime(null);
+            return new PoliciesCombineDTO()
+                    .setPoliciesDO(policiesDO)
+                    .setAttachmentDOList(pair.getSecond());
+        }
 
         // 标题
         policiesDO.setTitle(policy.getTitle());
@@ -114,7 +137,7 @@ public class PoliciesDataSyncJob implements DataSyncJob<SpiderPolicyCombineDTO, 
         policiesDO.setDocCode(DocCodeUtil.getDocCode(docCodeVO));
 
         // 税种
-        if(!StringUtils.isEmpty(policy.getTaxClassName())){
+        if (!StringUtils.isEmpty(policy.getTaxClassName())) {
             List<String> taxClassNames = Arrays.stream(policy.getTaxClassName().split(",")).collect(Collectors.toList());
             List<String> categoriesNames = new ArrayList<>();
             List<String> categoriesCodes = new ArrayList<>();
@@ -140,7 +163,7 @@ public class PoliciesDataSyncJob implements DataSyncJob<SpiderPolicyCombineDTO, 
         // 发布日期
         policiesDO.setReleaseDate(DateProcessors.releaseDate.apply(policy.getPublishDate()));
 
-        // 正文
+/*        // 正文
         String content = policy.getNextContent();
         if(StringUtils.isEmpty(content)){
             content=policy.getContent();
@@ -152,7 +175,7 @@ public class PoliciesDataSyncJob implements DataSyncJob<SpiderPolicyCombineDTO, 
         Pair<Document, List<AttachmentDO>> pair = attachmentProcessors.processContentAndAttachment(document, spiderPolicyAttachmentDOList, AttachmentType.POLICIES);
 
         // 设置正文
-        policiesDO.setContent(pair.getFirst().html());
+        policiesDO.setContent(pair.getFirst().html());*/
 
         // 设置摘要信息
         String digest = pair.getFirst().text();
@@ -160,7 +183,6 @@ public class PoliciesDataSyncJob implements DataSyncJob<SpiderPolicyCombineDTO, 
             digest = digest.substring(0, DIGEST_MAX_LENGTH);
         }
         policiesDO.setDigest(digest);
-        policiesDO.setDeleted(policy.getDeleteMark());
 
         return new PoliciesCombineDTO()
                 .setPoliciesDO(policiesDO)
@@ -189,9 +211,9 @@ public class PoliciesDataSyncJob implements DataSyncJob<SpiderPolicyCombineDTO, 
         PoliciesDO policiesDO = processData.getPoliciesDO();
         policiesDO.setId(docId);
         policiesMapper.updateById(policiesDO);
-        if(policiesDO.getDeleted()){
+        if (policiesDO.getDeleted()) {
             //涉及税收优惠需要将税收优惠撤回
-            log.info("需要撤回的docid:{}",docId);
+            log.info("需要撤回的docid:{}", docId);
             //根据政策法规id找税收优惠id
             List<TaxPreferenceCountVO> taxPreferenceIdVOs = taxPreferenceService.getTaxPreferenceId(docId);
             for (TaxPreferenceCountVO taxPreferenceIdVO : taxPreferenceIdVOs) {

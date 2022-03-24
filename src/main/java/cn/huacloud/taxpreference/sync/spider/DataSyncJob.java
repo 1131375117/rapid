@@ -1,6 +1,7 @@
 package cn.huacloud.taxpreference.sync.spider;
 
 import cn.huacloud.taxpreference.common.enums.DocType;
+import cn.huacloud.taxpreference.common.enums.JobType;
 import cn.huacloud.taxpreference.services.sync.entity.dos.SpiderDataSyncDO;
 import cn.huacloud.taxpreference.sync.spider.entity.dtos.DataSyncResult;
 import cn.huacloud.taxpreference.sync.spider.entity.dtos.SpiderUrlGetter;
@@ -8,25 +9,28 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  * 数据同步作业
+ *
  * @author wangkh
  */
 public interface DataSyncJob<T extends SpiderUrlGetter, R> {
     /**
      * 作业排序
+     *
      * @return 排序值
      */
     int order();
 
     /**
      * 执行同步
+     *
      * @param spiderDataSyncDO 数据同步记录
      * @return docId
      */
-    default DataSyncResult doSync(SpiderDataSyncDO spiderDataSyncDO, JdbcTemplate jdbcTemplate) {
+    default DataSyncResult doSync(SpiderDataSyncDO spiderDataSyncDO, JdbcTemplate jdbcTemplate, JobType jobType) {
         // 获取原始数据
         T sourceData = getSourceData(spiderDataSyncDO.getSpiderDataId(), jdbcTemplate);
         // 数据处理
-        R processData = process(sourceData);
+        R processData = process(sourceData, jobType);
         // 数据持久化
         Long docId = spiderDataSyncDO.getDocId();
         if (docId != null && isDocExist(docId)) {
@@ -34,7 +38,9 @@ public interface DataSyncJob<T extends SpiderUrlGetter, R> {
             updateProcessData(docId, processData);
         } else {
             // 执行保存方法
-            docId = saveProcessData(processData);
+            if (JobType.INSERT.equals(jobType)) {
+                docId = saveProcessData(processData);
+            }
 
         }
         return DataSyncResult.of(docId, sourceData.getSpiderUrl());
@@ -42,18 +48,21 @@ public interface DataSyncJob<T extends SpiderUrlGetter, R> {
 
     /**
      * 获取文档类型
+     *
      * @return 文档类型
      */
     DocType getDocType();
 
     /**
      * 获取爬虫数据要同步的ID主键查询SQL
+     *
      * @return SQL语句
      */
     String getSyncIdsQuerySql();
 
     /**
      * 是否需要重新同步，经过数据加工的数据不需要再同步
+     *
      * @param docId 文档ID
      * @return 是否需要重新同步
      */
@@ -61,6 +70,7 @@ public interface DataSyncJob<T extends SpiderUrlGetter, R> {
 
     /**
      * 获取原始数据
+     *
      * @param sourceId 原始ID
      * @return 原始数据
      */
@@ -68,13 +78,15 @@ public interface DataSyncJob<T extends SpiderUrlGetter, R> {
 
     /**
      * 处理原始数据，生成处理数据
+     *
      * @param sourceData 原始数据
      * @return 处理好的数据
      */
-    R process(T sourceData);
+    R process(T sourceData, JobType jobType);
 
     /**
      * 文档数据是否已经存在
+     *
      * @param docId 文档ID
      * @return 数据是否已经存在
      */
@@ -90,7 +102,8 @@ public interface DataSyncJob<T extends SpiderUrlGetter, R> {
 
     /**
      * 更新处理好的数据
-     * @param docId 文档ID
+     *
+     * @param docId       文档ID
      * @param processData 处理好的数据
      */
     void updateProcessData(Long docId, R processData);

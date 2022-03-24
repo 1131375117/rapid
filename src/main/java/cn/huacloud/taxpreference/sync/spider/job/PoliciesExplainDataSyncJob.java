@@ -2,6 +2,7 @@ package cn.huacloud.taxpreference.sync.spider.job;
 
 import cn.huacloud.taxpreference.common.enums.AttachmentType;
 import cn.huacloud.taxpreference.common.enums.DocType;
+import cn.huacloud.taxpreference.common.enums.JobType;
 import cn.huacloud.taxpreference.services.common.AttachmentService;
 import cn.huacloud.taxpreference.services.common.entity.dos.AttachmentDO;
 import cn.huacloud.taxpreference.services.producer.entity.dos.PoliciesExplainDO;
@@ -81,7 +82,7 @@ public class PoliciesExplainDataSyncJob implements DataSyncJob<SpiderPolicyExpla
     }
 
     @Override
-    public PoliciesExplainCombineDTO process(SpiderPolicyExplainCombineDTO sourceData) {
+    public PoliciesExplainCombineDTO process(SpiderPolicyExplainCombineDTO sourceData, JobType jobType) {
         SpiderPolicyExplainDataDO policyExplain = sourceData.getSpiderPolicyExplainDataDO();
         SpiderDataSyncDO spiderDataSyncDO = spiderDataSyncMapper.getSpiderDataSyncDO(DocType.POLICIES, policyExplain.getId());
         LocalDateTime now = LocalDateTime.now();
@@ -92,15 +93,9 @@ public class PoliciesExplainDataSyncJob implements DataSyncJob<SpiderPolicyExpla
                 .setInputUserId(-1L)
                 .setDeleted(false)
                 .setPoliciesId(spiderDataSyncDO.getDocId());
+        //是否删除
 
-        //标题
-        policiesExplainDO.setTitle(policyExplain.getRelatedInterpretationTitle());
-
-        //来源
-        policiesExplainDO.setDocSource(policyExplain.getRelatedInterpretationSource());
-
-        // 发布日期
-        policiesExplainDO.setReleaseDate(DateProcessors.releaseDate.apply(policyExplain.getRelatedInterpretationDate()));
+        policiesExplainDO.setDeleted(policyExplain.getDeleteMark());
 
         //正文
         String content = policyExplain.getNextRelatedContent();
@@ -114,7 +109,37 @@ public class PoliciesExplainDataSyncJob implements DataSyncJob<SpiderPolicyExpla
         Pair<Document, List<AttachmentDO>> pair = attachmentProcessors.processContentAndAttachment(document, spiderPolicyAttachmentDOList, AttachmentType.POLICIES_EXPLAIN);
 
         policiesExplainDO.setContent(pair.getFirst().html());
-        policiesExplainDO.setDeleted(policyExplain.getDeleteMark());
+
+        if (JobType.UPDATE.equals(jobType)) {
+            policiesExplainDO.setPoliciesExplainStatus(null);
+            policiesExplainDO.setCreateTime(null);
+            return new PoliciesExplainCombineDTO()
+                    .setPoliciesExplainDO(policiesExplainDO)
+                    .setAttachmentDOList(pair.getSecond());
+        }
+
+        //标题
+        policiesExplainDO.setTitle(policyExplain.getRelatedInterpretationTitle());
+
+        //来源
+        policiesExplainDO.setDocSource(policyExplain.getRelatedInterpretationSource());
+
+        // 发布日期
+        policiesExplainDO.setReleaseDate(DateProcessors.releaseDate.apply(policyExplain.getRelatedInterpretationDate()));
+
+        //正文
+      /*  String content = policyExplain.getNextRelatedContent();
+        if (StringUtils.isEmpty(content)) {
+            content = policyExplain.getRelatedInterpretationContent();
+        }
+        Document document = HtmlProcessors.content.apply(content);
+
+        List<SpiderPolicyAttachmentDO> spiderPolicyAttachmentDOList = sourceData.getSpiderPolicyAttachmentDOList();
+
+        Pair<Document, List<AttachmentDO>> pair = attachmentProcessors.processContentAndAttachment(document, spiderPolicyAttachmentDOList, AttachmentType.POLICIES_EXPLAIN);
+
+        policiesExplainDO.setContent(pair.getFirst().html());*/
+
 
         return new PoliciesExplainCombineDTO()
                 .setPoliciesExplainDO(policiesExplainDO)

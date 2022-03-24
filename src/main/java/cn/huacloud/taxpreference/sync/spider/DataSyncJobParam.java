@@ -31,4 +31,5 @@ public class DataSyncJobParam {
 
     @ApiModelProperty(value = "文档类型集合，指定要同步的文档，空集合会同步所有文档")
     private List<DocType> docTypes;
+
 }

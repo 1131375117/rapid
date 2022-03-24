@@ -27,6 +27,8 @@ public class ConsultationVO {
 
     @ApiModelProperty("咨询用户")
     private Long customerUserId;
+    @ApiModelProperty("咨询用户")
+    private String customerUserName;
 
     @ApiModelProperty("咨询时间")
     private LocalDateTime createTime;
@@ -36,6 +38,9 @@ public class ConsultationVO {
 
     @ApiModelProperty("所属行业标签name集合")
     private List<String> industryNames;
+
+    @ApiModelProperty("是否公开(0-不公开,1-公开)")
+    private Long published;
     private List<ConsultationContentVO> consultationContentVO;
 
 }

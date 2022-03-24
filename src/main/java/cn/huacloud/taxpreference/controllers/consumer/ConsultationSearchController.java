@@ -89,8 +89,8 @@ public class ConsultationSearchController {
     public ResultVO<PageVO<ConsultationESVO>> myConsultation(PageQueryDTO pageQuery) throws Exception {
 
         pageQuery.paramReasonable();
-        PageVO<ConsultationESVO> page = consultationSearchService.myConsultation(pageQuery, ConsumerUserUtil.getCurrentUserId());
-        PageVO<ConsultationESVO> pageVO = consultationSearchService.hotConsultation(pageQuery);
+        PageVO<ConsultationESVO> pageVO = consultationSearchService.myConsultation(pageQuery, ConsumerUserUtil.getCurrentUserId());
+       // PageVO<ConsultationESVO> pageVO = consultationSearchService.hotConsultation(pageQuery);
         pageVO.setRecords(pageVO.getRecords()
                 .stream()
                 .peek(consultationESVO
@@ -100,7 +100,7 @@ public class ConsultationSearchController {
                                 .getCreateTime()))
                 .collect(Collectors.toList()))
         ;
-        return ResultVO.ok(page);
+        return ResultVO.ok(pageVO);
     }
 
     @ApiOperation("热门咨询（推荐）")

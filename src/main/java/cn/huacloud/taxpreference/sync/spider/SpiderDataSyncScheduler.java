@@ -2,6 +2,7 @@ package cn.huacloud.taxpreference.sync.spider;
 
 import cn.huacloud.taxpreference.common.enums.BizCode;
 import cn.huacloud.taxpreference.common.enums.DocType;
+import cn.huacloud.taxpreference.common.enums.JobType;
 import cn.huacloud.taxpreference.config.SpiderDataSyncConfig;
 import cn.huacloud.taxpreference.services.sync.mapper.SpiderDataSyncMapper;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ import java.util.List;
 
 /**
  * 爬虫数据同步调度器
+ *
  * @author wangkh
  */
 @EnableScheduling
@@ -39,7 +41,7 @@ public class SpiderDataSyncScheduler implements InitializingBean, SchedulingConf
     // 初始化创建，不交由spring管理
     private DefaultDataSyncJobExecutor dataSyncJobExecutor;
 
-    public synchronized void executeJobs(DataSyncJobParam dataSyncJobParam) {
+    public synchronized void executeJobs(DataSyncJobParam dataSyncJobParam,JobType jobType) {
         if (!spiderDataSyncConfig.getEnabled()) {
             // 未开启爬虫数据同步直接抛出异常
             throw BizCode._4405.exception();
@@ -53,7 +55,13 @@ public class SpiderDataSyncScheduler implements InitializingBean, SchedulingConf
         // 循环执行同步任务
         for (DataSyncJob<?, ?> dataSyncJob : dataSyncJobs) {
             if (docTypes.contains(dataSyncJob.getDocType())) {
-                dataSyncJobExecutor.execute(dataSyncJob, dataSyncJobParam);
+                if (JobType.UPDATE.equals(jobType)) {
+                    //更新已经发布的数据
+                    dataSyncJobExecutor.executeUpdate(dataSyncJob, dataSyncJobParam);
+                } else {
+                    //新增
+                    dataSyncJobExecutor.execute(dataSyncJob, dataSyncJobParam);
+                }
             }
         }
     }

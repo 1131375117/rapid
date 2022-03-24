@@ -1,5 +1,6 @@
 package cn.huacloud.taxpreference.controllers.tool;
 
+import cn.huacloud.taxpreference.common.enums.JobType;
 import cn.huacloud.taxpreference.common.utils.ResultVO;
 import cn.huacloud.taxpreference.config.SysConfig;
 import cn.huacloud.taxpreference.sync.es.trigger.impl.*;
@@ -83,7 +84,15 @@ public class DataSyncController {
     @PostMapping("/sync/spiderData")
     public ResultVO<Void> syncSpiderData(@RequestBody JobParam jobParam) {
         sysConfig.checkSysPassword(jobParam.getPassword());
-        spiderDataSyncScheduler.executeJobs(jobParam);
+        spiderDataSyncScheduler.executeJobs(jobParam,JobType.INSERT);
+        return ResultVO.ok();
+    }
+
+    @ApiOperation("更新已发布的爬虫数据")
+    @PostMapping("/sync/refreshSpiderData")
+    public ResultVO<Void> refreshSpiderData(@RequestBody JobParam jobParam) {
+        sysConfig.checkSysPassword(jobParam.getPassword());
+        spiderDataSyncScheduler.executeJobs(jobParam,JobType.UPDATE);
         return ResultVO.ok();
     }
 

@@ -121,7 +121,7 @@ public class ConsultationServiceImpl implements ConsultationService {
         }
 
         //写入redis
-        stringRedisTemplate.opsForValue().set(RedisKeyUtil.getConsultationReplyRedisKey(customerUserId), String.valueOf(RedPointStatus.SHOW),7L, TimeUnit.DAYS);
+        stringRedisTemplate.opsForValue().set(RedisKeyUtil.getConsultationReplyRedisKey(customerUserId), String.valueOf(RedPointStatus.SHOW), 7L, TimeUnit.DAYS);
 
     }
 
@@ -155,6 +155,16 @@ public class ConsultationServiceImpl implements ConsultationService {
             consultationContentVOList.add(consultationContentVO);
         }
         consultationVO.setConsultationContentVO(consultationContentVOList);
+        //设置咨询时间变成最后一条追问时间
+        if (consultationContentVOList.size() >= 2) {
+            consultationVO.setCreateTime(consultationContentVOList.get(consultationContentVOList.size() - 2).getCreateTime());
+        } else {
+            consultationVO.setCreateTime(consultationContentVOList.get(0).getCreateTime());
+        }
+
+        //设置用户名
+        ConsumerUserDO consumerUserDO = consumerUserMapper.selectById(consultationVO.getCustomerUserId());
+        consultationVO.setCustomerUserName(consumerUserDO.getUsername());
         return consultationVO;
     }
 
@@ -164,9 +174,9 @@ public class ConsultationServiceImpl implements ConsultationService {
         Integer pageNum = queryConsultationDTO.getPageNum();
         Integer pageSize = queryConsultationDTO.getPageSize();
         List<QueryConsultationVO> voList = consultationMapper.queryConsultationList((pageNum - 1) * pageSize, pageSize, queryConsultationDTO);
-       // List<QueryConsultationVO> records = iPage.getRecords();
+        // List<QueryConsultationVO> records = iPage.getRecords();
         Long count = consultationMapper.selectCountByConsultationId(queryConsultationDTO);
-        PageVO<QueryConsultationVO> pageVO=new PageVO<>();
+        PageVO<QueryConsultationVO> pageVO = new PageVO<>();
         pageVO.setTotal(count);
         pageVO.setPageNum(pageNum);
         pageVO.setPageSize(pageSize);
