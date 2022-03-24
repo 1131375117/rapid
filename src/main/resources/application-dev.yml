@@ -108,6 +108,12 @@ wwx:
     secret: "-cuNx4ZJOOsOWXDIdZMzS_-Bdt3EGKibNjLtYjVnCxI"
     token: "VzShwDoTtBMn9qahSB45nVQPqIY5Eh"
     encoding-aes-key: "gKUXxMtvyacfq3KczuhjJawW4IUpqV7CuLIIMWMPn5n"
+  proxy:
+    enable: true
+    host: "1.117.164.184"
+    port: 3200
+    username: ""
+    password: ""
 
 # open-api
 open-api:
