@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rapid-client" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rapid-client/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rapid-client/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rapid-common" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rapid-common/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rapid-common/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rapid-console" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rapid-console/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rapid-console/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rapid-core" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rapid-core/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rapid-core/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rapid-discovery" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rapid-discovery/rapid-discovery-api" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rapid-discovery/rapid-discovery-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rapid-discovery/rapid-discovery-api/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rapid-discovery/rapid-discovery-etcd" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rapid-discovery/rapid-discovery-etcd/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rapid-discovery/rapid-discovery-etcd/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rapid-discovery/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rapid-discovery/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
+  </component>
+</project>

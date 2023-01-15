@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/rapid.iml" filepath="$PROJECT_DIR$/rapid.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rapid-client/rapid-client.iml" filepath="$PROJECT_DIR$/rapid-client/rapid-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rapid-common/rapid-common.iml" filepath="$PROJECT_DIR$/rapid-common/rapid-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rapid-console/rapid-console.iml" filepath="$PROJECT_DIR$/rapid-console/rapid-console.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rapid-core/rapid-core.iml" filepath="$PROJECT_DIR$/rapid-core/rapid-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rapid-discovery/rapid-discovery.iml" filepath="$PROJECT_DIR$/rapid-discovery/rapid-discovery.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rapid-discovery/rapid-discovery-api/rapid-discovery-api.iml" filepath="$PROJECT_DIR$/rapid-discovery/rapid-discovery-api/rapid-discovery-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rapid-discovery/rapid-discovery-etcd/rapid-discovery-etcd.iml" filepath="$PROJECT_DIR$/rapid-discovery/rapid-discovery-etcd/rapid-discovery-etcd.iml" />
+    </modules>
+  </component>
+</project>

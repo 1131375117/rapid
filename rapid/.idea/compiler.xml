@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="rapid-core" />
+        <module name="rapid-discovery-etcd" />
+        <module name="rapid-console" />
+        <module name="rapid-client" />
+        <module name="rapid-discovery-api" />
+        <module name="rapid-common" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel target="8">
+      <module name="rapid" target="1.8" />
+      <module name="rapid-client" target="1.8" />
+      <module name="rapid-common" target="1.8" />
+      <module name="rapid-console" target="1.8" />
+      <module name="rapid-core" target="1.8" />
+      <module name="rapid-discovery" target="1.8" />
+      <module name="rapid-discovery-api" target="1.8" />
+      <module name="rapid-discovery-etcd" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

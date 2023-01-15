@@ -1,0 +1,34 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  	<parent>
+    	<groupId>com.ruyuan</groupId>
+    	<artifactId>rapid</artifactId>
+    	<version>1.0.0</version>
+  	</parent>
+  	<artifactId>rapid-discovery</artifactId>
+  	<packaging>pom</packaging>
+  	<modules>
+  		<module>rapid-discovery-api</module>
+  		<module>rapid-discovery-etcd</module>
+  	</modules>
+  	
+  	<properties>
+  		<rapid-commonn.version>1.0.0</rapid-commonn.version>
+		<jetcd-core.version>0.5.4</jetcd-core.version>
+        <lombok.version>1.18.0</lombok.version> 
+  	</properties>
+  	<dependencyManagement>
+        <dependencies>
+			<dependency>
+				<groupId>com.ruyuan</groupId>
+				<artifactId>rapid-common</artifactId>
+				<version>${rapid-commonn.version}</version>
+			</dependency>          
+			<dependency>
+			    <groupId>io.etcd</groupId>
+			    <artifactId>jetcd-core</artifactId>
+			    <version>${jetcd-core.version}</version>
+			</dependency>
+	     </dependencies>
+    </dependencyManagement>  	  	
+</project>
